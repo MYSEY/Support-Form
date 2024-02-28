@@ -408,7 +408,7 @@ aside.page-sidebar ($nav-width, $nav-background)
     content: "\f2f7"; }
 
 .toast-error {
-  background-color: #fd3995; }
+  background-color: #e4242f; }
   .toast-error:before {
     content: "\f2f0"; }
 

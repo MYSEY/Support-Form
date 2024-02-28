@@ -25146,7 +25146,10 @@ jQuery.fn.extend({
  * Convert RGB to HEX
  * rgb2hex(hex_value)
  */
-function rgb2hex(rgb) {
+function rgb2hex(rgb) { 
+	if (!rgb) {
+		rgb = "rgb(255, 0, 0)";
+	}
     rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
     function hex(x) {
         return ("0" + parseInt(x).toString(16)).slice(-2);

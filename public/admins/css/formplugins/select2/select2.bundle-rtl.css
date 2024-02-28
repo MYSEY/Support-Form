@@ -1080,7 +1080,7 @@ span.select2-selection.select2-selection--multiple {
   padding: 0 15px;
   margin-left: 8px;
   font-size: 1rem;
-  color: #fd3995; }
+  color: #e4242f; }
   .select2-container--default .select2-selection--single .select2-selection__clear:hover {
     color: #fd2087; }
 
@@ -1091,4 +1091,4 @@ span.select2-selection.select2-selection--multiple {
     margin-top: 8px; } }
 
 .select2-results__message {
-  color: #fd3995; }
+  color: #e4242f; }

@@ -1152,7 +1152,7 @@ body.swal2-no-backdrop .swal2-shown {
     -webkit-transform: none;
             transform: none;
     background: transparent;
-    color: #fd3995; }
+    color: #e4242f; }
 
 .swal2-content {
   z-index: 1;
@@ -1196,9 +1196,9 @@ body.swal2-no-backdrop .swal2-shown {
   .swal2-input.swal2-inputerror,
   .swal2-file.swal2-inputerror,
   .swal2-textarea.swal2-inputerror {
-    border-color: #fd3995 !important;
-    -webkit-box-shadow: 0 0 2px #fd3995 !important;
-            box-shadow: 0 0 2px #fd3995 !important; }
+    border-color: #e4242f !important;
+    -webkit-box-shadow: 0 0 2px #e4242f !important;
+            box-shadow: 0 0 2px #e4242f !important; }
   .swal2-input:focus,
   .swal2-file:focus,
   .swal2-textarea:focus {
@@ -1307,7 +1307,7 @@ body.swal2-no-backdrop .swal2-shown {
     margin: 0 .625em;
     zoom: normal;
     border-radius: 50%;
-    background-color: #fd3995;
+    background-color: #e4242f;
     color: #fff;
     font-weight: 600;
     line-height: 1.5em;
@@ -1359,7 +1359,7 @@ body.swal2-no-backdrop .swal2-shown {
     height: 92%;
     font-size: 3.75em; }
   .swal2-icon.swal2-error {
-    border-color: #fd3995; }
+    border-color: #e4242f; }
     .swal2-icon.swal2-error .swal2-x-mark {
       position: relative;
       -webkit-box-flex: 1;
@@ -1372,7 +1372,7 @@ body.swal2-no-backdrop .swal2-shown {
       width: 2.9375em;
       height: .3125em;
       border-radius: .125em;
-      background-color: #fd3995; }
+      background-color: #e4242f; }
       .swal2-icon.swal2-error [class^='swal2-x-mark-line'][class$='left'] {
         right: 1.0625em;
         -webkit-transform: rotate(-45deg);

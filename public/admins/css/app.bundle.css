@@ -613,7 +613,7 @@ RESULT:
   --theme-success: #1dc9b7;
   --theme-info: #2196F3;
   --theme-warning: #ffc241;
-  --theme-danger: #fd3995;
+  --theme-danger: #e4242f;
   --theme-light: #fff;
   --theme-dark: #505050;
   --theme-primary-50: #ccbfdf;
@@ -661,7 +661,7 @@ RESULT:
   --theme-danger-200: #fe85be;
   --theme-danger-300: #fe6bb0;
   --theme-danger-400: #fd52a3;
-  --theme-danger-500: #fd3995;
+  --theme-danger-500: #e4242f;
   --theme-danger-600: #fd2087;
   --theme-danger-700: #fc077a;
   --theme-danger-800: #e7026e;
@@ -1331,7 +1331,7 @@ html body {
           text-align: center; }
         .nav-menu li > ul li a > .badge {
           color: #fff;
-          background-color: #fd3995;
+          background-color: #e4242f;
           border: 1px solid #505050; }
         .nav-menu li > ul li a:hover {
           color: white;
@@ -1369,7 +1369,7 @@ html body {
           color: white; }
         .nav-menu li > ul li > ul li a > .badge {
           color: #fff;
-          background-color: #fd3995;
+          background-color: #e4242f;
           border: 1px solid #505050; }
     .nav-menu li:last-child {
       margin-bottom: 0; }
@@ -2616,7 +2616,7 @@ html body {
 .badge.badge-icon {
   position: absolute;
   display: inline-block;
-  background-color: #fd3995;
+  background-color: #e4242f;
   color: #fff;
   -webkit-box-shadow: 0 0 0 1px #fff;
           box-shadow: 0 0 0 1px #fff;
@@ -3704,7 +3704,7 @@ html body {
         -ms-flex-pack: center;
             justify-content: center;
     font-size: 1.1rem;
-    color: #fd3995; }
+    color: #e4242f; }
   .panel.ui-sortable-helper {
     -webkit-box-shadow: 0 5px 16px 0 rgba(0, 0, 0, 0.05), 0 5px 20px 0 rgba(0, 0, 0, 0.09);
             box-shadow: 0 5px 16px 0 rgba(0, 0, 0, 0.05), 0 5px 20px 0 rgba(0, 0, 0, 0.09);
@@ -3857,7 +3857,7 @@ html body {
     .panel-toolbar .btn-panel[data-action="panel-fullscreen"], .panel-toolbar .btn-panel.js-panel-fullscreen {
       background: #ffc241; }
     .panel-toolbar .btn-panel[data-action="panel-close"], .panel-toolbar .btn-panel.js-panel-close {
-      background: #fd3995; }
+      background: #e4242f; }
   .panel-toolbar .btn-toolbar-master {
     height: 3rem;
     width: 1.826875rem;
@@ -5206,7 +5206,7 @@ span.img-share {
   .status.status-success:before {
     background: #1dc9b7; }
   .status.status-danger:before {
-    background: #fd3995; }
+    background: #e4242f; }
   .status.status-warning:before {
     background: #ffc241; }
 
@@ -7432,7 +7432,7 @@ html:not(.root-text-sm):not(.root-text-lg):not(.root-text-xl) [data-class="root-
     color: white; }
 
 .bg-danger-500 {
-  background-color: #fd3995;
+  background-color: #e4242f;
   color: white; }
   .bg-danger-500:hover {
     color: white; }
@@ -7477,7 +7477,7 @@ html:not(.root-text-sm):not(.root-text-lg):not(.root-text-xl) [data-class="root-
   color: #fd52a3; }
 
 .color-danger-500 {
-  color: #fd3995; }
+  color: #e4242f; }
 
 .color-danger-600 {
   color: #fd2087; }

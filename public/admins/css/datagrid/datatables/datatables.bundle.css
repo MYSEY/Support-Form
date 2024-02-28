@@ -1228,7 +1228,7 @@ table.dataTable thead .sorting_desc_disabled:after {
   font-family: 'Font Awesome 5 Pro'; }
 
 .dataTables_empty {
-  color: #fd3995;
+  color: #e4242f;
   font-size: 2rem;
   padding-top: 2.5rem !important;
   padding-bottom: 2.5rem !important; }
@@ -1336,7 +1336,7 @@ div.dt-autofill-select {
   top: 1px;
   bottom: 0px;
   width: 1px;
-  background: #fd3995;
+  background: #e4242f;
   z-index: 1;
   -webkit-box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.4);
           box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.4); }

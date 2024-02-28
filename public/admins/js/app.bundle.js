@@ -1303,7 +1303,7 @@ var initApp = (function(app) {
 			
 		} else {
 			if (myapp_config.debugState)
-				console.log("%c✘ Waves plugin inactive! ", "color: #fd3995");
+				console.log("%c✘ Waves plugin inactive! ", "color: #e4242f");
 
 		}
 
@@ -1878,7 +1878,7 @@ var color = {
 		_200: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-200').css('color')) || '#fe85be',
 		_300: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-300').css('color')) || '#fe6bb0',
 		_400: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-400').css('color')) || '#fd52a3',
-		_500: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-500').css('color')) || '#fd3995',
+		_500: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-500').css('color')) || '#e4242f',
 		_600: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-600').css('color')) || '#fd2087',
 		_700: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-700').css('color')) || '#fc077a',
 		_800: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-800').css('color')) || '#e7026e',
