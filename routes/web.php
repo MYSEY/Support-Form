@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admins\DashboardController;
+use App\Http\Controllers\Admins\TicketController;
+use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,5 +25,15 @@ Route::post('/login', [LoginController::class, 'login']);
 // });
 
 Auth::routes();
+Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
+    Route::get('/dashboad', [DashboardController::class, 'index']);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    // users 
+    Route::get('/user', [UserController::class, 'index']);
+
+    // Ticket  
+    Route::get('/ticket', [TicketController::class, 'index']);
+    
+});
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

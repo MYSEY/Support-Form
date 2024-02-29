@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/admin';
 
     /**
      * Create a new controller instance.
@@ -50,7 +50,7 @@ class LoginController extends Controller
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
             if (Auth::user()->status == 'Active') {
                 Toastr::success('Login successfully.', 'Success');
-                return view('layouts.admin');
+                return redirect('admin/dashboad');
             } else {
                 Auth::logout();
                 Toastr::error('Your account is not active. Please contact support.', 'Error');
