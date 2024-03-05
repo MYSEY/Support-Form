@@ -128,12 +128,6 @@
                                 </a>
                             </li>
                             <li class="">
-                                <a href="" title="Departments" data-filter-tags="application intel Departments">
-                                    <i class="fal fa-list-ul"></i>
-                                    <span class="nav-link-text" data-i18n="nav.Tickets">Support Departments</span>
-                                </a>
-                            </li>
-                            <li class="">
                                 <a href="" title="Reports" data-filter-tags="application intel Reports">
                                     <i class="fal fa-chart-pie"></i>
                                     <span class="nav-link-text" data-i18n="nav.Reports">Reports</span>
@@ -146,6 +140,11 @@
                                     <span class="nav-link-text" data-i18n="nav.theme_settings">Settings</span>
                                 </a>
                                 <ul>
+                                    <li>
+                                        <a href="" title="Departments" data-filter-tags="application intel Departments">
+                                            <span class="nav-link-text" data-i18n="nav.Tickets">Supporting Department</span>
+                                        </a>
+                                    </li>
                                     <li>
                                         <a href="" title="General" data-filter-tags="theme settings General">
                                             <span class="nav-link-text" data-i18n="nav.general">General</span>
@@ -162,13 +161,18 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="" title="Status" data-filter-tags="theme settings Status">
-                                            <span class="nav-link-text" data-i18n="nav.help_desk">Status</span>
+                                        <a href="{{url('admin/statuses')}}" title="Status" data-filter-tags="theme settings Status">
+                                            <span class="nav-link-text" data-i18n="nav.help_desk">Statuses</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="" title="Departments" data-filter-tags="theme settings Departments">
+                                        <a href="{{url('admin/department')}}" title="Departments" data-filter-tags="theme settings Departments">
                                             <span class="nav-link-text" data-i18n="nav.department">Department</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{url('admin/branch')}}" title="Branch" data-filter-tags="theme settings branch">
+                                            <span class="nav-link-text" data-i18n="nav.department">Branch</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -214,14 +218,6 @@
                                 <i class="ni ni-menu"></i>
                             </a>
                         </div>
-                        {{-- <div class="search">
-                            <form class="app-forms hidden-xs-down" role="search" action="page_search.html" autocomplete="off">
-                                <input type="text" id="search-field" placeholder="Search for anything" class="form-control" tabindex="1">
-                                <a href="#" onclick="return false;" class="btn-danger btn-search-close js-waves-off d-none" data-action="toggle" data-class="mobile-search-on">
-                                    <i class="fal fa-times"></i>
-                                </a>
-                            </form>
-                        </div> --}}
                         <div class="ml-auto d-flex">
                             <!-- activate app search icon (mobile) -->
                             <div class="hidden-sm-up">

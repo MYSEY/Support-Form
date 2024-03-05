@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admins\BranchController;
 use App\Http\Controllers\Admins\DashboardController;
+use App\Http\Controllers\Admins\DepartmentController;
+use App\Http\Controllers\Admins\StatusesController;
 use App\Http\Controllers\Admins\TicketController;
 use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -33,7 +36,16 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     // Ticket  
     Route::get('/ticket', [TicketController::class, 'index']);
-    
+
+    // Statuses
+    Route::get('/statuses', [StatusesController::class, 'index']);
+
+    // Department
+    Route::get('/department', [DepartmentController::class, 'index']);
+
+    // Department
+    Route::get('/branch', [BranchController::class, 'index']);
+
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
