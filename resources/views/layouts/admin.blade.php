@@ -16,10 +16,11 @@
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/vendors.bundle.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/app.bundle.css')}}">
         <!-- Place favicon.ico in the root directory -->
-        <link rel="apple-touch-icon" sizes="180x180" href="{{asset('/admins/img/favicon/logo.png')}}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{asset('/admins/img/favicon/logo.png')}}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{asset('/admins/img/favicon.ico')}}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{asset('/admins/img/favicon.ico')}}">
         <link rel="mask-icon" href="{{asset('admins/img/favicon/safari-pinned-tab.svg')}}" color="#5bbad5">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/datagrid/datatables/datatables.bundle.css')}}">
+        <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
     </head>
     <body class="mod-bg-1 ">
         <!-- DOC: script to save and load page settings -->
@@ -670,6 +671,8 @@
         <script src="{{asset('admins/js/statistics/flot/flot.bundle.js')}}"></script>
         <script src="{{asset('admins/js/statistics/easypiechart/easypiechart.bundle.js')}}"></script>
         <script src="{{asset('admins/js/datagrid/datatables/datatables.bundle.js')}}"></script>
+        <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+        {!! Toastr::message() !!}
         @yield('script')
     </body>
 </html>
