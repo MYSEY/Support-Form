@@ -42,9 +42,17 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     // Department
     Route::get('/department', [DepartmentController::class, 'index']);
+    Route::post('/department/store', [DepartmentController::class,'store']);
+    Route::post('/department/update', [DepartmentController::class,'update']);
+    Route::post('/department/delete', [DepartmentController::class,'destroy']);
 
-    // Department
+    // Branch
     Route::get('/branch', [BranchController::class, 'index']);
+    Route::post('/branch/store', [BranchController::class,'store']);
+    Route::get('/branch/edit', [BranchController::class,'edit']);
+    Route::post('/branch/update', [BranchController::class,'update']);
+    Route::post('/branch/delete', [BranchController::class,'destroy']);
+
 
 });
 

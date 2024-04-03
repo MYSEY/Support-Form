@@ -16,8 +16,8 @@
      <link rel="stylesheet" media="screen, print" href="{{asset('/admins/css/vendors.bundle.css')}}">
      <link rel="stylesheet" media="screen, print" href="{{asset('/admins/css/app.bundle.css')}}">
      <!-- Place favicon.ico in the root directory -->
-     <link rel="apple-touch-icon" sizes="180x180" href="{{asset('/admins/img/favicon/logo.png')}}">
-     <link rel="icon" type="image/png" sizes="32x32" href="{{asset('/admins/img/favicon/logo.png') }}">
+     <link rel="apple-touch-icon" sizes="180x180" href="{{asset('/admins/img/favicon.ico')}}">
+     <link rel="icon" type="image/png" sizes="32x32" href="{{asset('/admins/img/favicon.ico') }}">
      <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
      <!-- Optional: page related CSS-->
      <link rel="stylesheet" media="screen, print" href="{{asset('/admins/css/fa-brands.css') }}">
