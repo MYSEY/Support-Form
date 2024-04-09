@@ -6,29 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Branch extends Model
+class CustomStatus extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'branchs';
+    protected $table = 'custom_statuses';
     protected $guarded = ['id'];
+    
     protected $fillable = [
-        'branch_name_kh',
-        'branch_name_en',
-        'abbreviations',
-        'address',
-        'address_kh',
+        'name',
+        'color',
+        'can_customers_change',
+        'order',
         'created_by',
         'updated_by',
         'deleted_at',
     ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | RELATIONS
-    |--------------------------------------------------------------------------
-    */
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');

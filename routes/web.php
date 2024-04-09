@@ -33,12 +33,18 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     // users 
     Route::get('/user', [UserController::class, 'index']);
+    Route::post('/user/show', [UserController::class, 'show']);
+    Route::post('/user/create', [UserController::class, 'store']);
+    Route::post('/user/delete', [UserController::class, 'destroy']);
 
     // Ticket  
     Route::get('/ticket', [TicketController::class, 'index']);
 
     // Statuses
     Route::get('/statuses', [StatusesController::class, 'index']);
+    Route::post('/statuses/store', [StatusesController::class,'store']);
+    Route::post('/statuses/update', [StatusesController::class,'update']);
+    Route::post('/statuses/delete', [StatusesController::class,'destroy']);
 
     // Department
     Route::get('/department', [DepartmentController::class, 'index']);
@@ -52,7 +58,6 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/branch/edit', [BranchController::class,'edit']);
     Route::post('/branch/update', [BranchController::class,'update']);
     Route::post('/branch/delete', [BranchController::class,'destroy']);
-
 
 });
 
