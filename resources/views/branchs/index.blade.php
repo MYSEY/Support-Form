@@ -70,7 +70,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{url('admin/branch/store ')}}" method="POST">
+                <form action="{{url('admin/branch/store ')}}" method="POST" class="needs-validation" novalidate>
                     @csrf
                     <div class="form-group">
                         <label class="form-label">Name(KH)</label>
@@ -109,7 +109,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{url('admin/branch/update')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{url('admin/branch/update')}}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                     @csrf
                     <input type="hidden" name="id" id="e_id" class="e_id" value="">
                     <div class="form-group">

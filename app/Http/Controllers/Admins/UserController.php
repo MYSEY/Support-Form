@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -12,7 +17,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('users.index');
+        $data = User::get();
+        return view('users.index', compact('data'));
     }
 
     /**
@@ -28,15 +34,49 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate(
+                [
+                    'password' => 'required',
+                    'confirm_password' => 'required',
+                ],
+                [
+                    'password.required' => 'The password field is required.',
+                    'confirm_password.min' => 'The confirm password must be at least :min characters.',
+                ]
+            );
+            if ($request->password != $request->confirm_password) {
+                return response()->json([
+                    'message' => "Password and Confirm password is incorrect. Please review!",
+                    'status'=>"error"
+                ]);
+            }
+            $data = $request->all();
+            $data['created_by'] = Auth::user()->id;
+            $data['password']   = Hash::make($request->password);
+            User::create($data);
+            return response()->json([
+                'message' => "User created successfully.",
+                'status'=>"success"
+            ]);
+            // Toastr::success('User created successfully.','Success');
+            // return redirect()->back();
+            DB::commit();
+        } catch (\Throwable $exp) {
+            return response()->json(['errors' => $exp]);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        //
+        $data = User::where('id',$request->id)->first();
+        DB::commit();
+        return response()->json([
+            'data'=>$data
+        ]);
     }
 
     /**
@@ -58,8 +98,16 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        try{
+            User::destroy($request->id);
+            Toastr::success('User deleted successfully.','Success');
+            return redirect()->back();
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('User delete fail.','Error');
+            return redirect()->back();
+        }
     }
 }

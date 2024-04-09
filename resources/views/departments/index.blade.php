@@ -61,7 +61,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{url('admin/department/store')}}" method="POST" enctype="multipart/form-data" >
+                <form action="{{url('admin/department/store')}}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate >
                     @csrf
                     <div class="form-group">
                         <label class="form-label" >Name(KH)</label>
@@ -92,16 +92,16 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{url('admin/department/update')}}" method="POST">
+                <form action="{{url('admin/department/update')}}" method="POST" class="needs-validation" novalidate>
                     @csrf
                     <input type="hidden" name="id" class="e_id" value="">
                     <div class="form-group">
                         <label class="form-label">Name(KH)</label>
-                        <input type="text" id="e_name_khmer" name="name_khmer" class="form-control">
+                        <input type="text" id="e_name_khmer" name="name_khmer" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Name(EN)</label>
-                        <input type="text" id="e_name_english" name="name_english"class="form-control">
+                        <input type="text" id="e_name_english" name="name_english"class="form-control" required>
                     </div>
                     <div class="float-lg-right">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

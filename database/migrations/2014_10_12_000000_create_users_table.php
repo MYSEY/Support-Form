@@ -17,11 +17,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('user');
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('autoassign')->nullable();
+            $table->integer('rating')->nullable();
             $table->string('status')->nullable();
+            $table->dateTime('deleted_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -29,6 +33,7 @@ return new class extends Migration
         DB::table('users')->insert(
             [
                 [
+                    'user'=>'Admin',
                     'name'=>'Admin',
                     'email'=>'admin@gmail.com',
                     'password'=>Hash::make('Camma@123'),
