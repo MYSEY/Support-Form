@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admins\BranchController;
-use App\Http\Controllers\Admins\DashboardController;
-use App\Http\Controllers\Admins\DepartmentController;
-use App\Http\Controllers\Admins\StatusesController;
-use App\Http\Controllers\Admins\TicketController;
-use App\Http\Controllers\Admins\UserController;
-use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admins\UserController;
+use App\Http\Controllers\Admins\BranchController;
+use App\Http\Controllers\Admins\TicketController;
+use App\Http\Controllers\Admins\PriorityController;
+use App\Http\Controllers\Admins\StatusesController;
+use App\Http\Controllers\Admins\DashboardController;
+use App\Http\Controllers\Admins\DepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/branch/update', [BranchController::class,'update']);
     Route::post('/branch/delete', [BranchController::class,'destroy']);
 
+    Route::resource('priority', PriorityController::class);
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
