@@ -5,14 +5,14 @@
         <div id="panel-1" class="panel">
             <div class="panel-hdr">
                 <h2>
-                    Priority
+                    Issue Type
                 </h2>
             </div>
             
             <div class="panel-container show">
                 <div class="panel-tag">
                     <div class="text-lg-right">
-                        <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#priority-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                        <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#issue-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
                     </div>
                 </div>
                 <div class="panel-content">
@@ -27,7 +27,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (count($data)>0)
+                            {{-- @if (count($data)>0)
                                 @foreach ($data as $key=>$item)
                                     <tr>
                                         <td class="ids">{{$item->id}}</td>
@@ -41,7 +41,7 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                            @endif
+                            @endif --}}
                         </tbody>
                     </table>
                 </div>
@@ -51,25 +51,21 @@
 </div>
 
 <!-- Modal Create New Priority -->
-<div class="modal custom-modal fade" id="priority-create" role="dialog" tabindex="-1" aria-hidden="true">
+<div class="modal custom-modal fade" id="issue-create" role="dialog" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add New Priority</h5>
+                <h5 class="modal-title">Add New Issue Type</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="fal fa-times"></i></span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{url('admin/priority')}}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <form action="{{url('admin/issue-type')}}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                     @csrf
                     <div class="form-group">
                         <label class="form-label">Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Priority Color</label>
-                        <input type="color" class="form-control" name="color">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name">
                     </div>
                     <div class="float-lg-right">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -82,27 +78,23 @@
 </div>
 
 <!-- Modal Edit Priority -->
-<div class="modal fade" id="editPriority" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="editIssueType" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit priority</h5>
+                <h5 class="modal-title">Edit Issue Type</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="fal fa-times"></i></span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{url('admin/priority/update')}}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <form action="{{url('admin/issue-type/update')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="id" class="e_id" id="e_id" value="">
                     <div class="form-group">
                         <label class="form-label">Name <span class="text-danger">*</span></label>
                         <input type="text" id="e_name" class="form-control @error('name') is-invalid @enderror" name="name">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Priority Color</label>
-                        <input type="color" class="form-control" id="e_color" name="color">
                     </div>
                     <div class="float-lg-right">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -157,7 +149,7 @@
                             $('#e_id').val(response.success.id);
                             $('#e_name').val(response.success.name);
                             $('#e_color').val(response.success.color);
-                            $('#editPriority').modal('show');
+                            $('#editIssueType').modal('show');
                         }
                     }
                 });

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admins\TicketController;
 use App\Http\Controllers\Admins\PriorityController;
 use App\Http\Controllers\Admins\StatusesController;
 use App\Http\Controllers\Admins\DashboardController;
+use App\Http\Controllers\Admins\IssueTypeController;
 use App\Http\Controllers\Admins\DepartmentController;
 
 /*
@@ -61,6 +62,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/branch/delete', [BranchController::class,'destroy']);
 
     Route::resource('priority', PriorityController::class);
+    Route::resource('issue-type', IssueTypeController::class);
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

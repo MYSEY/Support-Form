@@ -135,7 +135,7 @@
                                 </a>
                             </li>
 
-                            <li class="@if (in_array(Request::instance()->segment(2), ['branch','department','statuses','priority'])) active @endif">
+                            <li class="@if (in_array(Request::instance()->segment(2), ['branch','department','statuses','priority','issue-type'])) active @endif">
                                 <a href="#" title="Theme Settings" data-filter-tags="theme settings">
                                     <i class="fal fa-cog"></i>
                                     <span class="nav-link-text" data-i18n="nav.theme_settings">Settings</span>
@@ -179,6 +179,11 @@
                                     <li class="@if (in_array(Request::instance()->segment(2), ['priority'])) active @endif">
                                         <a href="{{url('admin/priority')}}" title="Priority" data-filter-tags="theme settings Priority">
                                             <span class="nav-link-text">Priority</span>
+                                        </a>
+                                    </li>
+                                    <li class="@if (in_array(Request::instance()->segment(2), ['issue-type'])) active @endif">
+                                        <a href="{{url('admin/issue-type')}}" title="issue-type" data-filter-tags="theme settings issue-type">
+                                            <span class="nav-link-text">Issue Type</span>
                                         </a>
                                     </li>
                                 </ul>
