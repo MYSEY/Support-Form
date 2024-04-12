@@ -34,7 +34,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        try {
+        // try {
             $request->validate(
                 [
                     'password' => 'required',
@@ -62,9 +62,9 @@ class UserController extends Controller
             // Toastr::success('User created successfully.','Success');
             // return redirect()->back();
             DB::commit();
-        } catch (\Throwable $exp) {
-            return response()->json(['errors' => $exp]);
-        }
+        // } catch (\Throwable $exp) {
+        //     return response()->json(['errors' => $exp]);
+        // }
     }
 
     /**
@@ -90,9 +90,27 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        try{
+            $data = User::find($request->id);
+            $data['user']  = $request->user;
+            $data['name']  = $request->name;
+            $data['email']  = $request->email;
+            $data['autoassign']  = $request->autoassign;
+            $data['updated_by']  = Auth::user()->id;
+            $data->save();
+            return response()->json([
+                'message' => "Update created successfully.",
+                'status'=>"success"
+            ]);
+            // Toastr::success('User updated successfully.','Success');
+            // return redirect()->back();
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('User updated fail.','Error');
+            return redirect()->back();
+        }
     }
 
     /**

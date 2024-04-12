@@ -24,9 +24,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'signature',
         'autoassign',
         'rating',
         'status',
+        'created_by',
+        'updated_by',
         'deleted_at',
     ];
 
