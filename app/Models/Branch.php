@@ -11,7 +11,7 @@ class Branch extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'branchs';
+    protected $table = 'branches';
     protected $guarded = ['id'];
     protected $fillable = [
         'branch_name_kh',

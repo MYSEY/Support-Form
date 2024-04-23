@@ -15,12 +15,14 @@
         <!-- base css -->
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/vendors.bundle.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/app.bundle.css')}}">
+        <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/notifications/sweetalert2/sweetalert2.bundle.css')}}">
         <!-- Place favicon.ico in the root directory -->
         <link rel="apple-touch-icon" sizes="180x180" href="{{asset('/admins/img/favicon.ico')}}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{asset('/admins/img/favicon.ico')}}">
         <link rel="mask-icon" href="{{asset('admins/img/favicon/safari-pinned-tab.svg')}}" color="#5bbad5">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/datagrid/datatables/datatables.bundle.css')}}">
         <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+        
     </head>
     <body class="mod-bg-1 ">
         <!-- DOC: script to save and load page settings -->
@@ -108,21 +110,19 @@
                         </div>
                         
                         <ul id="js-nav-menu" class="nav-menu">
-                            <li class="active open">
-                                <li class="active">
-                                    <a href="{{url('admin/dashboad')}}" title="Support Form Dashboard" data-filter-tags="application intel support form dashboard">
-                                        <i class="fal fa-tachometer-alt"></i>
-                                        <span class="nav-link-text" data-i18n="nav.application_intel_marketing_dashboard">Dashboard</span>
-                                    </a>
-                                </li>
+                            <li class="@if (Request::instance()->segment(2) == 'dashboad') active @endif">
+                                <a href="{{url('admin/dashboad')}}" title="Support Form Dashboard" data-filter-tags="application intel support form dashboard">
+                                    <i class="fal fa-tachometer-alt"></i>
+                                    <span class="nav-link-text">Dashboard</span>
+                                </a>
                             </li>
-                            <li class="">
+                            <li class="@if (Request::instance()->segment(2) == 'ticket') active @endif">
                                 <a href="{{url('admin/ticket')}}" title="Support Form Tickets" data-filter-tags="application intel support form Tickets">
                                     <i class="fal fa-ticket-alt"></i>
                                     <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
                                 </a>
                             </li>
-                            <li>
+                            <li class="@if (Request::instance()->segment(2) == 'user') active @endif">
                                 <a href="{{url('admin/user')}}" title="Users" data-filter-tags="users">
                                     <i class="fal fa-users"></i>
                                     <span class="nav-link-text" data-i18n="nav.user">Users</span>
@@ -135,7 +135,7 @@
                                 </a>
                             </li>
 
-                            <li>
+                            <li class="@if (in_array(Request::instance()->segment(2), ['branch','department','statuses','priority','issue-type'])) active @endif">
                                 <a href="#" title="Theme Settings" data-filter-tags="theme settings">
                                     <i class="fal fa-cog"></i>
                                     <span class="nav-link-text" data-i18n="nav.theme_settings">Settings</span>
@@ -161,19 +161,29 @@
                                             <span class="nav-link-text" data-i18n="nav.help_desk">Knowledgebase</span>
                                         </a>
                                     </li>
-                                    <li>
+                                    <li class="@if (in_array(Request::instance()->segment(2), ['statuses'])) active @endif">
                                         <a href="{{url('admin/statuses')}}" title="Status" data-filter-tags="theme settings Status">
                                             <span class="nav-link-text" data-i18n="nav.help_desk">Statuses</span>
                                         </a>
                                     </li>
-                                    <li>
+                                    <li class="@if (in_array(Request::instance()->segment(2), ['department'])) active @endif">
                                         <a href="{{url('admin/department')}}" title="Departments" data-filter-tags="theme settings Departments">
                                             <span class="nav-link-text" data-i18n="nav.department">Department</span>
                                         </a>
                                     </li>
-                                    <li>
+                                    <li class="@if (in_array(Request::instance()->segment(2), ['branch'])) active @endif">
                                         <a href="{{url('admin/branch')}}" title="Branch" data-filter-tags="theme settings branch">
                                             <span class="nav-link-text" data-i18n="nav.department">Branch</span>
+                                        </a>
+                                    </li>
+                                    <li class="@if (in_array(Request::instance()->segment(2), ['priority'])) active @endif">
+                                        <a href="{{url('admin/priority')}}" title="Priority" data-filter-tags="theme settings Priority">
+                                            <span class="nav-link-text">Priority</span>
+                                        </a>
+                                    </li>
+                                    <li class="@if (in_array(Request::instance()->segment(2), ['issue-type'])) active @endif">
+                                        <a href="{{url('admin/issue-type')}}" title="issue-type" data-filter-tags="theme settings issue-type">
+                                            <span class="nav-link-text">Issue Type</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -662,10 +672,13 @@
         <!-- END Page Settings -->
         <script src="{{asset('admins/js/vendors.bundle.js')}}"></script>
         <script src="{{asset('admins/js/app.bundle.js')}}"></script>
+        <script src="{{asset('admins/js/notifications/sweetalert2/sweetalert2.bundle.js')}}"></script>
         <script type="text/javascript">
             /* Activate smart panels */
             $('#js-page-content').smartPanel();
         </script>
+
+
         <!-- The order of scripts is irrelevant. Please check out the plugin pages for more details about these plugins below: -->
         <script src="{{asset('admins/js/statistics/peity/peity.bundle.js')}}"></script>
         <script src="{{asset('admins/js/statistics/flot/flot.bundle.js')}}"></script>
@@ -675,6 +688,11 @@
         {!! Toastr::message() !!}
         @yield('script')
         <script>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
             // Example starter JavaScript for disabling form submissions if there are invalid fields
             (function()
             {
@@ -698,7 +716,6 @@
                     });
                 }, false);
             })();
-    
         </script>
     </body>
 </html>

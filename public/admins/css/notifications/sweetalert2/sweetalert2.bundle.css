@@ -1093,7 +1093,7 @@ body.swal2-no-backdrop .swal2-shown {
     border: 0;
     border-radius: 0.25em;
     background: initial;
-    background-color: #886ab5;
+    /* background-color: #886ab5; */
     color: #fff;
     font-size: 0.875em; }
   .swal2-styled.swal2-cancel {
