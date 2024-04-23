@@ -63,7 +63,7 @@
                     @csrf
                     <div class="form-group">
                         <label class="form-label">Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}" required>
                     </div>
                     <div class="float-lg-right">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
