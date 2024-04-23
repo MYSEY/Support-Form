@@ -35,8 +35,9 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     // users 
     Route::get('/user', [UserController::class, 'index']);
-    Route::post('/user/show', [UserController::class, 'show']);
+    Route::get('/user/show', [UserController::class, 'show']);
     Route::post('/user/create', [UserController::class, 'store']);
+    Route::post('/user/update', [UserController::class, 'update']);
     Route::post('/user/delete', [UserController::class, 'destroy']);
 
     // Ticket  
