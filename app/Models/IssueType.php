@@ -16,6 +16,12 @@ class IssueType extends Model
     
     protected $fillable = [
         'name',
+        'type',
+        'req',
+        'category_type',
+        'department_id',
+        'branch_id',
+        'value',
         'created_by',
         'updated_by',
         'deleted_at',

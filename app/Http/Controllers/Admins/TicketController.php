@@ -20,7 +20,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
+        return view('tickets.form-create-ticket');
     }
 
     /**
@@ -44,7 +44,7 @@ class TicketController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('tickets.form-edit-ticket');
     }
 
     /**
