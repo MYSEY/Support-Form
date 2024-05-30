@@ -42,7 +42,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     // Ticket  
     Route::get('/ticket', [TicketController::class, 'index']);
-    Route::get('/ticket/create', [TicketController::class, 'create']);
+    Route::get('/ticket/create/{id}', [TicketController::class, 'create']);
     Route::get('/ticket/update', [TicketController::class, 'edit']);
 
     // Statuses
@@ -66,6 +66,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     Route::resource('priority', PriorityController::class);
     Route::resource('issue-type', IssueTypeController::class);
+    Route::post('/issue-type/ids', [IssueTypeController::class,'dataSelect']);
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

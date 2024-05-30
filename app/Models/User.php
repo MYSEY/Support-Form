@@ -25,6 +25,8 @@ class User extends Authenticatable
         'email',
         'email_verified_at',
         'password',
+        'department_id',
+        'branch_id',
         'signature',
         'afterreply',
         'autostart',

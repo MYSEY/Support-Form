@@ -38,7 +38,7 @@ class IssueTypeController extends Controller
      */
     public function store(IssueTypeRequest $request)
     {
-        // try {
+        try {
             $data = $request->all();
             $data['created_by'] = Auth::user()->id;
             IssueType::create($data);
@@ -49,12 +49,12 @@ class IssueTypeController extends Controller
                 'status'=>"success"
             ]);
             // return redirect()->back();
-        // } catch (\Throwable $exp) {
-        //     DB::rollback();
-        //      return response()->json(['errors' => $exp]);
-        //     Toastr::error('Created Issue Type fail','Error');
-        //     return redirect()->back();
-        // }
+        } catch (\Throwable $exp) {
+            DB::rollback();
+             return response()->json(['errors' => $exp]);
+            // Toastr::error('Created Issue Type fail','Error');
+            // return redirect()->back();
+        }
     }
 
     /**
@@ -69,6 +69,19 @@ class IssueTypeController extends Controller
             'success'=>$data,
             'branch'=>$branch,
             'department'=>$department,
+        ]);
+    }
+
+    public function dataSelect(Request $request)
+    {
+        $data = IssueType::when($request->department_id, function ($query, $department_id) {
+            $query->where('department_id', $department_id);
+        })
+        ->when($request->branch_id, function ($query, $branch_id) {
+            $query->where('branch_id', $branch_id);
+        })->get();
+        return response()->json([
+            'data'=>$data
         ]);
     }
 

@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
+use App\Models\Department;
+use App\Models\IssueType;
+use App\Models\Priority;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
@@ -12,7 +17,10 @@ class TicketController extends Controller
      */
     public function index()
     {
-        return view('tickets.index');
+        // dd(Auth::user()->branch_id);
+        $branch = Branch::get();
+        $department = Department::get();
+        return view('tickets.index', compact('department', 'branch'));
     }
 
     /**
@@ -20,7 +28,9 @@ class TicketController extends Controller
      */
     public function create()
     {
-        return view('tickets.form-create-ticket');
+        $issuetype= IssueType::orderBy('id','DESC')->get();
+        $priority= Priority::get();
+        return view('tickets.form-create-ticket', compact('issuetype', 'priority'));
     }
 
     /**

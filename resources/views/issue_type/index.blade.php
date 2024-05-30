@@ -323,6 +323,27 @@
                     $("#title-sub-type").text("Options for this checkbox, enter one option per line. Each line will be a choice your customers can choose from, multiple choices are possible.");
                 }
             });
+            $('#e_select-type').click(function(){
+                var selectedValue = $(this).val();
+                $("#e_example-textarea").val("");
+                if(selectedValue === 'text') {
+                    $("#e_title-sub-type").text("Maximum length (250 chars)");
+                    $("#e_example-textarea").attr("maxlength", "250");
+                    $("#e_example-textarea").data("permiss", "" + 1);
+                } else if(selectedValue === 'radio') {
+                    $(".e_textarea").removeAttr("maxlength");
+                    $("#e_title-sub-type").text("Options for this radio button, enter one option per line (each line will create a new radio button value to choose from). You need to enter at least two options!");
+                    $("#e_example-textarea").data("permiss", "" + 2);
+                } else if( selectedValue ==="select"){
+                    $(".e_textarea").removeAttr("maxlength");
+                    $("#e_title-sub-type").text("Options for this select box, enter one option per line (each line will be a choice your customers can choose from). You need to enter at least two options!");
+                    $("#e_example-textarea").data("permiss", "" + 3);
+                }else if(selectedValue ==="checkbox"){
+                    $(".e_textarea").removeAttr("maxlength");
+                    $("#e_example-textarea").data("permiss", "" + 4);
+                    $("#e_title-sub-type").text("Options for this checkbox, enter one option per line. Each line will be a choice your customers can choose from, multiple choices are possible.");
+                }
+            });
 
             $("#btn-save").on("click", function() {
                 var num_miss = 0;
