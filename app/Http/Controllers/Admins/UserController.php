@@ -34,7 +34,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // try {
+        try {
             $request->validate(
                 [
                     'password' => 'required',
@@ -62,9 +62,9 @@ class UserController extends Controller
             // Toastr::success('User created successfully.','Success');
             // return redirect()->back();
             DB::commit();
-        // } catch (\Throwable $exp) {
-        //     return response()->json(['errors' => $exp]);
-        // }
+        } catch (\Throwable $exp) {
+            return response()->json(['errors' => $exp]);
+        }
     }
 
     /**
@@ -94,11 +94,28 @@ class UserController extends Controller
     {
         try{
             $data = User::find($request->id);
-            $data['user']  = $request->user;
-            $data['name']  = $request->name;
-            $data['email']  = $request->email;
-            $data['autoassign']  = $request->autoassign;
-            $data['updated_by']  = Auth::user()->id;
+            $data['user']                       = $request->user;
+            $data['name']                       = $request->name;
+            $data['email']                      = $request->email;
+            $data['signature']                 = $request->signature;
+            $data['autoassign']                 = $request->autoassign;
+            $data["afterreply"]                 = $request->afterreply;
+            $data["autostart"]                  = $request->autostart;
+            $data["notify_customer_new"]        = $request->notify_customer_new;
+            $data["notify_customer_reply"]      = $request->notify_customer_reply;
+            $data["show_suggested"]             = $request->show_suggested;
+            $data["autoreload"]                 = $request->autoreload;
+            $data["secmin"]                     = $request->secmin;
+            $data["notify_new_unassigned"]      = $request->notify_new_unassigned;
+            $data["notify_new_my"]              = $request->notify_new_my;
+            $data["notify_reply_unassigned"]    = $request->notify_reply_unassigned;
+            $data["notify_reply_my"]            = $request->notify_reply_my;
+            $data["notify_overdue_unassigned"]  = $request->notify_overdue_unassigned;
+            $data["notify_overdue_my"]          = $request->notify_overdue_my;
+            $data["notify_assigned"]            = $request->notify_assigned;
+            $data["notify_note"]                = $request->notify_note;
+            $data["notify_pm"]                  = $request->notify_pm;
+            $data['updated_by']                 = Auth::user()->id;
             $data->save();
             return response()->json([
                 'message' => "Update created successfully.",

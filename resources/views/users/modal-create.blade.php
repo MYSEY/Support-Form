@@ -13,54 +13,54 @@
                         <div class="panel-container show">
                             <div class="panel-content">
                                 <div class="demo-v-spacing">
-                                    <ul class="nav nav-tabs" role="tablist">
+                                    <ul class="nav nav-pills" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active fs-xs py-1 px-1" data-toggle="tab" href="#tab-user" role="tab">
+                                            <a class="nav-link fs-xs py-1 px-1 nav-link-tab active" data-toggle="tab" id="btn-tab-user" data-dismiss="1" href="#tab-user" role="tab">
                                                 <span class="hidden-sm-down ml-1">Profile information</span>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link fs-xs py-1 px-1" data-toggle="tab" href="#tab-profile" role="tab">
+                                            <a class="nav-link fs-xs py-1 px-1 nav-link-tab" data-toggle="tab" data-dismiss="2" id="btn-tab-2" href="#tab-profile" role="tab">
                                                 <span class="hidden-sm-down ml-1">Permissions</span>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link fs-xs py-1 px-1" data-toggle="tab" href="#tab-time" role="tab">
+                                            <a class="nav-link fs-xs py-1 px-1 nav-link-tab" data-toggle="tab" data-dismiss="3" id="btn-tab-3" href="#tab-time" role="tab">
                                                 <span class="hidden-sm-down ml-1">Signature</span>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link fs-xs py-1 px-1" data-toggle="tab" href="#tab-preferences" role="tab">
+                                            <a class="nav-link fs-xs py-1 px-1 nav-link-tab" data-toggle="tab" data-dismiss="4" id="btn-tab-4" href="#tab-preferences" role="tab">
                                                 <span class="hidden-sm-down ml-1">Preferences</span>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link fs-xs py-1 px-1" data-toggle="tab" href="#tap-notifications" role="tab">
+                                            <a class="nav-link fs-xs py-1 px-1 nav-link-tab" data-toggle="tab" data-dismiss="5" id="btn-tab-5" href="#tap-notifications" role="tab">
                                                 <span class="hidden-sm-down ml-1">Notifications</span>
                                             </a>
                                         </li>
                                     </ul>
                                     <div class="tab-content py-3">
-                                        <div class="tab-pane fade show active" id="tab-user" role="tabpanel">
+                                        <div class="tab-pane fade show active tab-pane-tab" id="tab-user" role="tabpanel">
                                             <div class="form-group">
-                                                <label class="form-label" for="user">Real name</label>
+                                                <label class="form-label" for="user">Real name <span class="text-danger">*</span></label>
                                                 <input type="text" id="user" class="form-control user_required" name="user" required>
                                             </div>
                                             <div class="form-group">
-                                                <label class="form-label" for="email">Email</label>
+                                                <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
                                                 <input type="email" id="email" name="email" class="form-control user_required" placeholder="Email" required>
                                             </div>
                                             <div class="form-group">
-                                                <label class="form-label" for="name">Username</label>
+                                                <label class="form-label" for="name">Username <span class="text-danger">*</span></label>
                                                 <input type="text" id="name" name="name" class="form-control user_required" required>
                                             </div>
                                             <div class="form-group">
-                                                <label class="form-label" for="password">Password</label>
+                                                <label class="form-label" for="password">Password <span class="text-danger">*</span></label>
                                                 <input type="password" id="password" class="form-control user_required" name="password" required>
                                                 <p id="passwordError" style="color: red;"></p>
                                             </div>
                                             <div class="form-group">
-                                                <label class="form-label" for="confirm_password">Confirm password</label>
+                                                <label class="form-label" for="confirm_password">Confirm password <span class="text-danger">*</span></label>
                                                 <input type="password" id="confirm_password" class="form-control user_required" name="confirm_password" required>
                                             </div>
                                             <div class="form-group">
@@ -74,28 +74,28 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="tab-profile" role="tabpanel">
+                                        <div class="tab-pane fade tab-pane-tab" id="tab-profile" role="tabpanel">
 
                                         </div>
-                                        <div class="tab-pane fade" id="tab-time" role="tabpanel">
+                                        <div class="tab-pane fade tab-pane-tab" id="tab-time" role="tabpanel">
                                             <label class="form-label" for="signature">Signature (max 1000 chars)</label>
                                             <textarea class="form-control" id="signature" name="signature" rows="6" maxlength="1000"></textarea>
                                         </div>
-                                        <div class="tab-pane fade" id="tab-preferences" role="tabpanel">
+                                        <div class="tab-pane fade tab-pane-tab" id="tab-preferences" role="tabpanel">
                                             <h5 class="frame-heading">After replying to a ticket</h5>
                                             <div class="frame-wrap">
                                                 <div class="demo">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" class="custom-control-input" id="defaultUncheckedRadio1" name="defaultExampleRadios" checked="">
-                                                        <label class="custom-control-label" for="defaultUncheckedRadio1">Show the ticket I just replied to</label>
+                                                        <input type="radio" class="custom-control-input replying_afterreply" id="afterreply0" name="defaultExampleRadios" value="0" checked="">
+                                                        <label class="custom-control-label" for="afterreply0">Show the ticket I just replied to</label>
                                                     </div>
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" class="custom-control-input" id="defaultCheckedRadio2" name="defaultExampleRadios">
-                                                        <label class="custom-control-label" for="defaultCheckedRadio2">Return to main administration page</label>
+                                                        <input type="radio" class="custom-control-input replying_afterreply" id="afterreply1" name="defaultExampleRadios" value="1">
+                                                        <label class="custom-control-label" for="afterreply1">Return to main administration page</label>
                                                     </div>
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" class="custom-control-input active" id="defaultUncheckedRadio3" name="defaultExampleRadios">
-                                                        <label class="custom-control-label" for="defaultUncheckedRadio3">Open next ticket that needs my reply</label>
+                                                        <input type="radio" class="custom-control-input replying_afterreply" id="afterreply2" name="defaultExampleRadios" value="2">
+                                                        <label class="custom-control-label" for="afterreply2">Open next ticket that needs my reply</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -103,30 +103,30 @@
                                             <div class="frame-wrap">
                                                 <div class="demo">
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="defaultUnchecked1" checked="">
-                                                        <label class="custom-control-label" for="defaultUnchecked1">Automatically start timer when I open a ticket</label>
+                                                        <input type="checkbox" class="custom-control-input" id="autostart" checked="">
+                                                        <label class="custom-control-label" for="autostart">Automatically start timer when I open a ticket</label>
                                                     </div>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="defaultChecked1" checked="">
-                                                        <label class="custom-control-label" for="defaultChecked1">Select notify customer option in the new ticket form</label>
+                                                        <input type="checkbox" class="custom-control-input" id="notify_customer_new" checked="">
+                                                        <label class="custom-control-label" for="notify_customer_new">Select notify customer option in the new ticket form</label>
                                                     </div>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="defaultIndeterminate1" checked="">
-                                                        <label class="custom-control-label" for="defaultIndeterminate1">Select notify customer option in the ticket reply form</label>
+                                                        <input type="checkbox" class="custom-control-input" id="notify_customer_reply" checked="">
+                                                        <label class="custom-control-label" for="notify_customer_reply">Select notify customer option in the ticket reply form</label>
                                                     </div>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="defaultIndeterminate12" checked="">
-                                                        <label class="custom-control-label" for="defaultIndeterminate12">Show what knowledgebase articles were suggested to customers</label>
+                                                        <input type="checkbox" class="custom-control-input" id="show_suggested" checked="">
+                                                        <label class="custom-control-label" for="show_suggested">Show what knowledgebase articles were suggested to customers</label>
                                                     </div>
                                                 </div>
                                                 <div class="custom-control custom-checkbox" style="display: flex; -ms-flex-align: center; align-items: center; margin-top: -5px;">
-                                                    <input type="checkbox" class="custom-control-input" id="defaultIndeterminate3">
-                                                    <label class="custom-control-label" for="defaultIndeterminate3" style="font-weight: 1 !important;">Automatically reload page with ticket list every:</label>
+                                                    <input type="checkbox" class="custom-control-input" id="autoreload">
+                                                    <label class="custom-control-label" for="autoreload" style="font-weight: 1 !important;">Automatically reload page with ticket list every:</label>
                                                     <div class="form-group" style="width: 45px !important; margin-left: 8px; margin-bottom: 0;">
-                                                        <input type="text" class="form-control" name="reload_time" value="30" maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]+/,'')">
+                                                        <input type="text" class="form-control" id="reload_time" name="reload_time" value="30" maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]+/,'')">
                                                     </div>
                                                     <div class="form-group ml-1">
-                                                        <select class="form-control" id="example-select" style="border: 0px solid #E5E5E5 !important;">
+                                                        <select class="form-control" id="secmin" style="border: 0px solid #E5E5E5 !important;">
                                                             <option>seconds</option>
                                                             <option>minutes</option>
                                                         </select>
@@ -134,48 +134,48 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="tap-notifications" role="tabpanel">
+                                        <div class="tab-pane fade tab-pane-tab" id="tap-notifications" role="tabpanel">
                                             <h5 class="frame-heading">The help desk will send an email notification when:</h5>
                                             <div class="frame-wrap">
                                                 <div class="demo">
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="defaultUnchecked2" checked="">
-                                                        <label class="custom-control-label" for="defaultUnchecked2">A new ticket is submitted with owner: Unassigned</label>
+                                                        <input type="checkbox" class="custom-control-input" id="notify_new_unassigned" checked="">
+                                                        <label class="custom-control-label" for="notify_new_unassigned">A new ticket is submitted with owner: Unassigned</label>
                                                     </div>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="defaultChecked2" checked="">
-                                                        <label class="custom-control-label" for="defaultChecked2">A new ticket is submitted with owner: Assigned to me</label>
-                                                    </div>
-                                                    <br>
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="unassigned1" checked="">
-                                                        <label class="custom-control-label" for="unassigned1">Client responds to a ticket with owner: Unassigned</label>
-                                                    </div>
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="assigned1" checked="">
-                                                        <label class="custom-control-label" for="assigned1">Client responds to a ticket with owner: Assigned to me</label>
+                                                        <input type="checkbox" class="custom-control-input" id="notify_new_my" checked="">
+                                                        <label class="custom-control-label" for="notify_new_my">A new ticket is submitted with owner: Assigned to me</label>
                                                     </div>
                                                     <br>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="Unassigned2" checked="">
-                                                        <label class="custom-control-label" for="Unassigned2">A ticket is overdue with owner: Unassigned*</label>
+                                                        <input type="checkbox" class="custom-control-input" id="notify_reply_unassigned" checked="">
+                                                        <label class="custom-control-label" for="notify_reply_unassigned">Client responds to a ticket with owner: Unassigned</label>
                                                     </div>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="assigned3" checked="">
-                                                        <label class="custom-control-label" for="assigned3">A ticket is overdue with owner: Assigned to me*</label>
+                                                        <input type="checkbox" class="custom-control-input" id="notify_reply_my" checked="">
+                                                        <label class="custom-control-label" for="notify_reply_my">Client responds to a ticket with owner: Assigned to me</label>
                                                     </div>
                                                     <br>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="assigned4" checked="">
-                                                        <label class="custom-control-label" for="assigned4">A ticket is assigned to me</label>
+                                                        <input type="checkbox" class="custom-control-input" id="notify_overdue_unassigned" checked="">
+                                                        <label class="custom-control-label" for="notify_overdue_unassigned">A ticket is overdue with owner: Unassigned*</label>
                                                     </div>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="assigned5" checked="">
-                                                        <label class="custom-control-label" for="assigned5">Someone adds a note to a ticket assigned to me</label>
+                                                        <input type="checkbox" class="custom-control-input" id="notify_overdue_my" checked="">
+                                                        <label class="custom-control-label" for="notify_overdue_my">A ticket is overdue with owner: Assigned to me*</label>
+                                                    </div>
+                                                    <br>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="notify_assigned" checked="">
+                                                        <label class="custom-control-label" for="notify_assigned">A ticket is assigned to me</label>
                                                     </div>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="message" checked="">
-                                                        <label class="custom-control-label" for="message">A private message is sent to me</label>
+                                                        <input type="checkbox" class="custom-control-input" id="notify_note" checked="">
+                                                        <label class="custom-control-label" for="notify_note">Someone adds a note to a ticket assigned to me</label>
+                                                    </div>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="notify_pm" checked="">
+                                                        <label class="custom-control-label" for="notify_pm">A private message is sent to me</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -187,8 +187,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btn-back" class="btn btn-outline-secondary waves-effect waves-themed">Back</button>
-                    <button type="submit" id="btn-save" class="btn btn-primary ml-auto waves-effect waves-themed">Next</button>
+                    <button type="button" id="btn-back" data-dismiss="" class="btn btn-outline-secondary waves-effect waves-themed">Back</button>
+                    <button type="button" id="btn-save" data-dismiss="" class="btn btn-primary ml-auto waves-effect waves-themed">Next</button>
                 </div>
             </form>
         </div>

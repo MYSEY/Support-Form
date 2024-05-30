@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\IssueTypeRequest;
+use App\Models\Branch;
+use App\Models\Department;
 
 class IssueTypeController extends Controller
 {
@@ -17,8 +19,10 @@ class IssueTypeController extends Controller
      */
     public function index()
     {
+        $branch = Branch::orderBy('id','DESC')->get();
+        $department = Department::orderBy('id','DESC')->get();
         $data = IssueType::all();
-        return view('issue_type.index',compact('data'));
+        return view('issue_type.index',compact('branch','department','data'));
     }
 
     /**
@@ -39,12 +43,17 @@ class IssueTypeController extends Controller
             $data['created_by'] = Auth::user()->id;
             IssueType::create($data);
             DB::commit();
-            Toastr::success('Created Issue Type successfully.','Success');
-            return redirect()->back();
+            // Toastr::success('Created Issue Type successfully.','Success');
+            return response()->json([
+                'message' => "Create created successfully.",
+                'status'=>"success"
+            ]);
+            // return redirect()->back();
         } catch (\Throwable $exp) {
             DB::rollback();
-            Toastr::error('Created Issue Type fail','Error');
-            return redirect()->back();
+             return response()->json(['errors' => $exp]);
+            // Toastr::error('Created Issue Type fail','Error');
+            // return redirect()->back();
         }
     }
 
@@ -54,8 +63,25 @@ class IssueTypeController extends Controller
     public function show(Request $request)
     {
         $data = IssueType::where('id',$request->id)->first();
+        $branch = Branch::orderBy('id','DESC')->get();
+        $department = Department::orderBy('id','DESC')->get();
         return response()->json([
             'success'=>$data,
+            'branch'=>$branch,
+            'department'=>$department,
+        ]);
+    }
+
+    public function dataSelect(Request $request)
+    {
+        $data = IssueType::when($request->department_id, function ($query, $department_id) {
+            $query->where('department_id', $department_id);
+        })
+        ->when($request->branch_id, function ($query, $branch_id) {
+            $query->where('branch_id', $branch_id);
+        })->get();
+        return response()->json([
+            'data'=>$data
         ]);
     }
 
@@ -74,16 +100,27 @@ class IssueTypeController extends Controller
     {
         try {
             IssueType::where('id',$request->id)->update([
-                'name'    => $request->name,
+                'name'          => $request->name,
+                'type'          => $request->type,
+                'req'           => $request->req,
+                'category_type' => $request->category_type,
+                'department_id' => $request->department_id,
+                'branch_id'     => $request->branch_id,
+                'value'         => $request->value,
                 'updated_by'    => Auth::user()->id,
             ]);
             DB::commit();
-            Toastr::success('Updated Issue Type successfully.','Success');
-            return redirect()->back();
+            return response()->json([
+                'message' => "Update created successfully.",
+                'status'=>"success"
+            ]);
+            // Toastr::success('Updated Issue Type successfully.','Success');
+            // return redirect()->back();
         } catch (\Throwable $exp) {
             DB::rollback();
-            Toastr::error('Updated Issue Type fail','Error');
-            return redirect()->back();
+            return response()->json(['errors' => $exp]);
+            // Toastr::error('Updated Issue Type fail','Error');
+            // return redirect()->back();
         }
     }
 
