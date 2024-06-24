@@ -24,7 +24,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="ticket-subject">Subject: <span class="text-danger">*</span></label>
-                            <input type="text" name="ticket-subject" class="form-control">
+                            <input type="text" name="ticket-subject" class="form-control" id="ticket-subject">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="ticket-template">Select a ticket template:</label>
@@ -40,11 +40,11 @@
                             <label class="form-label">Ticket templates (<a type="button" href="#" >Manage ticket templates</a>)</label>
                             <div class="demo">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="ticket-bottom" name="defaultExampleRadios" checked="">
+                                    <input type="radio" class="custom-control-input ticket-templates" value="0" id="ticket-bottom" name="defaultExampleRadios" checked="">
                                     <label class="custom-control-label" for="ticket-bottom">Add to the bottom</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="ticket-replace-message" name="defaultExampleRadios">
+                                    <input type="radio" class="custom-control-input ticket-templates" value="1" id="ticket-replace-message" name="defaultExampleRadios">
                                     <label class="custom-control-label" for="ticket-replace-message">Replace message</label>
                                 </div>
                             </div>
@@ -54,9 +54,10 @@
                     </div>
 
                     <div class="col-xl-6">
-                        <div class="form-group">
-                            <label class="form-label" for="ticket-proiority">Priority: <span class="text-danger">*</span></label>
-                            <select class="form-control" id="ticket-proiority">
+                        <div class="form-group" >
+                            <label class="form-label" for="ticket-priority">Priority: <span class="text-danger">*</span></label>
+                            <select class="select2 form-control w-100 select2-hidden-accessible" id="ticket-priority">
+                                <option value=""></option>
                                 @foreach ($priority as $item)
                                     <option value="{{$item->id}}">{{ $item->name}}</option>
                                 @endforeach
@@ -64,12 +65,12 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="ticket-assign">Assign this ticket to:</label>
-                            <select class="form-control" id="ticket-assign">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                            <select class="select2 form-control w-100 select2-hidden-accessible" id="ticket-assign">
+                                <option value="unassigned" selected> > Unassigned < </option>
+                                <option value="auto-assign">  > Auto-assign <  </option>
+                                @foreach ($user_support as $user)
+                                    <option value="{{$user->id}}">{{ $user->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -105,8 +106,16 @@
                     </div>
                 </div>
                 <div class="text-md-right">
-                    <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/ticket')}}"  type="button">Cancel</a>
-                    <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn-save" type="button">Submit</button>
+                    <div class="btn-hidden-show">
+                        <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/ticket')}}"  type="button">Cancel</a>
+                        <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn-save" type="button">Submit</button>
+                    </div>
+                    <div class="btn-loading mt-3" style="display: none">
+                        <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -124,24 +133,36 @@
             dataIssueType({"department_id":department_id, "branch_id": branch_id});
 
             $("#btn-save").on("click", function() {
-                alert(34567890);
+                $(".btn-hidden-show").hide();
+                $(".btn-loading").css('display', 'block');
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('admin/issue-type') }}",
+                    url: "{{ url('admin/ticket/save') }}",
                     data: {
                         "_token": "{{ csrf_token() }}",
-                        department_id:ids.department_id,
-                        branch_id:ids.branch_id
+                        department_id:      department_id,
+                        branch_id:          branch_id,
+                        name:               $("#ticket-name").val(),
+                        email:              $("#ticket-email").val(),
+                        subject:            $("#ticket-subject").val(),
+                        priority:           $("#ticket-priority").val(),
+                        assignedby:         $("#ticket-assign").val(),
+                        due_date:           $("#ticket-due-date").val(),
+                        // attachments:        $("#ticket-file").val(),
+                        message:            $("#ticket-textarea").val(),
                     },
                     dataType: "JSON",
                     success: function(response) {
-                        let data = response.data;
-                        console.log(data);
+                        if (response.status == "error") {
+                            toastr.error(response.message);
+                        }else{
+                            toastr.success('Create ticket successfully.');
+                            window.location.replace("{{ URL('admin/ticket') }}"); 
+                        }
                     }
                 })
             });
         });
-        
 
         function dataIssueType(ids){
             $.ajax({
