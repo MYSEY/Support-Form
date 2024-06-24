@@ -22,10 +22,13 @@ return new class extends Migration
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('department_id')->nullable(); //integer('department_id');
+            $table->string('branch_id')->nullable(); //integer('branch_id');
             $table->string('signature')->nullable();
             $table->enum('afterreply', ['0', '1', '2'])->default('0');
             $table->enum('autostart', ['0', '1'])->default('0');
             $table->smallInteger('autoreload')->length(5)->nullable();
+            $table->string('secmin')->nullable();
             $table->enum('notify_customer_new', ['0', '1'])->default('0');
             $table->enum('notify_customer_reply', ['0', '1'])->default('0');
             $table->enum('show_suggested', ['0', '1'])->default('0');
