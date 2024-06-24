@@ -11,6 +11,7 @@ use App\Http\Controllers\Admins\StatusesController;
 use App\Http\Controllers\Admins\DashboardController;
 use App\Http\Controllers\Admins\IssueTypeController;
 use App\Http\Controllers\Admins\DepartmentController;
+use App\Http\Controllers\Admins\TicketReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +69,8 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::resource('priority', PriorityController::class);
     Route::resource('issue-type', IssueTypeController::class);
     Route::post('/issue-type/ids', [IssueTypeController::class,'dataSelect']);
+    Route::resource('ticket/report', TicketReportController::class);
+    
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

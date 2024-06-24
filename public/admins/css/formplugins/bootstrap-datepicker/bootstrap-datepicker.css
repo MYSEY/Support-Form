@@ -1116,7 +1116,7 @@ RESULT:
   color: #a1a8c3; }
 
 .datepicker {
-  width: 265px;
+  /* width: 265px; */
   padding: 10px; }
 
 /*# sourceMappingURL=bootstrap-datepicker.css.map */

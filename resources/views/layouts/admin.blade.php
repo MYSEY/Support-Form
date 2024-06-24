@@ -23,6 +23,7 @@
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/datagrid/datatables/datatables.bundle.css')}}">
         <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
         <link rel="stylesheet" media="screen, print" href="{{asset('/admins/css/formplugins/select2/select2.bundle.css')}}">
+        <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css')}}">
         
     </head>
     <body class="mod-bg-1 ">
@@ -130,10 +131,17 @@
                                 </a>
                             </li>
                             <li class="">
-                                <a href="" title="Reports" data-filter-tags="application intel Reports">
+                                <a href="#" title="Reports" data-filter-tags="application intel Reports">
                                     <i class="fal fa-chart-pie"></i>
                                     <span class="nav-link-text" data-i18n="nav.Reports">Reports</span>
                                 </a>
+                                <ul>
+                                    <li>
+                                        <a href="{{url('admin/ticket/report')}}" title="Tickets" data-filter-tags="application intel Tickets">
+                                            <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
 
                             <li class="@if (in_array(Request::instance()->segment(2), ['branch','department','statuses','priority','issue-type'])) active @endif">
@@ -688,6 +696,7 @@
         <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
         <script src="{{asset('admins/js/formplugins/select2/select2.bundle.js')}}"></script>
+        <script src="{{asset('admins/js/formplugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
 
         {!! Toastr::message() !!}
         @yield('script')
@@ -719,6 +728,17 @@
                         }, false);
                     });
                 }, false);
+                var controls = {
+                    leftArrow: '<i class="fal fa-angle-left" style="font-size: 1.25rem"></i>',
+                    rightArrow: '<i class="fal fa-angle-right" style="font-size: 1.25rem"></i>'
+                }
+                // minimum setup
+                $('.datepicker').datepicker(
+                {
+                    todayHighlight: true,
+                    orientation: "bottom left",
+                    templates: controls
+                });
 
 
                 $('.select2').select2();

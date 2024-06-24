@@ -77,4 +77,23 @@ class Ticket extends Model
     {
         return $this->belongsTo(User::class ,'updated_by');
     }
+
+    public function getTicketStatusAttribute(){
+        if ($this->status == 0) {
+            $Ticket_status = 'Open';
+        } else if($this->status == 1) {
+            $Ticket_status = 'Waition Replay';
+        }else if($this->status == 2){
+            $Ticket_status = 'Replied';
+        }else if($this->status == 3){
+            $Ticket_status = 'Resolved';
+        }else if($this->status == 4){
+            $Ticket_status = 'In Progress';
+        }else if($this->status == 5){
+            $Ticket_status = 'On Hold';
+        }else if($this->status == 6){
+            $Ticket_status = 'Fixed';
+        }
+        return $Ticket_status;
+    }
 }
