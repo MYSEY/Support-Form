@@ -962,7 +962,7 @@ S2.define('select2/results',[
 
     this.data.current(function (selected) {
       var selectedIds = $.map(selected, function (s) {
-        return s.id.toString();
+        return s.id;
       });
 
       var $options = self.$results

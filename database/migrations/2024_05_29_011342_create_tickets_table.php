@@ -16,13 +16,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
-            $table->string('trackid');
+            $table->string('trackid')->nullable();
             $table->integer('department_id')->nullable();
             $table->integer('branch_id')->nullable();
-            $table->enum('priority', ['0', '1', '2', '3'])->default('0');
+            $table->integer('priority')->nullable();
             $table->string('subject')->nullable();
             $table->mediumText('message')->nullable();
-            $table->message_html('message_html')->nullable();
+            $table->mediumText('message_html')->nullable();
             $table->bigInteger('dt')->nullable();
             $table->bigInteger('lastchange')->nullable();
             $table->bigInteger('firstreply')->nullable();
@@ -37,7 +37,7 @@ return new class extends Migration
             $table->smallInteger('replies')->nullable();
             $table->smallInteger('staffreplies')->nullable();
             $table->smallInteger('owner')->nullable();
-            $table->mediumInteger('assignedby')->nullable();
+            $table->integer('assignedby')->nullable();
             $table->time('time_worked')->nullable();
             $table->enum('lastreplier', ['0', '1'])->default('0');
             $table->smallInteger('replierid')->nullable();
