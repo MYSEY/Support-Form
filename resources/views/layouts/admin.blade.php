@@ -697,7 +697,8 @@
 
         <script src="{{asset('admins/js/formplugins/select2/select2.bundle.js')}}"></script>
         <script src="{{asset('admins/js/formplugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
-
+        <script src="{{asset('admins/js/datagrid/datatables/datatables.export.js')}}"></script>
+        <script src="{{asset('admins/js/dependency/moment/moment.js')}}"></script>
         {!! Toastr::message() !!}
         @yield('script')
         <script>
