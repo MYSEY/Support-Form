@@ -1,5 +1,5 @@
 <div class="tab-pane fade active show" id="js_change_pill_direction-1" role="tabpanel">
-    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+    <table id="dt-basic-all" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
                 <th>Tracking ID</th>
@@ -17,7 +17,8 @@
             </tr>
         </thead>
         <tbody>
-            @if (count($data_tickets)>0)
+            {{-- @dd($data_tickets) --}}
+            {{-- @if (count($data_tickets)>0)
                 @foreach ($data_tickets as $key=>$item)
                     <tr>
                         <td></td>
@@ -28,12 +29,20 @@
                             {{  $item->branch ? $item->branch->branch_name_en: ""}}
                         </td>
                         <td>{{$item->name}}</td>
-                        <td>{{$item->subject}}</td>
-                        <td></td>
-                        <td>{{$item->createdBy->name}}</td>
-                        <td></td>
+                        <td data-toggle="tooltip" data-html="true" title="{{$item->assignedBy ? "Assigned to: ".$item->assignedBy->name : "(".$item->assignedby.")" }}<br><br>{{nl2br(e($item->message))}}">
+                            <a href="javascript:void(0)">{{$item->subject}}</a>
+                        </td>
+                        <td style="color: {{$item->CustomStatus->color}}">{{$item->CustomStatus->name}}</td>
+                        <td>{{$item->assignedBy ? $item->assignedBy->name : $item->assignedby}}</td>
+                        <td>{{$item->lastReplier ? $item->lastReplier->name : $item->name}}</td>
                         <td>{{ \Carbon\Carbon::parse($item->due_date)->format('d-M-Y') ?? '' }}</td>
-                        <td></td>createdBy
+                        <td>
+                            @php
+                                $issueTypeArray = json_decode($item->issue_type, true);
+                                $firstIssueType = $issueTypeArray[0] ?? '';
+                            @endphp
+                            {{ $firstIssueType }}
+                        </td>
                         <td>
                             <div style="display: flex">
                                 <i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:{{$item->priorities->color}};"></i> <span>{{$item->priorities->name}}</span>
@@ -41,7 +50,7 @@
                         </td>
                     </tr>
                 @endforeach
-            @endif
+            @endif --}}
         </tbody>
     </table>
 </div>
@@ -64,24 +73,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>
-                    <div style="display: flex">
-                        <i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px;"></i> <span>$320,800</span>
-                    </div>
-                </td>
-            </tr>
+            
         </tbody>
     </table>
 </div>
@@ -104,24 +96,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>
-                    <div style="display: flex">
-                        <i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px;"></i> <span>$320,800</span>
-                    </div>
-                </td>
-            </tr>
+            
         </tbody>
     </table>
 </div>
@@ -144,24 +119,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>
-                    <div style="display: flex">
-                        <i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px;"></i> <span>$320,800</span>
-                    </div>
-                </td>
-            </tr>
+            
         </tbody>
     </table>
 </div>
@@ -184,24 +142,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>
-                    <div style="display: flex">
-                        <i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px;"></i> <span>$320,800</span>
-                    </div>
-                </td>
-            </tr>
+            
         </tbody>
     </table>
 </div>
@@ -224,24 +165,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>$320,800</td>
-                <td>
-                    <div style="display: flex">
-                        <i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px;"></i> <span>$320,800</span>
-                    </div>
-                </td>
-            </tr>
+            
         </tbody>
     </table>
 </div>

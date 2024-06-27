@@ -26,7 +26,7 @@
                             <label class="form-label" for="ticket-subject">Subject: <span class="text-danger">*</span></label>
                             <input type="text" name="ticket-subject" class="form-control" id="ticket-subject">
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="form-label" for="ticket-template">Select a ticket template:</label>
                             <select class="form-control" id="ticket-template">
                                 <option>1</option>
@@ -35,7 +35,7 @@
                                 <option>4</option>
                                 <option>5</option>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="form-label">Ticket templates (<a type="button" href="#" >Manage ticket templates</a>)</label>
                             <div class="demo">
@@ -49,7 +49,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="issue_types"></div>
                     </div>
 
@@ -88,11 +87,11 @@
                             <label class="form-label">Options:</label>
                             <div class="demo">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="ticket-notification" checked="">
+                                    <input type="checkbox" class="custom-control-input" id="ticket-notification" value="1" name="ticket-notification" checked="">
                                     <label class="custom-control-label" for="ticket-notification">Send email notification to the customer</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="ticket-check-submiss" checked="">
+                                    <input type="checkbox" class="custom-control-input" id="ticket-check-submiss" value="1" name="ticket-check-submiss" checked="">
                                     <label class="custom-control-label" for="ticket-check-submiss">Show the ticket after submissio</label>
                                 </div>
                             </div>
@@ -105,6 +104,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="text-md-right">
                     <div class="btn-hidden-show">
                         <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/ticket')}}"  type="button">Cancel</a>
@@ -133,21 +133,32 @@
             dataIssueType({"department_id":department_id, "branch_id": branch_id});
 
             $("#btn-save").on("click", function() {
+
+                // console.log($("#ticket-textarea").val());
+                // return false;
                 $(".btn-hidden-show").hide();
                 $(".btn-loading").css('display', 'block');
+                var issueTypeValues = [];
+                $('input[name="issue_type"]:checked').each(function() {
+                    issueTypeValues.push($(this).val());
+                });
+
                 $.ajax({
                     type: "POST",
                     url: "{{ url('admin/ticket/save') }}",
                     data: {
                         "_token": "{{ csrf_token() }}",
-                        department_id:      department_id,
-                        branch_id:          branch_id,
-                        name:               $("#ticket-name").val(),
-                        email:              $("#ticket-email").val(),
-                        subject:            $("#ticket-subject").val(),
-                        priority:           $("#ticket-priority").val(),
-                        assignedby:         $("#ticket-assign").val(),
-                        due_date:           $("#ticket-due-date").val(),
+                        department_id:              department_id,
+                        branch_id:                  branch_id,
+                        name:                       $("#ticket-name").val(),
+                        email:                      $("#ticket-email").val(),
+                        subject:                    $("#ticket-subject").val(),
+                        priority:                   $("#ticket-priority").val(),
+                        assignedby:                 $("#ticket-assign").val(),
+                        due_date:                   $("#ticket-due-date").val(),
+                        issue_type:                 issueTypeValues,
+                        overdue_email_sent:         $('input[name="ticket-notification"]:checked').val(),
+                        satisfaction_email_sent:    $('input[name="ticket-check-submiss"]:checked').val(),
                         // attachments:        $("#ticket-file").val(),
                         message:            $("#ticket-textarea").val(),
                     },
@@ -185,7 +196,7 @@
                                 let text = item.value.split("\n");
                                 text.map((check,index) => {
                                     checks +='<div class="custom-control custom-checkbox">'+
-                                            '<input type="checkbox" class="custom-control-input checkbox_issue_type" id="checkod_'+index+'">'+
+                                            '<input type="checkbox" class="custom-control-input checkbox_issue_type" value="'+check+'" id="checkod_'+index+'" name="issue_type">'+
                                             '<label class="custom-control-label" for="checkod_'+index+'">'+check+'</label>'+
                                         '</div>';
                                 })
@@ -198,12 +209,12 @@
                             };
                             if (item.type == "radio") {
                                 let text = item.value.split("\n");
-                                text.map((check,index) => {
-                                    checks +='<div class="custom-control custom-radio">'+
-                                            '<input type="radio" class="custom-control-input checkbox_issue_type" id="issueRadio_'+index+'">'+
-                                            '<label class="custom-control-label" for="issueRadio_'+index+'">'+check+'</label>'+
+                                text.forEach(function(check, index) {
+                                    checks += '<div class="custom-control custom-radio">' +
+                                            '<input type="radio" class="custom-control-input checkbox_issue_type" id="issueRadio_' + index + '" name="issue_type" value="' + check + '">' +
+                                            '<label class="custom-control-label" for="issueRadio_' + index + '">' + check + '</label>' +
                                         '</div>';
-                                })
+                                });
                                 issue_type +='<div class="form-group">'+
                                                 '<label class="form-label">'+item.name+'</label>'+
                                                 '<div class="demo">'+
@@ -214,7 +225,7 @@
                             if (item.type == "select") {
                                 let text = item.value.split("\n");
                                 text.map((check,index) => {
-                                    checks +='<option>'+check+'</option>';
+                                    checks +='<option value="'+check+'">'+check+'</option>';
                                 })
                                 issue_type +='<div class="form-group">'+
                                                 '<label class="form-label">'+item.name+'</label>'+

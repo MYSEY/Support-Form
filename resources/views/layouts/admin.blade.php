@@ -24,7 +24,11 @@
         <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
         <link rel="stylesheet" media="screen, print" href="{{asset('/admins/css/formplugins/select2/select2.bundle.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css')}}">
-        
+        <style>
+            .tooltip-inner {
+                text-align: left;
+            }
+        </style>
     </head>
     <body class="mod-bg-1 ">
         <!-- DOC: script to save and load page settings -->
