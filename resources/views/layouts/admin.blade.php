@@ -130,14 +130,14 @@
                                     <span class="nav-link-text" data-i18n="nav.user">Users</span>
                                 </a>
                             </li>
-                            <li class="">
+                            <li class="@if (in_array(Request::instance()->segment(3), ['ticket'])) active @endif">
                                 <a href="#" title="Reports" data-filter-tags="application intel Reports">
                                     <i class="fal fa-chart-pie"></i>
                                     <span class="nav-link-text" data-i18n="nav.Reports">Reports</span>
                                 </a>
                                 <ul>
-                                    <li>
-                                        <a href="{{url('admin/ticket/report')}}" title="Tickets" data-filter-tags="application intel Tickets">
+                                    <li class="@if (Request::instance()->segment(3) == 'ticket') active @endif">
+                                        <a href="{{url('admin/report/ticket')}}" title="Tickets" data-filter-tags="application intel Tickets">
                                             <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
                                         </a>
                                     </li>
@@ -261,17 +261,17 @@
                             <!-- app user menu -->
                             <div>
                                 <a href="#" data-toggle="dropdown" title="drlantern@gotbootstrap.com" class="header-icon d-flex align-items-center justify-content-center ml-2">
-                                    <img src="{{asset('admins/img/demo/avatars/avatar-admin.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern">
+                                    <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
                                     <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
                                         <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
                                             <span class="mr-2">
-                                                <img src="{{asset('admins/img/demo/avatars/avatar-admin.png')}}" class="rounded-circle profile-image" alt="Dr. Codex Lantern">
+                                                <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="rounded-circle profile-image" alt="Dr. Codex Lantern">
                                             </span>
                                             <div class="info-card-text">
-                                                <div class="fs-lg text-truncate text-truncate-lg">Dr. Codex Lantern</div>
-                                                <span class="text-truncate text-truncate-md opacity-80">drlantern@gotbootstrap.com</span>
+                                                <div class="fs-lg text-truncate text-truncate-lg">{{Auth::user()->name}}</div>
+                                                <span class="text-truncate text-truncate-md opacity-80">{{Auth::user()->email}}</span>
                                             </div>
                                         </div>
                                     </div>

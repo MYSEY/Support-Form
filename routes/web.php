@@ -69,7 +69,9 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::resource('priority', PriorityController::class);
     Route::resource('issue-type', IssueTypeController::class);
     Route::post('/issue-type/ids', [IssueTypeController::class,'dataSelect']);
-    Route::resource('ticket/report', TicketReportController::class);
+    Route::resource('report/ticket', TicketReportController::class);
+    Route::get('ticket/report/show', [TicketReportController::class,'show']);
+    Route::post('ticket/report/search', [TicketReportController::class,'search']);
     
 });
 
