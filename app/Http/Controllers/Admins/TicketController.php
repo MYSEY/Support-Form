@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
+use App\Models\CustomStatus;
 use App\Models\Department;
 use App\Models\IssueType;
 use App\Models\Priority;
 use App\Models\Ticket;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,10 +22,12 @@ class TicketController extends Controller
      */
     public function index()
     {
-        // dd(Auth::user()->branch_id);
         $branch = Branch::get();
         $department = Department::get();
-        $data_tickets = Ticket::with("department")->with("branch")->with("assignedby")->with("priorities")->with("createdBy")->get();
+        $data_tickets = Ticket::with("department")
+        ->with("branch")->with("lastReplier")
+        ->with("CustomStatus")->with("assignedBy")
+        ->with("priorities")->with("createdBy")->get();
         return view('tickets.index', compact('data_tickets','department', 'branch'));
     }
 
@@ -43,8 +47,11 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        try {
+        // try {
+            $status = CustomStatus::orderBy('id', 'asc')->first();
             $data = $request->all();
+            $data['issue_type'] = json_encode($request->issue_type);
+            $data['status'] = $status->id;
             $data['created_by'] = Auth::user()->id;
             Ticket::create($data);
             return response()->json([
@@ -52,17 +59,44 @@ class TicketController extends Controller
                 'status'=>"success"
             ]);
             DB::commit();
-        } catch (\Throwable $exp) {
-            return response()->json(['errors' => $exp]);
-        }
+        // } catch (\Throwable $exp) {
+        //     return response()->json(['errors' => $exp]);
+        // }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        //
+        $data_tickets = Ticket::with("department")
+        ->with("branch")->with("lastReplier")
+        ->with("CustomStatus")->with("assignedBy")
+        ->with("priorities")->with("createdBy")
+        ->when($request->status, function ($query, $status) {
+            if ($status == 2) {
+                $query->where("assignedby", Auth::user()->id);
+            }
+            if ($status == 3) {
+                $query->whereNotIn("assignedby", ["unassigned","auto-assign"]);
+            }
+            if ($status == 4) {
+                $query->whereIn("assignedby", ["unassigned","auto-assign"]);
+            }
+            if ($status == 5) {
+                $currentDate = Carbon::now()->format('Y-m-d');
+                $query->where('due_date', '>=',$currentDate);
+            }
+            if ($status == 6) {
+                $currentDate = Carbon::now()->format('Y-m-d');
+                $query->where('due_date', '<',$currentDate);
+            }
+        })
+        ->get();
+        DB::commit();
+        return response()->json([
+            'datas'=>$data_tickets
+        ]);
     }
 
     /**

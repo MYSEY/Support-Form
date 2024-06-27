@@ -61,11 +61,17 @@ class Ticket extends Model
     public function branch(){
         return $this->belongsTo(Branch::class,'branch_id');
     }
-    public function assignedby(){
+    public function CustomStatus(){
+        return $this->belongsTo(CustomStatus::class,'status');
+    }
+    public function assignedBy(){
         return $this->belongsTo(User::class,'assignedby');
     }
     public function priorities(){
         return $this->belongsTo(Priority::class,'priority');
+    }
+    public function lastReplier(){
+        return $this->belongsTo(User::class,'lastreplier');
     }
 
 
