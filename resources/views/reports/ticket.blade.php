@@ -30,7 +30,7 @@
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                             <div class="form-group" data-select2-id="105">
                                 <select class="select2-placeholder-multiple form-control select2-hidden-accessible"
-                                    multiple="" id="multiple-placeholder" data-select2-id="multiple-placeholder"
+                                    multiple="" id="status" data-select2-id="multiple-placeholder"
                                     tabindex="-1" aria-hidden="true">
                                     <option value="0">Open</option>
                                     <option value="1">Waition Replay</option>
@@ -47,7 +47,7 @@
                             {{-- <a href="#" title="Export" data-filter-tags="datatables datagrid export tables pdf excel print csv">
                                 <span class="nav-link-text" data-i18n="nav.datatables_export">Export</span>
                             </a> --}}
-                            <button class="btn btn-outline-success waves-effect waves-themed mr-1" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></button>
+                            <a  href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
                         </div>
                     </div>
                 </div>
@@ -61,42 +61,44 @@
                 </div>
                 <div class="panel-container show">
                     <div class="panel-content">
-                        <!-- datatable start -->
-                        <table id="dt-basic-report-ticke" class="table table-bordered table-hover table-striped w-100">
-                            <thead>
-                                <tr>
-                                    <th>Tranking ID</th>
-                                    <th>Subject</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Submited Date</th>
-                                    <th>Department</th>
-                                    <th>Priority</th>
-                                    <th>Owner</th>
-                                    <th>Issue Type</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- @if (count($data) > 0)
-                                    @foreach ($data as $key => $item)
-                                        <tr class="">
-                                            <th><a href="#">{{ $item->trackid }}</a></th>
-                                            <th>{{ $item->subject }}</th>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{ $item->email }}</td>
-                                            <td>{{ Carbon\Carbon::parse($item->dt)->format('d-m-Y') }}</td>
-                                            <td>{{ $item->name_khmer }}</td>
-                                            <td>{{ $item->priorities_name }}</td>
-                                            <td>{{ $item->owner }}</td>
-                                            <td>{{ $item->custom2 == '' ? $item->custom1 : $item->custom2 }}</td>
-                                            <td>{{ $item->status }}</td>
-                                        </tr>
-                                    @endforeach
-                                @endif --}}
-                            </tbody>
-                        </table>
-                        <!-- datatable end -->
+                        <div class="table-responsive">
+                            <!-- datatable start -->
+                            <table id="dt-basic-ticket-report" class="table table-bordered table-hover table-striped w-100">
+                                <thead>
+                                    <tr>
+                                        <th>Tranking ID</th>
+                                        <th>Subject</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Submited Date</th>
+                                        <th>Department</th>
+                                        <th>Priority</th>
+                                        <th>Owner</th>
+                                        <th>Issue Type</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{-- @if (count($data) > 0)
+                                        @foreach ($data as $key => $item)
+                                            <tr class="">
+                                                <th><a href="#">{{ $item->trackid }}</a></th>
+                                                <th>{{ $item->subject }}</th>
+                                                <td>{{ $item->name }}</td>
+                                                <td>{{ $item->email }}</td>
+                                                <td>{{ Carbon\Carbon::parse($item->dt)->format('d-m-Y') }}</td>
+                                                <td>{{ $item->name_khmer }}</td>
+                                                <td>{{ $item->priorities_name }}</td>
+                                                <td>{{ $item->owner }}</td>
+                                                <td>{{ $item->custom2 == '' ? $item->custom1 : $item->custom2 }}</td>
+                                                <td>{{ $item->status }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endif --}}
+                                </tbody>
+                            </table>
+                            <!-- datatable end -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -104,12 +106,12 @@
     </div>
 @endsection
 @section('script')
-    @include('includs.datatables_export')
+    @include('includs.datatable_basic')
     <script>
         $(document).ready(function(){
             showTickeReport();
             $("#btnSearch").on("click", function() {
-                // $("#dt-basic-report-ticke tbody").empty();
+                // $("#dt-basic-ticket-report tbody").empty();
                 // let param = {
                 //     "_token": "{{ csrf_token() }}",
                 //     status: $("#status").val(),
@@ -118,6 +120,16 @@
                 //     to_date: $("#to_date").val(),
                 // }
                 showTickeReport();
+            });
+            $('#btn-export').on('click',function(){
+                let query = {
+                    status: $("#status").val(),
+                    priority: $("#priority").val(),
+                    from_date: $("#from_date").val(),
+                    to_date: $("#to_date").val()
+                };
+                var url = "{{URL::to('admin/ticket/report/export')}}?" + $.param(query)
+                window.location = url;
             });
         });
 
@@ -178,10 +190,10 @@
                             '</tr>';
                         });
                     } else {
-                        var tr ='<tr><td colspan=11 align="center">ពុំមានទិន្នន័យសម្រាប់បង្ហាញ</td></tr>';
+                        var tr ='<tr><td colspan=11 align="center">No data available in table</td></tr>';
                     }
-                    $("#dt-basic-report-ticke tbody").html(tr);
-                    $('#dt-basic-report-ticke').dataTable();
+                    $("#dt-basic-ticket-report tbody").html(tr);
+                    $('#dt-basic-ticket-report').dataTable();
                 }
             });
         }
