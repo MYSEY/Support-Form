@@ -128,7 +128,7 @@
                             var message = nl2br(value.message);
                             bodyTr +='<tr>'+
                                     '<td></td>'+
-                                    '<td>'+created_at+'</td>'+
+                                    '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(created_at)+'</a></td>'+
                                     '<td>'+updated_at+'</td>'+
                                     '<td>'+(value.department ? value.department.name_english: "")+'</td>'+
                                     '<td>'+value.name+'</td>'+
