@@ -74,6 +74,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::resource('report/ticket', TicketReportController::class);
     Route::get('ticket/report/show', [TicketReportController::class,'show']);
     Route::post('ticket/report/search', [TicketReportController::class,'search']);
+    Route::get('ticket/report/export', [TicketReportController::class,'export']);
     
 });
 
