@@ -47,6 +47,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/ticket/create/{id}', [TicketController::class, 'create']);
     Route::get('/ticket/update', [TicketController::class, 'edit']);
     Route::post('/ticket/save', [TicketController::class, 'store']);
+    Route::get('/ticket/detail/{id}', [TicketController::class, 'detail']);
 
     // Statuses
     Route::get('/statuses', [StatusesController::class, 'index']);

@@ -47,7 +47,7 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        // try {
+        try {
             $status = CustomStatus::orderBy('id', 'asc')->first();
             $data = $request->all();
             $data['issue_type'] = json_encode($request->issue_type);
@@ -59,9 +59,9 @@ class TicketController extends Controller
                 'status'=>"success"
             ]);
             DB::commit();
-        // } catch (\Throwable $exp) {
-        //     return response()->json(['errors' => $exp]);
-        // }
+        } catch (\Throwable $exp) {
+            return response()->json(['errors' => $exp]);
+        }
     }
 
     /**
@@ -105,6 +105,23 @@ class TicketController extends Controller
     public function edit(string $id)
     {
         return view('tickets.form-edit-ticket');
+    }
+
+    public function detail(Request $request)
+    {
+        $branch = Branch::get();
+        $department = Department::get();
+        $department = Department::get();
+        $priority= Priority::get();
+        $status = CustomStatus::orderBy('id', 'asc')->get();
+        $user_support = User::where("autoassign",1)->get();
+        $data_ticket = Ticket::with("department")
+        ->with("branch")->with("lastReplier")
+        ->with("CustomStatus")->with("assignedBy")
+        ->with("priorities")->with("createdBy")
+        ->where("id", $request->id)
+        ->first();
+        return view('tickets.ticket-detail', compact('data_ticket','status','branch', 'department', 'priority', 'user_support'));
     }
 
     /**
