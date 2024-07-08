@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Models\Online;
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
+use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -50,6 +52,10 @@ class LoginController extends Controller
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
             if (Auth::user()->status == 'Active') {
                 Toastr::success('Login successfully.', 'Success');
+                Online::create([
+                    'user_id' => Auth::user()->id,
+                    'dt' => Carbon::now(),
+                ]);
                 return redirect('admin/dashboad');
             } else {
                 Auth::logout();
@@ -63,6 +69,7 @@ class LoginController extends Controller
     }
     public function logout()
     {
+        Online::where('user_id',Auth::user()->id)->delete();
         Auth::logout();
         Toastr::success('Logout successfully', 'Success');
         return redirect('login');

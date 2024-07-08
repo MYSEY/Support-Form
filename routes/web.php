@@ -32,7 +32,8 @@ Route::post('/login', [LoginController::class, 'login']);
 
 Auth::routes();
 Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
-    Route::get('/dashboad', [DashboardController::class, 'index']);
+    Route::get('/dashboad', [DashboardController::class,'index']);
+    Route::get('/dashboad/show', [DashboardController::class,'show']);
 
     // users 
     Route::get('/user', [UserController::class, 'index']);
