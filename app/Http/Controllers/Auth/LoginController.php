@@ -54,7 +54,10 @@ class LoginController extends Controller
             if (Auth::user()->status == 'Active') {
                 Toastr::success('Login successfully.', 'Success');
                 $user = DB::table('users')->where('id',Auth::user()->id)->first();
-                Online::create([
+                Online::updateOrCreate([
+                    'user_id' => $user->id,
+                ],
+                [
                     'user_id' => $user->id,
                     'dt' => Carbon::now(),
                 ]);

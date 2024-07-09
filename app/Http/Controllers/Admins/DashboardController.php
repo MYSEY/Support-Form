@@ -25,8 +25,12 @@ class DashboardController extends Controller
     }
     public function show(Request $request){
         $dataTickets = DB::table('tickets')->get();
+        $dataCustomStatuses = DB::table('custom_statuses')->get();
+        $dataPriorities = DB::table('priorities')->get();
         return response()->json([
             'dataTickets'=>$dataTickets,
+            'customStatuses'=>$dataCustomStatuses,
+            'priorities'=>$dataPriorities,
         ]);
     }
 }

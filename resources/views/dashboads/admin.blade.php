@@ -211,7 +211,7 @@
             <div id="panel-4" class="panel panel-sortable" role="widget">
                 <div class="panel-hdr" role="heading">
                     <h2 class="ui-sortable-handle">
-                        Sale <span class="fw-300"><i>Records</i></span>
+                        Users <span class="fw-300"><i>Online</i></span>
                     </h2>
                     <div class="panel-saving mr-2" style="display:none"><i
                             class="fal fa-spinner-third fa-spin-4x fs-xl"></i></div>
@@ -270,9 +270,8 @@
                                         class="btn d-inline-block bg-faded width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
                                         data-panel-setstyle="bg-faded" style="margin:1px;"></a></div>
                             </div>
-                            <div class="dropdown-divider m-0"></div><a href="#"
-                                class="dropdown-item js-panel-reset"><span data-i18n="drpdwn.resetpanel">Reset
-                                    Panel</span></a>
+                            <div class="dropdown-divider m-0"></div>
+                                <a href="#" class="dropdown-item js-panel-reset"><span data-i18n="drpdwn.resetpanel">Reset Panel</span></a>
                         </div>
                     </div>
                 </div>
@@ -490,22 +489,26 @@
                     if (response.dataTickets.length > 0) {
                         var newTicket = 0;
                         var priority = 0;
-                        var Assign = 0;
+                        var assign = 0;
                         var tickeActive = 0;
                         response.dataTickets.map((item) => {
-                            if (item.status == 1) {
-                                newTicket++;
-                            } else if (item.priority == 4) {
-                                priority++;
-                            } else if (item.owner == 3) {
-                                Assign++;
-                            } else {
-                                tickeActive++;
-                            }
+                            response.customStatuses.map((itemStatus)=>{
+                                response.priorities.map((itemPororities)=>{
+                                    if (item.status == itemStatus.id) {
+                                        newTicket++;
+                                    } else if (item.priority == itemPororities.id) {
+                                        priority++;
+                                    } else if (item.owner == 3) {
+                                        assign++;
+                                    } else {
+                                        tickeActive++;
+                                    }
+                                });
+                            });
                         });
                         $('#total-new-ticket').text(newTicket);
                         $('#total-priority').text(priority);
-                        $('#total-assign').text(Assign);
+                        $('#total-assign').text(assign);
                         $('#total-ticke-active').text(tickeActive);
                     }
                 }
