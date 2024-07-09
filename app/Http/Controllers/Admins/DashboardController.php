@@ -11,12 +11,15 @@ class DashboardController extends Controller
     public function index(){
         $data = DB::table('onlines')
         ->leftJoin('users','onlines.user_id','=','users.id')
+        ->leftJoin('branchs','branchs.id','=','users.branch_id')
         ->select(
             'onlines.*',
             'users.id',
             'users.name',
             'users.email',
             'users.user',
+            'branchs.branch_name_kh',
+            'branchs.branch_name_en',
         )->get();
         return view('dashboads.admin',compact('data'));
     }

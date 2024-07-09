@@ -52,8 +52,9 @@ class LoginController extends Controller
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
             if (Auth::user()->status == 'Active') {
                 Toastr::success('Login successfully.', 'Success');
+                $user = DB::table('users')->where('id',Auth::user()->id)->first();
                 Online::create([
-                    'user_id' => Auth::user()->id,
+                    'user_id' => $user->id,
                     'dt' => Carbon::now(),
                 ]);
                 return redirect('admin/dashboad');

@@ -289,17 +289,21 @@
                                             <th>Email</th>
                                             <th>User Name</th>
                                             <th>Role</th>
-                                            <th>Create At</th>
+                                            <th>Branch</th>
+                                            <th>Login DateTime</th>
                                         </thead>
                                         <tbody>
                                             @if (count($data)>0)
                                                 @foreach ($data as $item)
                                                     <tr role="row" class="odd">
-                                                        <td class="sorting_1" tabindex="0"></td>
+                                                        <td class="sorting_1" tabindex="0">
+                                                            <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern" style="width: 36px;height: 36px;">
+                                                        </td>
                                                         <td>{{$item->name}}</td>
                                                         <td>{{$item->email}}</td>
                                                         <td>{{$item->user}}</td>
                                                         <td>{{$item->name}}</td>
+                                                        <td>{{$item->branch_name_en}}</td>
                                                         <td>{{$item->dt}}</td>
                                                     </tr>
                                                 @endforeach
@@ -311,7 +315,8 @@
                                             <th>Email</th>
                                             <th>User Name</th>
                                             <th>Role</th>
-                                            <th>Create At</th>
+                                            <th>Branch</th>
+                                            <th>Login DateTime</th>
                                         </tfoot>
                                     </table>
                                 </div>
