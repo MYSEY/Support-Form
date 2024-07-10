@@ -66,7 +66,6 @@
                                             <span class="float-right"><i class="fal fa-angle-right" style="font-size: 20px"></i></span>{{ $item->branch_name_en}}
                                         </a>
                                     @endforeach
-                                
                                 </div>
                             </div>
                         </div>
@@ -127,7 +126,7 @@
                             }
                             var message = nl2br(value.message);
                             bodyTr +='<tr>'+
-                                    '<td></td>'+
+                                    '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(value.trackid)+'</a></td>'+
                                     '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(created_at)+'</a></td>'+
                                     '<td>'+updated_at+'</td>'+
                                     '<td>'+(value.department ? value.department.name_english: "")+'</td>'+
@@ -142,7 +141,7 @@
                                     '<td></td>'+
                                     '<td>'+
                                         '<div style="display: flex">'+
-                                            '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px;"></i> <span>$320,800</span>'+
+                                            '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:'+value.priorities.color+'"></i> <span>'+(value.priority ? value.priorities.name : "")+'</span>'+
                                         '</div>'+
                                     '</td>'+
                                 '</tr>';

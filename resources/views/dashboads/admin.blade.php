@@ -491,21 +491,20 @@
                         var priority = 0;
                         var assign = 0;
                         var tickeActive = 0;
-                        response.dataTickets.map((item) => {
-                            response.customStatuses.map((itemStatus)=>{
-                                response.priorities.map((itemPororities)=>{
-                                    if (item.status == itemStatus.id) {
-                                        newTicket++;
-                                    } else if (item.priority == itemPororities.id) {
-                                        priority++;
-                                    } else if (item.owner == 3) {
-                                        assign++;
-                                    } else {
-                                        tickeActive++;
-                                    }
-                                });
-                            });
+                        response.customStatuses.map((itemStatus)=>{
+                            response.dataTickets.map((item) => {
+                                if (item.status == itemStatus.id) {
+                                    newTicket++;
+                                } else if (item.priority == 4) {
+                                    priority++;
+                                } else if (item.owner == 1) {
+                                    assign++;
+                                } else {
+                                    tickeActive++;
+                                }
+                            });   
                         });
+                        
                         $('#total-new-ticket').text(newTicket);
                         $('#total-priority').text(priority);
                         $('#total-assign').text(assign);

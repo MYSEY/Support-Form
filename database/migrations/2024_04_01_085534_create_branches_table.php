@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('branchs', function (Blueprint $table) {
             $table->id();
+            $table->string('branch_name_kh');
+            $table->string('branch_name_en')->nullable();
+            $table->string('direct_manager_id')->nullable();
+            $table->string('abbreviations')->nullable();
+            $table->string('address')->nullable();
+            $table->string('address_kh')->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
             $table->dateTime('deleted_at')->nullable();

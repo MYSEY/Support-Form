@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers\Admins;
 
-use App\Http\Controllers\Controller;
-use App\Models\Branch;
-use App\Models\CustomStatus;
-use App\Models\Department;
-use App\Models\IssueType;
-use App\Models\Priority;
-use App\Models\Ticket;
-use App\Models\User;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Branch;
+use App\Models\Ticket;
+use App\Models\Priority;
+use App\Models\IssueType;
+use App\Models\Department;
+use App\Models\CustomStatus;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Traits\GeneratingTicketID;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
+    use GeneratingTicketID;
+
     /**
      * Display a listing of the resource.
      */
@@ -50,6 +53,7 @@ class TicketController extends Controller
         try {
             $status = CustomStatus::orderBy('id', 'asc')->first();
             $data = $request->all();
+            $data['trackid'] = $this->generateTicketID();
             $data['issue_type'] = json_encode($request->issue_type);
             $data['status'] = $status->id;
             $data['created_by'] = Auth::user()->id;
