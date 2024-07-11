@@ -331,7 +331,7 @@
             <div id="panel-12" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Flot <span class="fw-300"><i>Pie</i></span>
+                        Titcke <span class="fw-300"><i>Status</i></span>
                     </h2>
                     <div class="panel-toolbar">
                         <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse"
@@ -344,84 +344,69 @@
                 </div>
                 <div class="panel-container show">
                     <div class="panel-content">
-                        <div class="panel-tag">
-                            Pie chart is used to see the proprotion of each data groups, making Flot pie chart is pretty
-                            simple, in order to make pie chart you have to incldue <code>jquery.flot.pie.js</code> plugin
-                        </div>
                         <div class="row">
                             <div class="col-xl-5">
-                                <div id="js-pie-options" class="w-100"
-                                    style="height: 250px; padding: 0px; position: relative;">
-                                    <canvas class="flot-base" width="586" height="312"
-                                        style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 469.5px; height: 250px;"></canvas>
-                                    <canvas class="flot-overlay" width="586" height="312"
-                                        style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 469.5px; height: 250px;"></canvas>
+                                <div id="js-pie-options" class="w-100" style="height: 250px; padding: 0px; position: relative;">
+                                    <canvas class="flot-base" width="586" height="312" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 469.5px; height: 250px;"></canvas>
+                                    <canvas class="flot-overlay" width="586" height="312" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 469.5px; height: 250px;"></canvas>
                                     <div class="legend">
-                                        <div
-                                            style="position: absolute; width: 88.675px; height: 107.55px; top: 5px; right: 5px; background-color: rgb(255, 255, 255); opacity: 0.85;">
+                                        <div style="position: absolute; width: 88.675px; height: 107.55px; top: 5px; right: 5px; background-color: rgb(255, 255, 255); opacity: 0.85;">
                                         </div>
-                                        <table
-                                            style="position:absolute;top:5px;right:5px;;font-size:smaller;color:#545454">
+                                        <table style="position:absolute;top:5px;right:5px;;font-size:smaller;color:#545454">
                                             <tbody>
                                                 <tr>
-                                                    <td class="legendColorBox">
-                                                        <div style="border:1px solid #ccc;padding:1px">
-                                                            <div
-                                                                style="width:4px;height:0;border:5px solid #886ab5;overflow:hidden">
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="legendLabel">Asia</td>
+                                                    <div style="border:1px solid #ccc;padding:1px">
+                                                        <div style="width:4px;height:0;border:5px solid #fd3995;overflow:hidden"></div>
+                                                    </div>
+                                                    <td class="legendLabel">New</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="legendColorBox">
                                                         <div style="border:1px solid #ccc;padding:1px">
-                                                            <div
-                                                                style="width:4px;height:0;border:5px solid #2196f3;overflow:hidden">
-                                                            </div>
+                                                            <div style="width:4px;height:0;border:5px solid #2196f3;overflow:hidden"></div>
                                                         </div>
                                                     </td>
-                                                    <td class="legendLabel">Latin America</td>
+                                                    <td class="legendLabel">Waiting Reply</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="legendColorBox">
                                                         <div style="border:1px solid #ccc;padding:1px">
-                                                            <div
-                                                                style="width:4px;height:0;border:5px solid #ffc241;overflow:hidden">
-                                                            </div>
+                                                            <div style="width:4px;height:0;border:5px solid #ffc241;overflow:hidden"></div>
                                                         </div>
                                                     </td>
-                                                    <td class="legendLabel">Africa</td>
+                                                    <td class="legendLabel">Replied</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="legendColorBox">
                                                         <div style="border:1px solid #ccc;padding:1px">
-                                                            <div
-                                                                style="width:4px;height:0;border:5px solid #fd3995;overflow:hidden">
-                                                            </div>
+                                                            <div style="width:4px;height:0;border:5px solid #886ab5;overflow:hidden"></div>
                                                         </div>
                                                     </td>
-                                                    <td class="legendLabel">Oceania</td>
+                                                    <td class="legendLabel">In Progress</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="legendColorBox">
                                                         <div style="border:1px solid #ccc;padding:1px">
-                                                            <div
-                                                                style="width:4px;height:0;border:5px solid #1dc9b7;overflow:hidden">
-                                                            </div>
+                                                            <div style="width:4px;height:0;border:5px solid #1dc9b7;overflow:hidden"></div>
                                                         </div>
                                                     </td>
-                                                    <td class="legendLabel">Europe</td>
+                                                    <td class="legendLabel">On Hold</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="legendColorBox">
                                                         <div style="border:1px solid #ccc;padding:1px">
-                                                            <div
-                                                                style="width:4px;height:0;border:5px solid #5d5d5d;overflow:hidden">
-                                                            </div>
+                                                            <div style="width:4px;height:0;border:5px solid #5d5d5d;overflow:hidden"></div>
                                                         </div>
                                                     </td>
-                                                    <td class="legendLabel">North America</td>
+                                                    <td class="legendLabel">Fixed</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="legendColorBox">
+                                                        <div style="border:1px solid #ccc;padding:1px">
+                                                            <div style="width:4px;height:0;border:5px solid #5d5d5d;overflow:hidden"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="legendLabel">Resolved</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -491,25 +476,30 @@
                         var priority = 0;
                         var assign = 0;
                         var tickeActive = 0;
-                        response.customStatuses.map((itemStatus)=>{
-                            response.dataTickets.map((item) => {
-                                if (item.status == itemStatus.id) {
-                                    newTicket++;
-                                } else if (item.priority == 4) {
-                                    priority++;
-                                } else if (item.owner == 1) {
-                                    assign++;
-                                } else {
-                                    tickeActive++;
-                                }
-                            });   
+                        response.dataTickets.map((item) => {
+                            if (item.status == 1) {
+                                newTicket++;
+                            }
+                            if (item.priority == 2) {
+                                priority++;
+                            }
+                            if (item.owner == 1) {
+                                assign++;
+                            } 
+                            
+                            if(item.status) {
+                                tickeActive++;
+                            }
                         });
-                        
                         $('#total-new-ticket').text(newTicket);
                         $('#total-priority').text(priority);
                         $('#total-assign').text(assign);
                         $('#total-ticke-active').text(tickeActive);
                     }
+                    let dataTicketStatus = {
+                        dataTickets: response.dataTickets,
+                    }
+                    TicketStatus(dataTicketStatus);
                 }
             });
         });
@@ -622,39 +612,367 @@
             [5, 3],
             [6, 6]
         ];
-        var dataSetPie = [{
-                label: "Asia",
-                data: 4119630000,
-                color: color.primary._500
-            },
-            {
-                label: "Latin America",
-                data: 590950000,
-                color: color.info._500
-            },
-            {
-                label: "Africa",
-                data: 1012960000,
-                color: color.warning._500
-            },
-            {
-                label: "Oceania",
-                data: 95100000,
-                color: color.danger._500
-            },
-            {
-                label: "Europe",
-                data: 727080000,
-                color: color.success._500
-            },
-            {
-                label: "North America",
-                data: 344120000,
-                color: color.fusion._400
+
+        function TicketStatus(datas){
+            // console.log(datas.dataTickets);
+            let totalNew = 0;
+            let totalWaitingReply = 0;
+            let totalReplied = 0;
+            let totalInProgress = 0;
+            let tatalOnHold = 0;
+            let totalFixed = 0;
+            let totalResolved = 0;
+            if (datas.dataTickets.length>0) {
+                datas.dataTickets.map((item)=>{
+                    if (item.status==1) {
+                        totalNew++;
+                    }
+                    if(item.status==2){
+                        totalWaitingReply++;
+                    }
+                    if(item.status==3){
+                        totalReplied++;
+                    }
+                    if(item.status==4){
+                        totalInProgress++;
+                    } 
+                    if(item.status==5){
+                        tatalOnHold++;
+                    }
+                    if(item.status==6){
+                        totalFixed++;
+                    }
+                    if(item.status==7){
+                        totalResolved++;   
+                    }
+                });
             }
-        ];
-        var data = [],
-            totalPoints = 50;
+            
+            var dataSetPie = [
+                {
+                    label: "New",
+                    data: totalNew,
+                    color: color.danger._500
+                },
+                {
+                    label: "Waiting Reply",
+                    data: totalWaitingReply,
+                    color: color.warning._500
+                },
+                {
+                    label: "Replied",
+                    data: totalReplied,
+                    color: color.info._500
+                },
+                {
+                    label: "In Progress",
+                    data: totalInProgress,
+                    color: color.primary._500
+                },
+                {
+                    label: "On Hold",
+                    data: tatalOnHold,
+                    color: color.success._500
+                },
+                {
+                    label: "Fixed",
+                    data: totalFixed,
+                    color: color.fusion._400
+                },
+                {
+                    label: "Resolved",
+                    data: totalResolved,
+                    color: color.success._500
+                }
+            ];
+            
+            // target 
+            var placeholder = $("#js-pie-options");
+            /* init first plot */
+            $.plot(placeholder, dataSetPie, {
+                series: {
+                    pie: {
+                        show: true
+                    }
+                },
+                legend: {
+                    show: true
+                }
+            });
+            //buttons
+            $(document).on('click', '.js-pie-example', function() {
+                $("#js-pie-options").unbind();
+                var id = this.id;
+                $(".js-pie-example").removeClass("active");
+                $("#" + id).addClass("active");
+                switch (true) {
+                    case (id == "example-1"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Chart (default)</span>');
+                        $("#panel-12 .panel-tag").text("The default pie chart with no options set");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true
+                                }
+                            }
+                        });
+                        break;
+                    case (id == "example-2"):
+                        // code block
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Chart (legend)</span>');
+                        $("#panel-12 .panel-tag").text("The default pie chart when the legend is disabled. Since the labels would normally be outside the container, the chart is resized to fit");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true
+                                }
+                            },
+                            legend: {
+                                show: false
+                            }
+                        });
+                        break;
+                    case (id == "example-3"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Custom Label Formatter</span>');
+                        $("#panel-12 .panel-tag").text("Added a semi-transparent background to the labels and a custom labelFormatter function");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true,
+                                    radius: 1,
+                                    label: {
+                                        show: true,
+                                        radius: 1,
+                                        formatter: labelFormatter,
+                                        background: {
+                                            opacity: 0.8
+                                        }
+                                    }
+                                }
+                            },
+                            legend: {
+                                show: false
+                            }
+                        });
+                        break;
+                    case (id == "example-4"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Label Radius</span>');
+                        $("#panel-12 .panel-tag").html("Slightly more transparent label backgrounds and adjusted the radius values to place them within the pie <code>radius: 3 / 4</code>");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true,
+                                    radius: 1,
+                                    label: {
+                                        show: true,
+                                        radius: 3 / 4,
+                                        formatter: labelFormatter,
+                                        background: {
+                                            opacity: 0.5
+                                        }
+                                    }
+                                }
+                            },
+                            legend: {
+                                show: false
+                            }
+                        });
+                        break;
+                    case (id == "example-5"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Label Styles #1</span>');
+                        $("#panel-12 .panel-tag").html("Semi-transparent, black-colored label background");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true,
+                                    radius: 1,
+                                    label: {
+                                        show: true,
+                                        radius: 3 / 4,
+                                        formatter: labelFormatter,
+                                        background: {
+                                            opacity: 0.5,
+                                            color: "#000"
+                                        }
+                                    }
+                                }
+                            },
+                            legend: {
+                                show: false
+                            }
+                        });
+                        break;
+                    case (id == "example-6"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Label Styles #2</span>');
+                        $("#panel-12 .panel-tag").html("Semi-transparent, black-colored label background placed at pie edge");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true,
+                                    radius: 3 / 4,
+                                    label: {
+                                        show: true,
+                                        radius: 3 / 4,
+                                        formatter: labelFormatter,
+                                        background: {
+                                            opacity: 0.5,
+                                            color: "#000"
+                                        }
+                                    }
+                                }
+                            },
+                            legend: {
+                                show: false
+                            }
+                        });
+                        break;
+                    case (id == "example-7"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Hidden Labels</span>');
+                        $("#panel-12 .panel-tag").html("Labels can be hidden if the slice is less than a given percentage of the pie (10% in this case)");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true,
+                                    radius: 1,
+                                    label: {
+                                        show: true,
+                                        radius: 2 / 3,
+                                        formatter: labelFormatter,
+                                        threshold: 0.1
+                                    }
+                                }
+                            },
+                            legend: {
+                                show: false
+                            }
+                        });
+                        break;
+                    case (id == "example-8"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Combined Slice</span>');
+                        $("#panel-12 .panel-tag").html("Multiple slices less than a given percentage (5% in this case) of the pie can be combined into a single, larger slice");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true,
+                                    combine: {
+                                        color: "#999",
+                                        threshold: 0.05
+                                    }
+                                }
+                            },
+                            legend: {
+                                show: false
+                            }
+                        });
+                        break;
+                    case (id == "example-9"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Rectangular Pie</span>');
+                        $("#panel-12 .panel-tag").html("The radius can also be set to a specific size (even larger than the container itself)");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true,
+                                    radius: 500,
+                                    label: {
+                                        show: true,
+                                        formatter: labelFormatter,
+                                        threshold: 0.1
+                                    }
+                                }
+                            },
+                            legend: {
+                                show: false
+                            }
+                        });
+                        break;
+                    case (id == "example-10"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Tilted Pie</span>');
+                        $("#panel-12 .panel-tag").html("The pie can be tilted at an angle");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true,
+                                    radius: 1,
+                                    tilt: 0.5,
+                                    label: {
+                                        show: true,
+                                        radius: 1,
+                                        formatter: labelFormatter,
+                                        background: {
+                                            opacity: 0.8
+                                        }
+                                    },
+                                    combine: {
+                                        color: "#999",
+                                        threshold: 0.1
+                                    }
+                                }
+                            },
+                            legend: {
+                                show: false
+                            }
+                        });
+                        break;
+                    case (id == "example-11"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Donut Hole</span>');
+                        $("#panel-12 .panel-tag").html("A donut hole can be added");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    innerRadius: 0.5,
+                                    show: true
+                                }
+                            }
+                        });
+                        break;
+                    case (id == "example-12"):
+                        $("#panel-12 h2").html('Titcke <span class="fw-300 font-italic">Interactivity</span>');
+                        $("#panel-12 .panel-tag").html("The pie can be made interactive with hover and click events");
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    innerRadius: 0.5,
+                                    show: true
+                                }
+                            }
+                        });
+                        $.plot(placeholder, dataSetPie, {
+                            series: {
+                                pie: {
+                                    show: true
+                                }
+                            },
+                            grid: {
+                                hoverable: true,
+                                clickable: true
+                            }
+                        });
+
+                        placeholder.bind("plothover", function(event, pos, obj) {
+
+                            if (!obj) {
+                                return;
+                            }
+                            var percent = parseFloat(obj.series.percent).toFixed(2);
+                            $("#hover").html("<span style='font-weight:bold; color:" + obj.series.color + "'>" + obj.series.label + " (" +percent + "%)</span>");
+                        });
+
+                        placeholder.bind("plotclick", function(event, pos, obj) {
+
+                            if (!obj) {
+                                return;
+                            }
+
+                            percent = parseFloat(obj.series.percent).toFixed(2);
+                            alert("" + obj.series.label + ": " + percent + "%");
+                        });
+                    break;
+                }
+            });
+        }
+
+       
+        var data = [], totalPoints = 50;
         var plotRealtimeCurvedInterval = 1000;
         var plotRealtimeFillInterval = 1000;
 
@@ -682,8 +1000,7 @@
 
         /* label formatter */
         var labelFormatter = function(label, series) {
-            return "<div class='fs-xs text-center p-1 text-white'>" + label + "<br/>" + Math.round(series.percent) +
-                "%</div>";
+            return "<div class='fs-xs text-center p-1 text-white'>" + label + "<br/>" + Math.round(series.percent) + "%</div>";
         }
         /* label formatter -- end */
 
@@ -1331,331 +1648,6 @@
             flot_toggle();
             /* flot toggle example -- end*/
 
-            /* flot pie chart */
-            var flot_pie = function() {
-                // target 
-                var placeholder = $("#js-pie-options");
-                /* init first plot */
-                $.plot(placeholder, dataSetPie, {
-                    series: {
-                        pie: {
-                            show: true
-                        }
-                    },
-                    legend: {
-                        show: true
-                    }
-                });
-                //buttons
-                $(document).on('click', '.js-pie-example', function() {
-                    $("#js-pie-options").unbind();
-
-                    var id = this.id;
-                    console.log(id);
-                    $(".js-pie-example").removeClass("active");
-                    $("#" + id).addClass("active");
-                    //$("#panel-12 .panel-hdr").addClass("highlight");
-
-                    switch (true) {
-                        case (id == "example-1"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Chart (default)</span>');
-                            $("#panel-12 .panel-tag").text("The default pie chart with no options set");
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true
-                                    }
-                                }
-                            });
-                            break;
-                        case (id == "example-2"):
-                            // code block
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Chart (legend)</span>');
-                            $("#panel-12 .panel-tag").text(
-                                "The default pie chart when the legend is disabled. Since the labels would normally be outside the container, the chart is resized to fit"
-                                );
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true
-                                    }
-                                },
-                                legend: {
-                                    show: false
-                                }
-                            });
-                            break;
-                        case (id == "example-3"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Custom Label Formatter</span>'
-                                );
-                            $("#panel-12 .panel-tag").text(
-                                "Added a semi-transparent background to the labels and a custom labelFormatter function"
-                                );
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true,
-                                        radius: 1,
-                                        label: {
-                                            show: true,
-                                            radius: 1,
-                                            formatter: labelFormatter,
-                                            background: {
-                                                opacity: 0.8
-                                            }
-                                        }
-                                    }
-                                },
-                                legend: {
-                                    show: false
-                                }
-                            });
-                            break;
-                        case (id == "example-4"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Label Radius</span>');
-                            $("#panel-12 .panel-tag").html(
-                                "Slightly more transparent label backgrounds and adjusted the radius values to place them within the pie <code>radius: 3 / 4</code>"
-                                );
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true,
-                                        radius: 1,
-                                        label: {
-                                            show: true,
-                                            radius: 3 / 4,
-                                            formatter: labelFormatter,
-                                            background: {
-                                                opacity: 0.5
-                                            }
-                                        }
-                                    }
-                                },
-                                legend: {
-                                    show: false
-                                }
-                            });
-                            break;
-                        case (id == "example-5"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Label Styles #1</span>');
-                            $("#panel-12 .panel-tag").html(
-                                "Semi-transparent, black-colored label background");
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true,
-                                        radius: 1,
-                                        label: {
-                                            show: true,
-                                            radius: 3 / 4,
-                                            formatter: labelFormatter,
-                                            background: {
-                                                opacity: 0.5,
-                                                color: "#000"
-                                            }
-                                        }
-                                    }
-                                },
-                                legend: {
-                                    show: false
-                                }
-                            });
-                            break;
-                        case (id == "example-6"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Label Styles #2</span>');
-                            $("#panel-12 .panel-tag").html(
-                                "Semi-transparent, black-colored label background placed at pie edge"
-                                );
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true,
-                                        radius: 3 / 4,
-                                        label: {
-                                            show: true,
-                                            radius: 3 / 4,
-                                            formatter: labelFormatter,
-                                            background: {
-                                                opacity: 0.5,
-                                                color: "#000"
-                                            }
-                                        }
-                                    }
-                                },
-                                legend: {
-                                    show: false
-                                }
-                            });
-                            break;
-                        case (id == "example-7"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Hidden Labels</span>');
-                            $("#panel-12 .panel-tag").html(
-                                "Labels can be hidden if the slice is less than a given percentage of the pie (10% in this case)"
-                                );
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true,
-                                        radius: 1,
-                                        label: {
-                                            show: true,
-                                            radius: 2 / 3,
-                                            formatter: labelFormatter,
-                                            threshold: 0.1
-                                        }
-                                    }
-                                },
-                                legend: {
-                                    show: false
-                                }
-                            });
-                            break;
-                        case (id == "example-8"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Combined Slice</span>');
-                            $("#panel-12 .panel-tag").html(
-                                "Multiple slices less than a given percentage (5% in this case) of the pie can be combined into a single, larger slice"
-                                );
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true,
-                                        combine: {
-                                            color: "#999",
-                                            threshold: 0.05
-                                        }
-                                    }
-                                },
-                                legend: {
-                                    show: false
-                                }
-                            });
-                            break;
-                        case (id == "example-9"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Rectangular Pie</span>');
-                            $("#panel-12 .panel-tag").html(
-                                "The radius can also be set to a specific size (even larger than the container itself)"
-                                );
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true,
-                                        radius: 500,
-                                        label: {
-                                            show: true,
-                                            formatter: labelFormatter,
-                                            threshold: 0.1
-                                        }
-                                    }
-                                },
-                                legend: {
-                                    show: false
-                                }
-                            });
-                            break;
-                        case (id == "example-10"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Tilted Pie</span>');
-                            $("#panel-12 .panel-tag").html("The pie can be tilted at an angle");
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true,
-                                        radius: 1,
-                                        tilt: 0.5,
-                                        label: {
-                                            show: true,
-                                            radius: 1,
-                                            formatter: labelFormatter,
-                                            background: {
-                                                opacity: 0.8
-                                            }
-                                        },
-                                        combine: {
-                                            color: "#999",
-                                            threshold: 0.1
-                                        }
-                                    }
-                                },
-                                legend: {
-                                    show: false
-                                }
-                            });
-                            break;
-                        case (id == "example-11"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Donut Hole</span>');
-                            $("#panel-12 .panel-tag").html("A donut hole can be added");
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        innerRadius: 0.5,
-                                        show: true
-                                    }
-                                }
-                            });
-                            break;
-                        case (id == "example-12"):
-                            $("#panel-12 h2").html(
-                                'Pie <span class="fw-300 font-italic">Interactivity</span>');
-                            $("#panel-12 .panel-tag").html(
-                                "The pie can be made interactive with hover and click events");
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        innerRadius: 0.5,
-                                        show: true
-                                    }
-                                }
-                            });
-                            $.plot(placeholder, dataSetPie, {
-                                series: {
-                                    pie: {
-                                        show: true
-                                    }
-                                },
-                                grid: {
-                                    hoverable: true,
-                                    clickable: true
-                                }
-                            });
-
-                            placeholder.bind("plothover", function(event, pos, obj) {
-
-                                if (!obj) {
-                                    return;
-                                }
-
-                                var percent = parseFloat(obj.series.percent).toFixed(2);
-                                $("#hover").html("<span style='font-weight:bold; color:" + obj
-                                    .series.color + "'>" + obj.series.label + " (" +
-                                    percent + "%)</span>");
-                            });
-
-                            placeholder.bind("plotclick", function(event, pos, obj) {
-
-                                if (!obj) {
-                                    return;
-                                }
-
-                                percent = parseFloat(obj.series.percent).toFixed(2);
-                                alert("" + obj.series.label + ": " + percent + "%");
-                            });
-                            break;
-                    }
-
-                });
-            }
-            flot_pie();
-            /* flot pie chart -- end*/
         });
     </script>
 @endsection

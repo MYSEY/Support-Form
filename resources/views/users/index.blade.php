@@ -54,13 +54,15 @@
                                 @if (count($data)>0)
                                     @foreach ($data as $key=>$item)
                                         <tr>
-                                            <td></td>
+                                            <td class="sorting_1" tabindex="0">
+                                                <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern" style="width: 36px;height: 36px;">
+                                            </td>
                                             <td>{{$item->name}}</td>
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->user}}</td>
                                             <td> </td>
-                                            <td> </td>
-                                            <td> </td>
+                                            <td>{{$item->name_english}}</td>
+                                            <td>{{$item->branch_name_en}}</td>
                                             <td style="text-align:center">
                                                 <div class="rating" data-rating="{{$item->rating}}"></div>
                                             </td>

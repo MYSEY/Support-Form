@@ -23,8 +23,10 @@
             </div>
             <div class="panel-container show">
                 <div class="panel-content">
-                    <div class="tab-content py-3">
-                        @include('tickets.table-tickets')
+                    <div class="table-responsive">
+                        <div class="tab-content py-3">
+                            @include('tickets.table-tickets')
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,7 +140,7 @@
                                     '<td>'+(value.assigned_by ? value.assigned_by.name : value.assignedby)+'</td>'+
                                     '<td>'+(value.last_replier ? value.last_replier.name : value.name)+'</td>'+
                                     '<td>'+due_date+'</td>'+
-                                    '<td></td>'+
+                                    '<td>'+(value.issue_type)+'</td>'+
                                     '<td>'+
                                         '<div style="display: flex">'+
                                             '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:'+value.priorities.color+'"></i> <span>'+(value.priority ? value.priorities.name : "")+'</span>'+

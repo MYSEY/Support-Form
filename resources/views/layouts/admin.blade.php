@@ -21,7 +21,7 @@
         <link rel="icon" type="image/png" sizes="32x32" href="{{asset('/admins/img/favicon.ico')}}">
         <link rel="mask-icon" href="{{asset('admins/img/favicon/safari-pinned-tab.svg')}}" color="#5bbad5">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/datagrid/datatables/datatables.bundle.css')}}">
-        <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+        <link rel="stylesheet" href="{{asset('admins/css/notifications/toastr/toastr.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('/admins/css/formplugins/select2/select2.bundle.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css')}}">
         <style>
@@ -101,7 +101,6 @@
                             <img src="{{asset('admins/img/favicon/commalogo1.png')}}" alt="SupportForm WebApp" aria-roledescription="logo" style="width: 90px">
                             <span class="page-logo-text mr-1">Support Form</span>
                             <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
-                            <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
                         </a>
                     </div>
                     <!-- BEGIN PRIMARY NAVIGATION -->
@@ -697,7 +696,7 @@
         <script src="{{asset('admins/js/statistics/flot/flot.bundle.js')}}"></script>
         <script src="{{asset('admins/js/statistics/easypiechart/easypiechart.bundle.js')}}"></script>
         <script src="{{asset('admins/js/datagrid/datatables/datatables.bundle.js')}}"></script>
-        <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+        <script src="{{asset('admins/js/notifications/toastr/toastr.js')}}"></script>
 
         <script src="{{asset('admins/js/formplugins/select2/select2.bundle.js')}}"></script>
         <script src="{{asset('admins/js/formplugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
