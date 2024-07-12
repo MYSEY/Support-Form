@@ -17,6 +17,9 @@ return new class extends Migration
             $table->integer('user_id');
             $table->longText('message')->nullable();
             $table->longText('attachments')->nullable();
+            $table->bigInteger('created_by')->unsigned()->nullable();
+            $table->bigInteger('updated_by')->unsigned()->nullable();
+            $table->dateTime('deleted_at')->nullable();
             $table->timestamps();
         });
     }
