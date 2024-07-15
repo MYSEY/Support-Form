@@ -21,40 +21,63 @@
 </style>
 {{-- <div id="panel-1" class="panel"> --}}
     {{-- <div class="container mt-5"> --}}
+        <input type="hidden" name="id" id="e_id_ticket" value="{{$data_ticket->id}}">
         <div class="row">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <h3>{{$data_ticket->subject}}</h3><br>
-                        <h5 class="card-title">Contact: <span class="text-primary">{{$data_ticket->name}} ,</span>
-                            <span class="ml-3">{{ \Carbon\Carbon::parse($data_ticket->created_at)->format('d-M-Y h:i A') ?? '' }}</span>
-                        </h5>
-                       @php
-                            $issueTypeArray = json_decode($data_ticket->issue_type, true);
-                            $firstIssueType = $issueTypeArray ?? '';
-                        @endphp
-                        @foreach ($firstIssueType as $type)
-                            <p class="card-text">{{$type["title"]}}: {{$type["value"]}}</p>
-                        @endforeach
+                <div id="panel-1" class="panel panel-sortable" role="widget">
+                    <div class="panel-hdr">
+                        <h2>
+                            {{$data_ticket->subject}} <span class="fw-300"><i></i></span>
+                        </h2>
+                    </div>
+                    <div class="panel-container show">
+                            <div class="panel-content poisition-relative">
+                                {{-- <h3>{{$data_ticket->subject}}</h3><br> --}}
+                            <h5 class="card-title">Contact: <span class="text-primary">{{$data_ticket->name}} ,</span>
+                                <span class="ml-3">{{ \Carbon\Carbon::parse($data_ticket->created_at)->format('d-M-Y h:i A') ?? '' }}</span>
+                            </h5>
+                            @php
+                                $issueTypeArray = json_decode($data_ticket->issue_type, true);
+                                $firstIssueType = $issueTypeArray ?? '';
+                            @endphp
+                            @foreach ($firstIssueType as $type)
+                                <p class="card-text">{{$type["title"]}}: {{$type["value"]}}</p>
+                            @endforeach
 
-                        <p class="card-text">
-                            {!! nl2br(e($data_ticket->message)) !!}
-                        </p>
-                        <button class="btn btn-outline-success" id="btn-add-note">Add note</button>
-                        <div class="form-noted mt-3" style="display: none;">
-                            <div class="form-group">
-                                <label class="form-label" for="ticket-textarea">Message: <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="ticket-textarea" rows="5"></textarea>
+                            <p class="card-text">
+                                {!! nl2br(e($data_ticket->message)) !!}
+                            </p>
+
+                            <div id="show-notes"> </div>
+
+                            <button class="btn btn-outline-success" id="btn-add-note">Add note</button>
+                            <div class="form-noted mt-3" style="display: none;">
+                                <div class="form-group">
+                                    <label class="form-label" for="ticket-textarea">Message: <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="ticket-textarea" rows="5"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <input type="file" id="attachments" class="form-control-file">
+                                </div>
+                                <button class="btn btn-danger" id="btn-save-note">Submit</button>
                             </div>
-                            <div class="form-group">
-                                <input type="file" id="example-fileinput" class="form-control-file">
-                            </div>
-                            <button class="btn btn-danger">Submit</button>
                         </div>
-                       
+                    </div>
+                </div>
+
+                <div id="panel-2" class="panel panel-sortable" role="widget">
+                    <div class="panel-hdr">
+                        <h2>
+                            {{$data_ticket->subject}} <span class="fw-300"><i></i></span>
+                        </h2>
+                    </div>
+                    <div class="panel-container show">
+                            
                     </div>
                 </div>
             </div>
+
+
             <div class="col-md-4">
                 <div class="btn-group btn-group-custom d-flex justify-content-end" role="group" aria-label="Print Options">
                     <button type="button" class="btn btn-outline-primary"> <i class="fal fa-edit"></i> Edit</button>
@@ -216,14 +239,159 @@
         </div>
        
     
+
+
+        <!-- Modal Edit Note -->
+        <div class="modal fade" id="editNote" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Note</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{url('admin/note/update')}}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            @csrf
+                            <input type="hidden" name="id" class="e_id_note" id="e_id_note" value="">
+                            <div class="form-group">
+                                <label class="form-label">Message: <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="e_message_note" name="message" rows="5"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="file" id="e_attachments" name="attachments" class="form-control-file">
+                            </div>
+                            <div class="float-lg-right">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete note Modal -->
+        <div class="modal custom-modal fade" id="delteNote" role="dialog">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-header">
+                            <h5 class="modal-title">Delete</h5>
+                            <p>Are you sure want to delete?</p>
+                        </div>
+                        <div class="modal-btn delete-action">
+                            <form action="{{url('admin/note/delete')}}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="id" class="d_id_note" id="d_id_note" value="">
+                                <div class="float-lg-right">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger waves-effect waves-themed">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     {{-- </div> --}}
 {{-- </div> --}}
 @endsection
 @section('script')
     @include('includs.datatable_basic')
     <script type="text/javascript">
+    $(function(){
+        var url = window.location.pathname;
+        var id = url.substring(url.lastIndexOf('/') + 1);
+        showNote(id)
        $("#btn-add-note").click(function(){
             $(".form-noted").toggle();
+            $("#ticket-textarea").addClass("is-valid");
+            $("#ticket-textarea").removeClass("is-invalid");
         });
+        $(document).on('click','#btn-note-edit', function(){
+            let id = $(this).data("id");
+            let message = $(this).data("message");
+            $("#e_id_note").val(id);
+            $("#e_message_note").val(message);
+            $('#editNote').modal('show');
+        });
+        $(document).on('click','#btn-note-delete', function(){
+            let id = $(this).data("id");
+            $("#d_id_note").val(id);
+            $('#delteNote').modal('show');
+        });
+        $("#btn-save-note").click(function() {
+            if ($("#ticket-textarea").val() == null || $("#ticket-textarea").val() == "") {
+                $("#ticket-textarea").addClass("is-invalid");
+                $("#ticket-textarea").removeClass("is-valid");
+                toastr.error("Please input text!");
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: "{{url('admin/note/save')}}",
+                    data: {
+                        "_token":                   "{{ csrf_token() }}",
+                        ticket_id:                  $("#e_id_ticket").val(),
+                        message:                    $("#ticket-textarea").val(),
+                        // attachments:             $("#attachments").val(),
+                    },
+                    dataType: "JSON",
+                    success: function (response) {
+                        if (response.status == "error") {
+                            toastr.error(response.message);
+                        }else{
+                            toastr.success('Data create successfully.');
+                            var url = "{{ URL('admin/ticket/detail/') }}/" + id;
+                            window.location.replace(url); 
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error(error);
+                    }
+                });
+            }
+        });
+        
+        
+    });
+    function nl2br(str) {
+        return str.replace(/\n/g, '<br>');
+    }
+    function showNote(ticket_id){
+        $.ajax({
+            type: "GET",
+            url: "{{url('admin/note/show')}}",
+            data: {
+                ticket_id:ticket_id
+            },
+            dataType: "JSON",
+            success: function (response) {
+                let datas = response.datas;
+                console.log("response: ",response.datas);
+                let text = "";
+                if (datas.length > 0) {
+                    datas.forEach(function(value, index) {
+                        var message = nl2br(value.message);
+                        let created_at = moment(value.updated_at).format('D-MMM-YYYY h:mm');
+                        text +='<div class="panel-tag">'+
+                                '<div>'+
+                                    '<a style="float: right;" href="javascript:void(0);" id="btn-note-delete" data-id="'+value.id+'" data-toggle="tooltip" title="Delete" class="btn btn-outline-primary btn-sm btn-icon waves-effect waves-themed">'+
+                                        '<i class="fal fa-trash-alt"></i>'+
+                                    '</a>'+
+                                    '<a style="float: right;" href="javascript:void(0);" id="btn-note-edit" data-id="'+value.id+'" data-message="'+value.message+'" data-toggle="tooltip" title="Edit" class="mr-1 btn btn-outline-secondary btn-sm btn-icon waves-effect waves-themed">'+
+                                        '<i class="fal fa-edit"></i>'+
+                                    '</a>'+
+                                    '<p class="card-text">Note by: <strong>'+value.created_by.name+'</strong> , '+created_at+'</p>'+
+                                '</div>'+
+                                '<p class="card-text mt-2">'+message+'</p>'+
+                            '</div>';
+                    });
+                    $("#show-notes").html(text);
+                }
+            }
+        });
+    }
     </script>
 @endsection

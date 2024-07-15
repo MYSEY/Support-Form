@@ -11,6 +11,7 @@ use App\Http\Controllers\Admins\StatusesController;
 use App\Http\Controllers\Admins\DashboardController;
 use App\Http\Controllers\Admins\IssueTypeController;
 use App\Http\Controllers\Admins\DepartmentController;
+use App\Http\Controllers\Admins\NoteController;
 use App\Http\Controllers\Admins\TicketReportController;
 
 /*
@@ -49,6 +50,13 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/ticket/update', [TicketController::class, 'edit']);
     Route::post('/ticket/save', [TicketController::class, 'store']);
     Route::get('/ticket/detail/{id}', [TicketController::class, 'detail']);
+
+    // Note  
+    Route::get('/note/show', [NoteController::class, 'show']);
+    Route::get('/note/create/{id}', [NoteController::class, 'create']);
+    Route::post('/note/update', [NoteController::class, 'update']);
+    Route::post('/note/save', [NoteController::class, 'store']);
+    Route::post('/note/delete', [NoteController::class,'destroy']);
 
     // Statuses
     Route::get('/statuses', [StatusesController::class, 'index']);
