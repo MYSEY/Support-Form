@@ -31,7 +31,7 @@ trait GeneratingTicketID
             }
         }
         do {
-            $ticketID = $currentYear->format('y').'0'.str_pad(($count + 1), 6, "0", STR_PAD_LEFT);
+            $ticketID = $currentYear->format('y').'-'.str_pad(($count + 1), 6, "0", STR_PAD_LEFT);
             $alreadyExist = Ticket::select('trackid')->where('trackid', $ticketID)->first()->trackid ?? null;
             $count++;
         } while ($alreadyExist);
