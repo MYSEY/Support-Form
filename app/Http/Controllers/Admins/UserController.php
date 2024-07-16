@@ -61,6 +61,7 @@ class UserController extends Controller
             }
             $data = $request->all();
             $data['created_by'] = Auth::user()->id;
+            $data['status'] = 'Active';
             $data['password']   = Hash::make($request->password);
             User::create($data);
             return response()->json([
@@ -123,6 +124,7 @@ class UserController extends Controller
             $data["notify_assigned"]            = $request->notify_assigned;
             $data["notify_note"]                = $request->notify_note;
             $data["notify_pm"]                  = $request->notify_pm;
+            $data['status']                     = 'Active';
             $data['updated_by']                 = Auth::user()->id;
             $data->save();
             return response()->json([
