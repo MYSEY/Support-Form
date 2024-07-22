@@ -113,7 +113,7 @@
                                     <div class="dropdown-menu" style="">
                                         @if (count($status) > 0)
                                             @foreach ($status as $item)
-                                                <a class="dropdown-item" href="#"><span style="color: {{$item->color}}">{{$item->name}}</span></a>
+                                                <a class="dropdown-item btn-update-status" href="javascript:void(0);" data-id="{{$item->id}}"><span style="color: {{$item->color}}">{{$item->name}}</span></a>
                                             @endforeach
                                         @endif
                                     </div>
