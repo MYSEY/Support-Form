@@ -12,6 +12,7 @@ use App\Http\Controllers\Admins\DashboardController;
 use App\Http\Controllers\Admins\IssueTypeController;
 use App\Http\Controllers\Admins\DepartmentController;
 use App\Http\Controllers\Admins\NoteController;
+use App\Http\Controllers\Admins\ReplyController;
 use App\Http\Controllers\Admins\TicketReportController;
 
 /*
@@ -50,6 +51,9 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/ticket/update', [TicketController::class, 'edit']);
     Route::post('/ticket/save', [TicketController::class, 'store']);
     Route::get('/ticket/detail/{id}', [TicketController::class, 'detail']);
+    Route::post('/ticket/update/status', [TicketController::class, 'status']);
+    Route::post('/ticket/update/priority', [TicketController::class, 'priorities']);
+    Route::post('/ticket/update/assignedto', [TicketController::class, 'assignedTo']);
 
     // Note  
     Route::get('/note/show', [NoteController::class, 'show']);
@@ -57,6 +61,13 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/note/update', [NoteController::class, 'update']);
     Route::post('/note/save', [NoteController::class, 'store']);
     Route::post('/note/delete', [NoteController::class,'destroy']);
+
+    // Replies  ticket
+    Route::get('/replies/show', [ReplyController::class, 'show']);
+    Route::get('/replies/create/{id}', [ReplyController::class, 'create']);
+    Route::post('/replies/update', [ReplyController::class, 'update']);
+    Route::post('/replies/save', [ReplyController::class, 'store']);
+    Route::post('/replies/delete', [ReplyController::class,'destroy']);
 
     // Statuses
     Route::get('/statuses', [StatusesController::class, 'index']);

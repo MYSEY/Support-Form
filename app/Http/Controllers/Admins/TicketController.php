@@ -128,6 +128,54 @@ class TicketController extends Controller
         return view('tickets.ticket-detail', compact('data_ticket','status','branch', 'department', 'priority', 'user_support'));
     }
 
+    public function status(Request $request){
+        try {
+            $data = $request->all();
+            $data = Ticket::find($request->id);
+            $data['status'] = $request->status;
+            $data['updated_by']     = Auth::user()->id;
+            $data->save();
+            return response()->json([
+                'message' => "Status update successfully.",
+                'status'=>"success"
+            ]);
+            DB::commit();
+        } catch (\Throwable $exp) {
+            return response()->json(['errors' => $exp]);
+        }
+    }
+    public function priorities(Request $request){
+        try {
+            $data = $request->all();
+            $data = Ticket::find($request->id);
+            $data['priority'] = $request->priority;
+            $data['updated_by']     = Auth::user()->id;
+            $data->save();
+            return response()->json([
+                'message' => "Status update successfully.",
+                'status'=>"success"
+            ]);
+            DB::commit();
+        } catch (\Throwable $exp) {
+            return response()->json(['errors' => $exp]);
+        }
+    }
+    public function assignedTo(Request $request){
+        try {
+            $data = $request->all();
+            $data = Ticket::find($request->id);
+            $data['assignedby'] = $request->assigned_to;
+            $data['updated_by']     = Auth::user()->id;
+            $data->save();
+            return response()->json([
+                'message' => "Update assigned to successfully.",
+                'status'=>"success"
+            ]);
+            DB::commit();
+        } catch (\Throwable $exp) {
+            return response()->json(['errors' => $exp]);
+        }
+    }
     /**
      * Update the specified resource in storage.
      */
