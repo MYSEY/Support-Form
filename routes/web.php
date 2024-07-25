@@ -27,6 +27,7 @@ use App\Http\Controllers\Admins\TicketReportController;
 */
 Route::get('/', [LoginController::class, 'index']);
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login/change/password', [LoginController::class, 'changePassword']);
 // Route::get('/', function () {
 //     // return view('layouts.admin');
 //     return view('welcome');
