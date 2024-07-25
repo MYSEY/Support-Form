@@ -471,16 +471,21 @@
                 data: "data",
                 dataType: "JSON",
                 success: function(response) {
+                    // console.log(response.priorities);
+                    let dataPriorities = response.priorities;
                     if (response.dataTickets.length > 0) {
                         var newTicket = 0;
                         var priority = 0;
                         var assign = 0;
                         var tickeActive = 0;
+                        dataPriorities.map((element) => {
+                            console.log(element);
+                        });
                         response.dataTickets.map((item) => {
                             if (item.status == 1) {
                                 newTicket++;
                             }
-                            if (item.priority == 2) {
+                            if (item.priority == 1) {
                                 priority++;
                             }
                             if (item.owner == 1) {
@@ -498,6 +503,7 @@
                     }
                     let dataTicketStatus = {
                         dataTickets: response.dataTickets,
+                        customStatuses: response.customStatuses,
                     }
                     TicketStatus(dataTicketStatus);
                 }
@@ -647,7 +653,18 @@
                     }
                 });
             }
-            
+            // console.log(datas.customStatuses);
+            // let dataSetPie = [];
+            // datas.customStatuses.map((item)=>{
+            //     console.log(item);
+            //     dataSetPie.push(
+            //         {
+            //             label: item.name,
+            //             data: totalNew,
+            //             color: item.color
+            //         }
+            //     )
+            // });
             var dataSetPie = [
                 {
                     label: "New",

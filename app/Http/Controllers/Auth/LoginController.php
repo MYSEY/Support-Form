@@ -62,6 +62,13 @@ class LoginController extends Controller
                     ]);
                 }else{
                     if (Auth::attempt(['user' => $username, 'password' => $password])) {
+                        Online::updateOrCreate([
+                            'user_id' => $user->id,
+                        ],
+                        [
+                            'user_id' => $user->id,
+                            'dt' => Carbon::now(),
+                        ]);
                         return response()->json([
                             'message' => "Login successfully",
                             'status'=>"success",
@@ -143,6 +150,13 @@ class LoginController extends Controller
                 $user->status = "Active";
                 $user->save();
                 if (Auth::attempt(['user' => $request->username, 'password' => $request->new_password])) {
+                    Online::updateOrCreate([
+                        'user_id' => $user->id,
+                    ],
+                    [
+                        'user_id' => $user->id,
+                        'dt' => Carbon::now(),
+                    ]);
                     return response()->json([
                         'message' => "Login successfully",
                         'status'=>"success",

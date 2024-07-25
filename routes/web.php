@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admins\NoteController;
+use App\Http\Controllers\Admins\RoleController;
 use App\Http\Controllers\Admins\UserController;
+use App\Http\Controllers\Admins\ReplyController;
 use App\Http\Controllers\Admins\BranchController;
 use App\Http\Controllers\Admins\TicketController;
 use App\Http\Controllers\Admins\PriorityController;
@@ -11,8 +14,6 @@ use App\Http\Controllers\Admins\StatusesController;
 use App\Http\Controllers\Admins\DashboardController;
 use App\Http\Controllers\Admins\IssueTypeController;
 use App\Http\Controllers\Admins\DepartmentController;
-use App\Http\Controllers\Admins\NoteController;
-use App\Http\Controllers\Admins\ReplyController;
 use App\Http\Controllers\Admins\TicketReportController;
 
 /*
@@ -96,7 +97,8 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('ticket/report/show', [TicketReportController::class,'show']);
     Route::post('ticket/report/search', [TicketReportController::class,'search']);
     Route::get('ticket/report/export', [TicketReportController::class,'export']);
-    
+
+    Route::resource('role', RoleController::class);
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

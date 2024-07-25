@@ -133,6 +133,12 @@
                                     <span class="nav-link-text" data-i18n="nav.user">Users</span>
                                 </a>
                             </li>
+                            <li class="@if (Request::instance()->segment(2) == 'role') active @endif">
+                                <a href="{{url('admin/role')}}" title="Role" data-filter-tags="users">
+                                    <i class="fal fa-users"></i>
+                                    <span class="nav-link-text" data-i18n="nav.role">Role Permission</span>
+                                </a>
+                            </li>
                             <li class="@if (in_array(Request::instance()->segment(3), ['ticket'])) active @endif">
                                 <a href="#" title="Reports" data-filter-tags="application intel Reports">
                                     <i class="fal fa-chart-pie"></i>
