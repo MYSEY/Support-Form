@@ -98,8 +98,16 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        try{
+            Role::destroy($request->id);
+            Toastr::success('Role deleted successfully.','Success');
+            return redirect()->back();
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('Role delete fail.','Error');
+            return redirect()->back();
+        }
     }
 }

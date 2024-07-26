@@ -305,7 +305,9 @@
                                                         <td>{{$item->name}}</td>
                                                         <td>{{$item->branch_name_en}}</td>
                                                         <td>{{$item->dt}}</td>
-                                                        <td><a href="#" data-id="{{$item->user_id}}" class="btn_delete_user_onlin"><i class="ni ni-reload"></i></a></td>
+                                                        <td>
+                                                            <a href="javascript:void(0);" data-id="{{$item->user_id}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block btn_delete_user_onlin"><i class="ni ni-reload" style="font-size: 12px"></i></a>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             @endif

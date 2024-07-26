@@ -39,7 +39,7 @@
                                         <td>{{$item->guard_name}}</td>
                                         <td>
                                             <div class="d-flex demo">
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 status-delete" data-toggle="modal" data-target="#delete_role" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 role-delete" data-toggle="modal" data-target="#delete_role" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
                                                 <a href="{{url('admin/role',$item->id)}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>
                                             </div>
                                         </td>
@@ -64,8 +64,9 @@
                     <p>Are you sure want to delete?</p>
                 </div>
                 <div class="modal-btn delete-action">
-                    <form action="{{url('admin/role')}}" method="POST">
+                    <form action="{{url('admin/role/delete')}}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        @method('DELETE')
                         <input type="hidden" name="id" class="e_id" value="">
                         <div class="float-lg-right">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -77,4 +78,13 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).on('click','.role-delete', function(){
+            let id = $(this).data("id");
+            $('.e_id').val(id);
+        });
+    </script>
 @endsection
