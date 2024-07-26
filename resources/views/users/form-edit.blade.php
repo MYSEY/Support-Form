@@ -18,20 +18,22 @@
                     <div class="col-md-6">
                         <input type="hidden" name="id" class="e_id" value="">
                         <div class="form-group">
-                            <label class="form-label" for="e_user">Real name</label>
+                            <label class="form-label" for="e_user">Real name <span class="text-danger">*</span></label>
                             <input type="text" id="e_user" class="form-control e_user_required" name="user" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="e_name">Username</label>
+                            <label class="form-label" for="e_name">Username <span class="text-danger">*</span></label>
                             <input type="text" id="e_name" name="name" class="form-control e_user_required" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="e_email">Email</label>
+                            <label class="form-label" for="e_email">Email <span class="text-danger">*</span></label>
                             <input type="email" id="e_email" name="email" class="form-control e_user_required" placeholder="Email" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="role_permission">Role Permission <span class="text-danger">*</span></label>
-                            <input type="text" id="role_permission" name="role_permission" class="form-control user_required" required>
+                            <label class="form-label" for="e_role_permission">Role Permission <span class="text-danger">*</span></label>
+                            <select class="form-control e_user_required" name="role_permission" id="e_role_permission" required>
+                                
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="e_signature">Signature (max 1000 chars)</label>
@@ -243,6 +245,7 @@
                             email:                      $("#e_email").val(),
                             signature:                  $("#e_signature").val(),
                             autoassign:                 $("#e_auto_assign").val(),
+                            role_id:                    $("#e_role_permission").val(),
                             afterreply:                 afterreply,
                             autostart:                  autostart,
                             notify_customer_new:        notify_customer_new,
@@ -309,6 +312,17 @@
                         if (response.data.afterreply == 2){
                             $("#e_replying_afterreply2").prop("checked", true);
                         };
+                        if (response.role != '') {
+                            $('#e_role_permission').html('<option selected value=""> -- Select --</option>');
+                            $.each(response.role, function(i, item) {
+                                $('#e_role_permission').append($('<option>', {
+                                    value: item.id,
+                                    text: item.name,
+                                    selected: item.id == response.data.role_id
+                                }));
+                            });
+                        };
+
                         response.data.autostart ==1 ? $("#e_autostart").prop("checked", true) : $("#e_autostart").prop("checked", false);
                         response.data.notify_customer_new ==1 ? $("#e_notify_customer_new").prop("checked", true) : $("#e_notify_customer_new").prop("checked", false);
                         response.data.notify_customer_reply ==1 ? $("#e_notify_customer_reply").prop("checked", true) : $("#e_notify_customer_reply").prop("checked", false);

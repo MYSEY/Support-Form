@@ -39,7 +39,14 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="role_permission">Role Permission <span class="text-danger">*</span></label>
-                            <input type="text" id="role_permission" name="role_permission" class="form-control">
+                            <select class="form-control user_required" id="role_permission">
+                                <option value="">-- Select --</option>
+                                @if (count($rolePermissions) > 0)
+                                    @foreach ($rolePermissions as $item)
+                                        <option value="{{$item->id}}">{{$item->name}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="signature">Signature (max 1000 chars)</label>
@@ -297,6 +304,7 @@
                                         signature:                  $("#signature").val(),
                                         confirm_password:           $("#confirm_password").val(),
                                         autoassign:                 $("#auto_assign").val(),
+                                        role_id:                    $("#role_permission").val(),
                                         afterreply:                 afterreply,
                                         autostart:                  autostart,
                                         notify_customer_new:        notify_customer_new,

@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -45,7 +46,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.form-create');
+        $rolePermissions = Role::orderBy('id', 'asc')->get();
+        return view('users.form-create', compact('rolePermissions'));
     }
 
     /**
@@ -92,10 +94,12 @@ class UserController extends Controller
      */
     public function show(Request $request)
     {
+        $rolePermissions = Role::orderBy('id', 'asc')->get();
         $data = User::where('id',$request->id)->first();
         DB::commit();
         return response()->json([
-            'data'=>$data
+            'data'=>$data,
+            'role'=>$rolePermissions
         ]);
     }
 
@@ -125,6 +129,7 @@ class UserController extends Controller
             $data["notify_customer_reply"]      = $request->notify_customer_reply;
             $data["show_suggested"]             = $request->show_suggested;
             $data["autoreload"]                 = $request->autoreload;
+            $data["role_id"]                    = $request->role_id;
             $data["secmin"]                     = $request->secmin;
             $data["notify_new_unassigned"]      = $request->notify_new_unassigned;
             $data["notify_new_my"]              = $request->notify_new_my;
