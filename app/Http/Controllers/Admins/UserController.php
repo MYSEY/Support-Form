@@ -28,6 +28,7 @@ class UserController extends Controller
     public function index()
     {
         $data = DB::table('users')
+        ->where("users.deleted_at",null)
         ->leftJoin('branchs','branchs.id','=','users.branch_id')
         ->leftJoin('departments','departments.id','=','users.department_id')
         ->select(
@@ -44,7 +45,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('users.form-create');
     }
 
     /**
@@ -101,9 +102,9 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit()
     {
-        //
+        return view('users.form-edit');
     }
 
     /**
@@ -147,6 +148,21 @@ class UserController extends Controller
             DB::rollback();
             Toastr::error('User updated fail.','Error');
             return redirect()->back();
+        }
+    }
+
+    public function duplicateUser(Request $request){
+        try {
+            $duplicate= User::where("user",$request->username)->first();
+            DB::commit();
+            if ($duplicate) {
+                return ['message' => 'User name already exists', "data"=>1];
+            }else{
+                return ['message' => 'User name does not exist', "data"=>0];
+            }
+        } catch (\Exception $exp) {
+            DB::rollBack();
+            return response()->json(['message' => $exp->getMessage()], 500);
         }
     }
 
