@@ -42,10 +42,13 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     // users 
     Route::get('/user', [UserController::class, 'index']);
     Route::get('/user/show', [UserController::class, 'show']);
+    Route::get('/user/form-create', [UserController::class, 'create']);
+    Route::get('/user/form-edit/{id}', [UserController::class, 'edit']);
     Route::post('/user/create', [UserController::class, 'store']);
     Route::post('/user/update', [UserController::class, 'update']);
     Route::post('/user/delete', [UserController::class, 'destroy']);
     Route::post('/user/online/delete', [UserController::class, 'userOnlineDelet']);
+    Route::post('/user/duplicate', [UserController::class, 'duplicateUser']);
 
     // Ticket  
     Route::get('/ticket', [TicketController::class, 'index']);

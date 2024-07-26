@@ -155,7 +155,6 @@
                         dataType: "JSON",
                         success: function(response) {
                             let data =  response;
-                            console.log("response: ",response);
                             if (data.status == "error") {
                                 toastr.error(data.message);
                                 return false;
