@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admins;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use Brian2694\Toastr\Facades\Toastr;
+use App\Models\Online;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -161,6 +162,21 @@ class UserController extends Controller
         }catch(\Exception $e){
             DB::rollback();
             Toastr::error('User delete fail.','Error');
+            return redirect()->back();
+        }
+    }
+    public function userOnlineDelet(Request $request){
+        try{
+            if (Auth::user()->id != $request->user_id) {
+                Online::where('user_id',$request->user_id)->delete();
+            }
+            return response()->json([
+                'message' => "Delete user online successfully.",
+                'status'=>"success"
+            ]);
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('Delete user online fail.','Error');
             return redirect()->back();
         }
     }

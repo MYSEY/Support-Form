@@ -17,6 +17,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->integer('role_id');
             $table->string('user');
             $table->string('name');
             $table->string('email');
@@ -50,18 +51,6 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-
-        DB::table('users')->insert(
-            [
-                [
-                    'user'=>'Admin',
-                    'name'=>'Admin',
-                    'email'=>'admin@gmail.com',
-                    'password'=>Hash::make('Camma@123'),
-                    'status'=> 'Active',
-                ]
-            ]
-        );
     }
 
     /**

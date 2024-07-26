@@ -290,6 +290,7 @@
                                             <th>Role</th>
                                             <th>Branch</th>
                                             <th>Login DateTime</th>
+                                            <th>Action</th>
                                         </thead>
                                         <tbody>
                                             @if (count($data)>0)
@@ -304,6 +305,7 @@
                                                         <td>{{$item->name}}</td>
                                                         <td>{{$item->branch_name_en}}</td>
                                                         <td>{{$item->dt}}</td>
+                                                        <td><a href="#" data-id="{{$item->user_id}}" class="btn_delete_user_onlin"><i class="ni ni-reload"></i></a></td>
                                                     </tr>
                                                 @endforeach
                                             @endif
@@ -456,6 +458,24 @@
 @include('includs.datatable_basic')
     <script>
         $(function() {
+            $('.btn_delete_user_onlin').on('click',function(){
+                let user_id = $(this).data("id");
+                $.ajax({
+                    type: "POST",
+                    url: "{{url('admin/user/online/delete')}}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        user_id : user_id
+                    },
+                    dataType: "JSON",
+                    success: function (response) {
+                        if (response.status == "success") {
+                            toastr.success('Create user successfully.');
+                            window.location.replace("{{ URL('admin/dashboad') }}"); 
+                        }
+                    }
+                });
+            });
             $.ajax({
                 type: "GET",
                 url: "{{ url('admin/dashboad/show') }}",

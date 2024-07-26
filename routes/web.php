@@ -45,6 +45,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/user/create', [UserController::class, 'store']);
     Route::post('/user/update', [UserController::class, 'update']);
     Route::post('/user/delete', [UserController::class, 'destroy']);
+    Route::post('/user/online/delete', [UserController::class, 'userOnlineDelet']);
 
     // Ticket  
     Route::get('/ticket', [TicketController::class, 'index']);
