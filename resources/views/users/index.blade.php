@@ -27,12 +27,15 @@
                         User List
                     </h2>
                 </div>
+                
                 <div class="panel-container show">
-                    <div class="panel-tag">
-                        <div class="text-lg-right">
-                            <button type="button" class="btn btn-success btn-sm mr-1" id="btn-modal"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                    @can('create user')
+                        <div class="panel-tag">
+                            <div class="text-lg-right">
+                                <button type="button" class="btn btn-success btn-sm mr-1" id="btn-modal"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                            </div>
                         </div>
-                    </div>
+                    @endcan
                     <div class="panel-content">
                         <!-- datatable start -->
                         <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
@@ -81,8 +84,12 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex demo">
-                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 status-delete" data-toggle="modal" data-target="#delete_user" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
-                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 show-data-edit" data-toggle="modal" data-target="#user-edit" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
+                                                    @can('delete user')
+                                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 status-delete" data-toggle="modal" data-target="#delete_user" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                                                    @endcan
+                                                    @can('update user')
+                                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 show-data-edit" data-toggle="modal" data-target="#user-edit" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
+                                                    @endcan
                                                 </div>
                                             </td>
                                         </tr>

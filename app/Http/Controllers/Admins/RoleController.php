@@ -14,6 +14,14 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this-> middleware('permission:view role', ['only' => ['index']]);
+        $this->middleware('permission:create role', ['only' => ['create','store']]);
+        $this->middleware('permission:update role', ['only' => ['update','edit']]);
+        $this->middleware('permission:delete role', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $data = Role::all();
@@ -55,7 +63,8 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         $permission = Permission::all();
-        return view('roles.edit',compact('role','permission'));
+        $rolePermission = Permission::leftJoin("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")->where("role_has_permissions.role_id",$id)->pluck('id')->toArray();
+        return view('roles.edit',compact('role','rolePermission','permission'));
     }
 
     /**
@@ -69,9 +78,21 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Role $role)
     {
-        //
+        try{
+            $data = $request->only('name');
+            $role->update($data);
+            $permissions = Permission::whereIn('id', $request->permission)->get(['name'])->toArray();
+            $role->syncPermissions($permissions);
+            DB::commit();
+            Toastr::success('Role Updated successfully.','Success');
+            return redirect()->route('role.index');
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('Create updated fail','Error');
+            return redirect()->back();
+        }
     }
 
     /**

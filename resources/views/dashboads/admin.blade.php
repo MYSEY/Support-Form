@@ -308,15 +308,6 @@
                                                 @endforeach
                                             @endif
                                         </tbody>
-                                        <tfoot>
-                                            <th>Profile</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>User Name</th>
-                                            <th>Role</th>
-                                            <th>Branch</th>
-                                            <th>Login DateTime</th>
-                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
