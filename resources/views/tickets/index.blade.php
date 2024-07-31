@@ -140,7 +140,7 @@
                                     '<td>'+(value.assigned_by ? value.assigned_by.name : value.assignedby)+'</td>'+
                                     '<td>'+(value.last_replier ? value.last_replier.name : value.name)+'</td>'+
                                     '<td>'+due_date+'</td>'+
-                                    '<td>'+(value.issue_type)+'</td>'+
+                                    '<td>'+(value.issue_type ? value.issue_type.name : "")+'</td>'+
                                     '<td>'+
                                         '<div style="display: flex">'+
                                             '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:'+value.priorities.color+'"></i> <span>'+(value.priority ? value.priorities.name : "")+'</span>'+

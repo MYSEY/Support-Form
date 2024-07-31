@@ -26,4 +26,7 @@ class IssueType extends Model
         'updated_by',
         'deleted_at',
     ];
+    public function department(){
+        return $this->belongsTo(Department::class,'department_id');
+    }
 }

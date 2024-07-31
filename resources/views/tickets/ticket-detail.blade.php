@@ -34,14 +34,7 @@
                         <h5 class="card-title">Contact: <span class="text-primary">{{$data_ticket->name}} ,</span>
                             <span class="ml-3">{{ \Carbon\Carbon::parse($data_ticket->created_at)->format('d-M-Y h:i A') ?? '' }}</span>
                         </h5>
-                        @php
-                            $issueTypeArray = json_decode($data_ticket->issue_type, true);
-                            $firstIssueType = $issueTypeArray ?? '';
-                        @endphp
-                        @foreach ($firstIssueType as $type)
-                            <p class="card-text">{{$type["title"]}}: {{$type["value"]}}</p>
-                        @endforeach
-
+                        <p class="card-text">Issue Type: {{$data_ticket->issueType->name}}</p>
                         <p class="card-text">
                             {!! nl2br(e($data_ticket->message)) !!}
                         </p>
@@ -127,16 +120,13 @@
 
         <div class="col-md-4">
             <div class="btn-group btn-group-custom d-flex justify-content-end" role="group" aria-label="Print Options">
-                <button type="button" class="btn btn-outline-primary"> <i class="fal fa-edit"></i> Edit</button>
+                <a class="btn btn-outline-primary" href="{{url("admin/ticket/edit")}}/{{$data_ticket->id}}"><i class="fal fa-edit"></i> Edit</a>
                 <button type="button" class="btn btn-outline-primary"> <span class="fal fa-print mr-1"></span> Print</button>
                 <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#"><i class="fal fa-lock-alt"></i> Look ticket</a>
-                    <a class="dropdown-item" href="#"><i class="fal fa-tags"></i> Tag ticket</a>
                     <a class="dropdown-item" href="#"><i class="fal fa-envelope"></i> Re-send email notification</a>
-                    <a class="dropdown-item" href="#">Import to Knowledgebase</a>
                     <a class="dropdown-item" href="#"><i class="fal fa-arrow-to-bottom"></i> Export to Excel</a>
                     <a class="dropdown-item" href="#"><i class="fal fa-trash-alt"></i> Delete ticket</a>
                 </div>

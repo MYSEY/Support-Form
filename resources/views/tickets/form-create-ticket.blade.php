@@ -49,7 +49,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="issue_types"></div>
+
+                        <div class="form-group">
+                            <label class="form-label">Issue Type:</label>
+                            <select class="select2 form-control w-100 select2-hidden-accessible" id="issue-type">
+                                @foreach ($issuetype as $item)
+                                    <option value="{{$item->id}}">{{ $item->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
                     <div class="col-xl-6">
@@ -138,16 +146,6 @@
                 // return false;
                 $(".btn-hidden-show").hide();
                 $(".btn-loading").css('display', 'block');
-                var issueTypeValues = [];
-                $('input[name="issue_type"]:checked').each(function() {
-                    let value = $(this).val();
-                    let title = $(this).data("title");
-                    let data = {
-                        title : title,
-                        value : value,
-                    };
-                    issueTypeValues.push(data);
-                });
 
                 $.ajax({
                     type: "POST",
@@ -162,7 +160,7 @@
                         priority:                   $("#ticket-priority").val(),
                         assignedby:                 $("#ticket-assign").val(),
                         due_date:                   $("#ticket-due-date").val(),
-                        issue_type:                 issueTypeValues,
+                        issue_type:                 $("#issue-type").val(),,
                         overdue_email_sent:         $('input[name="ticket-notification"]:checked').val(),
                         satisfaction_email_sent:    $('input[name="ticket-check-submiss"]:checked').val(),
                         // attachments:        $("#ticket-file").val(),
@@ -180,80 +178,6 @@
                 })
             });
         });
-
-        function dataIssueType(ids){
-            $.ajax({
-                type: "POST",
-                url: "{{ url('admin/issue-type/ids') }}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    department_id:ids.department_id,
-                    branch_id:ids.branch_id
-                },
-                dataType: "JSON",
-                success: function(response) {
-                    let datas = response.data;
-                    console.log("response: ",datas);
-                    if (datas.length > 0) {
-                        let issue_type = '';
-                        datas.map((item) => {
-                            let checks = "";
-                            if (item.type == "checkbox") {
-                                let text = item.value.split("\n");
-                                text.map((check,index) => {
-                                    checks +='<div class="custom-control custom-checkbox">'+
-                                            '<input type="checkbox" class="custom-control-input checkbox_issue_type" value="'+check+'" id="checkod_'+index+'" data-title="'+item.name+'" name="issue_type">'+
-                                            '<label class="custom-control-label" for="checkod_'+index+'">'+check+'</label>'+
-                                        '</div>';
-                                })
-                                issue_type +='<div class="form-group">'+
-                                                '<label class="form-label">'+item.name+'</label>'+
-                                                '<div class="demo">'+
-                                                    checks+
-                                                '</div>'+
-                                            '</div>';
-                            };
-                            if (item.type == "radio") {
-                                let text = item.value.split("\n");
-                                text.forEach(function(check, index) {
-                                    checks += '<div class="custom-control custom-radio">' +
-                                            '<input type="radio" class="custom-control-input checkbox_issue_type" id="issueRadio_' + index + '" name="issue_type" data-title="'+item.name+'" value="' + check + '">' +
-                                            '<label class="custom-control-label" for="issueRadio_' + index + '">' + check + '</label>' +
-                                        '</div>';
-                                });
-                                issue_type +='<div class="form-group">'+
-                                                '<label class="form-label">'+item.name+'</label>'+
-                                                '<div class="demo">'+
-                                                    checks+
-                                                '</div>'+
-                                            '</div>';
-                            }
-                            if (item.type == "select") {
-                                let text = item.value.split("\n");
-                                text.map((check,index) => {
-                                    checks +='<option value="'+check+'">'+check+'</option>';
-                                })
-                                issue_type +='<div class="form-group">'+
-                                                '<label class="form-label">'+item.name+'</label>'+
-                                                '<select class="form-control checkbox_issue_type" data-title="'+item.name+'">'+
-                                                    '<option></option>'+
-                                                    checks+
-                                                '</select>'+
-                                            '</div>';
-                                            $(".issue_types").addClass("form-group");
-                            }
-                            if (item.type == "text") {
-                                issue_type +='<div class="form-group">'+
-                                                '<label class="form-label">'+item.name+'</label>'+
-                                                '<p>'+item.value+'</p>'+
-                                            '</div>';
-                            }
-                        });
-                        $(".issue_types").append(issue_type);
-                    }
-                }
-            });
-        }
     </script>
 @endsection
 

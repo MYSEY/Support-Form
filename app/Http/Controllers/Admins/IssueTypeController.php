@@ -19,10 +19,9 @@ class IssueTypeController extends Controller
      */
     public function index()
     {
-        $branch = Branch::orderBy('id','DESC')->get();
         $department = Department::orderBy('id','DESC')->get();
-        $data = IssueType::all();
-        return view('issue_type.index',compact('branch','department','data'));
+        $data = IssueType::with("department")->get();
+        return view('issue_type.index',compact('department','data'));
     }
 
     /**
@@ -63,11 +62,9 @@ class IssueTypeController extends Controller
     public function show(Request $request)
     {
         $data = IssueType::where('id',$request->id)->first();
-        $branch = Branch::orderBy('id','DESC')->get();
         $department = Department::orderBy('id','DESC')->get();
         return response()->json([
             'success'=>$data,
-            'branch'=>$branch,
             'department'=>$department,
         ]);
     }
@@ -101,12 +98,9 @@ class IssueTypeController extends Controller
         try {
             IssueType::where('id',$request->id)->update([
                 'name'          => $request->name,
-                'type'          => $request->type,
                 'req'           => $request->req,
                 'category_type' => $request->category_type,
                 'department_id' => $request->department_id,
-                'branch_id'     => $request->branch_id,
-                'value'         => $request->value,
                 'updated_by'    => Auth::user()->id,
             ]);
             DB::commit();

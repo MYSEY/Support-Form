@@ -75,6 +75,9 @@ class Ticket extends Model
     public function lastReplier(){
         return $this->belongsTo(User::class,'lastreplier');
     }
+    public function issueType(){
+        return $this->belongsTo(issueType::class,'issue_type');
+    }
 
 
     public function createdBy()

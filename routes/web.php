@@ -54,12 +54,14 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/ticket', [TicketController::class, 'index']);
     Route::get('/ticket/show', [TicketController::class, 'show']);
     Route::get('/ticket/create/{id}', [TicketController::class, 'create']);
-    Route::get('/ticket/update', [TicketController::class, 'edit']);
+    Route::get('/ticket/edit/{id}', [TicketController::class, 'edit']);
     Route::post('/ticket/save', [TicketController::class, 'store']);
     Route::get('/ticket/detail/{id}', [TicketController::class, 'detail']);
+    Route::post('/ticket/update', [TicketController::class, 'update']);
     Route::post('/ticket/update/status', [TicketController::class, 'status']);
     Route::post('/ticket/update/priority', [TicketController::class, 'priorities']);
     Route::post('/ticket/update/assignedto', [TicketController::class, 'assignedTo']);
+    Route::get('/ticket/show-one', [TicketController::class, 'showOne']);
 
     // Note  
     Route::get('/note/show', [NoteController::class, 'show']);

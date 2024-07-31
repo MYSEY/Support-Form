@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Traits\GeneratingTicketID;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
@@ -77,6 +78,7 @@ class TicketController extends Controller
         ->with("branch")->with("lastReplier")
         ->with("CustomStatus")->with("assignedBy")
         ->with("priorities")->with("createdBy")
+        ->with("issueType")
         ->when($request->status, function ($query, $status) {
             if ($status == 2) {
                 $query->where("assignedby", Auth::user()->id);
@@ -102,11 +104,21 @@ class TicketController extends Controller
             'datas'=>$data_tickets
         ]);
     }
+    public function showOne(Request $request)
+    {
+        $issuetype= IssueType::orderBy('id','DESC')->get();
+        $data_ticket = Ticket::where("id", $request->id)->first();
+        DB::commit();
+        return response()->json([
+            'data'=>$data_ticket,
+            'issuetype'=>$issuetype
+        ]);
+    }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit()
     {
         return view('tickets.form-edit-ticket');
     }
@@ -123,6 +135,7 @@ class TicketController extends Controller
         ->with("branch")->with("lastReplier")
         ->with("CustomStatus")->with("assignedBy")
         ->with("priorities")->with("createdBy")
+        ->with("issueType")
         ->where("id", $request->id)
         ->first();
         return view('tickets.ticket-detail', compact('data_ticket','status','branch', 'department', 'priority', 'user_support'));
@@ -179,9 +192,28 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        try{
+            $data = Ticket::find($request->id);
+            $data['name']  = $request->name;
+            $data['email']  = $request->email;
+            $data['subject']  = $request->subject;
+            $data['issue_type']  = $request->issue_type;
+            $data['message']  = $request->message;
+            $data['updated_by']  = Auth::user()->id;
+            $data->save();
+
+            // Toastr::success('Updated successfully.','Success');
+            return response()->json([
+                'message' => "Update data successfully.",
+                'status'=>"success"
+            ]);
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('Updated fail.','Error');
+            return redirect()->back();
+        }
     }
 
     /**
