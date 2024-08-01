@@ -79,6 +79,9 @@ class Ticket extends Model
         return $this->belongsTo(issueType::class,'issue_type');
     }
 
+    public function histories(){
+        return $this->hasMany(TicketHistory::class,'trackid','id')->with("createdBy")->with("statusFrom")->with("statusTo")->with("priorityFrom")->with("priorityTo")->with("assignedBy")->with("recipient");
+    }
 
     public function createdBy()
     {

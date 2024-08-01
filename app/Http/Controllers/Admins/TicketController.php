@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Traits\GeneratingTicketID;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\TicketHistory;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,10 +56,15 @@ class TicketController extends Controller
             $status = CustomStatus::orderBy('id', 'asc')->first();
             $data = $request->all();
             $data['trackid'] = $this->generateTicketID();
-            $data['issue_type'] = json_encode($request->issue_type);
+            $data['issue_type'] = $request->issue_type;
             $data['status'] = $status->id;
             $data['created_by'] = Auth::user()->id;
-            Ticket::create($data);
+            $ticket = Ticket::create($data);
+
+            $data_histoies['trackid'] = $ticket->id;
+            $data_histoies['type'] = "new";
+            $data_histoies['created_by'] = Auth::user()->id;
+            TicketHistory::create($data_histoies);
             return response()->json([
                 'message' => "Ticket created successfully.",
                 'status'=>"success"
@@ -136,6 +142,7 @@ class TicketController extends Controller
         ->with("CustomStatus")->with("assignedBy")
         ->with("priorities")->with("createdBy")
         ->with("issueType")
+        ->with("histories")
         ->where("id", $request->id)
         ->first();
         return view('tickets.ticket-detail', compact('data_ticket','status','branch', 'department', 'priority', 'user_support'));
@@ -145,9 +152,17 @@ class TicketController extends Controller
         try {
             $data = $request->all();
             $data = Ticket::find($request->id);
+            $data_histoies['from_status'] = $data->status;
+
             $data['status'] = $request->status;
             $data['updated_by']     = Auth::user()->id;
             $data->save();
+            $data_histoies['trackid'] = $data->id;
+            $data_histoies['type'] = "status";
+            $data_histoies['to_status'] = $request->status;
+            $data_histoies['created_by'] = Auth::user()->id;
+            TicketHistory::create($data_histoies);
+
             return response()->json([
                 'message' => "Status update successfully.",
                 'status'=>"success"
@@ -161,9 +176,18 @@ class TicketController extends Controller
         try {
             $data = $request->all();
             $data = Ticket::find($request->id);
+            $data_histoies['from_priority_id'] = $data->priority;
+
             $data['priority'] = $request->priority;
             $data['updated_by']     = Auth::user()->id;
             $data->save();
+
+            $data_histoies['trackid'] = $data->id;
+            $data_histoies['type'] = "priority";
+            $data_histoies['to_priority_id'] = $request->priority;
+            $data_histoies['created_by'] = Auth::user()->id;
+            TicketHistory::create($data_histoies);
+
             return response()->json([
                 'message' => "Status update successfully.",
                 'status'=>"success"
@@ -177,9 +201,17 @@ class TicketController extends Controller
         try {
             $data = $request->all();
             $data = Ticket::find($request->id);
+            $data_histoies['assignedby'] = $data->assignedby;
             $data['assignedby'] = $request->assigned_to;
             $data['updated_by']     = Auth::user()->id;
             $data->save();
+
+            $data_histoies['trackid'] = $data->id;
+            $data_histoies['type'] = "assign";
+            $data_histoies['recipient_id'] = $request->assigned_to;
+            $data_histoies['created_by'] = Auth::user()->id;
+            TicketHistory::create($data_histoies);
+
             return response()->json([
                 'message' => "Update assigned to successfully.",
                 'status'=>"success"

@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito:200,600');
+@import url('https://fonts.googleapis.com/css?family=Nokora');
+a{
+    text-decoration: none;
+ }
+/* #ivoice{
+    background-color:white !important;
+} */
+.table-a {
+    font-family: 'Nunito','Nokora', sans-serif, serif;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14px;
+    
+}
+.print_table_training{
+    font-family: 'Nunito','Nokora', sans-serif, serif;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+}
+.tbody_print tr, th, td{
+    padding: 1.5%;
+    border: 0.5px solid #dee2e6;
+}
+.td-border {
+    border: none !important
+}
+.tr-bckground-ch {
+    background-color: chocolate !important
+}
+.tr-background-83 {
+    background-color: #83d85c;
+}
+.td-background-cc {
+    background-color: #cccccc !important;
+}
+
+
+/* block style print candidate resume */
+ol {
+    list-style: none;
+    font-family: 'Khmer OS Battambang', serif;
+    margin-top: 0%;
+}
+ol.s {list-style-type: inherit;}
+
+.set-font,p{
+    font-family:'Khmer OS Battambang', serif;
+    margin-top: -15px;
+    font-size: 12px;
+}
+.font-title, .title{
+    font-family: 'Khmer OS Muol Light', serif;
+    font-size: 18px;
+}
+.font-title, p {
+    font-family: 'Khmer OS Bokor', serif;
+    font-size: 12px;
+    margin-top: -2px;
+}
+.font-sub-title{
+    text-align: center; 
+    margin-top: -12px;
+}
+.label-sub{
+    font-family: "Khmer OS Muol Light", serif;
+    font-size: 14px;
+}
+.label-subs{
+    font-family: 'Khmer OS Siemreap', serif;
+    font-size: 14px;
+}
+.label-subss{
+    font-family: 'Khmer OS Siemreap', serif;
+    font-size: 16px;
+}
+.label-sub_l{
+    font-weight: bold;
+    font-family: 'Khmer OS Bokor', serif;
+    font-size: 14px;
+}
+.label-sub_ll{
+    font-weight: bold;
+    font-family: 'Khmer OS Bokor', serif;
+    font-size: 14px;
+}
+.label-sub_lll {
+    font-family: "Khmer OS Muol Light", serif;
+    font-size: 14px;
+}
+
+.style-table {
+    display: flex;
+    margin-left: 1%;
+}
+.table_tr{
+    border: solid 0px !important; 
+    padding: 0% !important;
+    font-size: 15.7px;
+    text-align: justify; 
+    text-justify: inter-word;
+}

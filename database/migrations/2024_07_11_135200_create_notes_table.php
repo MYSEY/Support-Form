@@ -8,6 +8,7 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * php artisan migrate:refresh --path=database/migrations/2024_07_11_135200_create_notes_table.php
      */
     public function up(): void
     {

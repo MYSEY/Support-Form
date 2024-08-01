@@ -121,7 +121,7 @@
         <div class="col-md-4">
             <div class="btn-group btn-group-custom d-flex justify-content-end" role="group" aria-label="Print Options">
                 <a class="btn btn-outline-primary" href="{{url("admin/ticket/edit")}}/{{$data_ticket->id}}"><i class="fal fa-edit"></i> Edit</a>
-                <button type="button" class="btn btn-outline-primary"> <span class="fal fa-print mr-1"></span> Print</button>
+                <button type="button" class="btn btn-outline-primary btn-print"> <span class="fal fa-print mr-1"></span> Print</button>
                 <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
@@ -269,8 +269,44 @@
                         </div>
                         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#History">
                             <div class="card-body">
-                                <p class="card-text">{{ \Carbon\Carbon::parse($data_ticket->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">ticket created by {{$data_ticket->createdBy->name}}</strong></p>
-                                
+                                <ul>
+                                    @if (count($data_ticket->histories) > 0)
+                                        @foreach ($data_ticket->histories as $item)
+                                            @if ($item->type == "new")
+                                                <li><strong>Ticket created by</strong>
+                                                    <ul style="list-style-type:none;">
+                                                        <li>{{$item->createdBy->name}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                    </ul>
+                                                </li>
+                                                {{-- <li> <p>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">ticket created by {{$item->createdBy->name}}</strong></p></li> --}}
+                                            @endif
+                                            @if ($item->type == "status")
+                                                <li><strong>Status changed </strong>
+                                                    <ul style="list-style-type:none;">
+                                                        <li>From <strong style="color: {{$item->statusFrom->color}}">{{$item->statusFrom->name}}</strong> to <strong style="color: {{$item->statusTo->color}}">{{$item->statusTo->name}}</strong> by user change {{$item->createdBy->name}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                    </ul>
+                                                </li>
+                                            {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Status changed from {{$item->statusFrom->name}} to {{$item->statusTo->name}} by user change {{$item->createdBy->name}}</strong></p></li>  --}}
+                                            @endif
+                                            @if ($item->type == "priority")
+                                                <li><strong>Priority changed </strong>
+                                                    <ul style="list-style-type:none;">
+                                                        <li>From <strong style="color: {{$item->priorityFrom->color}}">{{$item->priorityFrom->name}}</strong> to <strong style="color: {{$item->priorityTo->color}}">{{$item->priorityTo->name}}</strong> by user change {{$item->createdBy->name}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                    </ul>
+                                                </li>
+                                            {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Priority changed from {{$item->priorityFrom->name}} to {{$item->priorityTo->name}} by user change {{$item->createdBy->name}}</strong></p></li>  --}}
+                                            @endif
+                                            @if ($item->type == "assign")
+                                                <li><strong>Assignee</strong>
+                                                    <ul style="list-style-type:none;">
+                                                        <li>From <strong>{{$item->assignedBy->name}}</strong> to <strong>{{$item->recipient->name}}</strong> at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                    </ul>
+                                                </li>
+                                            {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Assignee from {{$item->assignedBy->name}} to {{$item->recipient->name}}</strong></p></li>  --}}
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -281,9 +317,11 @@
 
     @include('tickets.noted')
     @include('tickets.replies')
+    @include('tickets.print_ticket_detail')
 @endsection
 @section('script')
     @include('includs.datatable_basic')
+    <script type="text/javascript" src="{{ asset('/admins/js/printThis.js') }}"></script>
     <script type="text/javascript">
         $(function(){
             var url = window.location.pathname;
@@ -354,6 +392,10 @@
                         }
                     }
                 });
+            });
+
+            $(".btn-print").on("click", function() {
+                print_pdf();
             });
 
             //** block noted
@@ -468,6 +510,7 @@
                 success: function (response) {
                     let datas = response.datas;
                     let text = "";
+                    let note_tr = "";
                     if (datas.length > 0) {
                         datas.forEach(function(value, index) {
                             var message = nl2br(value.message);
@@ -484,8 +527,17 @@
                                     '</div>'+
                                     '<p class="card-text mt-2">'+message+'</p>'+
                                 '</div>';
+
+                                note_tr  +='<tr>'+
+                                                '<td class="table_tr">'+
+                                                    '<strong>Note by: '+value.created_by.name+'</strong> » '+created_at+'<br>'
+                                                    +message+
+                                                '</td>'+
+                                            '</tr>';
                         });
+
                         $("#show-notes").html(text);
+                        $(".tbl-noted").html(note_tr);
                     }
                 }
             });
@@ -502,6 +554,7 @@
                 success: function (response) {
                     let datas = response.datas;
                     let text = "";
+                    let reply_tr = "";
                     if (datas.length > 0) {
                         datas.forEach(function(value, index) {
                             var message = nl2br(value.message);
@@ -520,11 +573,33 @@
                                     '</div>'+
                                     '<p class="card-text mt-2">'+message+'</p>'+
                                 '</div>';
+
+                                reply_tr  +='<tr>'+
+                                                '<td class="table_tr">'+
+                                                    '<strong>Reply by: '+value.staff.name+'</strong> » '+created_at+'<br>'
+                                                    +message+
+                                                '</td>'+
+                                            '</tr>';
+                                
                         });
                         $("#show-replies").html(text);
+                        $(".tbl-reply").html(reply_tr);
                     }
                 }
             });
         }
+        function print_pdf() {
+        $("#print_purchase").show();
+        $("#print_purchase").printThis({
+            importCSS: false,
+            importStyle: true,
+            loadCSS: "{{asset('/admins/css/style_table.css')}}",
+            header: "",
+            printDelay: 1500,
+            formValues: false,
+            canvas: false,
+            doctypeString: "",
+        });
+    }
     </script>
 @endsection

@@ -138,7 +138,6 @@
             var name_id = url.split("/")[4];
             var department_id = name_id.split("department")[1];
             var branch_id = name_id.split("branch")[1];
-            dataIssueType({"department_id":department_id, "branch_id": branch_id});
 
             $("#btn-save").on("click", function() {
 
@@ -160,7 +159,7 @@
                         priority:                   $("#ticket-priority").val(),
                         assignedby:                 $("#ticket-assign").val(),
                         due_date:                   $("#ticket-due-date").val(),
-                        issue_type:                 $("#issue-type").val(),,
+                        issue_type:                 $("#issue-type").val(),
                         overdue_email_sent:         $('input[name="ticket-notification"]:checked').val(),
                         satisfaction_email_sent:    $('input[name="ticket-check-submiss"]:checked').val(),
                         // attachments:        $("#ticket-file").val(),
