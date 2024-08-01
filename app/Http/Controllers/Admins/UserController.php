@@ -20,7 +20,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this-> middleware('permission:view user', ['only' => ['index']]);
+        $this->middleware('permission:view user', ['only' => ['index']]);
         $this->middleware('permission:create user', ['only' => ['create','store']]);
         $this->middleware('permission:update user', ['only' => ['update','edit']]);
         $this->middleware('permission:delete user', ['only' => ['destroy']]);
@@ -76,7 +76,9 @@ class UserController extends Controller
             $data['created_by'] = Auth::user()->id;
             $data['status'] = 'Active';
             $data['password']   = Hash::make($request->password);
-            User::create($data);
+            $user = User::create($data);
+            $user->assignRole($request->role_id);
+
             return response()->json([
                 'message' => "User created successfully.",
                 'status'=>"success"
@@ -117,7 +119,7 @@ class UserController extends Controller
     public function update(Request $request)
     {
         try{
-            $data = User::find($request->id);
+            $data = $request->all();
             $data['user']                       = $request->user;
             $data['name']                       = $request->name;
             $data['email']                      = $request->email;
@@ -142,7 +144,18 @@ class UserController extends Controller
             $data["notify_pm"]                  = $request->notify_pm;
             $data['status']                     = 'Active';
             $data['updated_by']                 = Auth::user()->id;
-            $data->save();
+            $user = User::find($request->id);
+            if ($user) {
+                $user->update($data);
+                // Find the role by ID and get its name
+                $role = Role::find($request->role_id);
+                if ($role) {
+                    $user->syncRoles($role->name); // Use the role name
+                } else {
+                    return response()->json(['error' => 'Role not found'], 404);
+                }
+                return response()->json(['success' => 'User updated successfully']);
+            }
             return response()->json([
                 'message' => "Update created successfully.",
                 'status'=>"success"

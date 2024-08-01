@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admins;
 
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
+use App\Http\Requests\RoleRequest;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
 use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
@@ -16,10 +17,10 @@ class RoleController extends Controller
      */
     public function __construct()
     {
-        $this-> middleware('permission:view role', ['only' => ['index']]);
-        $this->middleware('permission:create role', ['only' => ['create','store']]);
-        $this->middleware('permission:update role', ['only' => ['update','edit']]);
-        $this->middleware('permission:delete role', ['only' => ['destroy']]);
+        // $this->middleware('permission:view role', ['only' => ['index']]);
+        // $this->middleware('permission:create role', ['only' => ['create','store']]);
+        // $this->middleware('permission:update role', ['only' => ['update','edit']]);
+        // $this->middleware('permission:delete role', ['only' => ['destroy']]);
     }
 
     public function index()
@@ -40,7 +41,7 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
         try{
             $role = Role::create(['guard_name' => 'web','name' => $request->name]);

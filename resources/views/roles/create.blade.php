@@ -1,6 +1,3 @@
-
-
-
 @extends('layouts.admin')
 @section('content')
 <div class="row">
@@ -41,7 +38,7 @@
                         <hr>
 
                         <div class="text-right">
-                            <button class="btn btn-danger waves-effect waves-themed" type="button">Submit</button>
+                            <button type="submit" class="btn btn-danger waves-effect waves-themed">Submit</button>
                             <a class="btn btn-secondary waves-effect waves-themed"  href="{{url('admin/role')}}"  type="button">Cancel</a>
                         </div>
                     </form>
