@@ -299,7 +299,7 @@
                                             @if ($item->type == "assign")
                                                 <li><strong>Assignee</strong>
                                                     <ul style="list-style-type:none;">
-                                                        <li>From <strong>{{$item->assignedBy->user}}</strong> to <strong>{{$item->recipient->user}}</strong> at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                        <li>From <strong>{{$item->assignedBy ? $item->assignedBy->user : "null"}}</strong> to <strong>{{$item->recipient ? item->recipient->user : "null"}}</strong> at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
                                                     </ul>
                                                 </li>
                                             {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Assignee from {{$item->assignedBy->name}} to {{$item->recipient->name}}</strong></p></li>  --}}
