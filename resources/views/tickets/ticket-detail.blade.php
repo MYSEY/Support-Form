@@ -198,7 +198,7 @@
                         <span><strong>Assigned to:</strong></span>
                         <div>
                             <button style="text-decoration: none !important;" class="btn btn-link dropdown-toggle p-0" type="button" id="assignedDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span>{{$data_ticket->assignedBy ? $data_ticket->assignedBy->name : '> '.$data_ticket->assignedby.' <'}}</span>
+                                <span>{{$data_ticket->assignedBy ? $data_ticket->assignedBy->user : '> '.$data_ticket->assignedby.' <'}}</span>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="assignedDropdown">
                                 <a class="dropdown-item" href="#">> Unassigned <</a>
@@ -275,7 +275,7 @@
                                             @if ($item->type == "new")
                                                 <li><strong>Ticket created by</strong>
                                                     <ul style="list-style-type:none;">
-                                                        <li>{{$item->createdBy->name}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                        <li>{{$item->createdBy->user}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
                                                     </ul>
                                                 </li>
                                                 {{-- <li> <p>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">ticket created by {{$item->createdBy->name}}</strong></p></li> --}}
@@ -283,7 +283,7 @@
                                             @if ($item->type == "status")
                                                 <li><strong>Status changed </strong>
                                                     <ul style="list-style-type:none;">
-                                                        <li>From <strong style="color: {{$item->statusFrom->color}}">{{$item->statusFrom->name}}</strong> to <strong style="color: {{$item->statusTo->color}}">{{$item->statusTo->name}}</strong> by user change {{$item->createdBy->name}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                        <li>From <strong style="color: {{$item->statusFrom->color}}">{{$item->statusFrom->name}}</strong> to <strong style="color: {{$item->statusTo->color}}">{{$item->statusTo->name}}</strong> by user change {{$item->createdBy->user}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
                                                     </ul>
                                                 </li>
                                             {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Status changed from {{$item->statusFrom->name}} to {{$item->statusTo->name}} by user change {{$item->createdBy->name}}</strong></p></li>  --}}
@@ -291,7 +291,7 @@
                                             @if ($item->type == "priority")
                                                 <li><strong>Priority changed </strong>
                                                     <ul style="list-style-type:none;">
-                                                        <li>From <strong style="color: {{$item->priorityFrom->color}}">{{$item->priorityFrom->name}}</strong> to <strong style="color: {{$item->priorityTo->color}}">{{$item->priorityTo->name}}</strong> by user change {{$item->createdBy->name}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                        <li>From <strong style="color: {{$item->priorityFrom->color}}">{{$item->priorityFrom->name}}</strong> to <strong style="color: {{$item->priorityTo->color}}">{{$item->priorityTo->name}}</strong> by user change {{$item->createdBy->user}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
                                                     </ul>
                                                 </li>
                                             {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Priority changed from {{$item->priorityFrom->name}} to {{$item->priorityTo->name}} by user change {{$item->createdBy->name}}</strong></p></li>  --}}
@@ -299,7 +299,7 @@
                                             @if ($item->type == "assign")
                                                 <li><strong>Assignee</strong>
                                                     <ul style="list-style-type:none;">
-                                                        <li>From <strong>{{$item->assignedBy->name}}</strong> to <strong>{{$item->recipient->name}}</strong> at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                        <li>From <strong>{{$item->assignedBy->user}}</strong> to <strong>{{$item->recipient->user}}</strong> at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
                                                     </ul>
                                                 </li>
                                             {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Assignee from {{$item->assignedBy->name}} to {{$item->recipient->name}}</strong></p></li>  --}}
@@ -523,14 +523,14 @@
                                         '<a style="float: right;" href="javascript:void(0);" id="btn-note-edit" data-id="'+value.id+'" data-message="'+value.message+'" data-toggle="tooltip" title="Edit" class="mr-1 btn btn-outline-secondary btn-sm btn-icon waves-effect waves-themed">'+
                                             '<i class="fal fa-edit"></i>'+
                                         '</a>'+
-                                        '<p class="card-text">Note by: <strong>'+value.created_by.name+'</strong> » '+created_at+'</p>'+
+                                        '<p class="card-text">Note by: <strong>'+value.created_by.user+'</strong> » '+created_at+'</p>'+
                                     '</div>'+
                                     '<p class="card-text mt-2">'+message+'</p>'+
                                 '</div>';
 
                                 note_tr  +='<tr>'+
                                                 '<td class="table_tr">'+
-                                                    '<strong>Note by: '+value.created_by.name+'</strong> » '+created_at+'<br>'
+                                                    '<strong>Note by: '+value.created_by.user+'</strong> » '+created_at+'<br>'
                                                     +message+
                                                 '</td>'+
                                             '</tr>';
@@ -569,14 +569,14 @@
                                         '<a style="float: right;" href="javascript:void(0);" class="mr-2 btn btn-outline-secondary btn-sm btn-icon waves-effect waves-themed" id="btn-reply-edit" data-id="'+value.id+'" data-message="'+value.message+'" data-toggle="tooltip" title="Edit">'+
                                             '<i class="fal fa-edit"></i>'+
                                         '</a>'+
-                                        '<p class="card-text">Reply by: <strong>'+value.staff.name+'</strong> » '+created_at+'</p>'+
+                                        '<p class="card-text">Reply by: <strong>'+value.staff.user+'</strong> » '+created_at+'</p>'+
                                     '</div>'+
                                     '<p class="card-text mt-2">'+message+'</p>'+
                                 '</div>';
 
                                 reply_tr  +='<tr>'+
                                                 '<td class="table_tr">'+
-                                                    '<strong>Reply by: '+value.staff.name+'</strong> » '+created_at+'<br>'
+                                                    '<strong>Reply by: '+value.staff.user+'</strong> » '+created_at+'<br>'
                                                     +message+
                                                 '</td>'+
                                             '</tr>';

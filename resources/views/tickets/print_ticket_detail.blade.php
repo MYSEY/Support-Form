@@ -40,7 +40,7 @@
                             </tr>
                             <tr>
                                 <td class="table_tr">Assigned to:</td>
-                                <td class="table_tr">{{$data_ticket->assignedBy ? $data_ticket->assignedBy->name : '> '.$data_ticket->assignedby.' <'}}</td>
+                                <td class="table_tr">{{$data_ticket->assignedBy ? $data_ticket->assignedBy->user : '> '.$data_ticket->assignedby.' <'}}</td>
                             </tr>
                             <tr>
                                 <td class="table_tr">Last replier:</td>
@@ -60,7 +60,7 @@
                             </tr>
                             <tr>
                                 <td class="table_tr">Name</td>
-                                <td class="table_tr">{{$data_ticket->createdBy->name}}</td>
+                                <td class="table_tr">{{$data_ticket->createdBy->user}}</td>
                             </tr>
                             <tr>
                                 <td class="table_tr">Issue Types:</td>
