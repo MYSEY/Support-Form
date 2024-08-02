@@ -31,27 +31,27 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d H:i:s'); //2023-05-09 00:00:00
             $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s'); //2023-05-09 23:59:59
         }
-        $data = DB::table('hesk_tickets')
+        $data = DB::table('tickets')
         ->select(
-            'hesk_tickets.*'
+            'tickets.*'
         )
         ->when($request->tracking_id, function ($query, $tracking_id) {
-            $query->where('hesk_tickets.trackid', $tracking_id);
+            $query->where('tickets.trackid', $tracking_id);
         })
         ->when($request->name, function ($query, $name) {
-            $query->where('hesk_tickets.name', $name);
+            $query->where('tickets.name', $name);
         })
         ->when($request->priority, function ($query, $priority) {
-            $query->where('hesk_tickets.priority', $priority);
+            $query->where('tickets.priority', $priority);
         })
         ->when($from_date, function ($query, $from_date) {
-            $query->where('hesk_tickets.dt', '>=', $from_date);
+            $query->where('tickets.dt', '>=', $from_date);
         })
         ->when($to_date, function ($query, $to_date) {
-            $query->where('hesk_tickets.dt','<=', $to_date);
+            $query->where('tickets.dt','<=', $to_date);
         })
         ->when($request->status, function ($query, $status) {
-            $query->whereIn('hesk_tickets.status', $status);
+            $query->whereIn('tickets.status', $status);
         })->OrderBy('id','DESC')->get();
 
         foreach ($data as $key=>$value) {
