@@ -32,11 +32,13 @@ class UserController extends Controller
         ->where("users.deleted_at",null)
         ->leftJoin('branchs','branchs.id','=','users.branch_id')
         ->leftJoin('departments','departments.id','=','users.department_id')
+        ->leftJoin('roles','roles.id','=','users.role_id')
         ->select(
             'users.*',
             'branchs.branch_name_kh',
             'branchs.branch_name_en',
             'departments.name_english',
+            'roles.name as role_name',
         )->get();
         return view('users.index', compact('data'));
     }

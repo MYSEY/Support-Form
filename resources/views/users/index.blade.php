@@ -63,7 +63,7 @@
                                             <td>{{$item->name}}</td>
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->user}}</td>
-                                            <td> </td>
+                                            <td>{{$item->role_name}}</td>
                                             <td>{{$item->name_english}}</td>
                                             <td>{{$item->branch_name_en}}</td>
                                             <td style="text-align:center">
