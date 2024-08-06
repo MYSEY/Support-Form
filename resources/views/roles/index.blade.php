@@ -81,6 +81,8 @@
 @endsection
 
 @section('script')
+@include('includs.datatable_basic')
+
     <script>
         $(document).on('click','.role-delete', function(){
             let id = $(this).data("id");

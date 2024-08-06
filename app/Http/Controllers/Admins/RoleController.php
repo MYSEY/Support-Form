@@ -45,7 +45,7 @@ class RoleController extends Controller
     {
         try{
             $role = Role::create(['guard_name' => 'web','name' => $request->name]);
-            $permissions = Permission::pluck('id','id')->all();
+            $permissions = Permission::whereIn('id', $request->permission)->pluck('id','id')->all();
             $role->syncPermissions($permissions);
             DB::commit();
             Toastr::success('Role created successfully.','Success');
