@@ -96,9 +96,17 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/branch/update', [BranchController::class,'update']);
     Route::post('/branch/delete', [BranchController::class,'destroy']);
 
+    // Priority
     Route::resource('priority', PriorityController::class);
+
+    // Issue Type
+    Route::get('/issue-type/duplicate', [IssueTypeController::class,'duplicateIssueType']);
     Route::resource('issue-type', IssueTypeController::class);
     Route::post('/issue-type/ids', [IssueTypeController::class,'dataSelect']);
+    Route::post('/issue-type/import', [IssueTypeController::class,'dataImport']);
+    
+
+    // Reports
     Route::resource('report/ticket', TicketReportController::class);
     Route::get('ticket/report/show', [TicketReportController::class,'show']);
     Route::post('ticket/report/search', [TicketReportController::class,'search']);
