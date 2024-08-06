@@ -747,7 +747,8 @@
                 {
                     todayHighlight: true,
                     orientation: "bottom left",
-                    templates: controls
+                    templates: controls,
+                    format: "dd-mm-yyyy"
                 });
 
 

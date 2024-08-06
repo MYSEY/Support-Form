@@ -32,8 +32,17 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s'); //2023-05-09 23:59:59
         }
         $data = DB::table('tickets')
+        ->leftJoin('departments','tickets.department_id','=','departments.id')
+        ->leftJoin('priorities','tickets.priority','=','priorities.id')
+        ->leftJoin('users','tickets.owner','=','users.id')
+        ->leftJoin('custom_statuses','tickets.status','=','custom_statuses.id')
         ->select(
-            'tickets.*'
+            'tickets.*',
+            'departments.name_khmer',
+            'departments.name_english',
+            'priorities.name as priority',
+            'users.user as owner',
+            'custom_statuses.name as status',
         )
         ->when($request->tracking_id, function ($query, $tracking_id) {
             $query->where('tickets.trackid', $tracking_id);
@@ -62,7 +71,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 "Name" => $value->name,
                 "Email" => $value->email,
                 "Submited Date" => $value->dt,
-                "Category" => $value->category,
+                "Category" => $value->name_english,
                 "Priority" => $value->priority,
                 "Owner" => $value->owner,
                 "Issue Type" => $value->custom1,
