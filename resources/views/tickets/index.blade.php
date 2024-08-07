@@ -81,14 +81,6 @@
 @section('script')
     @include('includs.datatables_export')
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('.tab-tables').each(function() {
-                if ($(this).hasClass('active')) {
-                    var dataId = $(this).attr('data-permiss');
-                    showDatas(dataId);
-                }
-            });
-        });
         $(function(){
             // $(document).ready(function(){
             //     $('#dt-basic-assign').DataTable();
@@ -98,6 +90,12 @@
             //     $('#dt-basic-overdue').DataTable();
             //     $('[data-toggle="tooltip"]').tooltip(); 
             // });
+            $('.tab-tables').each(function() {
+                if ($(this).hasClass('active')) {
+                    var dataId = $(this).attr('data-permiss');
+                    showDatas(dataId);
+                }
+            });
             $(".tab-tables").on("click", function(){
                 let tab_status = $(this).attr('data-permiss');
                 showDatas(tab_status);
@@ -118,6 +116,7 @@
                     let datas = response.datas
                     var bodyTr = "";
                     if (datas.length > 0) {
+                        // let message ="";
                         datas.forEach(function(value, index) {
                             let created_at = moment(value.created_at).format('D-MMM-YYYY');
                             let updated_at = moment(value.updated_at).format('D-MMM-YYYY');
@@ -126,21 +125,23 @@
                             if (value.assigned_by) {
                                 assign_by = "Assigned to: "+value.assigned_by.name;
                             }
-                            var message = nl2br(value.message);
+                            // var message = nl2br(value.message);
+                            // message = removeBrTags(value.message);
+                            
                             bodyTr +='<tr>'+
                                     '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(value.trackid)+'</a></td>'+
                                     '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(created_at)+'</a></td>'+
                                     '<td>'+updated_at+'</td>'+
                                     '<td>'+(value.department ? value.department.name_english: "")+'</td>'+
                                     '<td>'+value.name+'</td>'+
-                                    '<td data-toggle="tooltip" data-html="true" title="'+(assign_by)+'<br><br>'+(message)+'">'+
+                                    '<td class="sub-issue-type sub-message" data-assign-by="'+(assign_by)+'" data-message="'+(value.message)+'">'+
                                         '<a href="javascript:void(0)">'+value.subject+'</a>'+
                                     '</td>'+
                                     '<td style="color: '+value.custom_status.color+'">'+value.custom_status.name+'</td>'+
                                     '<td>'+(value.assigned_by ? value.assigned_by.name : value.assignedby)+'</td>'+
                                     '<td>'+(value.last_replier ? value.last_replier.name : value.name)+'</td>'+
                                     '<td>'+due_date+'</td>'+
-                                    '<td>'+(value.issue_type ? value.issue_type.name : "")+'</td>'+
+                                    '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="'+(value.issue_type ? value.issue_type.name : "")+'">'+(value.issue_type ? value.issue_type.name : "")+'</td>'+
                                     '<td>'+
                                         '<div style="display: flex">'+
                                             '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:'+value.priorities.color+'"></i> <span>'+(value.priority ? value.priorities.name : "")+'</span>'+
@@ -175,6 +176,32 @@
                         $("#dt-basic-overdue tbody").html(bodyTr);
                         $('#dt-basic-overdue').dataTable()
                     }
+                    
+                    $('.sub-issue-type').each(function() {
+                        var text = $(this).text();
+                        var limit = 20; // Set your character limit
+                        if (text.length > limit) {
+                            var truncated = text.substring(0, limit) + '...';
+                            $(this).text(truncated);
+                        }
+                    });
+                    $(document).ready(function() {
+                        function removeBrTags(input) {
+                            return input.replace(/<br\s*\/?>/gi, '');
+                        }
+                        $('.sub-message').each(function() {
+                            var assignBy = $(this).data('assign-by');
+                            var message = $(this).data('message');
+
+                            var cleanedMessage = removeBrTags(message);
+                            var tooltipContent = assignBy + ' » ' + cleanedMessage;
+
+                            $(this).attr('data-toggle', 'tooltip')
+                                .attr('data-html', 'true')
+                                .attr('title', tooltipContent);
+                        });
+                    });
+                    
                     $('[data-toggle="tooltip"]').tooltip();
                 }
             });

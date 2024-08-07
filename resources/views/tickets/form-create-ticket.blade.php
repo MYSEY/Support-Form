@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="form-group form-group-select2">
-                            <label class="form-label">Issue Type <span class="text-danger">*</span></label>
+                            <label class="form-label">Issue Type: <span class="text-danger">*</span></label>
                             <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="issue-type" required>
                             </select>
                         </div>
