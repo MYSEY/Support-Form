@@ -101,6 +101,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     // Issue Type
     Route::get('/issue-type/duplicate', [IssueTypeController::class,'duplicateIssueType']);
+    Route::get('/show/issue-type', [IssueTypeController::class,'showById']);
     Route::resource('issue-type', IssueTypeController::class);
     Route::post('/issue-type/ids', [IssueTypeController::class,'dataSelect']);
     Route::post('/issue-type/import', [IssueTypeController::class,'dataImport']);

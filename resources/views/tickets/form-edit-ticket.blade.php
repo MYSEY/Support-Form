@@ -13,23 +13,23 @@
                 <div class="row">
                     <div class="col-xl-6">
                         <div class="form-group">
-                            <label class="form-label">Subject: <span class="text-danger">*</span></label>
-                            <input type="text" name="ticket-subject" class="form-control" id="e_ticket-subject">
+                            <label class="form-label">Name: <span class="text-danger">*</span></label>
+                            <input type="text" id="e_ticket-name" class="form-control required">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Name: <span class="text-danger">*</span></label>
-                            <input type="text" id="e_ticket-name" class="form-control">
+                            <label class="form-label">Subject: <span class="text-danger">*</span></label>
+                            <input type="text" name="ticket-subject" class="form-control required" id="e_ticket-subject">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Email: <span class="text-danger">*</span></label>
-                            <input type="email" id="e_ticket-email" name="email" class="form-control" placeholder="Email">
+                            <input type="email" id="e_ticket-email" name="email" class="form-control required" placeholder="Email">
                         </div>
                     </div>
 
                     <div class="col-xl-6">
-                        <div class="form-group">
+                        <div class="form-group form-group-select2">
                             <label class="form-label" for="e_issue-type">Issue Type</label>
-                            <select class="select2 form-control w-100 select2-hidden-accessible" id="e_issue-type">
+                            <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="e_issue-type">
                             </select>
                             {{-- <select class="form-control" id="e_issue-type">
                             </select> --}}
@@ -45,7 +45,7 @@
                     <div class="col-xl-12 mt-3">
                         <div class="form-group">
                             <label class="form-label" for="ticket-textarea">Message: <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="e_ticket-textarea" rows="5"></textarea>
+                            <textarea class="form-control required" id="e_ticket-textarea" rows="5"></textarea>
                         </div>
                     </div>
                 </div>
@@ -77,34 +77,65 @@
             dataShow(ticket_id);
 
             $("#btn-update").on("click", function() {
-                
                 $(".btn-hidden-show").hide();
                 $(".btn-loading").css('display', 'block');
 
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('admin/ticket/update') }}",
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        id:                         $("#e_ticket_id").val(),
-                        name:                       $("#e_ticket-name").val(),
-                        email:                      $("#e_ticket-email").val(),
-                        subject:                    $("#e_ticket-subject").val(),
-                        issue_type:                 $("#e_issue-type").val(),
-                        // attachments:        $("#ticket-file").val(),
-                        message:            $("#e_ticket-textarea").val(),
-                    },
-                    dataType: "JSON",
-                    success: function(response) {
-                        if (response.status == "error") {
-                            toastr.error(response.message);
-                        }else{
-                            toastr.success(response.message);
-                            var url = "{{ URL('admin/ticket/detail/') }}/" + $("#e_ticket_id").val();
-                            window.location.replace(url); 
-                        }
+                var num_miss = 0;
+                $(".form-group-select2").each(function(){
+                    let formGroup = $(this);
+                    let value = formGroup.attr("data-select2-id");
+                    let requeredField = formGroup.find(".select2-option").val();
+                    let requered = formGroup.find(".required").val();
+                    if(!value && requered == ""){ 
+                        formGroup.find(".select2-selection--single").css("border-color","#dc3545");
+                    }else if(!requeredField && requered == "") {
+                        formGroup.find(".select2-selection--single").css("border-color","#dc3545");
+                    }else{
+                        formGroup.find(".select2-selection--single").css("border-color","#1dc9b7");
                     }
-                })
+                });
+
+                $(".required").each(function(){
+                    if($(this).val()==""){ 
+                        num_miss++;
+                        $(this).addClass("is-invalid");
+                        $(this).removeClass("is-valid");
+                    }else{
+                        $(this).addClass("is-valid");
+                        $(this).removeClass("is-invalid");
+                    }
+                });
+                if (num_miss>0) {
+                    toastr.error("Please check field all required!");
+                    $(".btn-hidden-show").show();
+                    $(".btn-loading").css('display', 'none');
+                    return false;
+                }else{
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ url('admin/ticket/update') }}",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            id:                         $("#e_ticket_id").val(),
+                            name:                       $("#e_ticket-name").val(),
+                            email:                      $("#e_ticket-email").val(),
+                            subject:                    $("#e_ticket-subject").val(),
+                            issue_type:                 $("#e_issue-type").val(),
+                            // attachments:        $("#ticket-file").val(),
+                            message:            $("#e_ticket-textarea").val(),
+                        },
+                        dataType: "JSON",
+                        success: function(response) {
+                            if (response.status == "error") {
+                                toastr.error(response.message);
+                            }else{
+                                toastr.success(response.message);
+                                var url = "{{ URL('admin/ticket/detail/') }}/" + $("#e_ticket_id").val();
+                                window.location.replace(url); 
+                            }
+                        }
+                    })
+                }
             });
         });
 
@@ -137,8 +168,6 @@
                                 }));
                             });
                         };
-
-                        e_issue-type
                     }
                 }
             });

@@ -107,6 +107,22 @@ class IssueTypeController extends Controller
         ]);
     }
 
+    public function showById(Request $request){
+
+        $data = IssueType::when($request, function ($query, $request) {
+            if ($request->department_id) {
+                $query->where("department_id", $request->department_id);
+            }
+            if ($request->branch_id) {
+                $query->where("branch_id", $request->branch_id);
+            }
+        })
+        ->get();
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
+
     public function duplicateIssueType(Request $request){
         try {
             $duplicate = IssueType::where([["name",$request->name], ["department_id",$request->department_id]])->first();
