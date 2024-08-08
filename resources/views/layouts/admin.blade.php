@@ -133,12 +133,32 @@
                                     <span class="nav-link-text" data-i18n="nav.user">Users</span>
                                 </a>
                             </li>
-                            <li class="@if (Request::instance()->segment(2) == 'role') active @endif">
-                                <a href="{{url('admin/role')}}" title="Role" data-filter-tags="users">
-                                    <i class="fal fa-users"></i>
-                                    <span class="nav-link-text" data-i18n="nav.role">Role Permission</span>
+                            
+
+                            <li class="@if (in_array(Request::instance()->segment(2), ['role','permission','permissions','category'])) active @endif">
+                                <a href="#" title="Access Permission" data-filter-tags="application intel Access Permission">
+                                    <i class="fal fa-chart-pie"></i>
+                                    <span class="nav-link-text" data-i18n="nav.Access Permission">Access Permission</span>
                                 </a>
+                                <ul>
+                                    <li class="@if (Request::instance()->segment(2) == 'role') active @endif">
+                                        <a href="{{url('admin/role')}}" title="Role" data-filter-tags="Role">
+                                            <span class="nav-link-text" data-i18n="nav.role">Role</span>
+                                        </a>
+                                    </li>
+                                    <li class="@if (Request::instance()->segment(2) == 'permission') active @endif">
+                                        <a href="{{url('admin/permission')}}" title="permission" data-filter-tags="permission">
+                                            <span class="nav-link-text" data-i18n="nav.permission">Permission</span>
+                                        </a>
+                                    </li>
+                                    <li class="@if (Request::instance()->segment(2) == 'permissions' && Request::instance()->segment(3) == 'category') active @endif">
+                                        <a href="{{url('admin/permissions/category')}}" title="permission category" data-filter-tags="permission category">
+                                            <span class="nav-link-text" data-i18n="nav.permission category">Permission Category</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
+
                             <li class="@if (in_array(Request::instance()->segment(3), ['ticket'])) active @endif">
                                 <a href="#" title="Reports" data-filter-tags="application intel Reports">
                                     <i class="fal fa-chart-pie"></i>

@@ -20,10 +20,10 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:view user', ['only' => ['index']]);
-        $this->middleware('permission:create user', ['only' => ['create','store']]);
-        $this->middleware('permission:update user', ['only' => ['update','edit']]);
-        $this->middleware('permission:delete user', ['only' => ['destroy']]);
+        $this->middleware('permission:User View', ['only' => ['index']]);
+        $this->middleware('permission:User Create', ['only' => ['create','store']]);
+        $this->middleware('permission:User Update', ['only' => ['update','edit']]);
+        $this->middleware('permission:User Delete', ['only' => ['destroy']]);
     }
 
     public function index()
@@ -49,7 +49,9 @@ class UserController extends Controller
     public function create()
     {
         $rolePermissions = Role::orderBy('id', 'asc')->get();
-        return view('users.form-create', compact('rolePermissions'));
+        $department = DB::table('departments')->get();
+        $branch = DB::table('branchs')->get();
+        return view('users.form-create', compact('rolePermissions','department','branch'));
     }
 
     /**
@@ -99,11 +101,15 @@ class UserController extends Controller
     public function show(Request $request)
     {
         $rolePermissions = Role::orderBy('id', 'asc')->get();
+        $department = DB::table('departments')->get();
+        $branch = DB::table('branchs')->get();
         $data = User::where('id',$request->id)->first();
         DB::commit();
         return response()->json([
             'data'=>$data,
-            'role'=>$rolePermissions
+            'role'=>$rolePermissions,
+            'department'=>$department,
+            'branch'=>$branch,
         ]);
     }
 
@@ -134,6 +140,8 @@ class UserController extends Controller
             $data["show_suggested"]             = $request->show_suggested;
             $data["autoreload"]                 = $request->autoreload;
             $data["role_id"]                    = $request->role_id;
+            $data["department_id"]              = $request->department_id;
+            $data["branch_id"]                  = $request->branch_id;
             $data["secmin"]                     = $request->secmin;
             $data["notify_new_unassigned"]      = $request->notify_new_unassigned;
             $data["notify_new_my"]              = $request->notify_new_my;

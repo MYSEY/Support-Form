@@ -30,6 +30,18 @@
                             <input type="email" id="e_email" name="email" class="form-control e_user_required" placeholder="Email" required>
                         </div>
                         <div class="form-group">
+                            <label class="form-label" for="department_id">Department <span class="text-danger">*</span></label>
+                            <select class="form-control user_required" id="e_department_id" name="department_id">
+                               
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="branch_id">Branch <span class="text-danger">*</span></label>
+                            <select class="form-control user_required" id="e_branch_id" name="branch_id">
+                                
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label class="form-label" for="e_role_permission">Role Permission <span class="text-danger">*</span></label>
                             <select class="form-control e_user_required" name="role_permission" id="e_role_permission" required>
                                 
@@ -246,6 +258,8 @@
                             signature:                  $("#e_signature").val(),
                             autoassign:                 $("#e_auto_assign").val(),
                             role_id:                    $("#e_role_permission").val(),
+                            department_id:              $("#e_department_id").val(),
+                            branch_id:                  $("#e_branch_id").val(),
                             afterreply:                 afterreply,
                             autostart:                  autostart,
                             notify_customer_new:        notify_customer_new,
@@ -311,6 +325,26 @@
                         };
                         if (response.data.afterreply == 2){
                             $("#e_replying_afterreply2").prop("checked", true);
+                        };
+                        if (response.department != '') {
+                            $('#e_department_id').html('<option selected value=""> -- Select --</option>');
+                            $.each(response.department, function(i, item) {
+                                $('#e_department_id').append($('<option>', {
+                                    value: item.id,
+                                    text: item.name_english,
+                                    selected: item.id == response.data.department_id
+                                }));
+                            });
+                        };
+                        if (response.branch != '') {
+                            $('#e_branch_id').html('<option selected value=""> -- Select --</option>');
+                            $.each(response.branch, function(i, item) {
+                                $('#e_branch_id').append($('<option>', {
+                                    value: item.id,
+                                    text: item.branch_name_en,
+                                    selected: item.id == response.data.branch_id
+                                }));
+                            });
                         };
                         if (response.role != '') {
                             $('#e_role_permission').html('<option selected value=""> -- Select --</option>');

@@ -14,7 +14,9 @@ use App\Http\Controllers\Admins\StatusesController;
 use App\Http\Controllers\Admins\DashboardController;
 use App\Http\Controllers\Admins\IssueTypeController;
 use App\Http\Controllers\Admins\DepartmentController;
+use App\Http\Controllers\Admins\PermissionController;
 use App\Http\Controllers\Admins\TicketReportController;
+use App\Http\Controllers\Admins\PermissionCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +116,8 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('ticket/report/export', [TicketReportController::class,'export']);
 
     Route::resource('role', RoleController::class);
+    Route::resource('permission', PermissionController::class);
+    Route::resource('permissions/category', PermissionCategoryController::class);
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

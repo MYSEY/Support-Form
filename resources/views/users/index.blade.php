@@ -84,10 +84,10 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex demo">
-                                                    @can('create delete')
+                                                    @can('delete user')
                                                         <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 status-delete" data-toggle="modal" data-target="#delete_user" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
                                                     @endcan    
-                                                    @can('create update')
+                                                    @can('update user')
                                                         <a href="{{url("admin/user/form-edit")}}/{{$item->id}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 show-data-edit" title="Edit"><i class="fal fa-edit"></i></a>
                                                     @endcan                                                            
                                                 </div>

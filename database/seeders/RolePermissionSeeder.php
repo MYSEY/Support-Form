@@ -18,25 +18,25 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         // Create Permissions
-        Permission::create(['name' => 'view role']);
-        Permission::create(['name' => 'create role']);
-        Permission::create(['name' => 'update role']);
-        Permission::create(['name' => 'delete role']);
+        Permission::create(['name' => 'Role View','permission_category_id'=>1]);
+        Permission::create(['name' => 'Role Create','permission_category_id'=>1]);
+        Permission::create(['name' => 'Role Update','permission_category_id'=>1]);
+        Permission::create(['name' => 'Role Delete','permission_category_id'=>1]);
 
-        Permission::create(['name' => 'view permission']);
-        Permission::create(['name' => 'create permission']);
-        Permission::create(['name' => 'update permission']);
-        Permission::create(['name' => 'delete permission']);
+        Permission::create(['name' => 'Permission View','permission_category_id'=>1]);
+        Permission::create(['name' => 'Permission Create','permission_category_id'=>1]);
+        Permission::create(['name' => 'Permission Update','permission_category_id'=>1]);
+        Permission::create(['name' => 'Permission Delete','permission_category_id'=>1]);
 
-        Permission::create(['name' => 'view user']);
-        Permission::create(['name' => 'create user']);
-        Permission::create(['name' => 'update user']);
-        Permission::create(['name' => 'delete user']);
+        Permission::create(['name' => 'User View','permission_category_id'=>1]);
+        Permission::create(['name' => 'User Create','permission_category_id'=>1]);
+        Permission::create(['name' => 'User Update','permission_category_id'=>1]);
+        Permission::create(['name' => 'User Delete','permission_category_id'=>1]);
 
-        Permission::create(['name' => 'view ticket']);
-        Permission::create(['name' => 'create ticket']);
-        Permission::create(['name' => 'update ticket']);
-        Permission::create(['name' => 'delete ticket']);
+        Permission::create(['name' => 'Ticket View','permission_category_id'=>1]);
+        Permission::create(['name' => 'Ticket Create','permission_category_id'=>1]);
+        Permission::create(['name' => 'Ticket Update','permission_category_id'=>1]);
+        Permission::create(['name' => 'Ticket Delete','permission_category_id'=>1]);
 
         // Create Roles
         $superAdminRole = Role::create(['name' => 'Administrator']); //as super-admin

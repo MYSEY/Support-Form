@@ -28,14 +28,28 @@
                             <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
                             <input type="email" id="email" name="email" class="form-control user_required" placeholder="Email" required>
                         </div>
+                        
                         <div class="form-group">
-                            <label class="form-label" for="password">Password <span class="text-danger">*</span></label>
-                            <input type="password" id="password" class="form-control user_required" name="password" required>
-                            <p id="passwordError" style="color: red;"></p>
+                            <label class="form-label" for="department_id">Department <span class="text-danger">*</span></label>
+                            <select class="form-control user_required" id="department_id" name="department_id">
+                                <option value="">-- Select --</option>
+                                @if (count($department) > 0)
+                                    @foreach ($department as $item)
+                                        <option value="{{$item->id}}">{{$item->name_english}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="confirm_password">Confirm password <span class="text-danger">*</span></label>
-                            <input type="password" id="confirm_password" class="form-control user_required" name="confirm_password" required>
+                            <label class="form-label" for="branch_id">Branch <span class="text-danger">*</span></label>
+                            <select class="form-control user_required" id="branch_id" name="branch_id">
+                                <option value="">-- Select --</option>
+                                @if (count($branch) > 0)
+                                    @foreach ($branch as $item)
+                                        <option value="{{$item->id}}">{{$item->branch_name_en}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="role_permission">Role Permission <span class="text-danger">*</span></label>
@@ -47,6 +61,15 @@
                                     @endforeach
                                 @endif
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="password">Password <span class="text-danger">*</span></label>
+                            <input type="password" id="password" class="form-control user_required" name="password" required>
+                            <p id="passwordError" style="color: red;"></p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="confirm_password">Confirm password <span class="text-danger">*</span></label>
+                            <input type="password" id="confirm_password" class="form-control user_required" name="confirm_password" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="signature">Signature (max 1000 chars)</label>
