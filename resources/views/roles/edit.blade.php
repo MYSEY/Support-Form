@@ -24,6 +24,7 @@
                             </div>
                         </div>
                         <hr>
+                        <label for="">Permission Name</label>
                         <div class="row">
                             @foreach ($permission as $key=>$item)
                                 <div class="col-md-3 mb-2">
