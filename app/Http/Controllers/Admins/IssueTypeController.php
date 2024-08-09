@@ -19,6 +19,13 @@ class IssueTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:Issue Type View', ['only' => ['index']]);
+        $this->middleware('permission:Issue Type Create', ['only' => ['create','store']]);
+        $this->middleware('permission:Issue Type Edit', ['only' => ['update','edit']]);
+        $this->middleware('permission:Issue Type Delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $department = Department::orderBy('id', 'DESC')->get();

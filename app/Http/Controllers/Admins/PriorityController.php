@@ -16,6 +16,13 @@ class PriorityController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:Priority View', ['only' => ['index']]);
+        $this->middleware('permission:Priority Create', ['only' => ['create','store']]);
+        $this->middleware('permission:Priority Edit', ['only' => ['update','edit']]);
+        $this->middleware('permission:Priority Delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $data = Priority::all();

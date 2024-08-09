@@ -14,6 +14,13 @@ class BranchController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:Branch View', ['only' => ['index']]);
+        $this->middleware('permission:Branch Create', ['only' => ['create','store']]);
+        $this->middleware('permission:Branch Edit', ['only' => ['update','edit']]);
+        $this->middleware('permission:Branch Delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $data = Branch::orderBy('id','DESC')->get();

@@ -15,6 +15,13 @@ class PermissionController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:Permission View', ['only' => ['index']]);
+        $this->middleware('permission:Permission Create', ['only' => ['create','store']]);
+        $this->middleware('permission:Permission Edit', ['only' => ['update','edit']]);
+        $this->middleware('permission:Permission Delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $data = DB::table('permissions')->get();
@@ -86,7 +93,28 @@ class PermissionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try{
+            $data_per = PermissionCategory::find($request->permission_category_id);
+            $permissionName = $data_per->name;
+
+            // $check_duplicate = Permission::where('name', $permissionName.' '.$request->permission)->first();
+            // if(!empty($check_duplicate)){
+            //     DB::rollback();
+            //     Toastr::warning('Duplicate entry permission'. ' '.$request->permission,'Error');
+            //     return redirect()->back();
+            // }
+            $data = Permission::find($request->id);
+            $data->name = $permissionName.' '.$request->permission;
+            $data->permission_category_id = $request->permission_category_id;
+            $data->save();
+            DB::commit();
+            Toastr::success('Update Permission successfully.','success');
+            return redirect()->route('permission.index');
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('Update Permission fail', $e->getMessage());
+            return redirect()->back();
+        }
     }
 
     /**

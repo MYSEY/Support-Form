@@ -14,6 +14,13 @@ class DepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:Department View', ['only' => ['index']]);
+        $this->middleware('permission:Department Create', ['only' => ['create','store']]);
+        $this->middleware('permission:Department Edit', ['only' => ['update','edit']]);
+        $this->middleware('permission:Department Delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $data = Department::orderBy('id','DESC')->get();

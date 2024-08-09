@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Models\PermissionCategory;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,41 +19,31 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
+        $Role = PermissionCategory::create(['name'=>'Role','created_by'=>Auth::user()->id]);
+        $Permission = PermissionCategory::create(['name'=>'Permission','created_by'=>Auth::user()->id]);
+        $permissionCategory = PermissionCategory::create(['name'=>'Permission Category','created_by'=>Auth::user()->id]);
+        
         // Create Permissions
-        Permission::create(['name' => 'Role View','permission_category_id'=>1]);
-        Permission::create(['name' => 'Role Create','permission_category_id'=>1]);
-        Permission::create(['name' => 'Role Update','permission_category_id'=>1]);
-        Permission::create(['name' => 'Role Delete','permission_category_id'=>1]);
+        Permission::create(['name' => 'Role View','permission_category_id'=>$Role->id]);
+        Permission::create(['name' => 'Role Create','permission_category_id'=>$Role->id]);
+        Permission::create(['name' => 'Role Edit','permission_category_id'=>$Role->id]);
+        Permission::create(['name' => 'Role Delete','permission_category_id'=>$Role->id]);
 
-        Permission::create(['name' => 'Permission View','permission_category_id'=>1]);
-        Permission::create(['name' => 'Permission Create','permission_category_id'=>1]);
-        Permission::create(['name' => 'Permission Update','permission_category_id'=>1]);
-        Permission::create(['name' => 'Permission Delete','permission_category_id'=>1]);
+        Permission::create(['name' => 'Permission View','permission_category_id'=>$Permission->id]);
+        Permission::create(['name' => 'Permission Create','permission_category_id'=>$Permission->id]);
+        Permission::create(['name' => 'Permission Edit','permission_category_id'=>$Permission->id]);
+        Permission::create(['name' => 'Permission Delete','permission_category_id'=>$Permission->id]);
 
-        Permission::create(['name' => 'User View','permission_category_id'=>1]);
-        Permission::create(['name' => 'User Create','permission_category_id'=>1]);
-        Permission::create(['name' => 'User Update','permission_category_id'=>1]);
-        Permission::create(['name' => 'User Delete','permission_category_id'=>1]);
-
-        Permission::create(['name' => 'Ticket View','permission_category_id'=>1]);
-        Permission::create(['name' => 'Ticket Create','permission_category_id'=>1]);
-        Permission::create(['name' => 'Ticket Update','permission_category_id'=>1]);
-        Permission::create(['name' => 'Ticket Delete','permission_category_id'=>1]);
+        Permission::create(['name' => 'Permission Category View','permission_category_id'=>$permissionCategory->id]);
+        Permission::create(['name' => 'Permission Category Create','permission_category_id'=>$permissionCategory->id]);
+        Permission::create(['name' => 'Permission Category Edit','permission_category_id'=>$permissionCategory->id]);
+        Permission::create(['name' => 'Permission Category Delete','permission_category_id'=>$permissionCategory->id]);
 
         // Create Roles
         $superAdminRole = Role::create(['name' => 'Administrator']); //as super-admin
         // Lets give all permission to super-admin role.
         $allPermissionNames = Permission::pluck('name')->toArray();
         $superAdminRole->givePermissionTo($allPermissionNames);
-
-        // Let's give few permissions to admin role.
-        // $adminRole->givePermissionTo(['create role', 'view role', 'update role']);
-        // $adminRole->givePermissionTo(['create permission', 'view permission']);
-        // $adminRole->givePermissionTo(['create user', 'view user', 'update user']);
-        // $adminRole->givePermissionTo(['create ticket', 'view ticket', 'update ticket']);
-
-        // Lets give all permission to staff role.
-        // $staffRole->givePermissionTo(['view user']);
 
         // Let's Create User and assign Role to it.
         $superAdminUser = User::firstOrCreate([

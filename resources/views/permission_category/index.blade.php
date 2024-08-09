@@ -29,7 +29,7 @@
                 </div>
                 
                 <div class="panel-container show">
-                    @can('User Create')
+                    @can('Permission Category Create')
                         <div class="panel-tag">
                             <div class="text-lg-right">
                                 <button class="btn btn-sm btn-success waves-effect waves-themed" data-toggle="modal" data-target="#permission-category-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>

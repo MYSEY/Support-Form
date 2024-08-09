@@ -25,6 +25,13 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:Ticket View', ['only' => ['index']]);
+        $this->middleware('permission:Ticket Create', ['only' => ['create','store']]);
+        $this->middleware('permission:Ticket Edit', ['only' => ['update','edit']]);
+        $this->middleware('permission:Ticket Delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $branch = Branch::get();

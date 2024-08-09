@@ -15,6 +15,13 @@ class PermissionCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:Permission Category View', ['only' => ['index']]);
+        $this->middleware('permission:Permission Category Create', ['only' => ['create','store']]);
+        $this->middleware('permission:Permission Category Edit', ['only' => ['update','edit']]);
+        $this->middleware('permission:Permission Category Delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $data = DB::table('permission_categories')

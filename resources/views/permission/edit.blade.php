@@ -8,8 +8,9 @@
     </div>
     <div class="panel-container show">
         <div class="panel-content">
-            <form action="{{ url('admin/permission') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ url('admin/permission/update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 <div class="row mb-2">
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
@@ -23,6 +24,9 @@
                         </div>
                     </div>
                 </div>
+                <?php
+                    $st_name = explode(' ',$data->name);
+                ?>
                 <div class="row">
                     <div class="col-md-3 mb-2">
                         <div class="form-group">
@@ -34,36 +38,37 @@
                             </div>
                             <div class="mb-1">
                                 <div class="custom-control custom-checkbox custom-control-inline">
-                                    <input type="checkbox" class="custom-control-input check_all" name="permission[]" id="view" value="View">
+                                    <input type="checkbox" class="custom-control-input check_all" name="permission" id="view" value="View" {{ $st_name[1] == "View" ? 'checked' : ''}}>
                                     <label class="custom-control-label" for="view">View</label>
                                 </div>
                             </div>
                             <div class="mb-1">
                                 <div class="custom-control custom-checkbox custom-control-inline">
-                                    <input type="checkbox" class="custom-control-input check_all" name="permission[]" id="create" value="Create">
+                                    <input type="checkbox" class="custom-control-input check_all" name="permission" id="create" value="Create" {{ $st_name[1] == "Create" ? 'checked' : ''}}>
                                     <label class="custom-control-label" for="create">Create</label>
                                 </div>
                             </div>
                             <div class="mb-1">
                                 <div class="custom-control custom-checkbox custom-control-inline">
-                                    <input type="checkbox" class="custom-control-input check_all" name="permission[]" id="edit" value="Edit">
+                                    <input type="checkbox" class="custom-control-input check_all" name="permission" id="edit" value="Edit" {{$st_name[1] == "Edit" ? 'checked' : ''}}>
                                     <label class="custom-control-label" for="edit">Edit</label>
                                 </div>
                             </div>
                             <div class="mb-1">
                                 <div class="custom-control custom-checkbox custom-control-inline">
-                                    <input type="checkbox" class="custom-control-input check_all" name="permission[]" id="delete" value="Delete">
+                                    <input type="checkbox" class="custom-control-input check_all" name="permission" id="delete" value="Delete" {{$st_name[1] == "Delete" ? 'checked' : ''}}>
                                     <label class="custom-control-label" for="delete">Delete</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-12">
+                    {{-- <div class="col-sm-12 col-md-12">
                         <div class="wrapper_lan"></div>
                         <button class="add_fields btn btn-success"><i class="fal fa-plus-circle"></i> Add</button>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="modal-footer">
+                    <input type="hidden" value="{{$data->id}}" name="id">
                     <a href="{{url('admin/permission')}}" class="btn btn-secondary waves-effect waves-themed"><span>Back</span></a>
                     <button type="submit" class="btn btn-primary waves-effect waves-themed">Submit</button>
                 </div>

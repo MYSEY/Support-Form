@@ -14,6 +14,13 @@ class StatusesController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:Status View', ['only' => ['index']]);
+        $this->middleware('permission:Status Create', ['only' => ['create','store']]);
+        $this->middleware('permission:Status Edit', ['only' => ['update','edit']]);
+        $this->middleware('permission:Status Delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $data = CustomStatus::orderBy('id','DESC')->get();
