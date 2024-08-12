@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admins;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\RoleRequest;
+use App\Models\PermissionCategory;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
@@ -34,8 +35,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permission = Permission::orderBy('permission_category_id')->get();
-        return view('roles.create',compact('permission'));
+        $permissionCategory = PermissionCategory::all();
+        return view('roles.create',compact('permissionCategory'));
     }
 
     /**
@@ -63,9 +64,9 @@ class RoleController extends Controller
     public function show(string $id)
     {
         $role = Role::find($id);
-        $permission = Permission::all();
+        $permissionCategory = PermissionCategory::all();
         $rolePermission = Permission::leftJoin("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")->where("role_has_permissions.role_id",$id)->pluck('id')->toArray();
-        return view('roles.edit',compact('role','rolePermission','permission'));
+        return view('roles.edit',compact('role','rolePermission','permissionCategory'));
     }
 
     /**

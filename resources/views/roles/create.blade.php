@@ -22,17 +22,43 @@
                         <hr>
                         <label for="">Permission Name</label>
                         <div class="row">
-                            @foreach ($permission as $key=>$item)
+                            @foreach ($permissionCategory as $cate)
+                                <?php
+                                    $permission = \Spatie\Permission\Models\Permission::where('permission_category_id', $cate->id)->get();
+                                ?>
                                 <div class="col-md-3 mb-2">
                                     <div class="form-group">
-                                        <div class="frame-wrap">
-                                            <div class="custom-control custom-checkbox custom-control-inline">
-                                                <input type="checkbox" class="custom-control-input check_all" name="permission[]" id="defaultInline_{{ $key }}" value="{{$item->id}}">
-                                                <label class="custom-control-label" for="defaultInline_{{ $key }}">{{$item->name}}</label>
+                                        <div class="card border-success">
+                                            <div class="card-header border-success">{{$cate->name}}</div>
+                                            <div class="card-body">
+                                                <div class="mb-1">
+                                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                                        <input type="checkbox" class="custom-control-input check_all" id="checkAll_{{$cate->id}}" onClick="toggle_{{ $cate->id }}(this)">
+                                                        <label class="custom-control-label" for="checkAll_{{$cate->id}}">Check All</label>
+                                                    </div>
+                                                </div>
+                                                @foreach ($permission as $item)
+                                                    <div class="mb-1">
+                                                        <div class="custom-control custom-checkbox custom-control-inline">
+                                                            <input type="checkbox" class="custom-control-input check_all ch_all_{{ $cate->id }}" name="permission[]" id="defaultInline_{{ $item->id }}" value="{{$item->id}}">
+                                                            <label class="custom-control-label" for="defaultInline_{{ $item->id }}">{{$item->name}}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <script>
+                                    // checked all select
+                                    function toggle_{{ $cate->id }}(source) {
+                                        checkboxes = $('.ch_all_{{ $cate->id }}');
+                                        for (var i = 0, n = checkboxes.length; i < n; i++) {
+                                            checkboxes[i].checked = source.checked;
+                                        }
+                                    }
+                                    // checked all select
+                                </script>
                             @endforeach
                         </div>
                         <hr>
