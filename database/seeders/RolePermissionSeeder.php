@@ -19,9 +19,9 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $Role = PermissionCategory::create(['name'=>'Role','created_by'=>Auth::user()->id]);
-        $Permission = PermissionCategory::create(['name'=>'Permission','created_by'=>Auth::user()->id]);
-        $permissionCategory = PermissionCategory::create(['name'=>'Permission Category','created_by'=>Auth::user()->id]);
+        $Role = PermissionCategory::create(['name'=>'Role']);
+        $Permission = PermissionCategory::create(['name'=>'Permission']);
+        $permissionCategory = PermissionCategory::create(['name'=>'Permission Category']);
         
         // Create Permissions
         Permission::create(['name' => 'Role View','permission_category_id'=>$Role->id]);
