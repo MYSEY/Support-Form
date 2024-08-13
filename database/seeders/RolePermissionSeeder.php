@@ -40,13 +40,13 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'Permission Category Delete','permission_category_id'=>$permissionCategory->id]);
 
         // Create Roles
-        $superAdminRole = Role::create(['name' => 'Administrator']); //as super-admin
+        $AdminRole = Role::create(['name' => 'Administrator']); //as super-admin
         // Lets give all permission to super-admin role.
         $allPermissionNames = Permission::pluck('name')->toArray();
-        $superAdminRole->givePermissionTo($allPermissionNames);
+        $AdminRole->givePermissionTo($allPermissionNames);
 
         // Let's Create User and assign Role to it.
-        $superAdminUser = User::firstOrCreate([
+        $userAdmin = User::firstOrCreate([
             'email' => 'admin@gmail.com',
         ], [
             'role_id'=>'1',
@@ -56,6 +56,6 @@ class RolePermissionSeeder extends Seeder
             'password'=>Hash::make('Camma@123'),
             'status'=> 'Active',
         ]);
-        $superAdminUser->assignRole($superAdminRole);
+        $userAdmin->assignRole($AdminRole);
     }
 }

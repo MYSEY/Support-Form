@@ -160,7 +160,7 @@ class UserController extends Controller
                 // Find the role by ID and get its name
                 $role = Role::find($request->role_id);
                 if ($role) {
-                    $user->syncRoles($role->name); // Use the role name
+                    $user->syncRoles($role->role_id); // Use the role name
                 } else {
                     return response()->json(['error' => 'Role not found'], 404);
                 }

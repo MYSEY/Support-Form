@@ -41,11 +41,11 @@
                                                         <label class="custom-control-label" for="checkAll_{{$cate->id}}">Check All</label>
                                                     </div>
                                                 </div>
-                                                @foreach ($permission as $key=>$item)
+                                                @foreach ($permission as $item)
                                                     <div class="mb-1">
                                                         <div class="custom-control custom-checkbox custom-control-inline">
-                                                            <input type="checkbox" name="permission[]" class="custom-control-input check_all ch_all_{{ $cate->id }}" id="defaultInline_{{ $key }}" value="{{ $item->id }}" {{ in_array($item->id, $rolePermission) ? 'checked' : '' }}>
-                                                            <label class="custom-control-label" for="defaultInline_{{ $key }}">{{$item->name}}</label>
+                                                            <input type="checkbox" name="permission[]" class="custom-control-input check_all ch_all_{{ $cate->id }}" id="defaultInline_{{ $item->id }}" value="{{ $item->id }}" {{ in_array($item->id, $rolePermission) ? 'checked' : '' }}>
+                                                            <label class="custom-control-label" for="defaultInline_{{ $item->id }}">{{$item->name}}</label>
                                                         </div>
                                                     </div>
                                                 @endforeach
