@@ -120,18 +120,33 @@
                                     <span class="nav-link-text">Dashboard</span>
                                 </a>
                             </li>
-                            <li class="@if (Request::instance()->segment(2) == 'ticket') active @endif">
-                                <a href="{{url('admin/ticket')}}" title="Support Form Tickets" data-filter-tags="application intel support form Tickets">
-                                    <i class="fal fa-ticket-alt"></i>
-                                    <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
-                                </a>
-                            </li>
+                            
                             @if(auth()->user()->hasRole('Administrator|Staff'))
+                                <li class="@if (Request::instance()->segment(2) == 'ticket') active @endif">
+                                    <a href="{{url('admin/ticket')}}" title="Support Form Tickets" data-filter-tags="application intel support form Tickets">
+                                        <i class="fal fa-ticket-alt"></i>
+                                        <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
+                                    </a>
+                                </li>
+                                
                                 <li class="@if (Request::instance()->segment(2) == 'user') active @endif">
                                     <a href="{{url('admin/user')}}" title="Users" data-filter-tags="users">
                                         <i class="fal fa-users"></i>
                                         <span class="nav-link-text" data-i18n="nav.user">Users</span>
                                     </a>
+                                </li>
+                                <li class="@if (in_array(Request::instance()->segment(3), ['ticket'])) active @endif">
+                                    <a href="#" title="Reports" data-filter-tags="application intel Reports">
+                                        <i class="fal fa-chart-pie"></i>
+                                        <span class="nav-link-text" data-i18n="nav.Reports">Reports</span>
+                                    </a>
+                                    <ul>
+                                        <li class="@if (Request::instance()->segment(3) == 'ticket') active @endif">
+                                            <a href="{{url('admin/report/ticket')}}" title="Tickets" data-filter-tags="application intel Tickets">
+                                                <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                             @endif
                             
@@ -161,19 +176,6 @@
                                     </ul>
                                 </li>
 
-                                <li class="@if (in_array(Request::instance()->segment(3), ['ticket'])) active @endif">
-                                    <a href="#" title="Reports" data-filter-tags="application intel Reports">
-                                        <i class="fal fa-chart-pie"></i>
-                                        <span class="nav-link-text" data-i18n="nav.Reports">Reports</span>
-                                    </a>
-                                    <ul>
-                                        <li class="@if (Request::instance()->segment(3) == 'ticket') active @endif">
-                                            <a href="{{url('admin/report/ticket')}}" title="Tickets" data-filter-tags="application intel Tickets">
-                                                <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
                                 {{-- Settings --}}
                                 <li class="@if (in_array(Request::instance()->segment(2), ['branch','department','statuses','priority','issue-type'])) active @endif">
                                     <a href="#" title="Theme Settings" data-filter-tags="theme settings">

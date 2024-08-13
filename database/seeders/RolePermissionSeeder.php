@@ -22,25 +22,33 @@ class RolePermissionSeeder extends Seeder
         $Role = PermissionCategory::create(['name'=>'Role']);
         $Permission = PermissionCategory::create(['name'=>'Permission']);
         $permissionCategory = PermissionCategory::create(['name'=>'Permission Category']);
+        $user = PermissionCategory::create(['name'=>'User']);
         
-        // Create Permissions
+        // Create Role
         Permission::create(['name' => 'Role View','permission_category_id'=>$Role->id]);
         Permission::create(['name' => 'Role Create','permission_category_id'=>$Role->id]);
         Permission::create(['name' => 'Role Edit','permission_category_id'=>$Role->id]);
         Permission::create(['name' => 'Role Delete','permission_category_id'=>$Role->id]);
-
+        // Create Permissions
         Permission::create(['name' => 'Permission View','permission_category_id'=>$Permission->id]);
         Permission::create(['name' => 'Permission Create','permission_category_id'=>$Permission->id]);
         Permission::create(['name' => 'Permission Edit','permission_category_id'=>$Permission->id]);
         Permission::create(['name' => 'Permission Delete','permission_category_id'=>$Permission->id]);
-
+        // Create Permissions Category
         Permission::create(['name' => 'Permission Category View','permission_category_id'=>$permissionCategory->id]);
         Permission::create(['name' => 'Permission Category Create','permission_category_id'=>$permissionCategory->id]);
         Permission::create(['name' => 'Permission Category Edit','permission_category_id'=>$permissionCategory->id]);
         Permission::create(['name' => 'Permission Category Delete','permission_category_id'=>$permissionCategory->id]);
 
+        // Create User
+        Permission::create(['name' => 'User View','permission_category_id'=>$user->id]);
+        Permission::create(['name' => 'User Create','permission_category_id'=>$user->id]);
+        Permission::create(['name' => 'User Edit','permission_category_id'=>$user->id]);
+        Permission::create(['name' => 'User Delete','permission_category_id'=>$user->id]);
+
         // Create Roles
-        $AdminRole = Role::create(['name' => 'Administrator']); //as super-admin
+        $AdminRole = Role::create(['name' => 'Administrator']); //as admin
+        $StaffRole = Role::create(['name' => 'Staff']); //as Staff
         // Lets give all permission to super-admin role.
         $allPermissionNames = Permission::pluck('name')->toArray();
         $AdminRole->givePermissionTo($allPermissionNames);
