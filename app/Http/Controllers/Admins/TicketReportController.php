@@ -43,6 +43,7 @@ class TicketReportController extends Controller
         $data = DB::table('tickets')
         ->leftJoin('departments','tickets.department_id','=','departments.id')
         ->leftJoin('users','tickets.owner','=','users.id')
+        ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
         ->select(
             'tickets.id',
             'tickets.trackid',
@@ -53,7 +54,7 @@ class TicketReportController extends Controller
             'tickets.subject',
             'tickets.created_at',
             'tickets.owner',
-            'tickets.issue_type',
+            'issue_types.name as issue_type',
             'departments.name_khmer as depart_name',
             'users.name as owner_name'
         )->when($request->priority, function ($query, $priority) {
