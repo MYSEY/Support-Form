@@ -185,7 +185,7 @@
                                 '<td>'+ row.cate_name +'</td>'+
                                 '<td>'+ priority +'</td>'+
                                 '<td>'+ row.owner_name +'</td>'+
-                                '<td>'+ row.custom1 +'</td>'+
+                                '<td>'+ row.issue_type +'</td>'+
                                 '<td>'+ status +'</td>'+
                             '</tr>';
                         });

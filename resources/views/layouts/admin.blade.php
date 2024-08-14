@@ -136,7 +136,7 @@
                                     </a>
                                 </li>
                                 <li class="@if (in_array(Request::instance()->segment(3), ['ticket'])) active @endif">
-                                    <a href="#" title="Reports" data-filter-tags="application intel Reports">
+                                    <a href="javascript:void(0);" title="Reports" data-filter-tags="application intel Reports">
                                         <i class="fal fa-chart-pie"></i>
                                         <span class="nav-link-text" data-i18n="nav.Reports">Reports</span>
                                     </a>
@@ -153,7 +153,7 @@
                             @if(auth()->user()->hasRole('Administrator'))
                                 {{-- Access Permission --}}
                                 <li class="@if (in_array(Request::instance()->segment(2), ['role','permission','permissions','category'])) active @endif">
-                                    <a href="#" title="Access Permission" data-filter-tags="application intel Access Permission">
+                                    <a href="javascript:void(0);" title="Access Permission" data-filter-tags="application intel Access Permission">
                                         <i class="fal fa-chart-pie"></i>
                                         <span class="nav-link-text" data-i18n="nav.Access Permission">Access Permission</span>
                                     </a>
@@ -178,7 +178,7 @@
 
                                 {{-- Settings --}}
                                 <li class="@if (in_array(Request::instance()->segment(2), ['branch','department','statuses','priority','issue-type'])) active @endif">
-                                    <a href="#" title="Theme Settings" data-filter-tags="theme settings">
+                                    <a href="javascript:void(0);" title="Theme Settings" data-filter-tags="theme settings">
                                         <i class="fal fa-cog"></i>
                                         <span class="nav-link-text" data-i18n="nav.theme_settings">Settings</span>
                                     </a>
