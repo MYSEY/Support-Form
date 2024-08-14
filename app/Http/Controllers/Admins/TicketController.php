@@ -36,10 +36,17 @@ class TicketController extends Controller
     {
         $branch = Branch::get();
         $department = Department::get();
-        $data_tickets = Ticket::with("department")
-        ->with("branch")->with("lastReplier")
-        ->with("CustomStatus")->with("assignedBy")
-        ->with("priorities")->with("createdBy")->get();
+        if (Auth::user()->RolePermission=='staff') {
+            $data_tickets = Ticket::with("department")
+            ->with("branch")->with("lastReplier")
+            ->with("CustomStatus")->with("assignedBy")
+            ->with("priorities")->with("createdBy")->where('department_id',Auth::user()->department_id)->where('branch_id',Auth::user()->branch_id)->get();
+        } else {
+            $data_tickets = Ticket::with("department")
+            ->with("branch")->with("lastReplier")
+            ->with("CustomStatus")->with("assignedBy")
+            ->with("priorities")->with("createdBy")->get();
+        }
         return view('tickets.index', compact('data_tickets','department', 'branch'));
     }
 

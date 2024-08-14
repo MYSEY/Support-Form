@@ -181,8 +181,8 @@
                                 '<td>'+ row.subject +'</td>'+
                                 '<td>'+ row.name +'</td>'+
                                 '<td>'+ row.email +'</td>'+
-                                '<td>'+ dt +'</td>'+
-                                '<td>'+ row.cate_name +'</td>'+
+                                '<td>'+ row.created_at +'</td>'+
+                                '<td>'+ row.depart_name +'</td>'+
                                 '<td>'+ priority +'</td>'+
                                 '<td>'+ row.owner_name +'</td>'+
                                 '<td>'+ row.issue_type +'</td>'+

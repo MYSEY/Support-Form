@@ -165,12 +165,12 @@
                                         </li>
                                         <li class="@if (Request::instance()->segment(2) == 'permission') active @endif">
                                             <a href="{{url('admin/permission')}}" title="permission" data-filter-tags="permission">
-                                                <span class="nav-link-text" data-i18n="nav.permission">Permission</span>
+                                                <span class="nav-link-text" data-i18n="nav.permission">Module Permission</span>
                                             </a>
                                         </li>
                                         <li class="@if (Request::instance()->segment(2) == 'permissions' && Request::instance()->segment(3) == 'category') active @endif">
                                             <a href="{{url('admin/permissions/category')}}" title="permission category" data-filter-tags="permission category">
-                                                <span class="nav-link-text" data-i18n="nav.permission category">Permission Category</span>
+                                                <span class="nav-link-text" data-i18n="nav.permission category">Module Access</span>
                                             </a>
                                         </li>
                                     </ul>

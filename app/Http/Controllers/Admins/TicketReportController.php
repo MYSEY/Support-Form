@@ -51,17 +51,17 @@ class TicketReportController extends Controller
             'tickets.email',
             'tickets.priority',
             'tickets.subject',
-            'tickets.dt',
+            'tickets.created_at',
             'tickets.owner',
             'tickets.issue_type',
-            'departments.name_khmer as cate_name',
+            'departments.name_khmer as depart_name',
             'users.name as owner_name'
         )->when($request->priority, function ($query, $priority) {
             $query->where('tickets.priority', $priority);
         })->when($from_date, function ($query, $from_date) {
-            $query->where('tickets.dt','>=', $from_date);
+            $query->where('tickets.created_at','>=', $from_date);
         })->when($to_date, function ($query, $to_date) {
-            $query->where('tickets.dt','<=', $to_date);
+            $query->where('tickets.created_at','<=', $to_date);
         })->when($request->status, function ($query, $status) {
             $query->whereIn('tickets.status', $status);
         })->OrderBy('tickets.id','DESC')->get();
