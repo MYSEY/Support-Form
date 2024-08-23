@@ -103,4 +103,23 @@ class DepartmentController extends Controller
             return redirect()->back();
         }
     }
+
+    public function onchangStatus(Request $request){
+        try{
+            dd($request->status);
+            $data = Department::find($request->id);
+            dd($data);
+            $data['name_khmer']  = $request->name_khmer;
+            $data['name_english']  = $request->name_english;
+            $data['updated_by']  = Auth::user()->id;
+            $data->save();return response()->json([
+                'message' => "Update data successfully.",
+                'status'=>"success"
+            ]);
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('Department Updated fail.','Error');
+            return redirect()->back();
+        }
+    }
 }

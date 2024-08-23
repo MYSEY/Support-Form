@@ -3,7 +3,7 @@
 <div id="panel-1" class="panel">
     <div class="panel-hdr">
         <h2>
-            Edit Permission
+            Edit Module Permission
         </h2>
     </div>
     <div class="panel-container show">

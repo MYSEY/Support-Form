@@ -22,6 +22,7 @@
                                 <th>ID</th>
                                 <th>Name (KH)</th>
                                 <th>Name (EN)</th>
+                                <th>Status</th>
                                 <th>Created By</th>
                                 <th>Action</th>
                             </tr>
@@ -33,6 +34,12 @@
                                         <td class="ids">{{$item->id }}</td>
                                         <td class="name_khmer">{{$item->name_khmer}}</td>
                                         <td class="name_english">{{$item->name_english}}</td>
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="checkbox custom-control-input btnStatus" data-status="{{$item->status}}" data-id="{{$item->id}}" id="status_{{$item->id}}" {{ $item->status == 1 ? 'checked' : '' }}>
+                                                <label class="custom-control-label" for="status_{{$item->id}}"></label>
+                                            </div>
+                                        </td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') ?? '' }}</td>
                                         <td>
                                             <div class="d-flex demo">
@@ -146,6 +153,23 @@
                 $('.e_id').val(id);
                 $('#e_name_khmer').val(_this.find('.name_khmer').text());
                 $('#e_name_english').val(_this.find('.name_english').text());
+            });
+            $(document).on('click','.btnStatus', function(){
+                let status = $(this).data("status");
+                let id = $(this).data("id");
+                $.ajax({
+                    type: "POST",
+                    url: "{{url('admin/department/status')}}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        id : id,
+                        status : status,
+                    },
+                    dataType: "JSON",
+                    success: function (response) {
+                        
+                    }
+                });
             });
 
             $(document).on('click','.department-delete', function(){

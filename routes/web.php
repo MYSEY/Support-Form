@@ -91,6 +91,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/department/store', [DepartmentController::class,'store']);
     Route::post('/department/update', [DepartmentController::class,'update']);
     Route::post('/department/delete', [DepartmentController::class,'destroy']);
+    Route::post('/department/status', [DepartmentController::class,'onchangStatus']);
 
     // Branch
     Route::get('/branch', [BranchController::class, 'index']);

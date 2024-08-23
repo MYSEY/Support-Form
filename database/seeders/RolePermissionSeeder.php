@@ -20,8 +20,8 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         $Role = PermissionCategory::create(['name'=>'Role']);
-        $Permission = PermissionCategory::create(['name'=>'Permission']);
-        $permissionCategory = PermissionCategory::create(['name'=>'Permission Category']);
+        $Permission = PermissionCategory::create(['name'=>'Module Permission']);
+        $permissionCategory = PermissionCategory::create(['name'=>'Module Access']);
         $user = PermissionCategory::create(['name'=>'User']);
         
         // Create Role

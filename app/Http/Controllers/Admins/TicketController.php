@@ -40,7 +40,7 @@ class TicketController extends Controller
     {
         $branch = Branch::get();
         $department = Department::get();
-        if (Auth::user()->RolePermission=='staff') {
+        if (Auth::user()->RolePermission=='Staff') {
             $data_tickets = Ticket::with("department")
             ->with("branch")->with("lastReplier")
             ->with("CustomStatus")->with("assignedBy")

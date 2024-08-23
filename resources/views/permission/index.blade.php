@@ -24,7 +24,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Permission
+                        Module Permission
                     </h2>
                 </div>
                 

@@ -18,14 +18,14 @@
                         </div>
                     </div>
                 @endcan
-
                 <div class="panel-content">
                     <!-- datatable start -->
                     <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
+                                <th>Role Name</th>
+                                <th>Role Type</th>
                                 <th>Guard Name</th>
                                 <th>Action</th>
                             </tr>
@@ -36,6 +36,7 @@
                                     <tr>
                                         <td class="ids">{{$item->id}}</td>
                                         <td class="name">{{$item->name}}</td>
+                                        <td class="role_type">{{$item->role_type}}</td>
                                         <td>{{$item->guard_name}}</td>
                                         <td>
                                             <div class="d-flex demo">

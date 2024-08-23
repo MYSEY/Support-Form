@@ -36,6 +36,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
         ->leftJoin('priorities','tickets.priority','=','priorities.id')
         ->leftJoin('users','tickets.owner','=','users.id')
         ->leftJoin('custom_statuses','tickets.status','=','custom_statuses.id')
+        ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
         ->select(
             'tickets.*',
             'departments.name_khmer',
@@ -43,8 +44,8 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             'priorities.name as priority',
             'users.user as owner',
             'custom_statuses.name as status',
-        )
-        ->when($request->tracking_id, function ($query, $tracking_id) {
+            'issue_types.name as issue_type',
+        )->when($request->tracking_id, function ($query, $tracking_id) {
             $query->where('tickets.trackid', $tracking_id);
         })
         ->when($request->name, function ($query, $name) {
@@ -54,10 +55,10 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             $query->where('tickets.priority', $priority);
         })
         ->when($from_date, function ($query, $from_date) {
-            $query->where('tickets.dt', '>=', $from_date);
+            $query->where('tickets.created_at', '>=', $from_date);
         })
         ->when($to_date, function ($query, $to_date) {
-            $query->where('tickets.dt','<=', $to_date);
+            $query->where('tickets.created_at','<=', $to_date);
         })
         ->when($request->status, function ($query, $status) {
             $query->whereIn('tickets.status', $status);
@@ -70,11 +71,11 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 "subject" => $value->subject,
                 "Name" => $value->name,
                 "Email" => $value->email,
-                "Submited Date" => $value->dt,
+                "Submited Date" => $value->created_at,
                 "Category" => $value->name_english,
                 "Priority" => $value->priority,
                 "Owner" => $value->owner,
-                "Issue Type" => $value->custom1,
+                "Issue Type" => $value->issue_type,
                 "Status" => $value->status,
                 "close_date" => $value->closedat,
             ];

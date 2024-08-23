@@ -29,7 +29,7 @@
                 </div>
                 
                 <div class="panel-container show">
-                    @can('create user')
+                    @can('User Create')
                         <div class="panel-tag">
                             <div class="text-lg-right">
                                 <a href="{{url('admin/user/form-create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>

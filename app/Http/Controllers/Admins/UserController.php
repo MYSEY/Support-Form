@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function index()
     {
-        if (Auth::user()->RolePermission=='staff') {
+        if (Auth::user()->RolePermission=='Staff') {
             $data = DB::table('users')
             ->where("users.deleted_at",null)
             ->leftJoin('branchs','branchs.id','=','users.branch_id')

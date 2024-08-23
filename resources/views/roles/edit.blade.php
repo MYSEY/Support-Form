@@ -11,10 +11,25 @@
                     @csrf
                     @method('PUT')
                     <div class="panel-content">
-                        <div class="form-group">
-                            <label for="">Name</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{$role->name}}" placeholder="Role Name">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Name</label>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{$role->name}}" placeholder="Role Name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Role Type</label>
+                                    <select class="form-control @error('role_type') is-invalid @enderror" id="role_type" name="role_type">
+                                        <option value="">-- Select --</option>
+                                        <option value="Admin" {{$role->role_type=='Admin' ? 'selected' : ''}}>Administrator</option>
+                                        <option value="Staff" {{$role->role_type=='Staff' ? 'selected' : ''}}>Staff</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
+                        <hr>
                         <div class="form-group">
                             <div class="frame-wrap">
                                 <div class="custom-control custom-checkbox custom-control-inline">
@@ -23,7 +38,6 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
                         <label for="">Permission Name</label>
                         <div class="row">
                             @foreach ($permissionCategory as $cate)

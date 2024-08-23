@@ -45,7 +45,11 @@ class RoleController extends Controller
     public function store(RoleRequest $request)
     {
         try{
-            $role = Role::create(['guard_name' => 'web','name' => $request->name]);
+            $role = Role::create([
+                'guard_name' => 'web',
+                'name' => $request->name,
+                'role_type' => $request->role_type,
+            ]);
             $permissions = Permission::whereIn('id', $request->permission)->pluck('id','id')->all();
             $role->syncPermissions($permissions);
             DB::commit();
