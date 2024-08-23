@@ -87,7 +87,7 @@ class Ticket extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-    public function upldatedBy()
+    public function updatedBy()
     {
         return $this->belongsTo(User::class ,'updated_by');
     }

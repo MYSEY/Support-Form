@@ -69,38 +69,80 @@
                             <div class="form-group">
                                 <textarea class="form-control" id="ticket-reply" rows="5"></textarea>
                             </div>
-                            <div class="form-group">
-                                <input type="file" id="rp_attachments" class="form-control-file">
-                            </div>
-
-                            <div class="frame-wrap">
-                                <div class="demo" style="display: flex">
-                                    <div class="custom-control custom-checkbox ">
-                                        <input type="checkbox" class="custom-control-input" id="autostart" checked="">
-                                        <label class="custom-control-label mr-3" for="autostart">Attach signature ( Profile settings )</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{-- <div class="form-group form-group-select2">
+                                        <label class="form-label" for="ticket-Department">Department Branch:</label>
+                                        <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="ticket-Department" required>
+                                            <option value=""></option>
+                                            @if (count($department) > 0)
+                                                @foreach ($department as $item)
+                                                    <option value="{{$item->id}}">{{ $item->name_english}}</option>
+                                                @endforeach
+                                            @endif
+                                            @if (count($branch) > 0)
+                                                @foreach ($branch as $item)
+                                                    <option value="{{$item->id}}">{{ $item->branch_name_en}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div> --}}
+                                    <div class="form-group form-group-select2">
+                                        <label class="form-label" for="ticket-assigned">Assigned to: </label>
+                                        <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="ticket-assigned" required>
+                                            <option value="unassigned">> Unassigned <</option>
+                                            <option value="auto-assign">> Auto-assign <</option>
+                                            @if (count($user_support) > 0)
+                                                @foreach ($user_support as $item)
+                                                    <option @if($item->id == $data_ticket->assignedby) selected @endif value="{{$item->id}}">{{ $item->name}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
                                     </div>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="notify_customer_new">
-                                        <label class="custom-control-label" for="notify_customer_new">Change priority to</label>
+                                    <div class="form-group">
+                                        <input type="file" id="rp_attachments" class="form-control-file">
                                     </div>
-                                    <button style="text-decoration: none !important;" class="btn btn-link dropdown-toggle pt-0" type="button" id="ticketStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span style="color: {{$data_ticket->priorities->color}}"><i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 16px "></i>{{$data_ticket->priorities->name}}</span>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="ticketStatus">
-                                        @if (count($priority) > 0)
-                                            @foreach ($priority as $item)
-                                                <a class="dropdown-item" href="#"><span style="color: {{$item->color}}"><i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 16px "></i>{{$item->name}}</span></a>
-                                            @endforeach
-                                        @endif
+                                    <div class="form-group frame-wrap">
+                                        <div class="demo" style="display: flex">
+                                            <div class="custom-control custom-checkbox ">
+                                                <input type="checkbox" class="custom-control-input" id="autostart" checked="">
+                                                <label class="custom-control-label mr-3" for="autostart">Attach signature ( Profile settings )</label>
+                                            </div>
+                                        </div>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="autoreload-send-email" name="autoreload-send-email">
+                                            <label class="custom-control-label" for="autoreload-send-email">Don't send email notification of this reply to the customer</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="autoreload">
-                                    <label class="custom-control-label" for="autoreload">Don't send email notification of this reply to the customer</label>
+                                <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label class="form-label" for="ticket-status">Ticket status:</label>
+                                        <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="ticket-status" required>
+                                            <option value=""></option>
+                                            @if (count($status) > 0)
+                                                @foreach ($status as $item)
+                                                    <option @if($item->id == $data_ticket->status) selected @endif value="{{$item->id}}">{{ $item->name}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <div class="form-group form-group-select2">
+                                        <label class="form-label" for="ticket-priority">Priority: </label>
+                                        <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="ticket-priority" required>
+                                            <option value=""></option>
+                                            @if (count($priority) > 0)
+                                                @foreach ($priority as $item)
+                                                    <option @if($item->id == $data_ticket->priority) selected @endif style="color: {{$item->color}}" value="{{$item->id}}">{{ $item->name}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            </div><br>
+                            
                             <button class="btn btn-danger" id="btn-reply-ticket">Submit Reply</button>
-                            <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
+                            {{-- <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-danger dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-expanded="false">Submit as</button>
                                     <div class="dropdown-menu" style="">
@@ -111,7 +153,7 @@
                                         @endif
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -131,93 +173,8 @@
                     <a class="dropdown-item" href="#"><i class="fal fa-trash-alt"></i> Delete ticket</a>
                 </div>
             </div>
-
-            <div class="card mt-4">
-                <div class="card-body">
-                    <div class="ticket-info-item d-flex justify-content-between align-items-center">
-                        <span><strong>Ticket status:</strong></span>
-                        <div>
-                            <button style="text-decoration: none !important;" class="btn btn-link dropdown-toggle p-0" type="button" id="ticketStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span style="color: {{$data_ticket->CustomStatus->color}}">{{$data_ticket->CustomStatus->name}}</span>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="ticketStatus">
-                                @if (count($status) > 0)
-                                    @foreach ($status as $item)
-                                        <a class="dropdown-item btn-update-status" href="javascript:void(0);" data-id="{{$item->id}}"><span style="color: {{$item->color}}">{{$item->name}}</span></a>
-                                    @endforeach
-                                @endif
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ticket-info-item d-flex justify-content-end align-items-center">
-                        <a href="#" class="mark-as-resolved ml-2">[Mark as Resolved]</a>
-                    </div>
-
-                    <div class="ticket-info-item d-flex justify-content-between align-items-center">
-                        <span><strong>Department/Branch:</strong></span>
-                        <div>
-                            <button style="text-decoration: none !important;" class="btn btn-link dropdown-toggle p-0" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span>
-                                    {{ $data_ticket->department ? $data_ticket->department->name_english: ""}}
-                                    {{ $data_ticket->branch ? $data_ticket->branch->branch_name_en: ""}}
-                                </span>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="categoryDropdown">
-                                @if (count($department) > 0)
-                                    @foreach ($department as $item)
-                                        <a class="dropdown-item" href="#">{{$item->name_english}}</a>
-                                    @endforeach
-                                @endif
-                                @if (count($branch) > 0)
-                                    @foreach ($branch as $item)
-                                        <a class="dropdown-item" href="#">{{$item->branch_name_en}}</a>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ticket-info-item d-flex justify-content-between align-items-center">
-                        <span><strong>Priority:</strong></span>
-                        <div>
-                            <button style="text-decoration: none !important;" class="btn btn-link dropdown-toggle p-0" type="button" id="priorityDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="priority-high" style="color: {{$data_ticket->priorities->color}}">
-                                    {{$data_ticket->priorities->name}}
-                                </span>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="priorityDropdown">
-                                @if (count($priority) > 0)
-                                    @foreach ($priority as $item)
-                                        <a class="dropdown-item btn-update-priority" href="javascript:void(0);" data-id="{{$item->id}}"><span style="color: {{$item->color}}">{{$item->name}}</span></a>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ticket-info-item d-flex justify-content-between align-items-center">
-                        <span><strong>Assigned to:</strong></span>
-                        <div>
-                            <button style="text-decoration: none !important;" class="btn btn-link dropdown-toggle p-0" type="button" id="assignedDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span>{{$data_ticket->assignedBy ? $data_ticket->assignedBy->user : '> '.$data_ticket->assignedby.' <'}}</span>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="assignedDropdown">
-                                <a class="dropdown-item" href="#">> Unassigned <</a>
-                                <a class="dropdown-item" href="#">> Auto-assign <</a>
-                                @if (count($user_support) > 0)
-                                    @foreach ($user_support as $item)
-                                        <a class="dropdown-item btn-update-assignedto" href="javascript:void(0);" data-id="{{$item->id}}">{{$item->name}}</a>
-                                    @endforeach
-                                @endif
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ticket-info-item d-flex justify-content-end align-items-center">
-                        <a href="#" class="mark-as-resolved ml-2">[Assign to self]</a>
-                    </div>
-                </div>
-            </div>
-
+           
+            {{-- Block Detail Tickets --}}
             <div class="frame-wrap w-100 mt-4">
                 <div class="accordion" id="accordionExample">
                     <div class="card">
@@ -250,11 +207,12 @@
                     </div>
                 </div>
             </div>
+            {{-- Block Histories --}}
             <div class="frame-wrap w-100">
                 <div class="accordion" id="History">
                     <div class="card">
                         <div class="card-header" id="headingThree">
-                            <a href="javascript:void(0);" class="card-title collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <a href="javascript:void(0);" class="card-title collapsed show" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                 Ticket History
                                 <span class="ml-auto">
                                     <span class="collapsed-reveal">
@@ -267,7 +225,7 @@
                                 </span>
                             </a>
                         </div>
-                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#History">
+                        <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#History">
                             <div class="card-body">
                                 <ul>
                                     @if (count($data_ticket->histories) > 0)
@@ -459,12 +417,16 @@
                 }else{
                     $.ajax({
                         type: "POST",
-                        url: "{{url('admin/replies/save')}}",
+                        url: "{{url('admin/ticket/replies')}}",
                         data: {
                             "_token":                   "{{ csrf_token() }}",
                             reply_to:                   $("#e_id_ticket").val(),
                             message:                    $("#ticket-reply").val(),
                             message_html:               $("#ticket-reply").val(),
+                            priority:                   $("#ticket-priority").val(),
+                            status:                     $("#ticket-status").val(),
+                            assignedby:                 $("#ticket-assigned").val(),
+                            autoreload:                 $('input[name="autoreload-send-email"]:checked').val(),
                             // attachments:             $("#rp_attachments").val(),
                         },
                         dataType: "JSON",
@@ -472,7 +434,7 @@
                             if (response.status == "error") {
                                 toastr.error(response.message);
                             }else{
-                                toastr.success('Data create successfully.');
+                                toastr.success(response.message);
                                 var url = "{{ URL('admin/ticket/detail/') }}/" + id;
                                 window.location.replace(url); 
                             }

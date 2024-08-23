@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admins;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Email as ModelsMail;
 use App\Models\Branch;
 use App\Models\Ticket;
 use App\Models\Priority;
@@ -17,6 +18,9 @@ use App\Http\Controllers\Controller;
 use App\Models\TicketHistory;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
+use App\Models\Reply;
 
 class TicketController extends Controller
 {
@@ -66,6 +70,7 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         try {
             $status = CustomStatus::orderBy('id', 'asc')->first();
             $data = $request->all();
@@ -79,11 +84,37 @@ class TicketController extends Controller
             $data_histoies['type'] = "new";
             $data_histoies['created_by'] = Auth::user()->id;
             TicketHistory::create($data_histoies);
+
+            // for send email
+            $assigned_to = User::where("id", $request->assignedby)->first();
+
+            $data_tickets = Ticket::where("id", $ticket->id)
+            ->with("department")
+            ->with("branch")->with("lastReplier")
+            ->with("CustomStatus")->with("assignedBy")
+            ->with("issueType")
+            ->with("priorities")
+            ->with("createdBy")
+            ->with("updatedBy")
+            ->first();
+            $datasSendEmail = [
+                "data_tickets"=> $data_tickets,
+                "status"=> "new",
+            ];
+             
+            //  $mail_message = ModelsMail::first();
+            if ($assigned_to) {
+                if ($assigned_to->email) {
+                    // Mail::to("hshong9666@gmail.com")->send(new SendMail($datasSendEmail));
+                    Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+                }
+             }
+
+            DB::commit();
             return response()->json([
                 'message' => "Ticket created successfully.",
                 'status'=>"success"
             ]);
-            DB::commit();
         } catch (\Throwable $exp) {
             return response()->json(['errors' => $exp]);
         }
@@ -146,8 +177,6 @@ class TicketController extends Controller
     public function detail(Request $request)
     {
         $branch = Branch::get();
-        $department = Department::get();
-        $department = Department::get();
         $priority= Priority::get();
         $status = CustomStatus::orderBy('id', 'asc')->get();
         $user_support = User::where("autoassign",1)->get();
@@ -159,7 +188,7 @@ class TicketController extends Controller
         ->with("histories")
         ->where("id", $request->id)
         ->first();
-        return view('tickets.ticket-detail', compact('data_ticket','status','branch', 'department', 'priority', 'user_support'));
+        return view('tickets.ticket-detail', compact('data_ticket','status', 'priority', 'user_support'));
     }
 
     public function status(Request $request){
@@ -257,7 +286,103 @@ class TicketController extends Controller
             ]);
         }catch(\Exception $e){
             DB::rollback();
-            Toastr::error('Updated fail.','Error');
+            // Toastr::error('Updated fail.','Error');
+            return redirect()->back();
+        }
+    }
+    public function replies(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $ticket_update = false;
+            $data_assign = false;
+            $dataHistoryStatus = [];
+            $dataHistoryPriority = [];
+            $data = Ticket::find($request->reply_to);
+            $assigned_to = User::where("id", $request->assignedby)->first();
+            // Add new history on status
+            if ($data->status != $request->status) {
+                $ticket_update = true;
+                $data_histoies_status['trackid'] = $data->id;
+                $data_histoies_status['type'] = "status";
+                $data_histoies_status['from_status'] = $data->status;
+                $data_histoies_status['to_status'] = $request->status;
+                $data_histoies_status['created_by'] = Auth::user()->id;
+                $historyStatus = TicketHistory::create($data_histoies_status);
+                $dataHistoryStatus = TicketHistory::where("id", $historyStatus->id)->with("statusFrom")->with("statusTo")->first();
+
+            }
+
+            // Add new history on priority
+            if ($data->priority !=  $request->priority) {
+                $ticket_update = true;
+                $data_histoies_priority['trackid'] = $data->id;
+                $data_histoies_priority['type'] = "priority";
+                $data_histoies_priority['from_priority_id'] = $data->priority;
+                $data_histoies_priority['to_priority_id'] = $request->priority;
+                $data_histoies_priority['created_by'] = Auth::user()->id;
+                $historyPriority = TicketHistory::create($data_histoies_priority);
+                $dataHistoryPriority = TicketHistory::where("id", $historyPriority->id)->with("priorityFrom")->with("priorityTo")->first();
+            }
+            
+            if ($data->assignedby != $request->assignedby) {
+                $ticket_update = true;
+                $data_assign = true;
+            }
+            // Update ticket
+            if ($ticket_update == true) {
+                $data['assignedby']  = $request->assignedby;
+                $data['status']  = $request->status;
+                $data['priority']  = $request->priority;
+                $data['updated_by']  = Auth::user()->id;
+                $data->save();
+            }
+            
+            // Add new reply
+            $dataReply['staff_id'] = Auth::user()->id;
+            $dataReply['reply_to'] = $request->reply_to;
+            $dataReply['message'] = $request->message;
+            $dataReply['message_html'] = $request->message_html;
+            $dataReply['name'] = Auth::user()->name;
+            $dataReply['created_by'] = Auth::user()->id;
+            $dataReply = Reply::create($dataReply);
+
+            $data_tickets = Ticket::where("id", $data->id)
+            ->with("department")
+            ->with("branch")->with("lastReplier")
+            ->with("CustomStatus")->with("assignedBy")
+            ->with("issueType")
+            ->with("priorities")
+            ->with("createdBy")
+            ->with("updatedBy")
+            ->first();
+            $datasSendEmail = [
+                "data_assign"=> $data_assign,
+                "data_tickets"=> $data_tickets,
+                "status"=> "replies",
+                "dataReply"=> $dataReply,
+                "dataHistoryStatus"=> $dataHistoryStatus,
+                "dataHistoryPriority"=> $dataHistoryPriority,
+            ];
+        
+            if (!$request->autoreload) {
+                // $mail_message = ModelsMail::first();
+                 if ($assigned_to) {
+                    if ($assigned_to->email) {
+                        Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+                    }
+                 }
+            }
+           
+            // Toastr::success('Updated successfully.','Success');
+            DB::commit();
+            return response()->json([
+                'message' => "Ticket replies successfully.",
+                'status'=>"success"
+            ]);
+        }catch(\Exception $e){
+            DB::rollback();
+            // Toastr::error('Updated fail.','Error');
             return redirect()->back();
         }
     }
