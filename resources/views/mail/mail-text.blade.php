@@ -1,10 +1,15 @@
 <div class="card">
     <div class="card-header">
         <p>Do not reply this email. This is auto reply from Camma Support Form System.</p>
-        <p>Issue <a class="btn btn-primary" href="#">#{{$data["data_tickets"]->trackid}}</a> has been {{$data["status"] == "new" ? "create by ".$data["data_tickets"]->createdBy->name : "update by ".$data["data_tickets"]->updatedBy->name}}.</p>
+        @if ($data["data_tickets"]->updatedBy)
+            <p>Issue <a class="btn btn-primary" href="#">#{{$data["data_tickets"]->trackid}}</a> has been {{$data["status"] == "new" ? "create by ".$data["data_tickets"]->createdBy->name : "update by ".$data["data_tickets"]->updatedBy->name}}.</p>
+        @else
+            <p>Issue <a class="btn btn-primary" href="#">#{{$data["data_tickets"]->trackid}}</a> has been create by .{{$data["data_tickets"]->createdBy->name}}</p>
+        @endif
     </div>
     <div class="card-body">
-        <a class="btn btn-primary" href="#"><h3>I need support #{{$data["data_tickets"]->trackid}}: {{$data["data_tickets"]->subject}}</h3></a>
+        <a class="btn btn-primary" href="{{url("http://hrms.camma.com:9090/Support-Form/public/admin/ticket/detail/").$data["data_tickets"]->id}}"><h3>I need support #{{$data["data_tickets"]->trackid}}: {{$data["data_tickets"]->subject}}</h3></a>
+        {{-- <a class="btn btn-primary" href="#"><h3>I need support #{{$data["data_tickets"]->trackid}}: {{$data["data_tickets"]->subject}}</h3></a> --}}
         @if ($data["status"] != "new")
             <hr>
             @if ($data["dataReply"])
