@@ -16,10 +16,7 @@ class BranchController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('permission:Branch View', ['only' => ['index']]);
-        $this->middleware('permission:Branch Create', ['only' => ['create','store']]);
-        $this->middleware('permission:Branch Edit', ['only' => ['update','edit']]);
-        $this->middleware('permission:Branch Delete', ['only' => ['destroy']]);
+        RolePermission($this, 'Branch');
     }
     public function index()
     {

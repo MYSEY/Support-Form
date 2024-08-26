@@ -21,10 +21,7 @@ class IssueTypeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('permission:Issue Type View', ['only' => ['index']]);
-        $this->middleware('permission:Issue Type Create', ['only' => ['create','store']]);
-        $this->middleware('permission:Issue Type Edit', ['only' => ['update','edit']]);
-        $this->middleware('permission:Issue Type Delete', ['only' => ['destroy']]);
+        RolePermission($this, 'Issue Type');
     }
     public function index()
     {

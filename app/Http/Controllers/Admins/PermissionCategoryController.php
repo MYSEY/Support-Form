@@ -17,10 +17,7 @@ class PermissionCategoryController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('permission:Permission Category View', ['only' => ['index']]);
-        $this->middleware('permission:Permission Category Create', ['only' => ['create','store']]);
-        $this->middleware('permission:Permission Category Edit', ['only' => ['update','edit']]);
-        $this->middleware('permission:Permission Category Delete', ['only' => ['destroy']]);
+        RolePermission($this, 'Permission Category');
     }
     public function index()
     {

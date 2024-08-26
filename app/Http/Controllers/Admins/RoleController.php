@@ -18,10 +18,7 @@ class RoleController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('permission:Role View', ['only' => ['index']]);
-        $this->middleware('permission:Role Create', ['only' => ['create','store']]);
-        $this->middleware('permission:Role Edit', ['only' => ['update','edit']]);
-        $this->middleware('permission:Role Delete', ['only' => ['destroy']]);
+        RolePermission($this, 'Role');
     }
 
     public function index()

@@ -20,10 +20,12 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:User View', ['only' => ['index']]);
-        $this->middleware('permission:User Create', ['only' => ['create','store']]);
-        $this->middleware('permission:User Edit', ['only' => ['update','edit']]);
-        $this->middleware('permission:User Delete', ['only' => ['destroy']]);
+        RolePermission($this, 'User');
+
+        // $this->middleware('permission:User View', ['only' => ['index']]);
+        // $this->middleware('permission:User Create', ['only' => ['create','store']]);
+        // $this->middleware('permission:User Edit', ['only' => ['update','edit']]);
+        // $this->middleware('permission:User Delete', ['only' => ['destroy']]);
     }
 
     public function index()

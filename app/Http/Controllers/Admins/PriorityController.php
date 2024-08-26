@@ -18,10 +18,7 @@ class PriorityController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('permission:Priority View', ['only' => ['index']]);
-        $this->middleware('permission:Priority Create', ['only' => ['create','store']]);
-        $this->middleware('permission:Priority Edit', ['only' => ['update','edit']]);
-        $this->middleware('permission:Priority Delete', ['only' => ['destroy']]);
+        RolePermission($this, 'Priority');
     }
     public function index()
     {

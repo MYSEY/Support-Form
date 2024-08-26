@@ -162,7 +162,9 @@
 
         <div class="col-md-4">
             <div class="btn-group btn-group-custom d-flex justify-content-end" role="group" aria-label="Print Options">
-                <a class="btn btn-outline-primary" href="{{url("admin/ticket/edit")}}/{{$data_ticket->id}}"><i class="fal fa-edit"></i> Edit</a>
+                @can('Ticket Edit')
+                    <a class="btn btn-outline-primary" href="{{url("admin/ticket/edit")}}/{{$data_ticket->id}}"><i class="fal fa-edit"></i> Edit</a>
+                @endcan
                 <button type="button" class="btn btn-outline-primary btn-print"> <span class="fal fa-print mr-1"></span> Print</button>
                 <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only">Toggle Dropdown</span>

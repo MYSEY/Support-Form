@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admins;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Carbon;
 use App\Models\User;
 use App\Models\Email as ModelsMail;
 use App\Models\Branch;
@@ -20,6 +20,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
+use App\Models\PermissionCategory;
 use App\Models\Reply;
 
 class TicketController extends Controller
@@ -31,10 +32,7 @@ class TicketController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('permission:Ticket View', ['only' => ['index']]);
-        $this->middleware('permission:Ticket Create', ['only' => ['create','store']]);
-        $this->middleware('permission:Ticket Edit', ['only' => ['update','edit']]);
-        $this->middleware('permission:Ticket Delete', ['only' => ['destroy']]);
+        RolePermission($this, 'Ticket');
     }
     public function index()
     {

@@ -1,9 +1,11 @@
 @extends('layouts.admin')
 @section('content')
-<div class="demo">
-    {{-- href="{{url('admin/ticket/create')}}" --}}
-    <a type="button" id="btn-crearte" href="#" data-toggle="modal" data-target="#modal-select" class="btn btn-danger waves-effect waves-themed float-right">Create New Ticket</a>
-</div>
+@can('Ticket Create')
+    <div class="demo">
+        {{-- href="{{url('admin/ticket/create')}}" --}}
+        <a type="button" id="btn-crearte" href="#" data-toggle="modal" data-target="#modal-select" class="btn btn-danger waves-effect waves-themed float-right">Create New Ticket</a>
+    </div>
+@endcan
 <ul class="nav nav-pills" role="tablist">
     <li class="nav-item"><a class="nav-link active tab-tables" data-toggle="tab" data-permiss="1" href="#js_change_pill_direction-1">Open tickets</a></li>
     <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="2" href="#js_change_pill_direction-2">Assigned to me</a></li>

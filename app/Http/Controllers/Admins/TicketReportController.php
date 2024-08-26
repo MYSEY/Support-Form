@@ -14,6 +14,11 @@ class TicketReportController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        RolePermission($this, 'Ticket Report');
+    }
+
     public function index()
     {
         // $data = DB::table('tickets')

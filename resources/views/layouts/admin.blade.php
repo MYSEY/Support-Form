@@ -92,6 +92,30 @@
 
         </script>
         <!-- BEGIN Page Wrapper -->
+        @php
+            $permissionsReports = [
+                'Ticket Report View' 
+            ];
+            $segmentReport = ['ticket'];
+            $permissionsRoles = [
+                'Role View', 
+                'Permission View', 
+                'Permission Category View'
+            ];
+            $segmentRole =['role','permission','permissions','category'];
+            $permissionsSettings = [
+                'General View', 
+                'Help Desk View', 
+                'Knowledgebase View', 
+                'Status View', 
+                'Department View', 
+                'Branch View', 
+                'Priority View', 
+                'Issue Type View'
+            ];
+            $segmentSetting =['branch','department','statuses','priority','issue-type'];
+        @endphp
+
         <div class="page-wrapper">
             <div class="page-inner">
                 <!-- BEGIN Left Aside -->
@@ -114,6 +138,7 @@
                             </div>
                         </div>
                         <ul id="js-nav-menu" class="nav-menu">
+                            
                             <li class="@if (Request::instance()->segment(2) == 'dashboad') active @endif">
                                 <a href="{{url('admin/dashboad')}}" title="Support Form Dashboard" data-filter-tags="application intel support form dashboard">
                                     <i class="fal fa-tachometer-alt"></i>
@@ -121,116 +146,142 @@
                                 </a>
                             </li>
                             
-                            @if(auth()->user()->hasRole('Administrator|Staff'))
+                            @if (Auth::user()->can('Ticket View'))
                                 <li class="@if (Request::instance()->segment(2) == 'ticket') active @endif">
                                     <a href="{{url('admin/ticket')}}" title="Support Form Tickets" data-filter-tags="application intel support form Tickets">
                                         <i class="fal fa-ticket-alt"></i>
                                         <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
                                     </a>
                                 </li>
-                                
+                            @endif
+                            @if (Auth::user()->can('User View'))
                                 <li class="@if (Request::instance()->segment(2) == 'user') active @endif">
                                     <a href="{{url('admin/user')}}" title="Users" data-filter-tags="users">
                                         <i class="fal fa-users"></i>
                                         <span class="nav-link-text" data-i18n="nav.user">Users</span>
                                     </a>
                                 </li>
-                                <li class="@if (in_array(Request::instance()->segment(3), ['ticket'])) active @endif">
+                            @endif
+
+                            {{-- Reports --}}
+                            @if (userHasAnyPermission($permissionsReports))
+                                <li class="@if (in_array(Request::instance()->segment(3), $segmentReport)) active @endif">
                                     <a href="javascript:void(0);" title="Reports" data-filter-tags="application intel Reports">
                                         <i class="fal fa-chart-pie"></i>
                                         <span class="nav-link-text" data-i18n="nav.Reports">Reports</span>
                                     </a>
                                     <ul>
-                                        <li class="@if (Request::instance()->segment(3) == 'ticket') active @endif">
-                                            <a href="{{url('admin/report/ticket')}}" title="Tickets" data-filter-tags="application intel Tickets">
-                                                <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
-                                            </a>
-                                        </li>
+                                        @if (Auth::user()->can('Ticket Report View'))
+                                            <li class="@if (Request::instance()->segment(3) == 'ticket') active @endif">
+                                                <a href="{{url('admin/report/ticket')}}" title="Tickets" data-filter-tags="application intel Tickets">
+                                                    <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
+                                                </a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </li>
                             @endif
-                            
-                            @if(auth()->user()->hasRole('Administrator'))
-                                {{-- Access Permission --}}
-                                <li class="@if (in_array(Request::instance()->segment(2), ['role','permission','permissions','category'])) active @endif">
-                                    <a href="javascript:void(0);" title="Access Permission" data-filter-tags="application intel Access Permission">
-                                        <i class="fal fa-chart-pie"></i>
-                                        <span class="nav-link-text" data-i18n="nav.Access Permission">Access Permission</span>
-                                    </a>
-                                    <ul>
-                                        <li class="@if (Request::instance()->segment(2) == 'role') active @endif">
-                                            <a href="{{url('admin/role')}}" title="Role" data-filter-tags="Role">
-                                                <span class="nav-link-text" data-i18n="nav.role">Role</span>
-                                            </a>
-                                        </li>
-                                        <li class="@if (Request::instance()->segment(2) == 'permission') active @endif">
-                                            <a href="{{url('admin/permission')}}" title="permission" data-filter-tags="permission">
-                                                <span class="nav-link-text" data-i18n="nav.permission">Module Permission</span>
-                                            </a>
-                                        </li>
-                                        <li class="@if (Request::instance()->segment(2) == 'permissions' && Request::instance()->segment(3) == 'category') active @endif">
-                                            <a href="{{url('admin/permissions/category')}}" title="permission category" data-filter-tags="permission category">
-                                                <span class="nav-link-text" data-i18n="nav.permission category">Module Access</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
 
-                                {{-- Settings --}}
-                                <li class="@if (in_array(Request::instance()->segment(2), ['branch','department','statuses','priority','issue-type'])) active @endif">
+                            {{-- Settings --}}
+                            @if (userHasAnyPermission($permissionsSettings))
+                                <li class="@if (in_array(Request::instance()->segment(2), $segmentSetting)) active @endif">
                                     <a href="javascript:void(0);" title="Theme Settings" data-filter-tags="theme settings">
                                         <i class="fal fa-cog"></i>
                                         <span class="nav-link-text" data-i18n="nav.theme_settings">Settings</span>
                                     </a>
                                     <ul>
-                                        <li>
-                                            <a href="" title="Departments" data-filter-tags="application intel Departments">
-                                                <span class="nav-link-text" data-i18n="nav.Tickets">Supporting Department</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" title="General" data-filter-tags="theme settings General">
-                                                <span class="nav-link-text" data-i18n="nav.general">General</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" title="Help Desk" data-filter-tags="theme settings Help Desk">
-                                                <span class="nav-link-text" data-i18n="nav.help_desk">Help Desk</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" title="Knowledgebase" data-filter-tags="theme settings Knowledgebase">
-                                                <span class="nav-link-text" data-i18n="nav.help_desk">Knowledgebase</span>
-                                            </a>
-                                        </li>
-                                        <li class="@if (in_array(Request::instance()->segment(2), ['statuses'])) active @endif">
-                                            <a href="{{url('admin/statuses')}}" title="Status" data-filter-tags="theme settings Status">
-                                                <span class="nav-link-text" data-i18n="nav.help_desk">Statuses</span>
-                                            </a>
-                                        </li>
-                                        <li class="@if (in_array(Request::instance()->segment(2), ['department'])) active @endif">
-                                            <a href="{{url('admin/department')}}" title="Departments" data-filter-tags="theme settings Departments">
-                                                <span class="nav-link-text" data-i18n="nav.department">Department</span>
-                                            </a>
-                                        </li>
-                                        <li class="@if (in_array(Request::instance()->segment(2), ['branch'])) active @endif">
-                                            <a href="{{url('admin/branch')}}" title="Branch" data-filter-tags="theme settings branch">
-                                                <span class="nav-link-text" data-i18n="nav.department">Branch</span>
-                                            </a>
-                                        </li>
-                                        <li class="@if (in_array(Request::instance()->segment(2), ['priority'])) active @endif">
-                                            <a href="{{url('admin/priority')}}" title="Priority" data-filter-tags="theme settings Priority">
-                                                <span class="nav-link-text">Priority</span>
-                                            </a>
-                                        </li>
-                                        <li class="@if (in_array(Request::instance()->segment(2), ['issue-type'])) active @endif">
-                                            <a href="{{url('admin/issue-type')}}" title="issue-type" data-filter-tags="theme settings issue-type">
-                                                <span class="nav-link-text">Issue Type</span>
-                                            </a>
-                                        </li>
+                                        @if (Auth::user()->can('General View'))
+                                            <li>
+                                                <a href="" title="General" data-filter-tags="theme settings General">
+                                                    <span class="nav-link-text" data-i18n="nav.general">General</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Help Desk View'))
+                                            <li>
+                                                <a href="" title="Help Desk" data-filter-tags="theme settings Help Desk">
+                                                    <span class="nav-link-text" data-i18n="nav.help_desk">Help Desk</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Knowledgebase View'))
+                                            <li>
+                                                <a href="" title="Knowledgebase" data-filter-tags="theme settings Knowledgebase">
+                                                    <span class="nav-link-text" data-i18n="nav.help_desk">Knowledgebase</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Status View'))
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['statuses'])) active @endif">
+                                                <a href="{{url('admin/statuses')}}" title="Status" data-filter-tags="theme settings Status">
+                                                    <span class="nav-link-text" data-i18n="nav.help_desk">Statuses</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Department View'))
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['department'])) active @endif">
+                                                <a href="{{url('admin/department')}}" title="Departments" data-filter-tags="theme settings Departments">
+                                                    <span class="nav-link-text" data-i18n="nav.department">Department</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Branch View'))
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['branch'])) active @endif">
+                                                <a href="{{url('admin/branch')}}" title="Branch" data-filter-tags="theme settings branch">
+                                                    <span class="nav-link-text" data-i18n="nav.department">Branch</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Priority View'))
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['priority'])) active @endif">
+                                                <a href="{{url('admin/priority')}}" title="Priority" data-filter-tags="theme settings Priority">
+                                                    <span class="nav-link-text">Priority</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Issue Type View'))
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['issue-type'])) active @endif">
+                                                <a href="{{url('admin/issue-type')}}" title="issue-type" data-filter-tags="theme settings issue-type">
+                                                    <span class="nav-link-text">Issue Type</span>
+                                                </a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </li>
                             @endif
+
+                            {{-- Access Permission --}}
+                            @if (userHasAnyPermission($permissionsRoles))
+                            <li class="@if (in_array(Request::instance()->segment(2), $segmentRole)) active @endif">
+                                <a href="javascript:void(0);" title="Access Permission" data-filter-tags="application intel Access Permission">
+                                    <i class="fal fa-chart-pie"></i>
+                                    <span class="nav-link-text" data-i18n="nav.Access Permission">Access Permission</span>
+                                </a>
+                                <ul>
+                                    @if (Auth::user()->can('Role View'))
+                                        <li class="@if (Request::instance()->segment(2) == 'role') active @endif">
+                                            <a href="{{url('admin/role')}}" title="Role" data-filter-tags="Role">
+                                                <span class="nav-link-text" data-i18n="nav.role">Role</span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if (Auth::user()->can('Permission View'))
+                                        <li class="@if (Request::instance()->segment(2) == 'permission') active @endif">
+                                            <a href="{{url('admin/permission')}}" title="permission" data-filter-tags="permission">
+                                                <span class="nav-link-text" data-i18n="nav.permission">Module Permission</span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if (Auth::user()->can('Permission Category View'))
+                                        <li class="@if (Request::instance()->segment(2) == 'permissions' && Request::instance()->segment(3) == 'category') active @endif">
+                                            <a href="{{url('admin/permissions/category')}}" title="permission category" data-filter-tags="permission category">
+                                                <span class="nav-link-text" data-i18n="nav.permission category">Module Access</span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </li>
+                         @endif
                         </ul>
                         <div class="filter-message js-filter-message bg-success-600"></div>
                     </nav>
@@ -286,12 +337,12 @@
                                 </a>
                             </div>
                             <!-- app notification -->
-                            <div>
+                            {{-- <div>
                                 <a href="#" class="header-icon" data-toggle="dropdown" title="You got 11 notifications">
                                     <i class="fal fa-bell"></i>
                                     <span class="badge badge-icon">11</span>
                                 </a>
-                            </div>
+                            </div> --}}
                             <!-- app user menu -->
                             <div>
                                 <a href="#" data-toggle="dropdown" title="drlantern@gotbootstrap.com" class="header-icon d-flex align-items-center justify-content-center ml-2">
