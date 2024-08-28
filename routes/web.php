@@ -120,6 +120,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::resource('role', RoleController::class);
     Route::resource('permission', PermissionController::class);
     Route::resource('permissions/category', PermissionCategoryController::class);
+    Route::post('permissions/category/duplicate', [PermissionCategoryController::class, "duplicate"]);
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

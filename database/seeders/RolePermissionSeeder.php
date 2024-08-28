@@ -20,6 +20,15 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         // Create Ticket
+        $dashboad = PermissionCategory::create(['name'=>'Dashboad']);
+        Permission::create(['name' => 'Dashboad View','permission_category_id'=>$dashboad->id]);
+        Permission::create(['name' => 'Dashboad New Ticket','permission_category_id'=>$dashboad->id]);
+        Permission::create(['name' => 'Dashboad Ticket Critical','permission_category_id'=>$dashboad->id]);
+        Permission::create(['name' => 'Dashboad Ticket Assign','permission_category_id'=>$dashboad->id]);
+        Permission::create(['name' => 'Dashboad Ticke Active','permission_category_id'=>$dashboad->id]);
+        Permission::create(['name' => 'Dashboad User Online','permission_category_id'=>$dashboad->id]);
+
+        // Create Ticket
         $ticket = PermissionCategory::create(['name'=>'Ticket']);
         Permission::create(['name' => 'Ticket View','permission_category_id'=>$ticket->id]);
         Permission::create(['name' => 'Ticket Create','permission_category_id'=>$ticket->id]);

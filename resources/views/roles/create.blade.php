@@ -1,4 +1,9 @@
 @extends('layouts.admin')
+<style>
+    .draggable {
+        cursor: move;
+    }
+</style>
 @section('content')
 <div class="row">
     <div class="col-xl-12">
@@ -43,7 +48,7 @@
                                 ?>
                                 <div class="col-md-3 mb-2">
                                     <div class="form-group">
-                                        <div class="card border-success">
+                                        <div class="card border-success draggable" draggable="true">
                                             <div class="card-header border-success">{{$cate->name}}</div>
                                             <div class="card-body">
                                                 <div class="mb-1">
@@ -91,6 +96,30 @@
 @endsection
 @section('script')
     <script>
+         $(document).ready(function() {
+            // JavaScript for drag-and-drop functionality
+            const draggables = document.querySelectorAll('.draggable');
+            const containers = document.querySelectorAll('.col-md-3');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggable.classList.add('dragging');
+                });
+
+                draggable.addEventListener('dragend', () => {
+                    draggable.classList.remove('dragging');
+                });
+            });
+
+            containers.forEach(container => {
+                container.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    const draggingElement = document.querySelector('.dragging');
+                    container.appendChild(draggingElement);
+                });
+            });
+        });
+
         function toggle(source) {
             checkboxes = $('.check_all');
             for (var i = 0, n = checkboxes.length; i < n; i++) {

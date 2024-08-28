@@ -40,8 +40,12 @@
                                         <td>{{$item->guard_name}}</td>
                                         <td>
                                             <div class="d-flex demo">
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 role-delete" data-toggle="modal" data-target="#delete_role" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                                                @can('Role Delete')
+                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 role-delete" data-toggle="modal" data-target="#delete_role" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                                                @endcan
+                                                @can('Role Edit')
                                                 <a href="{{url('admin/role',$item->id)}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

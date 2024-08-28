@@ -48,12 +48,17 @@ class PermissionCategoryController extends Controller
             $data['created_by'] = Auth::user()->id;
             PermissionCategory::create($data);
             DB::commit();
-            Toastr::success('Create Permission Category successfully.','success');
-            return redirect()->back();
+            return response()->json([
+                'message' => "Create Permission Category successfully.",
+                'status'=>"success"
+            ]);
+            // Toastr::success('Create Permission Category successfully.','success');
+            // return redirect()->back();
         }catch(\Exception $e){
-            DB::rollback();
-            Toastr::error('Create Category fail', $e->getMessage());
-            return redirect()->back();
+            return response()->json(['errors' => $e]);
+            // DB::rollback();
+            // Toastr::error('Create Category fail', $e->getMessage());
+            // return redirect()->back();
         }
     }
 
@@ -81,11 +86,25 @@ class PermissionCategoryController extends Controller
     {
        
     }
+    public function duplicate(Request $request){
+        try {
+            $duplicate = PermissionCategory::where("name",$request->name)->first();
+            DB::commit();
+            if ($duplicate) {
+                return ['message' => 'Name already exists', "data"=>1];
+            }else{
+                return ['message' => 'Name does not exist', "data"=>0];
+            }
+        } catch (\Exception $exp) {
+            DB::rollBack();
+            return response()->json(['message' => $exp->getMessage()], 500);
+        }
+    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
         try{
             PermissionCategory::where('id',$request->id)->update([
@@ -93,12 +112,17 @@ class PermissionCategoryController extends Controller
                 'updated_by' => Auth::user()->id,
             ]);
             DB::commit();
-            Toastr::success('Permission category updated successfully.','Success');
-            return redirect()->back();
+            return response()->json([
+                'message' => "Updated Permission Category successfully.",
+                'status'=>"success"
+            ]);
+            // Toastr::success('Permission category updated successfully.','Success');
+            // return redirect()->back();
         }catch(\Exception $e){
             DB::rollback();
-            Toastr::error('Permission category updated fail','Error');
-            return redirect()->back();
+            return response()->json(['errors' => $e]);
+            // Toastr::error('Permission category updated fail','Error');
+            // return redirect()->back();
         }
     }
 

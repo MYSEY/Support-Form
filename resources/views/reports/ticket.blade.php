@@ -47,7 +47,9 @@
                             {{-- <a href="#" title="Export" data-filter-tags="datatables datagrid export tables pdf excel print csv">
                                 <span class="nav-link-text" data-i18n="nav.datatables_export">Export</span>
                             </a> --}}
-                            <a  href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
+                            @can('Ticket Report Export')
+                                <a  href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
+                            @endcan
                         </div>
                     </div>
                 </div>

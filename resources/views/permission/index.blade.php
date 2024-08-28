@@ -29,13 +29,13 @@
                 </div>
                 
                 <div class="panel-container show">
-                    {{-- @can('create user') --}}
+                    @can('Permission Create')
                         <div class="panel-tag">
                             <div class="text-lg-right">
                                 <a href="{{url('admin/permission/create')}}" class="btn btn-sm btn-success waves-effect waves-themed"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
                             </div>
                         </div>
-                    {{-- @endcan --}}
+                    @endcan
                     <div class="panel-content">
                         <!-- datatable start -->
                         <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
@@ -56,8 +56,12 @@
                                             <td>{{$item->created_at}}</td>
                                             <td>
                                                 <div class="d-flex demo">
-                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btn_delete" data-toggle="modal" data-target="#delete_permission" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
-                                                    <a href="{{url('admin/permission',$item->id)}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>                                                         
+                                                    @can('Permission Delete')
+                                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btn_delete" data-toggle="modal" data-target="#delete_permission" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                                                    @endcan
+                                                    @can('Permission Edit')
+                                                        <a href="{{url('admin/permission',$item->id)}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>                                                         
+                                                    @endcan
                                                 </div>
                                             </td>
                                         </tr>

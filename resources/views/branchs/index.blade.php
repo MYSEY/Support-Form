@@ -9,11 +9,13 @@
                 </h2>
             </div>
             <div class="panel-container show">
-                <div class="panel-tag">
-                    <div class="text-lg-right">
-                        <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#branch-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                @can('Branch Create')
+                    <div class="panel-tag">
+                        <div class="text-lg-right">
+                            <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#branch-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                        </div>
                     </div>
-                </div>
+                @endcan
                 <div class="panel-content">
                     <!-- datatable start -->
                     <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
@@ -40,8 +42,12 @@
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') ?? '' }}</td>
                                         <td>
                                             <div class="d-flex demo">
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 branch-delete" data-toggle="modal" data-target="#delete_branch" title="Delete Record" data-id="{{$item->id}}"><i class="fal fa-times"></i></a>
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 update" title="Edit" data-id="{{$item->id}}"><i class="fal fa-edit"></i></a>
+                                                @can('Branch Delete')
+                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 branch-delete" data-toggle="modal" data-target="#delete_branch" title="Delete Record" data-id="{{$item->id}}"><i class="fal fa-times"></i></a>
+                                                @endcan
+                                                @can('Branch Edit')
+                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 update" title="Edit" data-id="{{$item->id}}"><i class="fal fa-edit"></i></a>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

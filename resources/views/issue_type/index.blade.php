@@ -12,11 +12,13 @@
                 <div class="panel-container show">
                     <div class="panel-tag">
                         <div class="text-lg-right">
-                            <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#issue-type-create"
-                                type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
-                            <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#importModal"
-                                type="button" id="btn-import"><span><i class="fal fa-arrow-circle-up"></i>
+                            @can('Issue Type Creaet')
+                                <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#issue-type-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                            @endcan
+                            @can('Issue Type Import')
+                                <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#importModal" type="button" id="btn-import"><span><i class="fal fa-arrow-circle-up"></i>
                                     Import</span></button>
+                            @endcan
                         </div>
                     </div>
                     <div class="panel-content">
@@ -43,14 +45,18 @@
                                             <td>{{ $item->category_type == 0 ? 'All' : 'Select' }}</td>
                                             <td>
                                                 <div class="d-flex demo">
-                                                    <a href="javascript:void(0);"
-                                                        class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 IssueTypeDelete"
-                                                        data-toggle="modal" data-target="#issue_type"
-                                                        data-id="{{ $item->id }}" title="Delete Record"><i
-                                                            class="fal fa-times"></i></a>
-                                                    <a class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 data-show"
+                                                    @can('Issue Type Delete')
+                                                        <a href="javascript:void(0);"
+                                                            class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 IssueTypeDelete"
+                                                            data-toggle="modal" data-target="#issue_type"
+                                                            data-id="{{ $item->id }}" title="Delete Record"><i
+                                                                class="fal fa-times"></i></a>
+                                                    @endcan
+                                                    @can('Issue Type Edit')
+                                                        <a class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 data-show"
                                                         data-id="{{ $item->id }}" title="Edit"><i
                                                             class="fal fa-edit"></i></a>
+                                                    @endcan
                                                 </div>
                                             </td>
                                         </tr>

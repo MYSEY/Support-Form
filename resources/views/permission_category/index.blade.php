@@ -58,8 +58,12 @@
                                             <td>{{$item->created_at}}</td>
                                             <td>
                                                 <div class="d-flex demo">
-                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btn_delete" data-toggle="modal" data-target="#delete_permission_category" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                                                    @can('Permission Category Delete')
+                                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btn_delete" data-toggle="modal" data-target="#delete_permission_category" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                                                    @endcan
+                                                    @can('Permission Category Edit')
                                                     <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 btn_updated" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>                                                         
+                                                    @endcan
                                                 </div>
                                             </td>
                                         </tr>
@@ -84,7 +88,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{url('admin/permissions/category')}}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <form enctype="multipart/form-data" class="needs-validation" novalidate>
                         @csrf
                         <div class="form-group">
                             <label class="form-label">Name</label>
@@ -92,7 +96,7 @@
                         </div>
                         <div class="float-lg-right">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-primary btn_save">Submit</button>
                         </div>
                     </form>
                 </div>
@@ -110,7 +114,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{url('admin/permissions/category/update')}}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <form enctype="multipart/form-data" class="needs-validation" novalidate>
                         @csrf
                         @method('PUT')
                         <div class="form-group">
@@ -120,7 +124,7 @@
                         <div class="float-lg-right">
                             <input type="hidden" name="id" class="e_cate_id" value="">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-primary btn_edit">Submit</button>
                         </div>
                     </form>
                 </div>
@@ -156,6 +160,51 @@
     @include('includs.datatable_basic')
     <script>
         $(function(){
+            $('.btn_save').on('click',function(){
+                duplicate($("#name").val(), function(response){
+                    if (response.data == 0) {
+                        $.ajax({
+                            type: "POST",
+                            url: `{{ url('admin/permissions/category') }}`,
+                            data:{
+                                "_token": "{{ csrf_token() }}",
+                                "name": $("#name").val()
+                            },
+                            dataType: "JSON",
+                            success: function (response) {
+                                toastr.success('Create successfully.');
+                                window.location.replace("{{ URL('admin/permissions/category') }}"); 
+                            }
+                        })
+                    }else{
+                        toastr.error(response.message);
+                    }
+                })
+            });
+
+            $('.btn_edit').on('click',function(){
+                duplicate($("#e_name").val(), function(response){
+                    if (response.data == 0) {
+                        $.ajax({
+                            type: "PUT",
+                            url: `{{ url('admin/permissions/category/update') }}`,
+                            data:{
+                                "_token": "{{ csrf_token() }}",
+                                "id": $(".e_cate_id").val(),
+                                "name": $("#e_name").val()
+                            },
+                            dataType: "JSON",
+                            success: function (response) {
+                                toastr.success('Updated Permission Category successfully.');
+                                window.location.replace("{{ URL('admin/permissions/category') }}"); 
+                            }
+                        })
+                    }else{
+                        toastr.error(response.message);
+                    }
+                })
+            });
+
             $('.btn_updated').on('click',function(){
                 let id = $(this).data("id");
                 $.ajax({
@@ -170,9 +219,25 @@
                 });
             });
         });
+        function duplicate(data, callback){
+            $.ajax({
+                type: "POST",
+                url: `{{ url('admin/permissions/category/duplicate') }}`,
+                data:{
+                    "_token": "{{ csrf_token() }}",
+                    "name": data
+                },
+                dataType: "JSON",
+                success: function (response) {
+                    callback(response);
+                }
+            });
+        }
+
         $(document).on('click','.btn_delete', function(){
             let id = $(this).data("id");
             $('.e_id').val(id);
         });
+
     </script>
 @endsection

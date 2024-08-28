@@ -40,8 +40,9 @@
                         </p>
 
                         <div id="show-notes"> </div>
-
-                        <button class="btn btn-outline-success" id="btn-add-note">Add note</button>
+                        @can('Ticket Add Note')
+                            <button class="btn btn-outline-success" id="btn-add-note">Add note</button>
+                        @endcan
                         <div class="form-noted mt-3" style="display: none;">
                             <div class="form-group">
                                 <label class="form-label" for="ticket-textarea">Message: <span class="text-danger">*</span></label>
@@ -71,22 +72,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    {{-- <div class="form-group form-group-select2">
-                                        <label class="form-label" for="ticket-Department">Department Branch:</label>
-                                        <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="ticket-Department" required>
-                                            <option value=""></option>
-                                            @if (count($department) > 0)
-                                                @foreach ($department as $item)
-                                                    <option value="{{$item->id}}">{{ $item->name_english}}</option>
-                                                @endforeach
-                                            @endif
-                                            @if (count($branch) > 0)
-                                                @foreach ($branch as $item)
-                                                    <option value="{{$item->id}}">{{ $item->branch_name_en}}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div> --}}
                                     <div class="form-group form-group-select2">
                                         <label class="form-label" for="ticket-assigned">Assigned to: </label>
                                         <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="ticket-assigned" required>
@@ -140,20 +125,9 @@
                                     </div>
                                 </div>
                             </div><br>
-                            
-                            <button class="btn btn-danger" id="btn-reply-ticket">Submit Reply</button>
-                            {{-- <div class="btn-group" id="js-demo-nesting" role="group" aria-label="Button group with nested dropdown">
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-danger dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-expanded="false">Submit as</button>
-                                    <div class="dropdown-menu" style="">
-                                        @if (count($status) > 0)
-                                            @foreach ($status as $item)
-                                                <a class="dropdown-item btn-update-status" href="javascript:void(0);" data-id="{{$item->id}}"><span style="color: {{$item->color}}">{{$item->name}}</span></a>
-                                            @endforeach
-                                        @endif
-                                    </div>
-                                </div>
-                            </div> --}}
+                            @can('Ticket Reply')
+                                <button class="btn btn-danger" id="btn-reply-ticket">Submit Reply</button>
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -165,14 +139,20 @@
                 @can('Ticket Edit')
                     <a class="btn btn-outline-primary" href="{{url("admin/ticket/edit")}}/{{$data_ticket->id}}"><i class="fal fa-edit"></i> Edit</a>
                 @endcan
-                <button type="button" class="btn btn-outline-primary btn-print"> <span class="fal fa-print mr-1"></span> Print</button>
+                @can('Ticket Print')
+                    <button type="button" class="btn btn-outline-primary btn-print"> <span class="fal fa-print mr-1"></span> Print</button>
+                @endcan
                 <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="#"><i class="fal fa-envelope"></i> Re-send email notification</a>
-                    <a class="dropdown-item" href="#"><i class="fal fa-arrow-to-bottom"></i> Export to Excel</a>
-                    <a class="dropdown-item" href="#"><i class="fal fa-trash-alt"></i> Delete ticket</a>
+                    @can('Ticket Export')
+                        <a class="dropdown-item" href="#"><i class="fal fa-arrow-to-bottom"></i> Export to Excel</a>
+                    @endcan
+                    @can('Ticket Delete')
+                        <a class="dropdown-item" href="#"><i class="fal fa-trash-alt"></i> Delete ticket</a>
+                    @endcan
                 </div>
             </div>
            
@@ -283,6 +263,7 @@
     @include('includs.datatable_basic')
     <script type="text/javascript" src="{{ asset('/admins/js/printThis.js') }}"></script>
     <script type="text/javascript">
+        var userPermissions = @json(Auth::user()->getAllPermissions()->pluck('name'));
         $(function(){
             var url = window.location.pathname;
             var id = url.substring(url.lastIndexOf('/') + 1);
@@ -480,19 +461,22 @@
                             var message = nl2br(value.message);
                             let created_at = moment(value.updated_at).format('D-MMM-YYYY h:mm');
                             text +='<div class="panel-tag">'+
-                                    '<div>'+
-                                        '<a style="float: right;" href="javascript:void(0);" id="btn-note-delete" data-id="'+value.id+'" data-toggle="tooltip" title="Delete" class="btn btn-outline-primary btn-sm btn-icon waves-effect waves-themed">'+
-                                            '<i class="fal fa-trash-alt"></i>'+
-                                        '</a>'+
-                                        '<a style="float: right;" href="javascript:void(0);" id="btn-note-edit" data-id="'+value.id+'" data-message="'+value.message+'" data-toggle="tooltip" title="Edit" class="mr-1 btn btn-outline-secondary btn-sm btn-icon waves-effect waves-themed">'+
-                                            '<i class="fal fa-edit"></i>'+
-                                        '</a>'+
-                                        '<p class="card-text">Note by: <strong>'+value.created_by.user+'</strong> » '+created_at+'</p>'+
+                                    '<div>';
+                                        if (userPermissions.includes('Ticket Delete Note')) {
+                                            text += '<a style="float: right;" href="javascript:void(0);" id="btn-note-delete" data-id="'+value.id+'" data-toggle="tooltip" title="Delete" class="btn btn-outline-primary btn-sm btn-icon waves-effect waves-themed">'+
+                                                '<i class="fal fa-trash-alt"></i>'+
+                                            '</a>';
+                                        }
+                                        if (userPermissions.includes('Ticket Edit Note')) {
+                                            text += '<a style="float: right;" href="javascript:void(0);" id="btn-note-edit" data-id="'+value.id+'" data-message="'+value.message+'" data-toggle="tooltip" title="Edit" class="mr-1 btn btn-outline-secondary btn-sm btn-icon waves-effect waves-themed">'+
+                                                '<i class="fal fa-edit"></i>'+
+                                            '</a>';
+                                        }
+                                        text += '<p class="card-text">Note by: <strong>'+value.created_by.user+'</strong> » '+created_at+'</p>'+
                                     '</div>'+
                                     '<p class="card-text mt-2">'+message+'</p>'+
                                 '</div>';
-
-                                note_tr  +='<tr>'+
+                                note_tr +='<tr>'+
                                                 '<td class="table_tr">'+
                                                     '<strong>Note by: '+value.created_by.user+'</strong> » '+created_at+'<br>'
                                                     +message+
@@ -520,24 +504,29 @@
                     let text = "";
                     let reply_tr = "";
                     if (datas.length > 0) {
+                        let btn_delete = "";
                         datas.forEach(function(value, index) {
                             var message = nl2br(value.message);
                             let created_at = moment(value.updated_at).format('D-MMM-YYYY h:mm');
+                            if (userPermissions.includes('Ticket Delete Reply')) {
+                                btn_delete = '<a class="dropdown-item" href="javascript:void(0);" id="btn-reply-delete" data-id="'+value.id+'"><i class="fal fa-trash-alt"></i> Delete reply</a>';
+                            }
                             text +='<div class="panel-tag">'+
                                     '<div>'+
                                         '<button style="text-decoration: none !important; float: right;" class="btn btn-link dropdown-toggle p-0" type="button" id="ticketStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> More </button>'+
                                         '<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="ticketStatus">'+
                                             '<a class="dropdown-item" href="javascript:void(0);"><i class="fal fa-envelope"></i> Re-send email notification</a>'+
-                                            '<a class="dropdown-item" href="javascript:void(0);" id="btn-reply-delete" data-id="'+value.id+'"><i class="fal fa-trash-alt"></i> Delete reply</a>'+
-                                        '</div>'+
-                                        '<a style="float: right;" href="javascript:void(0);" class="mr-2 btn btn-outline-secondary btn-sm btn-icon waves-effect waves-themed" id="btn-reply-edit" data-id="'+value.id+'" data-message="'+value.message+'" data-toggle="tooltip" title="Edit">'+
-                                            '<i class="fal fa-edit"></i>'+
-                                        '</a>'+
-                                        '<p class="card-text">Reply by: <strong>'+value.staff.user+'</strong> » '+created_at+'</p>'+
+                                            (btn_delete)+
+                                        '</div>';
+                                        if (userPermissions.includes('Ticket Edit Reply')) {
+                                            text += '<a style="float: right;" href="javascript:void(0);" class="mr-2 btn btn-outline-secondary btn-sm btn-icon waves-effect waves-themed" id="btn-reply-edit" data-id="'+value.id+'" data-message="'+value.message+'" data-toggle="tooltip" title="Edit">'+
+                                                '<i class="fal fa-edit"></i>'+
+                                            '</a>';
+                                        }
+                                        text += '<p class="card-text">Reply by: <strong>'+value.staff.user+'</strong> » '+created_at+'</p>'+
                                     '</div>'+
                                     '<p class="card-text mt-2">'+message+'</p>'+
                                 '</div>';
-
                                 reply_tr  +='<tr>'+
                                                 '<td class="table_tr">'+
                                                     '<strong>Reply by: '+value.staff.user+'</strong> » '+created_at+'<br>'

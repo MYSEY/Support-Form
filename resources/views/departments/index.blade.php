@@ -9,11 +9,13 @@
                 </h2>
             </div>
             <div class="panel-container show">
-                <div class="panel-tag">
-                    <div class="text-lg-right">
-                        <button class="btn btn-sm btn-success waves-effect waves-themed" data-toggle="modal" data-target="#department-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                @can('Department Create')
+                    <div class="panel-tag">
+                        <div class="text-lg-right">
+                            <button class="btn btn-sm btn-success waves-effect waves-themed" data-toggle="modal" data-target="#department-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                        </div>
                     </div>
-                </div>
+                @endcan
                 <div class="panel-content">
                     <!-- datatable start -->
                     <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
@@ -35,16 +37,22 @@
                                         <td class="name_khmer">{{$item->name_khmer}}</td>
                                         <td class="name_english">{{$item->name_english}}</td>
                                         <td>
-                                            <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="checkbox custom-control-input btnStatus" data-status="{{$item->status}}" data-id="{{$item->id}}" id="status_{{$item->id}}" {{ $item->status == 1 ? 'checked' : '' }}>
-                                                <label class="custom-control-label" for="status_{{$item->id}}"></label>
-                                            </div>
+                                            @can('Department Edit')
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="checkbox custom-control-input btnStatus" data-status="{{$item->status}}" data-id="{{$item->id}}" id="status_{{$item->id}}" {{ $item->status == 1 ? 'checked' : '' }}>
+                                                    <label class="custom-control-label" for="status_{{$item->id}}"></label>
+                                                </div>
+                                            @endcan
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') ?? '' }}</td>
                                         <td>
                                             <div class="d-flex demo">
+                                                @can('Department Delete')
                                                 <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 department-delete" data-toggle="modal" data-target="#delete_department" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 update" data-toggle="modal" data-id="{{$item->id}}"  data-target="#department-edit" title="Edit"><i class="fal fa-edit"></i></a>
+                                                @endcan
+                                                @can('Department Edit')
+                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 update" data-toggle="modal" data-id="{{$item->id}}"  data-target="#department-edit" title="Edit"><i class="fal fa-edit"></i></a>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

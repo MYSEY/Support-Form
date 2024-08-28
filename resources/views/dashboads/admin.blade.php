@@ -26,54 +26,62 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6 col-xl-3">
-            <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
-                <div class="">
-                    <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                        <span id="total-new-ticket" class="float-end">0</span>
-                        <small class="m-0 l-h-n">New Ticket</small>
-                    </h3>
+        @can('Dashboad New Ticket')
+            <div class="col-sm-6 col-xl-3">
+                <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            <span id="total-new-ticket" class="float-end">0</span>
+                            <small class="m-0 l-h-n">New Ticket</small>
+                        </h3>
+                    </div>
+                    <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1"
+                        style="font-size:6rem"></i>
                 </div>
-                <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1"
-                    style="font-size:6rem"></i>
             </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
-                <div class="">
-                    <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                        <span id="total-priority" class="float-end">0</span>
-                        <small class="m-0 l-h-n">Ticket Urgent</small>
-                    </h3>
+        @endcan
+        @can('Dashboad Ticket Critical')
+            <div class="col-sm-6 col-xl-3">
+                <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            <span id="total-priority" class="float-end">0</span>
+                            <small class="m-0 l-h-n">Ticket Urgent</small>
+                        </h3>
+                    </div>
+                    <i class="fal fa-gem position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4"
+                        style="font-size: 6rem;"></i>
                 </div>
-                <i class="fal fa-gem position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4"
-                    style="font-size: 6rem;"></i>
             </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
-                <div class="">
-                    <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                        <span id="total-assign" class="float-end">0</span>
-                        <small class="m-0 l-h-n">Ticket Assign</small>
-                    </h3>
+        @endcan
+        @can('Dashboad Ticket Assign')
+            <div class="col-sm-6 col-xl-3">
+                <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            <span id="total-assign" class="float-end">0</span>
+                            <small class="m-0 l-h-n">Ticket Assign</small>
+                        </h3>
+                    </div>
+                    <i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6"
+                        style="font-size: 8rem;"></i>
                 </div>
-                <i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6"
-                    style="font-size: 8rem;"></i>
             </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
-                <div class="">
-                    <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                        <span id="total-ticke-active" class="float-end">0</span>
-                        <small class="m-0 l-h-n">Ticke Active</small>
-                    </h3>
+        @endcan
+        @can('Dashboad Ticke Active')
+            <div class="col-sm-6 col-xl-3">
+                <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            <span id="total-ticke-active" class="float-end">0</span>
+                            <small class="m-0 l-h-n">Ticke Active</small>
+                        </h3>
+                    </div>
+                    <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4"
+                        style="font-size: 6rem;"></i>
                 </div>
-                <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4"
-                    style="font-size: 6rem;"></i>
             </div>
-        </div>
+        @endcan
     </div>
     <div class="row">
         <div class="col-lg-12">
@@ -207,120 +215,123 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-12 sortable-grid ui-sortable">
-            <div id="panel-4" class="panel panel-sortable" role="widget">
-                <div class="panel-hdr" role="heading">
-                    <h2 class="ui-sortable-handle">
-                        Users <span class="fw-300"><i>Online</i></span>
-                    </h2>
-                    <div class="panel-saving mr-2" style="display:none"><i
-                            class="fal fa-spinner-third fa-spin-4x fs-xl"></i></div>
-                    <div class="panel-toolbar" role="menu"><a href="#"
-                            class="btn btn-panel hover-effect-dot js-panel-collapse waves-effect waves-themed"
-                            data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></a> <a
-                            href="#"
-                            class="btn btn-panel hover-effect-dot js-panel-fullscreen waves-effect waves-themed"
-                            data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></a> <a
-                            href="#" class="btn btn-panel hover-effect-dot js-panel-close waves-effect waves-themed"
-                            data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></a></div>
-                    <div class="panel-toolbar" role="menu"><a href="#"
-                            class="btn btn-toolbar-master waves-effect waves-themed" data-toggle="dropdown"><i
-                                class="fal fa-ellipsis-v"></i></a>
-                        <div class="dropdown-menu dropdown-menu-animated dropdown-menu-right p-0"><a href="#"
-                                class="dropdown-item js-panel-refresh"><span data-i18n="drpdwn.refreshpanel">Refresh
-                                    Content</span></a> <a href="#" class="dropdown-item js-panel-locked"><span
-                                    data-i18n="drpdwn.lockpanel">Lock Position</span></a>
-                            <div class="dropdown-multilevel dropdown-multilevel-left">
-                                <div class="dropdown-item"> <span data-i18n="drpdwn.panelcolor">Panel Style</span> </div>
-                                <div class="dropdown-menu d-flex flex-wrap"
-                                    style="min-width: 9.5rem; width: 9.5rem; padding: 0.5rem"><a href="#"
-                                        class="btn d-inline-block bg-primary-700 bg-success-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-primary-700 bg-success-gradient" style="margin:1px;"></a>
-                                    <a href="#"
-                                        class="btn d-inline-block bg-primary-500 bg-info-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-primary-500 bg-info-gradient" style="margin:1px;"></a> <a
-                                        href="#"
-                                        class="btn d-inline-block bg-primary-600 bg-primary-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-primary-600 bg-primary-gradient" style="margin:1px;"></a>
-                                    <a href="#"
-                                        class="btn d-inline-block bg-info-600 bg-primray-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-info-600 bg-primray-gradient" style="margin:1px;"></a> <a
-                                        href="#"
-                                        class="btn d-inline-block bg-info-600 bg-info-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-info-600 bg-info-gradient" style="margin:1px;"></a> <a
-                                        href="#"
-                                        class="btn d-inline-block bg-info-700 bg-success-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-info-700 bg-success-gradient" style="margin:1px;"></a> <a
-                                        href="#"
-                                        class="btn d-inline-block bg-success-900 bg-info-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-success-900 bg-info-gradient" style="margin:1px;"></a> <a
-                                        href="#"
-                                        class="btn d-inline-block bg-success-700 bg-primary-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-success-700 bg-primary-gradient" style="margin:1px;"></a>
-                                    <a href="#"
-                                        class="btn d-inline-block bg-success-600 bg-success-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-success-600 bg-success-gradient" style="margin:1px;"></a>
-                                    <a href="#"
-                                        class="btn d-inline-block bg-danger-900 bg-info-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-danger-900 bg-info-gradient" style="margin:1px;"></a> <a
-                                        href="#"
-                                        class="btn d-inline-block bg-fusion-400 bg-fusion-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-fusion-400 bg-fusion-gradient" style="margin:1px;"></a> <a
-                                        href="#"
-                                        class="btn d-inline-block bg-faded width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
-                                        data-panel-setstyle="bg-faded" style="margin:1px;"></a></div>
+        @can('Dashboad User Online')
+            <div class="col-lg-12 sortable-grid ui-sortable">
+                <div id="panel-4" class="panel panel-sortable" role="widget">
+                    <div class="panel-hdr" role="heading">
+                        <h2 class="ui-sortable-handle">
+                            Users <span class="fw-300"><i>Online</i></span>
+                        </h2>
+                        <div class="panel-saving mr-2" style="display:none"><i
+                                class="fal fa-spinner-third fa-spin-4x fs-xl"></i></div>
+                        <div class="panel-toolbar" role="menu"><a href="#"
+                                class="btn btn-panel hover-effect-dot js-panel-collapse waves-effect waves-themed"
+                                data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></a> <a
+                                href="#"
+                                class="btn btn-panel hover-effect-dot js-panel-fullscreen waves-effect waves-themed"
+                                data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></a> <a
+                                href="#" class="btn btn-panel hover-effect-dot js-panel-close waves-effect waves-themed"
+                                data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></a></div>
+                        <div class="panel-toolbar" role="menu"><a href="#"
+                                class="btn btn-toolbar-master waves-effect waves-themed" data-toggle="dropdown"><i
+                                    class="fal fa-ellipsis-v"></i></a>
+                            <div class="dropdown-menu dropdown-menu-animated dropdown-menu-right p-0"><a href="#"
+                                    class="dropdown-item js-panel-refresh"><span data-i18n="drpdwn.refreshpanel">Refresh
+                                        Content</span></a> <a href="#" class="dropdown-item js-panel-locked"><span
+                                        data-i18n="drpdwn.lockpanel">Lock Position</span></a>
+                                <div class="dropdown-multilevel dropdown-multilevel-left">
+                                    <div class="dropdown-item"> <span data-i18n="drpdwn.panelcolor">Panel Style</span> </div>
+                                    <div class="dropdown-menu d-flex flex-wrap"
+                                        style="min-width: 9.5rem; width: 9.5rem; padding: 0.5rem"><a href="#"
+                                            class="btn d-inline-block bg-primary-700 bg-success-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-primary-700 bg-success-gradient" style="margin:1px;"></a>
+                                        <a href="#"
+                                            class="btn d-inline-block bg-primary-500 bg-info-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-primary-500 bg-info-gradient" style="margin:1px;"></a> <a
+                                            href="#"
+                                            class="btn d-inline-block bg-primary-600 bg-primary-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-primary-600 bg-primary-gradient" style="margin:1px;"></a>
+                                        <a href="#"
+                                            class="btn d-inline-block bg-info-600 bg-primray-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-info-600 bg-primray-gradient" style="margin:1px;"></a> <a
+                                            href="#"
+                                            class="btn d-inline-block bg-info-600 bg-info-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-info-600 bg-info-gradient" style="margin:1px;"></a> <a
+                                            href="#"
+                                            class="btn d-inline-block bg-info-700 bg-success-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-info-700 bg-success-gradient" style="margin:1px;"></a> <a
+                                            href="#"
+                                            class="btn d-inline-block bg-success-900 bg-info-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-success-900 bg-info-gradient" style="margin:1px;"></a> <a
+                                            href="#"
+                                            class="btn d-inline-block bg-success-700 bg-primary-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-success-700 bg-primary-gradient" style="margin:1px;"></a>
+                                        <a href="#"
+                                            class="btn d-inline-block bg-success-600 bg-success-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-success-600 bg-success-gradient" style="margin:1px;"></a>
+                                        <a href="#"
+                                            class="btn d-inline-block bg-danger-900 bg-info-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-danger-900 bg-info-gradient" style="margin:1px;"></a> <a
+                                            href="#"
+                                            class="btn d-inline-block bg-fusion-400 bg-fusion-gradient width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-fusion-400 bg-fusion-gradient" style="margin:1px;"></a> <a
+                                            href="#"
+                                            class="btn d-inline-block bg-faded width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
+                                            data-panel-setstyle="bg-faded" style="margin:1px;"></a></div>
+                                </div>
+                                <div class="dropdown-divider m-0"></div>
+                                    <a href="#" class="dropdown-item js-panel-reset"><span data-i18n="drpdwn.resetpanel">Reset Panel</span></a>
                             </div>
-                            <div class="dropdown-divider m-0"></div>
-                                <a href="#" class="dropdown-item js-panel-reset"><span data-i18n="drpdwn.resetpanel">Reset Panel</span></a>
                         </div>
                     </div>
-                </div>
-                <div class="panel-container show" role="content">
-                    <div class="loader"><i class="fal fa-spinner-third fa-spin-4x fs-xxl"></i></div>
-                    <div class="panel-content">
-                        <div id="dt-basic-example_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 dataTable dtr-inline" role="grid" aria-describedby="dt-basic-example_info" style="width: 1162px;">
-                                        <thead class="bg-warning-200">
-                                            <th>Profile</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>User Name</th>
-                                            <th>Role</th>
-                                            <th>Branch</th>
-                                            <th>Login DateTime</th>
-                                            <th>Action</th>
-                                        </thead>
-                                        <tbody>
-                                            @if (count($data)>0)
-                                                @foreach ($data as $item)
-                                                    <tr role="row" class="odd">
-                                                        <td class="sorting_1" tabindex="0">
-                                                            <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern" style="width: 36px;height: 36px;">
-                                                        </td>
-                                                        <td>{{$item->name}}</td>
-                                                        <td>{{$item->email}}</td>
-                                                        <td>{{$item->user}}</td>
-                                                        <td>{{$item->name}}</td>
-                                                        <td>{{$item->branch_name_en}}</td>
-                                                        <td>{{$item->dt}}</td>
-                                                        <td>
-                                                            <a href="javascript:void(0);" data-id="{{$item->user_id}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block btn_delete_user_onlin"><i class="ni ni-reload" style="font-size: 12px"></i></a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endif
-                                        </tbody>
-                                    </table>
+                    <div class="panel-container show" role="content">
+                        <div class="loader"><i class="fal fa-spinner-third fa-spin-4x fs-xxl"></i></div>
+                        <div class="panel-content">
+                            <div id="dt-basic-example_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 dataTable dtr-inline" role="grid" aria-describedby="dt-basic-example_info" style="width: 1162px;">
+                                            <thead class="bg-warning-200">
+                                                <th>Profile</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>User Name</th>
+                                                <th>Role</th>
+                                                <th>Branch</th>
+                                                <th>Login DateTime</th>
+                                                <th>Action</th>
+                                            </thead>
+                                            <tbody>
+                                                @if (count($data)>0)
+                                                    @foreach ($data as $item)
+                                                        <tr role="row" class="odd">
+                                                            <td class="sorting_1" tabindex="0">
+                                                                <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern" style="width: 36px;height: 36px;">
+                                                            </td>
+                                                            <td>{{$item->name}}</td>
+                                                            <td>{{$item->email}}</td>
+                                                            <td>{{$item->user}}</td>
+                                                            <td>{{$item->name}}</td>
+                                                            <td>{{$item->branch_name_en}}</td>
+                                                            <td>{{$item->dt}}</td>
+                                                            <td>
+                                                                <a href="javascript:void(0);" data-id="{{$item->user_id}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block btn_delete_user_onlin"><i class="ni ni-reload" style="font-size: 12px"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- datatable end -->
                         </div>
-                        <!-- datatable end -->
                     </div>
                 </div>
             </div>
-        </div>
+        @endcan
+        
 
         <div class="col-xl-12">
             <div id="panel-12" class="panel">

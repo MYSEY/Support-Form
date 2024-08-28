@@ -10,11 +10,14 @@
             </div>
             
             <div class="panel-container show">
-                <div class="panel-tag">
-                    <div class="text-lg-right">
-                        <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#priority-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                @can('Priority Create')
+                    <div class="panel-tag">
+                        <div class="text-lg-right">
+                            <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#priority-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                        </div>
                     </div>
-                </div>
+                @endcan
+               
                 <div class="panel-content">
                     <!-- datatable start -->
                     <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
@@ -35,8 +38,12 @@
                                         <td class="color" style="color: {{$item->color}}">{{$item->name}}</td>
                                         <td>
                                             <div class="d-flex demo">
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 priorityDelete" data-toggle="modal" data-target="#priority_status" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
-                                                <a class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 update" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
+                                                @can('Priority Delete')
+                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 priorityDelete" data-toggle="modal" data-target="#priority_status" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                                                @endcan
+                                                @can('Priority Edit')
+                                                    <a class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 update" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

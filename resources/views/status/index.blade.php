@@ -9,11 +9,13 @@
                 </h2>
             </div>
             <div class="panel-container show">
-                <div class="panel-tag">
-                    <div class="text-lg-right">
-                        <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#status-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                @can('Status Create')
+                    <div class="panel-tag">
+                        <div class="text-lg-right">
+                            <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#status-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                        </div>
                     </div>
-                </div>
+                @endcan
                 <div class="panel-content">
                     <!-- datatable start -->
                     <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
@@ -38,8 +40,12 @@
                                         <td class="can_customers_change">{{$item->can_customers_change}}</td>
                                         <td>
                                             <div class="d-flex demo">
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 status-delete" data-toggle="modal" data-target="#delete_status" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 update" data-toggle="modal" data-id="{{$item->id}}" data-color="{{$item->color}}" data-target="#status-edit" title="Edit"><i class="fal fa-edit"></i></a>
+                                                @can('Status Delete')
+                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 status-delete" data-toggle="modal" data-target="#delete_status" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                                                @endcan
+                                                @can('Status Edit')
+                                                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 update" data-toggle="modal" data-id="{{$item->id}}" data-color="{{$item->color}}" data-target="#status-edit" title="Edit"><i class="fal fa-edit"></i></a>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

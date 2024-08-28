@@ -8,6 +8,10 @@ use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        RolePermission($this, 'Dashboad');
+    }
     public function index(){
         $data = DB::table('onlines')
         ->leftJoin('users','onlines.user_id','=','users.id')
