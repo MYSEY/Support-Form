@@ -97,32 +97,6 @@ class LoginController extends Controller
                 'status'=>"error"
             ]);
         }
-
-
-
-        // if (Auth::attempt(['email' => $email, 'password' => $password])) {
-        //     if (Auth::user()->status == 'Active') {
-        //         Toastr::success('Login successfully.', 'Success');
-        //         $user = DB::table('users')->where('id',Auth::user()->id)->first();
-        //         Online::updateOrCreate([
-        //             'user_id' => $user->id,
-        //         ],
-        //         [
-        //             'user_id' => $user->id,
-        //             'dt' => Carbon::now(),
-        //         ]);
-        //         return redirect('admin/dashboad');
-        //     } else {
-        //         dd(3456789);
-        //         Auth::logout();
-        //         Toastr::error('Your account is not active. Please contact support.', 'Error');
-        //         return redirect('login');
-        //     }
-        // }else {
-        //     dd(22222222222);
-        //     Toastr::error('Wrong email or password', 'Error');
-        //     return redirect('login');
-        // }
     }
 
     public function changePassword(Request $request)

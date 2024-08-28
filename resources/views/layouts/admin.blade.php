@@ -138,14 +138,14 @@
                             </div>
                         </div>
                         <ul id="js-nav-menu" class="nav-menu">
-                            
-                            <li class="@if (Request::instance()->segment(2) == 'dashboad') active @endif">
-                                <a href="{{url('admin/dashboad')}}" title="Support Form Dashboard" data-filter-tags="application intel support form dashboard">
-                                    <i class="fal fa-tachometer-alt"></i>
-                                    <span class="nav-link-text">Dashboard</span>
-                                </a>
-                            </li>
-                            
+                            @if (Auth::user()->can('Department View'))
+                                <li class="@if (Request::instance()->segment(2) == 'dashboad') active @endif">
+                                    <a href="{{url('admin/dashboad')}}" title="Support Form Dashboard" data-filter-tags="application intel support form dashboard">
+                                        <i class="fal fa-tachometer-alt"></i>
+                                        <span class="nav-link-text">Dashboard</span>
+                                    </a>
+                                </li>
+                            @endif
                             @if (Auth::user()->can('Ticket View'))
                                 <li class="@if (Request::instance()->segment(2) == 'ticket') active @endif">
                                     <a href="{{url('admin/ticket')}}" title="Support Form Tickets" data-filter-tags="application intel support form Tickets">
