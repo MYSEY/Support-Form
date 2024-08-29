@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -59,7 +60,45 @@ class UserController extends Controller
         }
         return view('users.index', compact('data'));
     }
+    public function formResetPassword(){
+        $users = DB::table('users')->get();
+        return view('auth.forgot_password', compact('users'));
+    }
 
+    public function resetPassword(Request $request){
+        try {
+            $request->validate(
+                [
+                    'username' => 'required',
+                    'confirm_password' => 'required',
+                    'new_password' => 'required|min:8',
+                ],
+                [
+                    'new_password.required' => 'The new password field is required.',
+                    'new_password.min' => 'The new password must be at least :min characters.',
+                ]
+            );
+            if ($request->confirm_password != $request->new_password) {
+                return response()->json([
+                    'message' => "New password is invalid with password confirmation!",
+                    'status'=>"error"
+                ]);
+            }else{
+                $user = User::where("user",$request->username)->first();
+                $user->password = Hash::make($request->new_password);
+                $user->status = "Active";
+                $user->save();
+                return response()->json([
+                    'message' => "Reset password successfully",
+                    'status'=>"success",
+                ]);
+            }
+        } catch (\Throwable $exp) {
+            return response()->json(['errors' => $exp]);
+        }
+    }
+    
+    
     /**
      * Show the form for creating a new resource.
      */

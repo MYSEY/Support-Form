@@ -111,9 +111,10 @@
                 'Department View', 
                 'Branch View', 
                 'Priority View', 
-                'Issue Type View'
+                'Issue Type View',
+                'Reset Password User'
             ];
-            $segmentSetting =['branch','department','statuses','priority','issue-type'];
+            $segmentSetting =['branch','department','statuses','priority','issue-type','reset'];
         @endphp
 
         <div class="page-wrapper">
@@ -243,6 +244,13 @@
                                             <li class="@if (in_array(Request::instance()->segment(2), ['issue-type'])) active @endif">
                                                 <a href="{{url('admin/issue-type')}}" title="issue-type" data-filter-tags="theme settings issue-type">
                                                     <span class="nav-link-text">Issue Type</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Reset Password User'))
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['reset'])) active @endif">
+                                                <a href="{{url('admin/reset/password')}}" title="password" data-filter-tags="theme settings password">
+                                                    <span class="nav-link-text">Reset Password</span>
                                                 </a>
                                             </li>
                                         @endif

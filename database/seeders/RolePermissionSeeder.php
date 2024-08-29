@@ -123,6 +123,10 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'Issue Type Edit','permission_category_id'=>$IssueType->id]);
         Permission::create(['name' => 'Issue Type Delete','permission_category_id'=>$IssueType->id]);
 
+        // Create Reset Password
+        $resetPassword = PermissionCategory::create(['name'=>'Reset Password']);
+        Permission::create(['name' => 'Reset Password User','permission_category_id'=>$resetPassword->id]);
+
         // Create Roles
         $AdminRole = Role::create(['name' => 'Administrator']); //as admin
         $StaffRole = Role::create(['name' => 'Staff']); //as Staff

@@ -41,6 +41,8 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/page/not-found', function() {
         return view('upgrade.feature_not_available');
     });
+    Route::get('/reset/password', [UserController::class, 'formResetPassword']);
+    Route::post('/reset/password', [UserController::class, 'resetPassword']);
     
     Route::get('/dashboad', [DashboardController::class,'index']);
     Route::get('/dashboad/show', [DashboardController::class,'show']);

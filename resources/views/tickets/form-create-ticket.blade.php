@@ -121,10 +121,11 @@
     @include('includs.datatable_basic')
     <script type="text/javascript">
         $(function(){
-            var url = window.location.pathname;
-            var name_id = url.split("/")[4];
-            var department_id = name_id.split("department")[1];
-            var branch_id = name_id.split("branch")[1];
+            var url = window.location.href;
+            var parts = url.split('/');
+            var namURL = parts.pop() || parts.pop();
+            var department_id = namURL.split("department")[1];
+            var branch_id = namURL.split("branch")[1];
             let datas = {
                 branch_id: branch_id,
                 department_id: department_id
