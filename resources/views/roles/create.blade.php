@@ -24,8 +24,9 @@
                                     <label for="">Role Type</label>
                                     <select class="form-control @error('role_type') is-invalid @enderror" id="role_type" name="role_type">
                                         <option value="">-- Select --</option>
-                                        <option value="Admin">Administrator</option>
-                                        <option value="Staff">Staff</option>
+                                        <option value="super_admin">Super Admin</option>
+                                        <option value="admin">Administrator</option>
+                                        <option value="staff">Staff</option>
                                     </select>
                                 </div>
                             </div>

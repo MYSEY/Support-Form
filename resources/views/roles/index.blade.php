@@ -26,6 +26,7 @@
                                 <th>ID</th>
                                 <th>Role Name</th>
                                 <th>Role Type</th>
+                                <th>In User</th>
                                 <th>Guard Name</th>
                                 <th>Action</th>
                             </tr>
@@ -37,6 +38,7 @@
                                         <td class="ids">{{$item->id}}</td>
                                         <td class="name">{{$item->name}}</td>
                                         <td class="role_type">{{$item->role_type}}</td>
+                                        <td>{{$item->user_count}}</td>
                                         <td>{{$item->guard_name}}</td>
                                         <td>
                                             <div class="d-flex demo">
@@ -44,7 +46,10 @@
                                                     <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 role-delete" data-toggle="modal" data-target="#delete_role" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
                                                 @endcan
                                                 @can('Role Edit')
-                                                <a href="{{url('admin/role',$item->id)}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>
+                                                    <a href="{{url('admin/role',$item->id)}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>
+                                                @endcan
+                                                @can('Role Edit')
+                                                    <a href="{{url('admin/role/user',$item->id)}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1" title="View User"><i class="fal fa-eye"></i></a>
                                                 @endcan
                                             </div>
                                         </td>

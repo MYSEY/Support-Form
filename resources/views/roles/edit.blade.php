@@ -28,8 +28,9 @@
                                     <label for="">Role Type</label>
                                     <select class="form-control @error('role_type') is-invalid @enderror" id="role_type" name="role_type">
                                         <option value="">-- Select --</option>
-                                        <option value="Admin" {{$role->role_type=='Admin' ? 'selected' : ''}}>Administrator</option>
-                                        <option value="Staff" {{$role->role_type=='Staff' ? 'selected' : ''}}>Staff</option>
+                                        <option value="super_admin" {{$role->role_type=='super_admin' ? 'selected' : ''}}>Super Admin</option>
+                                        <option value="admin" {{$role->role_type=='admin' ? 'selected' : ''}}>Administrator</option>
+                                        <option value="staff" {{$role->role_type=='staff' ? 'selected' : ''}}>Staff</option>
                                     </select>
                                 </div>
                             </div>

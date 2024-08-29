@@ -23,8 +23,43 @@ class RoleController extends Controller
 
     public function index()
     {
-        $data = Role::all();
+        // $data = Role::all();
+        $data = DB::table('roles')
+        ->leftJoin('users', 'roles.id', '=', 'users.role_id')
+        ->select(
+            'roles.id',
+            'roles.name',   
+            'roles.role_type', 
+            'roles.guard_name', 
+            'roles.updated_at', 
+            'roles.created_at',
+            DB::raw('COUNT(users.id) as user_count')
+        )
+        ->groupBy(
+            'roles.id',
+            'roles.name',   
+            'roles.role_type', 
+            'roles.guard_name', 
+            'roles.updated_at', 
+            'roles.created_at'
+            )
+        ->get();
+        // dd($data);
         return view('roles.index',compact('data'));
+    }
+
+    public function userList(Request $request){
+        $users = DB::table('users')->where("role_id", $request->id)
+        ->leftJoin('branchs','branchs.id','=','users.branch_id')
+        ->leftJoin('departments','departments.id','=','users.department_id')
+        ->select(
+            'users.*',
+            'branchs.branch_name_kh',
+            'branchs.branch_name_en',
+            'departments.name_english',
+        )
+        ->get();
+        return view('roles.user_list', compact('users'));
     }
 
     /**

@@ -128,13 +128,14 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'Reset Password User','permission_category_id'=>$resetPassword->id]);
 
         // Create Roles
-        $AdminRole = Role::create(['name' => 'Administrator']); //as admin
-        $StaffRole = Role::create(['name' => 'Staff']); //as Staff
+        $SuperAdminRole = Role::create(['name' => 'Super Admin', 'role_type'=>'super_admin']); //as admin
+        $AdminRole = Role::create(['name' => 'Administrator', 'role_type'=>'admin']); //as admin
+        $StaffRole = Role::create(['name' => 'Staff', 'role_type'=>'staff']); //as Staff
         // Lets give all permission to super-admin role.
         $allPermissionNames = Permission::pluck('name')->toArray();
-        $AdminRole->givePermissionTo($allPermissionNames);
-        $userAdmin = User::where("email","admin@gmail.com" )->first();
-        $userAdmin->assignRole($AdminRole);
+        $SuperAdminRole->givePermissionTo($allPermissionNames);
+        $userAdmin = User::where("user","Super.Admin" )->first();
+        $userAdmin->assignRole($SuperAdminRole);
         // Let's Create User and assign Role to it.
         // $userAdmin = User::firstOrCreate([
         //     'email' => 'admin@gmail.com',

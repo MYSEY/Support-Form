@@ -124,6 +124,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('ticket/report/export', [TicketReportController::class,'export']);
 
     Route::resource('role', RoleController::class);
+    Route::get('role/user/{id}', [RoleController::class, "userList"]);
     Route::resource('permission', PermissionController::class);
     Route::resource('permissions/category', PermissionCategoryController::class);
     Route::post('permissions/category/duplicate', [PermissionCategoryController::class, "duplicate"]);
