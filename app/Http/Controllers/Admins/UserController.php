@@ -22,16 +22,11 @@ class UserController extends Controller
     public function __construct()
     {
         RolePermission($this, 'User');
-
-        // $this->middleware('permission:User View', ['only' => ['index']]);
-        // $this->middleware('permission:User Create', ['only' => ['create','store']]);
-        // $this->middleware('permission:User Edit', ['only' => ['update','edit']]);
-        // $this->middleware('permission:User Delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
-        if (Auth::user()->RolePermission=='Staff') {
+        if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
             $data = DB::table('users')
             ->where("users.deleted_at",null)
             ->leftJoin('branchs','branchs.id','=','users.branch_id')
@@ -43,7 +38,10 @@ class UserController extends Controller
                 'branchs.branch_name_en',
                 'departments.name_english',
                 'roles.name as role_name',
-            )->where('role_id',Auth::user()->role_id)->where('department_id',Auth::user()->department_id)->where('branch_id',Auth::user()->branch_id)->get();
+            )
+            ->where('department_id',Auth::user()->department_id)
+            ->where('branch_id',Auth::user()->branch_id)
+            ->get();
         } else {
             $data = DB::table('users')
             ->where("users.deleted_at",null)

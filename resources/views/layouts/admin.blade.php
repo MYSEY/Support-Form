@@ -139,7 +139,7 @@
                             </div>
                         </div>
                         <ul id="js-nav-menu" class="nav-menu">
-                            @if (Auth::user()->can('Department View'))
+                            @if (Auth::user()->can('Dashboad View'))
                                 <li class="@if (Request::instance()->segment(2) == 'dashboad') active @endif">
                                     <a href="{{url('admin/dashboad')}}" title="Support Form Dashboard" data-filter-tags="application intel support form dashboard">
                                         <i class="fal fa-tachometer-alt"></i>

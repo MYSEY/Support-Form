@@ -12,7 +12,7 @@
                 <div class="panel-container show">
                     <div class="panel-tag">
                         <div class="text-lg-right">
-                            @can('Issue Type Creaet')
+                            @can('Issue Type Create')
                                 <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#issue-type-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
                             @endcan
                             @can('Issue Type Import')

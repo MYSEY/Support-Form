@@ -16,33 +16,28 @@
                                 <input type="text" class="form-control datepicker" name="to_date" id="to_date" value="" placeholder="To Date">
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-2 col-lg-2 col-xl-2">
+                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                             <div class="form-group">
-                                <select class="select form-control" id="priority" data-select2-id="select2-data-2-c0n2" name="priority">
+                                <select class="select2-placeholder-multiple form-control select2-hidden-accessible" id="priority" data-select2-id="select2-data-2-c0n2" name="priority">
                                     <option value="">-- Select Priority --</option>
-                                    <option value="1">High</option>
-                                    <option value="2">Medium</option>
-                                    <option value="3">Low</option>
-                                    <option value="0">Critical</option>
+                                    @foreach ($priority as $key => $item)
+                                        <option value="{{$item->id}}">{{$item->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                             <div class="form-group" data-select2-id="105">
                                 <select class="select2-placeholder-multiple form-control select2-hidden-accessible"
                                     multiple="" id="status" data-select2-id="multiple-placeholder"
                                     tabindex="-1" aria-hidden="true">
-                                    <option value="0">Open</option>
-                                    <option value="1">Waition Replay</option>
-                                    <option value="2">Replied</option>
-                                    <option value="4">In Progress</option>
-                                    <option value="5">On Hold</option>
-                                    <option value="6">Fixed</option>
-                                    <option value="3">Resolved</option>
+                                    @foreach ($status as $key => $item)
+                                        <option value="{{$item->id}}">{{$item->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2" style="text-align: right;">
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4" style="text-align: right;">
                             <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed" id="btnSearch">Search</a>
                             {{-- <a href="#" title="Export" data-filter-tags="datatables datagrid export tables pdf excel print csv">
                                 <span class="nav-link-text" data-i18n="nav.datatables_export">Export</span>
@@ -81,22 +76,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @if (count($data) > 0)
-                                        @foreach ($data as $key => $item)
-                                            <tr class="">
-                                                <th><a href="#">{{ $item->trackid }}</a></th>
-                                                <th>{{ $item->subject }}</th>
-                                                <td>{{ $item->name }}</td>
-                                                <td>{{ $item->email }}</td>
-                                                <td>{{ Carbon\Carbon::parse($item->dt)->format('d-m-Y') }}</td>
-                                                <td>{{ $item->name_khmer }}</td>
-                                                <td>{{ $item->priorities_name }}</td>
-                                                <td>{{ $item->owner }}</td>
-                                                <td>{{ $item->custom2 == '' ? $item->custom1 : $item->custom2 }}</td>
-                                                <td>{{ $item->status }}</td>
-                                            </tr>
-                                        @endforeach
-                                    @endif --}}
                                 </tbody>
                             </table>
                             <!-- datatable end -->
@@ -153,42 +132,17 @@
                     if (rows.length > 0) {
                         $(rows).each(function(index, row) {
                             let dt = moment(row.dt).format('D-MMM-YYYY')
-                            if (row.status == 0) {
-                                var status = 'Open';
-                            } else if(row.status == 1) {
-                                var status = 'Waition Replay';
-                            }else if(row.status == 2){
-                                var status = 'Replied';
-                            }else if(row.status == 3){
-                                var status = 'Resolved';
-                            }else if(row.status == 4){
-                                var status = 'In Progress';
-                            }else if(row.status == 5){
-                                var status = 'On Hold';
-                            }else if(row.status == 6){
-                                var status = 'Fixed';
-                            }
-                            if (row.priority == 1) {
-                                var priority = 'High';
-                            } else if(row.priority == 2) {
-                                var priority = 'Medium';
-                            }else if(row.priority == 3){
-                                var priority = 'Low';
-                            }else{
-                                var priority = 'Critical';
-                            }
-                            
                             tr += '<tr class="odd">'+
                                 '<td>'+ row.trackid +'</td>'+
                                 '<td>'+ row.subject +'</td>'+
                                 '<td>'+ row.name +'</td>'+
                                 '<td>'+ row.email +'</td>'+
                                 '<td>'+ row.created_at +'</td>'+
-                                '<td>'+ row.depart_name +'</td>'+
-                                '<td>'+ priority +'</td>'+
-                                '<td>'+ row.owner_name +'</td>'+
-                                '<td>'+ row.issue_type +'</td>'+
-                                '<td>'+ status +'</td>'+
+                                '<td>'+ row.department.name_english +'</td>'+
+                                '<td style="color:'+row.priorities.color+'">'+ (row.priorities ? row.priorities.name : "" )+'</td>'+
+                                '<td>'+ (row.assigned_by ? row.assigned_by.name: "") +'</td>'+
+                                '<td>'+ row.issue_type.name +'</td>'+
+                                '<td style="color:'+row.custom_status.color+'">'+ row.custom_status.name +'</td>'+
                             '</tr>';
                         });
                     } else {

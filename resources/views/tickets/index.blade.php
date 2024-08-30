@@ -7,12 +7,12 @@
     </div>
 @endcan
 <ul class="nav nav-pills" role="tablist">
-    <li class="nav-item"><a class="nav-link active tab-tables" data-toggle="tab" data-permiss="1" href="#js_change_pill_direction-1">Open tickets</a></li>
-    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="2" href="#js_change_pill_direction-2">Assigned to me</a></li>
-    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="3" href="#js_change_pill_direction-3">Assigned to others</a></li>
-    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="4" href="#js_change_pill_direction-4">Unassigned</a></li>
-    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="5" href="#js_change_pill_direction-5">Due soon</a></li>
-    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="6" href="#js_change_pill_direction-6">Overdue</a></li>
+    <li class="nav-item"><a class="nav-link active tab-tables" data-toggle="tab" data-permiss="1" href="#js_change_pill_direction-1">Open tickets {{$total_all_ticket}}</a></li>
+    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="2" href="#js_change_pill_direction-2">Assigned to me {{$total_assigned_ticket}}</a></li>
+    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="3" href="#js_change_pill_direction-3">Assigned to others {{$total_others_ticket}}</a></li>
+    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="4" href="#js_change_pill_direction-4">Unassigned {{$total_unassigned_ticket}}</a></li>
+    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="5" href="#js_change_pill_direction-5">Due soon {{$total_due_soon_ticket}}</a></li>
+    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="6" href="#js_change_pill_direction-6">Overdue {{$total_overdue_ticket}}</a></li>
 </ul>
 
 <div class="row mt-3">
@@ -39,7 +39,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Please select Department or Branch</h5>
+                <h5 class="modal-title">Please select Department</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="fal fa-times"></i></span>
                 </button>
@@ -47,7 +47,7 @@
             <div class="modal-body">
                 <div class="row">
                     @if (count($department)>0)
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label" for="simpleinput">Department</label>
                                 <div class="dropdown-menu d-block position-relative float-none">
@@ -60,7 +60,7 @@
                             </div>
                         </div>
                     @endif
-                    @if (count($branch)>0)
+                    {{-- @if (count($branch)>0)
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label" for="simpleinput">Branch</label>
@@ -73,7 +73,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>

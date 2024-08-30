@@ -36,22 +36,34 @@ class TicketController extends Controller
     }
     public function index()
     {
-        $branch = Branch::get();
+        // $branch = Branch::get();
         $department = Department::get();
-        if (Auth::user()->RolePermission=='Staff') {
-            $data_tickets = Ticket::with("department")
-            ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedBy")
-            ->with("priorities")->with("createdBy")
-            ->where('department_id',Auth::user()->department_id)->where('branch_id',Auth::user()->branch_id)
-            ->orderBy('created_at','DESC')->get();
-        } else {
-            $data_tickets = Ticket::with("department")
-            ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedBy")
-            ->with("priorities")->with("createdBy")->orderBy('created_at','DESC')->get();
+        $status = CustomStatus::where("name", "Close")->first();
+        $currentDate = Carbon::now()->format('Y-m-d');
+        if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
+            $total_all_ticket = Ticket::where('department_id',Auth::user()->department_id)->whereNot("status", $status->id)->count();
+            $total_assigned_ticket = Ticket::where('department_id',Auth::user()->department_id)->whereNot("status", $status->id)->where("assignedby", Auth::user()->id)->count();
+            $total_others_ticket = Ticket::where('department_id',Auth::user()->department_id)->whereNot("status", $status->id)->whereNot("assignedby", Auth::user()->id)->count();
+            $total_unassigned_ticket = Ticket::where('department_id',Auth::user()->department_id)->whereNot("status", $status->id)->where("assignedby", "unassigned")->count();
+            $total_due_soon_ticket = Ticket::where('department_id',Auth::user()->department_id)->whereNot("status", $status->id)->where('due_date', '>=',$currentDate)->count();
+            $total_overdue_ticket = Ticket::where('department_id',Auth::user()->department_id)->whereNot("status", $status->id)->where('due_date', '<',$currentDate)->count();
+        }else {
+            $total_all_ticket = Ticket::whereNot("status", $status->id)->count();
+            $total_assigned_ticket = Ticket::where("assignedby", Auth::user()->id)->whereNot("status", $status->id)->count();
+            $total_others_ticket = Ticket::whereNot("assignedby", Auth::user()->id)->whereNot("status", $status->id)->count();
+            $total_unassigned_ticket = Ticket::where("assignedby", "unassigned")->whereNot("status", $status->id)->count();
+            $total_due_soon_ticket = Ticket::where('due_date', '>=',$currentDate)->whereNot("status", $status->id)->count();
+            $total_overdue_ticket = Ticket::where('due_date', '<',$currentDate)->whereNot("status", $status->id)->count();
         }
-        return view('tickets.index', compact('data_tickets','department', 'branch'));
+        return view('tickets.index', compact(
+            'total_all_ticket',
+            'total_assigned_ticket',
+            'total_others_ticket',
+            'total_unassigned_ticket',
+            'total_due_soon_ticket',
+            'total_overdue_ticket',
+            'department'
+        ));
     }
 
     /**
@@ -103,12 +115,12 @@ class TicketController extends Controller
             ];
              
             //  $mail_message = ModelsMail::first();
-            if ($assigned_to) {
-                if ($assigned_to->email) {
-                    Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                }
-            }
-            Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
+            // if ($assigned_to) {
+            //     if ($assigned_to->email) {
+            //         Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //     }
+            // }
+            // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
 
             DB::commit();
             return response()->json([
@@ -125,31 +137,66 @@ class TicketController extends Controller
      */
     public function show(Request $request)
     {
-        $data_tickets = Ticket::with("department")
-        ->with("branch")->with("lastReplier")
-        ->with("CustomStatus")->with("assignedBy")
-        ->with("priorities")->with("createdBy")
-        ->with("issueType")
-        ->when($request->status, function ($query, $status) {
-            if ($status == 2) {
-                $query->where("assignedby", Auth::user()->id);
-            }
-            if ($status == 3) {
-                $query->whereNotIn("assignedby", ["unassigned","auto-assign"]);
-            }
-            if ($status == 4) {
-                $query->whereIn("assignedby", ["unassigned","auto-assign"]);
-            }
-            if ($status == 5) {
-                $currentDate = Carbon::now()->format('Y-m-d');
-                $query->where('due_date', '>=',$currentDate);
-            }
-            if ($status == 6) {
-                $currentDate = Carbon::now()->format('Y-m-d');
-                $query->where('due_date', '<',$currentDate);
-            }
-        })
-        ->get();
+        $status = CustomStatus::where("name", "Close")->first();
+        if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
+            $data_tickets = Ticket::with("department")
+            ->with("branch")->with("lastReplier")
+            ->with("CustomStatus")->with("assignedBy")
+            ->with("priorities")->with("createdBy")
+            ->with("issueType")
+            ->where('department_id',Auth::user()->department_id)
+            ->whereNot("status", $status->id)
+            ->when($request->status, function ($query, $status) {
+                if ($status == 2) {
+                    $query->where("assignedby", Auth::user()->id);
+                }
+                if ($status == 3) {
+                    $query->whereNot("assignedby", Auth::user()->id);
+                }
+                if ($status == 4) {
+                    $query->whereIn("assignedby", ["unassigned","auto-assign"]);
+                }
+                if ($status == 5) {
+                    $currentDate = Carbon::now()->format('Y-m-d');
+                    $query->where('due_date', '>=',$currentDate);
+                }
+                if ($status == 6) {
+                    $currentDate = Carbon::now()->format('Y-m-d');
+                    $query->where('due_date', '<',$currentDate);
+                }
+            })
+            ->orderBy('id','DESC')
+            ->get();
+        }else {
+            $data_tickets = Ticket::with("department")
+            ->with("branch")->with("lastReplier")
+            ->with("CustomStatus")->with("assignedBy")
+            ->with("priorities")->with("createdBy")
+            ->with("issueType")
+            ->whereNot("status", $status->id)
+            ->when($request->status, function ($query, $status) {
+                if ($status == 2) {
+                    $query->where("assignedby", Auth::user()->id);
+                }
+                if ($status == 3) {
+                    $query->whereNotIn("assignedby", ["unassigned","auto-assign"]);
+                }
+                if ($status == 4) {
+                    $query->whereIn("assignedby", ["unassigned","auto-assign"]);
+                }
+                if ($status == 5) {
+                    $currentDate = Carbon::now()->format('Y-m-d');
+                    $query->where('due_date', '>=',$currentDate);
+                }
+                if ($status == 6) {
+                    $currentDate = Carbon::now()->format('Y-m-d');
+                    $query->where('due_date', '<',$currentDate);
+                }
+            })
+            ->orderBy('id','DESC')
+            ->get();
+        }
+       
         DB::commit();
         return response()->json([
             'datas'=>$data_tickets
@@ -365,19 +412,19 @@ class TicketController extends Controller
                 "dataHistoryPriority"=> $dataHistoryPriority,
             ];
         
-            if (!$request->autoreload) {
-                // $mail_message = ModelsMail::first();
-                if ($assigned_to) {
-                    if ($assigned_to->email == Auth::user()->email) {
-                        Mail::to($data_tickets->createdBy->email)->send(new SendMail($datasSendEmail));
-                    }else if($data_tickets->createdBy->email == Auth::user()->email){
-                        Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                    }else{
-                        Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                    }
-                }
-            }
-            Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
+            // if (!$request->autoreload) {
+            //     // $mail_message = ModelsMail::first();
+            //     if ($assigned_to) {
+            //         if ($assigned_to->email == Auth::user()->email) {
+            //             Mail::to($data_tickets->createdBy->email)->send(new SendMail($datasSendEmail));
+            //         }else if($data_tickets->createdBy->email == Auth::user()->email){
+            //             Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //         }else{
+            //             Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //         }
+            //     }
+            // }
+            // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
            
             // Toastr::success('Updated successfully.','Success');
             DB::commit();
