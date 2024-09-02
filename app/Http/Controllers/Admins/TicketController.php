@@ -402,9 +402,13 @@ class TicketController extends Controller
                 $data['assignedby']  = $request->assignedby;
                 $data['status']  = $request->status;
                 $data['priority']  = $request->priority;
-                $data['updated_by']  = Auth::user()->id;
-                $data->save();
+                // $data['lastreplier']  = Auth::user()->id;
+                // $data['updated_by']  = Auth::user()->id;
+                // $data->save();
             }
+            $data['lastreplier']  = Auth::user()->id;
+            $data['updated_by']  = Auth::user()->id;
+            $data->save();
             
             // Add new reply
             $dataReply['staff_id'] = Auth::user()->id;
@@ -463,8 +467,25 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        try{
+            Ticket::destroy($request->id);
+            DB::commit();
+            return response()->json([
+                'message' => "Ticket deleted successfully.",
+                'status'=>"success"
+            ]);
+            // Toastr::success('Ticket deleted successfully.','Success');
+            // return redirect()->back();
+        }catch(\Exception $e){
+            DB::rollback();
+            return response()->json([
+                'message' => "Ticket delete fail.",
+                'status'=>"Error"
+            ]);
+            // Toastr::error('Ticket delete fail.','Error');
+            // return redirect()->back();
+        }
     }
 }

@@ -71,6 +71,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/ticket/update/assignedto', [TicketController::class, 'assignedTo']);
     Route::get('/ticket/show-one', [TicketController::class, 'showOne']);
     Route::post('/ticket/replies', [TicketController::class, 'replies']);
+    Route::post('/ticket/delete', [TicketController::class, 'destroy']);
 
     // Note  
     Route::get('/note/show', [NoteController::class, 'show']);

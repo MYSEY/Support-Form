@@ -151,7 +151,7 @@
                         <a class="dropdown-item" href="#"><i class="fal fa-arrow-to-bottom"></i> Export to Excel</a>
                     @endcan
                     @can('Ticket Delete')
-                        <a class="dropdown-item" href="#"><i class="fal fa-trash-alt"></i> Delete ticket</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_ticket"><i class="fal fa-trash-alt"></i> Delete ticket</a>
                     @endcan
                 </div>
             </div>
@@ -180,9 +180,9 @@
                                 <p class="card-text">Ticket number: <strong class="ml-3">{{$data_ticket->id}}</strong></p>
                                 <p class="card-text">Created on: <strong class="ml-3">{{ \Carbon\Carbon::parse($data_ticket->created_at)->format('d-M-Y h:i A') ?? '' }}</strong></p>
                                 <p class="card-text">Updated: <strong class="ml-3">{{ \Carbon\Carbon::parse($data_ticket->updated_at)->format('d-M-Y h:i A') ?? '' }}</strong></p>
-                                <p class="card-text">Replies: <strong class="ml-3">0</strong></p>
-                                <p class="card-text">Last replier: <strong class="ml-3">0</strong></p>
-                                <p class="card-text">Time worked: <strong class="ml-3">00:00</strong></p>
+                                <p class="card-text">Replies: <strong class="ml-3" id="total_replies">0</strong></p>
+                                <p class="card-text">Last replier: <strong class="ml-3">{{$data_ticket->lastReplier ? $data_ticket->lastReplier->name : ""}}</strong></p>
+                                {{-- <p class="card-text">Time worked: <strong class="ml-3">00:00</strong></p> --}}
                                 <p class="card-text">Due date: <strong class="ml-3">{{ \Carbon\Carbon::parse($data_ticket->due_date)->format('d-M-Y') ?? '' }}</strong></p>
                             </div>
                         </div>
@@ -249,6 +249,30 @@
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete User Modal -->
+    <div class="modal custom-modal fade" id="delete_ticket" role="dialog">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-header">
+                        <h5 class="modal-title">Delete</h5>
+                        <p>Are you sure want to delete?</p>
+                    </div>
+                    <div class="modal-btn delete-action">
+                        <form>
+                            @csrf
+                            {{-- <input type="hidden"  name="id" class="e_id" value="{{$data_ticket->id}}"> --}}
+                            <div class="float-lg-right">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-danger waves-effect waves-themed btn-delete-ticket" data-id="{{$data_ticket->id}}">Delete</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -337,6 +361,26 @@
 
             $(".btn-print").on("click", function() {
                 print_pdf();
+            });
+
+            $(document).on('click','.btn-delete-ticket', function(){
+                let id = $(this).data("id");
+                $.ajax({
+                    type: "POST",
+                    url: "{{url('admin/ticket/delete')}}",
+                    data: {
+                        "_token":       "{{ csrf_token() }}",
+                        id:             id,
+                    },
+                    dataType: "JSON",
+                    success: function (response) {
+                        toastr.success('Ticket deleted successfully.');
+                        setTimeout(function() {
+                            var url = "{{ URL('admin/ticket') }}";
+                            window.location.replace(url); 
+                        }, 1500);
+                    }
+                });
             });
 
             //** block noted
@@ -440,6 +484,7 @@
                 $("#d_id_reply").val(id);
                 $('#delteReply').modal('show');
             });
+
         });
         function nl2br(str) {
             return str.replace(/\n/g, '<br>');
@@ -503,6 +548,7 @@
                     let datas = response.datas;
                     let text = "";
                     let reply_tr = "";
+                    $("#total_replies").text(datas.length);
                     if (datas.length > 0) {
                         let btn_delete = "";
                         datas.forEach(function(value, index) {
