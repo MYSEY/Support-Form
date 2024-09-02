@@ -48,8 +48,8 @@
                                     <th>Role</th>
                                     <th>Department</th>
                                     <th>Branch</th>
-                                    <th>Rating</th>
-                                    <th>Auto Asign</th>
+                                    {{-- <th>Rating</th> --}}
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -66,19 +66,14 @@
                                             <td>{{$item->role_name}}</td>
                                             <td>{{$item->name_english}}</td>
                                             <td>{{$item->branch_name_en}}</td>
-                                            <td style="text-align:center">
+                                            {{-- <td style="text-align:center">
                                                 <div class="rating" data-rating="{{$item->rating}}"></div>
-                                            </td>
+                                            </td> --}}
                                             <td style="text-align: center;">
-                                                <div class="frame-wrap demo">
-                                                    <div class="demo">
-                                                        <div class="custom-control custom-switch">
-                                                            <input type="checkbox" class="custom-control-input"
-                                                                {{$item->autoassign == "1" ? "checked": ""}}
-                                                                value="{{$item->autoassign}}"
-                                                            >
-                                                            <label class="custom-control-label"></label>
-                                                        </div>
+                                                <div class="demo">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input btn-status" id="customSwitch_{{$item->id}}" data-id="{{$item->id}}" {{$item->status == "Active" ? "checked": ""}} value="{{$item->status}}">
+                                                        <label class="custom-control-label" for="customSwitch_{{$item->id}}"></label>
                                                     </div>
                                                 </div>
                                             </td>
@@ -116,10 +111,35 @@
                     <div class="modal-btn delete-action">
                         <form action="{{url('admin/user/delete')}}" method="POST">
                             @csrf
-                            <input type=""  name="id" class="e_id" value="">
+                            <input type="hidden"  name="id" class="e_id" value="">
                             <div class="float-lg-right">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-danger waves-effect waves-themed">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update status User Modal -->
+    <div class="modal custom-modal fade" id="status_user" role="dialog">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-header">
+                        <h5 class="modal-title">Change Status</h5>
+                        <p>Are you sure want to change status <strong id="from_change_status"></strong> to <strong id="to_change_status"></strong> ?</p>
+                    </div>
+                    <div class="modal-btn delete-action">
+                        <form>
+                            @csrf
+                            <input type="hidden"  name="id" class="status_id" value="">
+                            <input type="hidden"  name="id" class="status_check" value="">
+                            <div class="float-lg-right">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-danger waves-effect waves-themed btn-update-status">Update</button>
                             </div>
                         </form>
                     </div>
@@ -151,6 +171,56 @@
         $(document).on('click','.status-delete', function(){
             let id = $(this).data("id");
             $('.e_id').val(id);
+        });
+
+        $(document).ready(function() {
+            var checkboxClicked = false;
+            $(document).on('click','.btn-status', function(event){
+                let id = $(this).data("id");
+                let value = $(this).val();
+                event.preventDefault();
+                checkboxClicked = !checkboxClicked;
+                if (value == "") {
+                    toastr.error('Waiting user login!.');
+                    return false;
+                }
+                $("#from_change_status").text(value);
+                if (value == "Active") {
+                    $("#to_change_status").text("Inactive");
+                }else{
+                    $("#to_change_status").text("Active");
+                }
+                $(".status_id").val(id);
+                $(".status_check").val(value);
+                $("#status_user").modal("show");
+            });
+        });
+
+        $(document).on('click','.btn-update-status', function(){
+            let status = "";
+            if ($(".status_check").val() == "Active") {
+                status = "Inactive";
+            }
+            if($(".status_check").val() == "Inactive"){
+                status = "Active";
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{url('admin/user/status')}}",
+                data: {
+                    "_token":       "{{ csrf_token() }}",
+                    id      :       $(".status_id").val(),
+                    status  :       status,
+                },
+                dataType: "JSON",
+                success: function (response) {
+                    toastr.success('Update status successfully.');
+                    setTimeout(function() {
+                        var url = "{{ URL('admin/user') }}";
+                        window.location.replace(url); 
+                    }, 1500);
+                }
+            });
         });
     </script>
 @endsection

@@ -138,6 +138,21 @@
                                 </a>
                             </div>
                         </div>
+                        {{-- <div class="info-card">
+                            <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern">
+                            <div class="info-card-text">
+                                <a href="#" class="d-flex align-items-center text-white">
+                                    <span class="text-truncate text-truncate-sm d-inline-block">
+                                        {{Auth::user()->name}}
+                                    </span>
+                                </a>
+                                <span class="d-inline-block text-truncate text-truncate-sm">Role: {{Auth::user()->RoleName}}</span>
+                                <span class="d-inline-block text-truncate text-truncate-sm">Department: {{Auth::user()->RoleName}}</span>
+                                <span class="d-inline-block text-truncate text-truncate-sm">Location: {{Auth::user()->RoleName}}</span>
+                            </div>
+                            <img src="" class="cover" alt="cover">
+                        </div> --}}
+
                         <ul id="js-nav-menu" class="nav-menu">
                             @if (Auth::user()->can('Dashboad View'))
                                 <li class="@if (Request::instance()->segment(2) == 'dashboad') active @endif">
@@ -353,7 +368,7 @@
                             </div> --}}
                             <!-- app user menu -->
                             <div>
-                                <a href="#" data-toggle="dropdown" title="drlantern@gotbootstrap.com" class="header-icon d-flex align-items-center justify-content-center ml-2">
+                                <a href="#" data-toggle="dropdown" title="{{Auth::user()->email}}" class="header-icon d-flex align-items-center justify-content-center ml-2">
                                     <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
@@ -364,7 +379,7 @@
                                             </span>
                                             <div class="info-card-text">
                                                 <div class="fs-lg text-truncate text-truncate-lg">{{Auth::user()->name}}</div>
-                                                <span class="text-truncate text-truncate-md opacity-80">{{Auth::user()->email}}</span>
+                                                <span class="text-truncate text-truncate-md opacity-80">Role: {{Auth::user()->RoleName}}</span>
                                             </div>
                                         </div>
                                     </div>

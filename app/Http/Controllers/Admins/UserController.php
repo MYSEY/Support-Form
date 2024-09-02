@@ -233,6 +233,26 @@ class UserController extends Controller
         }
     }
 
+    public function updateStatus(Request $request) {
+        try{
+            $user = User::find($request->id);
+            $user['status']            = $request->status;
+            $user['updated_by']        = Auth::user()->id;
+            $user->save();
+            return response()->json([
+                'message' => "Update status successfully.",
+                'status'=>"success"
+            ]);
+        }catch(\Exception $e){
+            DB::rollback();
+            return response()->json([
+                'message' => "User updated fail.",
+                'status'=>"Error"
+            ]);
+            return redirect()->back();
+        }
+    }
+
     public function duplicateUser(Request $request){
         try {
             $duplicate= User::where("user",$request->username)->first();

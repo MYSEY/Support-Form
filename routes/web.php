@@ -54,6 +54,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/user/form-edit/{id}', [UserController::class, 'edit']);
     Route::post('/user/create', [UserController::class, 'store']);
     Route::post('/user/update', [UserController::class, 'update']);
+    Route::post('/user/status', [UserController::class, 'updateStatus']);
     Route::post('/user/delete', [UserController::class, 'destroy']);
     Route::post('/user/online/delete', [UserController::class, 'userOnlineDelet']);
     Route::post('/user/duplicate', [UserController::class, 'duplicateUser']);
