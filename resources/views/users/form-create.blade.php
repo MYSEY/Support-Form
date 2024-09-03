@@ -328,6 +328,8 @@
                                         confirm_password:           $("#confirm_password").val(),
                                         autoassign:                 $("#auto_assign").val(),
                                         role_id:                    $("#role_permission").val(),
+                                        department_id:              $("#department_id").val(),
+                                        branch_id:                  $("#branch_id").val(),
                                         afterreply:                 afterreply,
                                         autostart:                  autostart,
                                         notify_customer_new:        notify_customer_new,

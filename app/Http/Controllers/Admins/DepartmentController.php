@@ -20,7 +20,7 @@ class DepartmentController extends Controller
     }
     public function index()
     {
-        $data = Department::orderBy('id','DESC')->get();
+        $data = Department::with("createdBy")->orderBy('id','DESC')->get();
         return view('departments.index', compact('data'));
     }
 

@@ -26,6 +26,8 @@
                                 <th>Name (EN)</th>
                                 <th>Status</th>
                                 <th>Created By</th>
+                                <th>Created At</th>
+                                <th>Updated At</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -49,7 +51,9 @@
                                                 </div>
                                             @endcan
                                         </td>
+                                        <td>{{ $item->createdBy ? $item->createdBy->name: '' }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') ?? '' }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d-M-Y') ?? '' }}</td>
                                         <td>
                                             <div class="d-flex demo">
                                                 @can('Department Delete')
@@ -192,24 +196,6 @@
                 $('#e_name_khmer').val(_this.find('.name_khmer').text());
                 $('#e_name_english').val(_this.find('.name_english').text());
             });
-            // $(document).on('click','.btnStatus', function(){
-            //     let status = $(this).data("status");
-            //     let id = $(this).data("id");
-            //     $.ajax({
-            //         type: "POST",
-            //         url: "{{url('admin/department/status')}}",
-            //         data: {
-            //             "_token": "{{ csrf_token() }}",
-            //             id : id,
-            //             status : status,
-            //         },
-            //         dataType: "JSON",
-            //         success: function (response) {
-                        
-            //         }
-            //     });
-            // });
-
             $(document).on('click','.department-delete', function(){
                 let id = $(this).data("id");
                 $('.e_id').val(id);
