@@ -36,10 +36,10 @@
     </div>
 </div>
 <div class="modal fade show" id="modal-select" role="dialog" aria-modal="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Please select Department</h5>
+                <h3 class="modal-title"><strong>Please click on the section to support you!</strong></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="fal fa-times"></i></span>
                 </button>
@@ -49,7 +49,7 @@
                     @if (count($department)>0)
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label" for="simpleinput">Department</label>
+                                {{-- <label class="form-label" for="simpleinput">Department</label> --}}
                                 <div class="dropdown-menu d-block position-relative float-none">
                                     @foreach ($department as $item)
                                         <a class="dropdown-item" href="{{url('admin/ticket/create','department'.$item->id)}}">
@@ -122,7 +122,7 @@
                         datas.forEach(function(value, index) {
                             let created_at = moment(value.created_at).format('D-MMM-YYYY');
                             let updated_at = moment(value.updated_at).format('D-MMM-YYYY');
-                            let due_date = moment(value.due_date).format('D-MMM-YYYY');
+                            let due_date = value.due_date ? moment(value.due_date).format('D-MMM-YYYY') : "";
                             let assign_by = value.assignedby;
                             if (value.assigned_by) {
                                 assign_by = "Assigned to: "+value.assigned_by.name;

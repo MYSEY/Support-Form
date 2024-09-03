@@ -36,7 +36,7 @@ class TicketController extends Controller
     public function index()
     {
         // $branch = Branch::get();
-        $department = Department::get();
+        $department = Department::where("status", "Active")->get();
         $status = CustomStatus::where("name", "Closed")->first();
         $currentDate = Carbon::now()->format('Y-m-d');
         $statusCondition = function ($query) use ($status) {

@@ -39,8 +39,13 @@
                                         <td>
                                             @can('Department Edit')
                                                 <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="checkbox custom-control-input btnStatus" data-status="{{$item->status}}" data-id="{{$item->id}}" id="status_{{$item->id}}" {{ $item->status == 1 ? 'checked' : '' }}>
+                                                    <input type="checkbox" class="checkbox custom-control-input btnStatus" data-id="{{$item->id}}" id="status_{{$item->id}}" {{ $item->status == "Active" ? 'checked' : '' }} value="{{$item->status}}">
                                                     <label class="custom-control-label" for="status_{{$item->id}}"></label>
+                                                </div>
+                                            @else
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" id="customSwitch3" {{$item->status == "Active" ? "checked": ""}} disabled="">
+                                                    <label class="custom-control-label" for="customSwitch3"></label>
                                                 </div>
                                             @endcan
                                         </td>
@@ -150,6 +155,31 @@
         </div>
     </div>
 </div>
+
+<!-- Update status User Modal -->
+<div class="modal custom-modal fade" id="status_department" role="dialog">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header">
+                    <h5 class="modal-title">Change Status</h5>
+                    <p>Are you sure want to <strong id="from_change_status"></strong>?</p>
+                </div>
+                <div class="modal-btn delete-action">
+                    <form>
+                        @csrf
+                        <input type="hidden"  name="id" class="status_id" value="">
+                        <input type="hidden"  name="id" class="status_check" value="">
+                        <div class="float-lg-right">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger waves-effect waves-themed btn-update-status">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('script')
     @include('includs.datatable_basic')
@@ -162,27 +192,68 @@
                 $('#e_name_khmer').val(_this.find('.name_khmer').text());
                 $('#e_name_english').val(_this.find('.name_english').text());
             });
-            $(document).on('click','.btnStatus', function(){
-                let status = $(this).data("status");
-                let id = $(this).data("id");
-                $.ajax({
-                    type: "POST",
-                    url: "{{url('admin/department/status')}}",
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        id : id,
-                        status : status,
-                    },
-                    dataType: "JSON",
-                    success: function (response) {
+            // $(document).on('click','.btnStatus', function(){
+            //     let status = $(this).data("status");
+            //     let id = $(this).data("id");
+            //     $.ajax({
+            //         type: "POST",
+            //         url: "{{url('admin/department/status')}}",
+            //         data: {
+            //             "_token": "{{ csrf_token() }}",
+            //             id : id,
+            //             status : status,
+            //         },
+            //         dataType: "JSON",
+            //         success: function (response) {
                         
-                    }
-                });
-            });
+            //         }
+            //     });
+            // });
 
             $(document).on('click','.department-delete', function(){
                 let id = $(this).data("id");
                 $('.e_id').val(id);
+            });
+        });
+        $(document).ready(function() {
+            var checkboxClicked = false;
+            $(document).on('click','.btnStatus', function(event){
+                let id = $(this).data("id");
+                let value = $(this).val();
+                event.preventDefault();
+                checkboxClicked = !checkboxClicked;
+                if (value == "") {
+                    $(".status_check").val("Active");
+                    $("#from_change_status").text("Support");
+                }
+                if (value == "Active") {
+                    $(".status_check").val("Inactive");
+                    $("#from_change_status").text("Close Support");
+                }else{
+                    $(".status_check").val("Active");
+                    $("#from_change_status").text("Open for Support");
+                }
+                $(".status_id").val(id);
+                $("#status_department").modal("show");
+            });
+        });
+        $(document).on('click','.btn-update-status', function(){
+            $.ajax({
+                type: "POST",
+                url: "{{url('admin/department/status')}}",
+                data: {
+                    "_token":       "{{ csrf_token() }}",
+                    id      :       $(".status_id").val(),
+                    status  :       $(".status_check").val()
+                },
+                dataType: "JSON",
+                success: function (response) {
+                    toastr.success('Update status successfully.');
+                    setTimeout(function() {
+                        var url = "{{ URL('admin/department') }}";
+                        window.location.replace(url); 
+                    }, 1500);
+                }
             });
         });
     </script>

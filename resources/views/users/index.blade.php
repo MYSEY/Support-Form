@@ -71,10 +71,17 @@
                                             </td> --}}
                                             <td style="text-align: center;">
                                                 <div class="demo">
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input btn-status" id="customSwitch_{{$item->id}}" data-id="{{$item->id}}" {{$item->status == "Active" ? "checked": ""}} value="{{$item->status}}">
-                                                        <label class="custom-control-label" for="customSwitch_{{$item->id}}"></label>
-                                                    </div>
+                                                    @can('User Edit')
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox" class="custom-control-input btn-status" id="customSwitch_{{$item->id}}" data-id="{{$item->id}}" {{$item->status == "Active" ? "checked": ""}} value="{{$item->status}}">
+                                                            <label class="custom-control-label" for="customSwitch_{{$item->id}}"></label>
+                                                        </div>
+                                                    @else
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox" class="custom-control-input" id="customSwitch3" {{$item->status == "Active" ? "checked": ""}} disabled="">
+                                                            <label class="custom-control-label" for="customSwitch3"></label>
+                                                        </div>
+                                                    @endcan 
                                                 </div>
                                             </td>
                                             <td>

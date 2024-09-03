@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name_khmer');
             $table->string('name_english');
             $table->integer('parent_id')->nullable();
+            $table->string('status')->nullable();
             $table->integer('head_department')->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();

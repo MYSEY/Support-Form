@@ -18,6 +18,7 @@ class Department extends Model
         'name_khmer',
         'name_english',
         'parent_id',
+        'status',
         'head_department',
         'created_by',
         'updated_by',
