@@ -48,9 +48,9 @@ class TicketReportController extends Controller
             ->when($request->priority, function ($query, $priority) {
                 $query->where('tickets.priority', $priority);
             })->when($from_date, function ($query, $from_date) {
-                $query->where('tickets.created_at','>=', $from_date);
+                $query->where('tickets.dt','>=', $from_date);
             })->when($to_date, function ($query, $to_date) {
-                $query->where('tickets.created_at','<=', $to_date);
+                $query->where('tickets.dt','<=', $to_date);
             })->when($request->status, function ($query, $status) {
                 $query->whereIn('tickets.status', $status);
             })->OrderBy('tickets.id','DESC')->get();     
@@ -63,9 +63,9 @@ class TicketReportController extends Controller
             ->when($request->priority, function ($query, $priority) {
                 $query->where('tickets.priority', $priority);
             })->when($from_date, function ($query, $from_date) {
-                $query->where('tickets.created_at','>=', $from_date);
+                $query->where('tickets.dt','>=', $from_date);
             })->when($to_date, function ($query, $to_date) {
-                $query->where('tickets.created_at','<=', $to_date);
+                $query->where('tickets.dt','<=', $to_date);
             })->when($request->status, function ($query, $status) {
                 $query->whereIn('tickets.status', $status);
             })->OrderBy('tickets.id','DESC')->get();

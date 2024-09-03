@@ -100,6 +100,7 @@ class TicketController extends Controller
             $data['trackid'] = $this->generateTicketID();
             $data['issue_type'] = $request->issue_type;
             $data['status'] = $status->id;
+            $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');
             $data['created_by'] = Auth::user()->id;
             $ticket = Ticket::create($data);
 
@@ -344,6 +345,7 @@ class TicketController extends Controller
             $data['subject']  = $request->subject;
             $data['issue_type']  = $request->issue_type;
             $data['message']  = $request->message;
+            $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');
             $data['updated_by']  = Auth::user()->id;
             $data->save();
 
