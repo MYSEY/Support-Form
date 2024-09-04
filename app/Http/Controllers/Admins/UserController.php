@@ -27,34 +27,39 @@ class UserController extends Controller
     public function index()
     {
         if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
-            $data = DB::table('users')
-            ->where("users.deleted_at",null)
-            ->leftJoin('branchs','branchs.id','=','users.branch_id')
-            ->leftJoin('departments','departments.id','=','users.department_id')
-            ->leftJoin('roles','roles.id','=','users.role_id')
-            ->select(
-                'users.*',
-                'branchs.branch_name_kh',
-                'branchs.branch_name_en',
-                'departments.name_english',
-                'roles.name as role_name',
-            )
+            $data = User::with('role')->with('department')->with("branch")->with("createdBy")->with("updatedBy")
             ->where('department_id',Auth::user()->department_id)
             ->where('branch_id',Auth::user()->branch_id)
             ->get();
+            // $data = DB::table('users')
+            // ->where("users.deleted_at",null)
+            // ->leftJoin('branchs','branchs.id','=','users.branch_id')
+            // ->leftJoin('departments','departments.id','=','users.department_id')
+            // ->leftJoin('roles','roles.id','=','users.role_id')
+            // ->select(
+            //     'users.*',
+            //     'branchs.branch_name_kh',
+            //     'branchs.branch_name_en',
+            //     'departments.name_english',
+            //     'roles.name as role_name',
+            // )
+            // ->where('department_id',Auth::user()->department_id)
+            // ->where('branch_id',Auth::user()->branch_id)
+            // ->get();
         } else {
-            $data = DB::table('users')
-            ->where("users.deleted_at",null)
-            ->leftJoin('branchs','branchs.id','=','users.branch_id')
-            ->leftJoin('departments','departments.id','=','users.department_id')
-            ->leftJoin('roles','roles.id','=','users.role_id')
-            ->select(
-                'users.*',
-                'branchs.branch_name_kh',
-                'branchs.branch_name_en',
-                'departments.name_english',
-                'roles.name as role_name',
-            )->get();
+            $data = User::with('role')->with('department')->with("branch")->with("createdBy")->with("updatedBy")->get();
+            // $data = DB::table('users')
+            // ->where("users.deleted_at",null)
+            // ->leftJoin('branchs','branchs.id','=','users.branch_id')
+            // ->leftJoin('departments','departments.id','=','users.department_id')
+            // ->leftJoin('roles','roles.id','=','users.role_id')
+            // ->select(
+            //     'users.*',
+            //     'branchs.branch_name_kh',
+            //     'branchs.branch_name_en',
+            //     'departments.name_english',
+            //     'roles.name as role_name',
+            // )->get();
         }
         return view('users.index', compact('data'));
     }

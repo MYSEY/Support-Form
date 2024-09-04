@@ -43,17 +43,22 @@
                                 <tr>
                                     <th>Profile</th>
                                     <th>Name</th>
-                                    <th>Email</th>
                                     <th>User Name</th>
                                     <th>Role</th>
                                     <th>Department</th>
                                     <th>Branch</th>
                                     {{-- <th>Rating</th> --}}
+                                    <th>Created_By</th>
+                                    <th>Created_At</th>
+                                    <th>Updated_By</th>
+                                    <th>Updated_At</th>
                                     <th>Status</th>
                                     <th>Action</th>
+                                    <th>Email</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {{-- @dd($data) --}}
                                 @if (count($data)>0)
                                     @foreach ($data as $key=>$item)
                                         <tr>
@@ -61,14 +66,17 @@
                                                 <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern" style="width: 36px;height: 36px;">
                                             </td>
                                             <td>{{$item->name}}</td>
-                                            <td>{{$item->email}}</td>
                                             <td>{{$item->user}}</td>
                                             <td>{{$item->role_name}}</td>
-                                            <td>{{$item->name_english}}</td>
-                                            <td>{{$item->branch_name_en}}</td>
+                                            <td>{{$item->department ? $item->department->name_english : ""}}</td>
+                                            <td>{{$item->branch ? $item->branch->branch_name_en : ""}}</td>
                                             {{-- <td style="text-align:center">
                                                 <div class="rating" data-rating="{{$item->rating}}"></div>
                                             </td> --}}
+                                            <td>{{$item->createdBy ? $item->createdBy->name: ""}}</td>
+                                            <td>{{\Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? ''}}</td>
+                                            <td>{{$item->updatedBy ? $item->updatedBy->name: ""}}</td>
+                                            <td>{{\Carbon\Carbon::parse($item->updated_at)->format('d-M-Y h:i A') ?? ''}}</td>
                                             <td style="text-align: center;">
                                                 <div class="demo">
                                                     @can('User Edit')
@@ -94,6 +102,7 @@
                                                     @endcan                                                            
                                                 </div>
                                             </td>
+                                            <td>{{$item->email}}</td>
                                         </tr>
                                     @endforeach
                                 @endif
