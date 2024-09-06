@@ -12,60 +12,50 @@
                 <input type="hidden" name="" id="e_ticket_id">
                 <div class="row">
                     <div class="col-xl-6">
-                        {{-- <div class="form-group">
-                            <label class="form-label">Name: <span class="text-danger">*</span></label>
-                            <input type="text" id="e_ticket-name" class="form-control required">
-                        </div> --}}
                         <div class="form-group">
                             <label class="form-label">Subject: <span class="text-danger">*</span></label>
                             <input type="text" name="ticket-subject" class="form-control required" id="e_ticket-subject">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="ticket-textarea">Description: <span class="text-danger">*</span></label>
-                            <textarea class="form-control required" id="e_ticket-textarea" rows="5"></textarea>
+                            <textarea class="form-control required" id="e_description" rows="5"></textarea>
                         </div>
                         <div class="form-group form-group-select2">
                             <label class="form-label" for="e_issue-type">Issue Type <span class="text-danger">*</span></label>
                             <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="e_issue-type">
                             </select>
-                            {{-- <select class="form-control" id="e_issue-type">
-                            </select> --}}
                         </div>
-                        {{-- <div class="form-group">
-                            <label class="form-label">Email: <span class="text-danger">*</span></label>
-                            <input type="email" id="e_ticket-email" name="email" class="form-control required" placeholder="Email">
-                        </div> --}}
                     </div>
 
                     <div class="col-xl-6">
                         <div class="form-group form-group-select2">
                             <label class="form-label" for="ticket-priority">Priority: <span class="text-danger">*</span></label>
-                            <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="ticket-priority" required>
+                            <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="e_ticket_priority" required>
                                 <option value=""></option>
-                                {{-- @foreach ($priority as $item)
-                                    <option value="{{$item->id}}">{{ $item->name}}</option>
-                                @endforeach --}}
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="ticket-assign">Assign this ticket to:</label>
-                            <select class="select2 form-control w-100 select2-hidden-accessible" id="ticket-assign">
+                            <select class="select2 form-control w-100 select2-hidden-accessible" id="e_ticket-assign">
                                 <option value="unassigned" selected> > Unassigned < </option>
                                 <option value="auto-assign">  > Auto-assign <  </option>
-                                {{-- @foreach ($user_support as $user)
-                                    <option value="{{$user->id}}">{{ $user->name}}</option>
-                                @endforeach --}}
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label text-muted" for="ticket-due-date">Due date:</label>
-                            <input class="form-control" id="ticket-due-date" type="date" name="date">
+                            <input class="form-control" id="e_due_date" type="date" name="date">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Attachments:</label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="e_ticket-file">
+                                <input type="file" class="custom-file-input" id="attachments">
                                 <label class="custom-file-label">Choose file</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Attachments:</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="e_attachment">
                             </div>
                         </div>
                     </div>
@@ -137,13 +127,14 @@
                         url: "{{ url('admin/ticket/update') }}",
                         data: {
                             "_token": "{{ csrf_token() }}",
-                            id:                         $("#e_ticket_id").val(),
-                            name:                       $("#e_ticket-name").val(),
-                            email:                      $("#e_ticket-email").val(),
-                            subject:                    $("#e_ticket-subject").val(),
-                            issue_type:                 $("#e_issue-type").val(),
+                            id:         $("#e_ticket_id").val(),
+                            subject:    $("#e_ticket-subject").val(),
+                            message:    $("#e_description").val(),
+                            issue_type: $("#e_issue-type").val(),
+                            due_date:   $("#e_due_date").val(),
+                            priority:   $("#e_ticket_priority").val(),
+                            assignedby:   $("#e_ticket-assign").val(),
                             // attachments:        $("#ticket-file").val(),
-                            message:            $("#e_ticket-textarea").val(),
                         },
                         dataType: "JSON",
                         success: function(response) {
@@ -172,13 +163,14 @@
                 success: function(response) {
                     let data = response.data;
                     let issuetype = response.issuetype;
-                    console.log("response: ",data);
+                    console.log(data);
                     if (data) {
                         $("#e_ticket-subject").val(data.subject);
-                        $("#e_ticket-name").val(data.name);
-                        $("#e_ticket-email").val(data.email);
-                        $("#e_ticket-textarea").val(data.message);
-
+                        $("#e_description").val(data.message);
+                        $("#e_due_date").val(data.due_date);
+                        $("#e_ticket-assign").val(data.assignedby);
+                        // $("#e_attachment").val(data.attachments);
+                        // $('#e_attachment').attr('src', "{{asset('/uploads/images')}}/"+(data.attachments));
                         if (data.issue_type != '') {
                             $('#e_issue-type').html('<option selected value=""> -- Select --</option>');
                             $.each(issuetype, function(i, item) {
@@ -186,6 +178,16 @@
                                     value: item.id,
                                     text: item.name,
                                     selected: item.id == data.issue_type
+                                }));
+                            });
+                        };
+                        if (response.priority != '') {
+                            $('#e_ticket_priority').html('<option selected value=""> -- Select --</option>');
+                            $.each(response.priority, function(i, item) {
+                                $('#e_ticket_priority').append($('<option>', {
+                                    value: item.id,
+                                    text: item.name,
+                                    selected: item.id == data.priority
                                 }));
                             });
                         };

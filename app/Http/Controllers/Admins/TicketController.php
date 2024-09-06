@@ -97,7 +97,7 @@ class TicketController extends Controller
         try {
             if($request->hasFile('attachments')) {
                 $image = $request->file('attachments');
-                $AttachmentName = time().'.'.$image->getClientOriginalName();
+                $AttachmentName = $image->getClientOriginalName();
                 $image->move(public_path('storage/attachments/'), $AttachmentName);
             }else{
                 $AttachmentName = $request->old_profile;
@@ -239,11 +239,13 @@ class TicketController extends Controller
     public function showOne(Request $request)
     {
         $issuetype= IssueType::orderBy('id','DESC')->get();
+        $Priority= Priority::orderBy('id','DESC')->get();
         $data_ticket = Ticket::where("id", $request->id)->first();
         DB::commit();
         return response()->json([
             'data'=>$data_ticket,
-            'issuetype'=>$issuetype
+            'issuetype'=>$issuetype,
+            'priority'=>$Priority,
         ]);
     }
 
@@ -352,10 +354,13 @@ class TicketController extends Controller
     {
         try{
             $data = Ticket::find($request->id);
-            $data['name']  = $request->name;
-            $data['email']  = $request->email;
+            $data['name'] = Auth::user()->name;
+            $data['email'] = Auth::user()->email;
+            $data['department_id'] = Auth::user()->department_id;
+            $data['branch_id'] = Auth::user()->branch_id;
             $data['subject']  = $request->subject;
             $data['issue_type']  = $request->issue_type;
+            $data['priority']  = $request->priority;
             $data['message']  = $request->message;
             $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');
             $data['updated_by']  = Auth::user()->id;

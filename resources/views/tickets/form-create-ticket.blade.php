@@ -27,8 +27,8 @@
                             <input type="text" name="ticket-subject" class="form-control required" id="ticket-subject" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="ticket-textarea">Description: <span class="text-danger">*</span></label>
-                            <textarea class="form-control required" id="ticket-textarea" rows="5" required></textarea>
+                            <label class="form-label" for="Description">Description: <span class="text-danger">*</span></label>
+                            <textarea class="form-control required" id="description" rows="5" required></textarea>
                         </div>
                         <div class="form-group form-group-select2">
                             <label class="form-label">Issue Type: <span class="text-danger">*</span></label>
@@ -142,8 +142,7 @@
                 var issue_type = $("#issue-type").val();
                 var overdue_email_sent = $('input[name="ticket-notification"]:checked').val();
                 var satisfaction_email_sent = $('input[name="ticket-check-submiss"]:checked').val();
-                var message = $("#ticket-textarea").val();
-                var message = $("#department_id").val();
+                var description = $("#description").val();
                 var fileSize = attachments['size'];
 
                 formData.append('_token', token);
@@ -155,7 +154,7 @@
                 formData.append('issue_type', issue_type);
                 formData.append('overdue_email_sent', overdue_email_sent);
                 formData.append('satisfaction_email_sent', satisfaction_email_sent);
-                formData.append('message', message);
+                formData.append('message', description);
 
                 if (fileSize < 1048576) {
                     $(".btn-hidden-show").hide();
