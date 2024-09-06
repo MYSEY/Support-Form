@@ -305,9 +305,9 @@
                 success: function (response) {
                     if (response.data) {
                         $(".e_id").val(response.data.id);
-                        $("#e_user").val(response.data.user);
+                        $("#e_user").val(response.data.name);
                         $("#e_email").val(response.data.email);
-                        $("#e_name").val(response.data.name);
+                        $("#e_name").val(response.data.user);
                         $("#e_signature").text(response.data.signature);
                         $("#e_reload_time").val(response.data.autoreload)
                         $("#e_secmin").val(response.data.secmin)

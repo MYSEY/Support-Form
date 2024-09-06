@@ -139,6 +139,7 @@
                                     '<td class="sub-issue-type sub-message" data-assign-by="'+(assign_by)+'" data-message="'+(value.message)+'">'+
                                         '<a href="javascript:void(0)">'+value.subject+'</a>'+
                                     '</td>'+
+                                    '<td><a href="{{url("storage/attachments")}}/'+(value.attachments)+'" target="_blank">'+(value.attachments)+'</a></td>'+
                                     '<td style="color: '+value.custom_status.color+'">'+value.custom_status.name+'</td>'+
                                     '<td>'+(value.assigned_by ? value.assigned_by.name : value.assignedby)+'</td>'+
                                     '<td>'+(value.last_replier ? value.last_replier.name : value.name)+'</td>'+

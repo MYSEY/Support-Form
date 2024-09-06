@@ -12,27 +12,54 @@
                 <input type="hidden" name="" id="e_ticket_id">
                 <div class="row">
                     <div class="col-xl-6">
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="form-label">Name: <span class="text-danger">*</span></label>
                             <input type="text" id="e_ticket-name" class="form-control required">
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="form-label">Subject: <span class="text-danger">*</span></label>
                             <input type="text" name="ticket-subject" class="form-control required" id="e_ticket-subject">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Email: <span class="text-danger">*</span></label>
-                            <input type="email" id="e_ticket-email" name="email" class="form-control required" placeholder="Email">
+                            <label class="form-label" for="ticket-textarea">Description: <span class="text-danger">*</span></label>
+                            <textarea class="form-control required" id="e_ticket-textarea" rows="5"></textarea>
                         </div>
-                    </div>
-
-                    <div class="col-xl-6">
                         <div class="form-group form-group-select2">
-                            <label class="form-label" for="e_issue-type">Issue Type</label>
+                            <label class="form-label" for="e_issue-type">Issue Type <span class="text-danger">*</span></label>
                             <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="e_issue-type">
                             </select>
                             {{-- <select class="form-control" id="e_issue-type">
                             </select> --}}
+                        </div>
+                        {{-- <div class="form-group">
+                            <label class="form-label">Email: <span class="text-danger">*</span></label>
+                            <input type="email" id="e_ticket-email" name="email" class="form-control required" placeholder="Email">
+                        </div> --}}
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="form-group form-group-select2">
+                            <label class="form-label" for="ticket-priority">Priority: <span class="text-danger">*</span></label>
+                            <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="ticket-priority" required>
+                                <option value=""></option>
+                                {{-- @foreach ($priority as $item)
+                                    <option value="{{$item->id}}">{{ $item->name}}</option>
+                                @endforeach --}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="ticket-assign">Assign this ticket to:</label>
+                            <select class="select2 form-control w-100 select2-hidden-accessible" id="ticket-assign">
+                                <option value="unassigned" selected> > Unassigned < </option>
+                                <option value="auto-assign">  > Auto-assign <  </option>
+                                {{-- @foreach ($user_support as $user)
+                                    <option value="{{$user->id}}">{{ $user->name}}</option>
+                                @endforeach --}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label text-muted" for="ticket-due-date">Due date:</label>
+                            <input class="form-control" id="ticket-due-date" type="date" name="date">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Attachments:</label>
@@ -40,12 +67,6 @@
                                 <input type="file" class="custom-file-input" id="e_ticket-file">
                                 <label class="custom-file-label">Choose file</label>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-12 mt-3">
-                        <div class="form-group">
-                            <label class="form-label" for="ticket-textarea">Message: <span class="text-danger">*</span></label>
-                            <textarea class="form-control required" id="e_ticket-textarea" rows="5"></textarea>
                         </div>
                     </div>
                 </div>

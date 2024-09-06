@@ -95,9 +95,21 @@ class TicketController extends Controller
     {
         DB::beginTransaction();
         try {
+            if($request->hasFile('attachments')) {
+                $image = $request->file('attachments');
+                $AttachmentName = time().'.'.$image->getClientOriginalName();
+                $image->move(public_path('storage/attachments/'), $AttachmentName);
+            }else{
+                $AttachmentName = $request->old_profile;
+            }
             $status = CustomStatus::orderBy('id', 'asc')->first();
             $data = $request->all();
             $data['trackid'] = $this->generateTicketID();
+            $data['name'] = Auth::user()->name;
+            $data['email'] = Auth::user()->email;
+            $data['department_id'] = Auth::user()->department_id;
+            $data['branch_id'] = Auth::user()->branch_id;
+            $data['attachments'] = $AttachmentName;
             $data['issue_type'] = $request->issue_type;
             $data['status'] = $status->id;
             $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');

@@ -8,6 +8,7 @@
                 <th>Department/Branch</th>
                 <th>Name</th>
                 <th>Subjesct</th>
+                <th>attachments</th>
                 <th>Status</th>
                 <th>Owner</th>
                 <th>Last Replier</th>
@@ -64,6 +65,7 @@
                 <th>Department</th>
                 <th>Name</th>
                 <th>Subjesct</th>
+                <th>attachments</th>
                 <th>Status</th>
                 <th>Owner</th>
                 <th>Last Replier</th>
@@ -87,6 +89,7 @@
                 <th>Department</th>
                 <th>Name</th>
                 <th>Subjesct</th>
+                <th>attachments</th>
                 <th>Status</th>
                 <th>Owner</th>
                 <th>Last Replier</th>
@@ -110,6 +113,7 @@
                 <th>Department</th>
                 <th>Name</th>
                 <th>Subjesct</th>
+                <th>attachments</th>
                 <th>Status</th>
                 <th>Owner</th>
                 <th>Last Replier</th>
@@ -133,6 +137,7 @@
                 <th>Department</th>
                 <th>Name</th>
                 <th>Subjesct</th>
+                <th>attachments</th>
                 <th>Status</th>
                 <th>Owner</th>
                 <th>Last Replier</th>
@@ -156,6 +161,7 @@
                 <th>Department</th>
                 <th>Name</th>
                 <th>Subjesct</th>
+                <th>attachments</th>
                 <th>Status</th>
                 <th>Owner</th>
                 <th>Last Replier</th>

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('subject')->nullable();
             $table->longText('message')->nullable();
             $table->mediumText('message_html')->nullable();
-            $table->bigInteger('dt')->nullable();
+            $table->dateTime('dt')->nullable();
             $table->bigInteger('lastchange')->nullable();
             $table->bigInteger('firstreply')->nullable();
             $table->bigInteger('closedat')->nullable();

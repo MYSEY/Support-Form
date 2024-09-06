@@ -36,7 +36,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
         ->leftJoin('priorities','tickets.priority','=','priorities.id')
         ->leftJoin('users','tickets.owner','=','users.id')
         ->leftJoin('custom_statuses','tickets.status','=','custom_statuses.id')
-        // ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
+        ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
         ->select(
             'tickets.*',
             'departments.name_khmer',
@@ -44,7 +44,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             'priorities.name as priority',
             'users.user as owner',
             'custom_statuses.name as status',
-            // 'issue_types.name as issue_type',
+            'issue_types.name as issue_type',
         )->when($request->tracking_id, function ($query, $tracking_id) {
             $query->where('tickets.trackid', $tracking_id);
         })

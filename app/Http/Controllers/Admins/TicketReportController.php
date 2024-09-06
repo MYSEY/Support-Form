@@ -69,7 +69,6 @@ class TicketReportController extends Controller
             })->when($request->status, function ($query, $status) {
                 $query->whereIn('tickets.status', $status);
             })->OrderBy('tickets.id','DESC')->get();
-
         }
         
         return response()->json([

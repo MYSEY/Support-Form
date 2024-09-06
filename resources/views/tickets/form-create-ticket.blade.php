@@ -8,23 +8,32 @@
     </div>
     <div class="panel-container show">
         <div class="panel-content">
-            <div class="panel-tag">
+            {{-- <div class="panel-tag">
                 Required fields are marked with <span class="text-danger">*</span>
-            </div>
+            </div> --}}
             <form id="form-save-ticket">
                 <div class="row">
                     <div class="col-xl-6">
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="form-label" for="ticket-name">Name: <span class="text-danger">*</span></label>
                             <input type="text" id="ticket-name" class="form-control required" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="ticket-email">Email: <span class="text-danger">*</span></label>
                             <input type="email" id="ticket-email" name="example-email-2" class="form-control required" placeholder="Email" required>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="form-label" for="ticket-subject">Subject: <span class="text-danger">*</span></label>
                             <input type="text" name="ticket-subject" class="form-control required" id="ticket-subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="ticket-textarea">Description: <span class="text-danger">*</span></label>
+                            <textarea class="form-control required" id="ticket-textarea" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group form-group-select2">
+                            <label class="form-label">Issue Type: <span class="text-danger">*</span></label>
+                            <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="issue-type" required>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Ticket templates (<a type="button" href="#" >Manage ticket templates</a>)</label>
@@ -38,12 +47,6 @@
                                     <label class="custom-control-label" for="ticket-replace-message">Replace message</label>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-group form-group-select2">
-                            <label class="form-label">Issue Type: <span class="text-danger">*</span></label>
-                            <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="issue-type" required>
-                            </select>
                         </div>
                     </div>
 
@@ -77,6 +80,7 @@
                                 <input type="file" class="custom-file-input" id="ticket-file">
                                 <label class="custom-file-label" for="ticket-file">Choose file</label>
                             </div>
+                            <span id="thanLess"></span>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Options:</label>
@@ -92,12 +96,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-12 mt-3">
-                        <div class="form-group">
-                            <label class="form-label" for="ticket-textarea">Message: <span class="text-danger">*</span></label>
-                            <textarea class="form-control required" id="ticket-textarea" rows="5" required></textarea>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="text-md-right">
@@ -105,6 +103,7 @@
                         <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/ticket')}}"  type="button">Cancel</a>
                         <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn-save" type="button">Submit</button>
                     </div>
+                    <input type="hidden" value="{{csrf_token()}}" id="token"/>
                     <div class="btn-loading mt-3" style="display: none">
                         <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -131,69 +130,88 @@
                 department_id: department_id
             };
             dataIssue(datas);
-            $("#btn-save").on("click", function() {
-                $(".btn-hidden-show").hide();
-                $(".btn-loading").css('display', 'block');
-                var num_miss = 0;
-                $(".form-group-select2").each(function(){
-                    let formGroup = $(this);
-                    let value = formGroup.attr("data-select2-id");
-                    let requeredField = formGroup.find(".select2-option").val();
-                    let requered = formGroup.find(".required").val();
-                    if(!value && requered == ""){ 
-                        formGroup.find(".select2-selection--single").css("border-color","#dc3545");
-                    }else if(!requeredField && requered == "") {
-                        formGroup.find(".select2-selection--single").css("border-color","#dc3545");
-                    }else{
-                        formGroup.find(".select2-selection--single").css("border-color","#1dc9b7");
-                    }
-                });
+            $("#btn-save").on("click", function(e) {
+                e.preventDefault();
+                var formData = new FormData();
+                var token = $("#token").val();
+                let subject = $("input[name=ticket-subject]").val();
+                var attachments = $('#ticket-file').prop('files')[0];
+                var priority = $("#ticket-priority").val();
+                var assignedby = $("#ticket-assign").val();
+                var due_date = $("#ticket-due-date").val();
+                var issue_type = $("#issue-type").val();
+                var overdue_email_sent = $('input[name="ticket-notification"]:checked').val();
+                var satisfaction_email_sent = $('input[name="ticket-check-submiss"]:checked').val();
+                var message = $("#ticket-textarea").val();
+                var message = $("#department_id").val();
+                var fileSize = attachments['size'];
 
-                $(".required").each(function(){
-                    if($(this).val()==""){ 
-                        num_miss++;
-                        $(this).addClass("is-invalid");
-                        $(this).removeClass("is-valid");
-                    }else{
-                        $(this).addClass("is-valid");
-                        $(this).removeClass("is-invalid");
-                    }
-                });
-                if (num_miss>0) {
-                    toastr.error("Please check field all required!");
-                    $(".btn-hidden-show").show();
-                    $(".btn-loading").css('display', 'none');
-                    return false;
-                }else{
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ url('admin/ticket/save') }}",
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            department_id:              department_id,
-                            branch_id:                  branch_id,
-                            name:                       $("#ticket-name").val(),
-                            email:                      $("#ticket-email").val(),
-                            subject:                    $("#ticket-subject").val(),
-                            priority:                   $("#ticket-priority").val(),
-                            assignedby:                 $("#ticket-assign").val(),
-                            due_date:                   $("#ticket-due-date").val(),
-                            issue_type:                 $("#issue-type").val(),
-                            overdue_email_sent:         $('input[name="ticket-notification"]:checked').val(),
-                            satisfaction_email_sent:    $('input[name="ticket-check-submiss"]:checked').val(),
-                            // attachments:        $("#ticket-file").val(),
-                            message:            $("#ticket-textarea").val(),
-                        },
-                        dataType: "JSON",
-                        success: function(response) {
-                            if (response.status == "error") {
-                                toastr.error(response.message);
-                            }else{
-                                toastr.success('Create ticket successfully.');
-                                window.location.replace("{{ URL('admin/ticket') }}"); 
-                            }
+                formData.append('_token', token);
+                formData.append('attachments', attachments);
+                formData.append('subject', subject);
+                formData.append('priority', priority);
+                formData.append('assignedby', assignedby);
+                formData.append('due_date', due_date);
+                formData.append('issue_type', issue_type);
+                formData.append('overdue_email_sent', overdue_email_sent);
+                formData.append('satisfaction_email_sent', satisfaction_email_sent);
+                formData.append('message', message);
+
+                if (fileSize < 1048576) {
+                    $(".btn-hidden-show").hide();
+                    $(".btn-loading").css('display', 'block');
+                    var num_miss = 0;
+                    $(".form-group-select2").each(function(){
+                        let formGroup = $(this);
+                        let value = formGroup.attr("data-select2-id");
+                        let requeredField = formGroup.find(".select2-option").val();
+                        let requered = formGroup.find(".required").val();
+                        if(!value && requered == ""){ 
+                            formGroup.find(".select2-selection--single").css("border-color","#dc3545");
+                        }else if(!requeredField && requered == "") {
+                            formGroup.find(".select2-selection--single").css("border-color","#dc3545");
+                        }else{
+                            formGroup.find(".select2-selection--single").css("border-color","#1dc9b7");
                         }
-                    })
+                    });
+
+                    $(".required").each(function(){
+                        if($(this).val()==""){ 
+                            num_miss++;
+                            $(this).addClass("is-invalid");
+                            $(this).removeClass("is-valid");
+                        }else{
+                            $(this).addClass("is-valid");
+                            $(this).removeClass("is-invalid");
+                        }
+                    });
+                    if (num_miss>0) {
+                        toastr.error("Please check field all required!");
+                        $(".btn-hidden-show").show();
+                        $(".btn-loading").css('display', 'none');
+                        return false;
+                    }else{
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ url('admin/ticket/save') }}",
+                            contentType: 'multipart/form-data',
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            data: formData,
+                            dataType: "JSON",
+                            success: function(response) {
+                                if (response.status == "error") {
+                                    toastr.error(response.message);
+                                }else{
+                                    toastr.success('Create ticket successfully.');
+                                    window.location.replace("{{ URL('admin/ticket') }}"); 
+                                }
+                            }
+                        })
+                    }
+                }else{
+                    $("#thanLess").text("please check file size").css("color", "red");
                 }
             });
         });
