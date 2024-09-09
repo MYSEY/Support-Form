@@ -37,78 +37,79 @@
                         </div>
                     @endcan
                     <div class="panel-content">
-                        <!-- datatable start -->
-                        <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                            <thead>
-                                <tr>
-                                    <th>Profile</th>
-                                    <th>Name</th>
-                                    <th>User Name</th>
-                                    <th>Role</th>
-                                    <th>Department</th>
-                                    <th>Branch</th>
-                                    {{-- <th>Rating</th> --}}
-                                    <th>Created_By</th>
-                                    <th>Created_At</th>
-                                    <th>Updated_By</th>
-                                    <th>Updated_At</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                    <th>Email</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- @dd($data) --}}
-                                @if (count($data)>0)
-                                    @foreach ($data as $key=>$item)
-                                        <tr>
-                                            <td class="sorting_1" tabindex="0">
-                                                <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern" style="width: 36px;height: 36px;">
-                                            </td>
-                                            <td>{{$item->name}}</td>
-                                            <td>{{$item->user}}</td>
-                                            <td>{{$item->role_name}}</td>
-                                            <td>{{$item->department ? $item->department->name_english : ""}}</td>
-                                            <td>{{$item->branch ? $item->branch->branch_name_en : ""}}</td>
-                                            {{-- <td style="text-align:center">
-                                                <div class="rating" data-rating="{{$item->rating}}"></div>
-                                            </td> --}}
-                                            <td>{{$item->createdBy ? $item->createdBy->name: ""}}</td>
-                                            <td>{{\Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? ''}}</td>
-                                            <td>{{$item->updatedBy ? $item->updatedBy->name: ""}}</td>
-                                            <td>{{\Carbon\Carbon::parse($item->updated_at)->format('d-M-Y h:i A') ?? ''}}</td>
-                                            <td style="text-align: center;">
-                                                <div class="demo">
-                                                    @can('User Edit')
-                                                        <div class="custom-control custom-switch">
-                                                            <input type="checkbox" class="custom-control-input btn-status" id="customSwitch_{{$item->id}}" data-id="{{$item->id}}" {{$item->status == "Active" ? "checked": ""}} value="{{$item->status}}">
-                                                            <label class="custom-control-label" for="customSwitch_{{$item->id}}"></label>
-                                                        </div>
+                        <div class="table-responsive">
+                            <!-- datatable start -->
+                            <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                <thead>
+                                    <tr>
+                                        <th>Profile</th>
+                                        <th>Name</th>
+                                        <th>User Name</th>
+                                        <th>Role</th>
+                                        <th>Department</th>
+                                        <th>Branch</th>
+                                        <th>Created By</th>
+                                        <th>Created At</th>
+                                        <th>Updated By</th>
+                                        <th>Updated At</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (count($data)>0)
+                                        @foreach ($data as $key=>$item)
+                                            <tr>
+                                                <td class="sorting_1" tabindex="0">
+                                                    @if ($item->profile)
+                                                        <img src="{{asset('storage/users/profile/'.$item->profile)}}" class="profile-image rounded-circle" alt="{{$item->name}}" style="width: 36px;height: 36px;object-fit: cover;">
                                                     @else
-                                                        <div class="custom-control custom-switch">
-                                                            <input type="checkbox" class="custom-control-input" id="customSwitch3" {{$item->status == "Active" ? "checked": ""}} disabled="">
-                                                            <label class="custom-control-label" for="customSwitch3"></label>
-                                                        </div>
-                                                    @endcan 
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex demo">
-                                                    @can('User Delete')
-                                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 status-delete" data-toggle="modal" data-target="#delete_user" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
-                                                    @endcan    
-                                                    @can('User Edit')
-                                                        <a href="{{url("admin/user/form-edit")}}/{{$item->id}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 show-data-edit" title="Edit"><i class="fal fa-edit"></i></a>
-                                                    @endcan                                                            
-                                                </div>
-                                            </td>
-                                            <td>{{$item->email}}</td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-                        <!-- datatable end -->
+                                                        <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="{{$item->name}}" style="width: 36px;height: 36px;">
+                                                    @endif
+                                                </td>
+                                                <td>{{$item->name}}</td>
+                                                <td>{{$item->user}}</td>
+                                                <td>{{$item->role_name}}</td>
+                                                <td>{{$item->department ? $item->department->name_english : ""}}</td>
+                                                <td>{{$item->branch ? $item->branch->branch_name_en : ""}}</td>
+                                                <td>{{$item->createdBy ? $item->createdBy->name: ""}}</td>
+                                                <td>{{\Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? ''}}</td>
+                                                <td>{{$item->updatedBy ? $item->updatedBy->name: ""}}</td>
+                                                <td>{{\Carbon\Carbon::parse($item->updated_at)->format('d-M-Y h:i A') ?? ''}}</td>
+                                                <td style="text-align: center;">
+                                                    <div class="demo">
+                                                        @can('User Edit')
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" class="custom-control-input btn-status" id="customSwitch_{{$item->id}}" data-id="{{$item->id}}" {{$item->status == "Active" ? "checked": ""}} value="{{$item->status}}">
+                                                                <label class="custom-control-label" for="customSwitch_{{$item->id}}"></label>
+                                                            </div>
+                                                        @else
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" class="custom-control-input" id="customSwitch3" {{$item->status == "Active" ? "checked": ""}} disabled="">
+                                                                <label class="custom-control-label" for="customSwitch3"></label>
+                                                            </div>
+                                                        @endcan 
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex demo">
+                                                        @can('User Delete')
+                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 status-delete" data-toggle="modal" data-target="#delete_user" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                                                        @endcan    
+                                                        @can('User Edit')
+                                                            <a href="{{url("admin/user/form-edit")}}/{{$item->id}}" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 show-data-edit" title="Edit"><i class="fal fa-edit"></i></a>
+                                                        @endcan                                                            
+                                                    </div>
+                                                </td>
+                                                <td>{{$item->email}}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
+                            <!-- datatable end -->
+                        </div>
                     </div>
                 </div>
             </div>

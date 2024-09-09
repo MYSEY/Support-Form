@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('user');
             $table->string('name');
             $table->string('email');
+            $table->longText('profile')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('department_id')->nullable(); //integer('department_id');

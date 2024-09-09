@@ -13,25 +13,49 @@
     </div>
     <div class="panel-container show">
         <div class="panel-content">
-            <form>
-                <div class="row">
+            <form action="{{ url('admin/user/create') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Profile</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="profile" id="profile">
+                                <label class="custom-file-label">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="user">Real name <span class="text-danger">*</span></label>
-                            <input type="text" id="user" class="form-control user_required" name="user" required>
+                            <input type="text" id="user" class="form-control @error('user') is-invalid @enderror" name="user" value="{{old('user')}}">
+                            @error('user')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="name">Username <span class="text-danger">*</span></label>
-                            <input type="text" id="name" name="name" class="form-control user_required" required>
+                            <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{old('name')}}">
                         </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
-                            <input type="email" id="email" name="email" class="form-control user_required" placeholder="Email" required>
+                            <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{old('email')}}">
                         </div>
-                        
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="department_id">Department <span class="text-danger">*</span></label>
-                            <select class="form-control user_required" id="department_id" name="department_id">
+                            <select class="form-control @error('department_id') is-invalid @enderror" id="department_id" name="department_id">
                                 <option value="">-- Select --</option>
                                 @if (count($department) > 0)
                                     @foreach ($department as $item)
@@ -40,9 +64,13 @@
                                 @endif
                             </select>
                         </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="branch_id">Branch <span class="text-danger">*</span></label>
-                            <select class="form-control user_required" id="branch_id" name="branch_id">
+                            <select class="form-control @error('branch_id') is-invalid @enderror" id="branch_id" name="branch_id">
                                 <option value="">-- Select --</option>
                                 @if (count($branch) > 0)
                                     @foreach ($branch as $item)
@@ -51,9 +79,11 @@
                                 @endif
                             </select>
                         </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="role_permission">Role Permission <span class="text-danger">*</span></label>
-                            <select class="form-control user_required" id="role_permission">
+                            <label class="form-label" for="role_id">Role Permission <span class="text-danger">*</span></label>
+                            <select class="form-control @error('role_id') is-invalid @enderror" name="role_id" id="role_id">
                                 <option value="">-- Select --</option>
                                 @if (count($rolePermissions) > 0)
                                     @foreach ($rolePermissions as $item)
@@ -62,130 +92,33 @@
                                 @endif
                             </select>
                         </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="password">Password <span class="text-danger">*</span></label>
-                            <input type="password" id="password" class="form-control user_required" name="password" required>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
                             <p id="passwordError" style="color: red;"></p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="confirm_password">Confirm password <span class="text-danger">*</span></label>
-                            <input type="password" id="confirm_password" class="form-control user_required" name="confirm_password" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="signature">Signature (max 1000 chars)</label>
-                            <textarea class="form-control" id="signature" name="signature" rows="6" maxlength="1000"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <div class="frame-wrap demo">
-                                <div class="demo">
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="auto_assign" name="autoassign" value="0">
-                                        <label class="custom-control-label" for="auto_assign">Auto-assign tickets to this user.</label>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <h5 class="frame-heading">After replying to a ticket</h5>
-                        <div class="frame-wrap">
-                            <div class="demo">
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input replying_afterreply" id="afterreply0" name="defaultExampleRadios" value="0" checked="">
-                                    <label class="custom-control-label" for="afterreply0">Show the ticket I just replied to</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input replying_afterreply" id="afterreply1" name="defaultExampleRadios" value="1">
-                                    <label class="custom-control-label" for="afterreply1">Return to main administration page</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input replying_afterreply" id="afterreply2" name="defaultExampleRadios" value="2">
-                                    <label class="custom-control-label" for="afterreply2">Open next ticket that needs my reply</label>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label" for="confirm_password">Confirm password <span class="text-danger">*</span></label>
+                            <input type="password" id="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" name="confirm_password">
                         </div>
-
-                        <h5 class="frame-heading">Defaults</h5>
-                        <div class="frame-wrap">
-                            <div class="demo">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="autostart" checked="">
-                                    <label class="custom-control-label" for="autostart">Automatically start timer when I open a ticket</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_customer_new" checked="">
-                                    <label class="custom-control-label" for="notify_customer_new">Select notify customer option in the new ticket form</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_customer_reply" checked="">
-                                    <label class="custom-control-label" for="notify_customer_reply">Select notify customer option in the ticket reply form</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="show_suggested" checked="">
-                                    <label class="custom-control-label" for="show_suggested">Show what knowledgebase articles were suggested to customers</label>
-                                </div>
+                        @error('password')
+                            <div class="invalid-feedback">
+                                {{ $message }}
                             </div>
-                            <div class="custom-control custom-checkbox" style="display: flex; -ms-flex-align: center; align-items: center; margin-top: -5px;">
-                                <input type="checkbox" class="custom-control-input" id="autoreload">
-                                <label class="custom-control-label" for="autoreload" style="font-weight: 1 !important;">Automatically reload page with ticket list every:</label>
-                                <div class="form-group" style="width: 45px !important; margin-left: 8px; margin-bottom: 0;">
-                                    <input type="text" class="form-control" id="reload_time" name="reload_time" value="30" maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]+/,'')">
-                                </div>
-                                <div class="form-group ml-1">
-                                    <select class="form-control" id="secmin" style="border: 0px solid #E5E5E5 !important;">
-                                        <option>seconds</option>
-                                        <option>minutes</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h5 class="frame-heading">The help desk will send an email notification when:</h5>
-                        <div class="frame-wrap">
-                            <div class="demo">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_new_unassigned" checked="">
-                                    <label class="custom-control-label" for="notify_new_unassigned">A new ticket is submitted with owner: Unassigned</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_new_my" checked="">
-                                    <label class="custom-control-label" for="notify_new_my">A new ticket is submitted with owner: Assigned to me</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_reply_unassigned" checked="">
-                                    <label class="custom-control-label" for="notify_reply_unassigned">Client responds to a ticket with owner: Unassigned</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_reply_my" checked="">
-                                    <label class="custom-control-label" for="notify_reply_my">Client responds to a ticket with owner: Assigned to me</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_overdue_unassigned" checked="">
-                                    <label class="custom-control-label" for="notify_overdue_unassigned">A ticket is overdue with owner: Unassigned*</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_overdue_my" checked="">
-                                    <label class="custom-control-label" for="notify_overdue_my">A ticket is overdue with owner: Assigned to me*</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_assigned" checked="">
-                                    <label class="custom-control-label" for="notify_assigned">A ticket is assigned to me</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_note" checked="">
-                                    <label class="custom-control-label" for="notify_note">Someone adds a note to a ticket assigned to me</label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notify_pm" checked="">
-                                    <label class="custom-control-label" for="notify_pm">A private message is sent to me</label>
-                                </div>
-                            </div>
-                        </div>
+                        @enderror
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <a href="{{url('admin/user')}}" class="btn btn-secondary  waves-effect waves-themed"><span>Back</span></a>
-                    <button type="button" id="btn-save" class="btn btn-primary waves-effect waves-themed">Submit</button>
+                <div class="row">
+                    <div class="col-md-12" style="text-align: right;">
+                        <a href="{{url('admin/user')}}" class="btn btn-secondary  waves-effect waves-themed"><span>Back</span></a>
+                        <button type="submit" class="btn btn-primary waves-effect waves-themed">Submit</button>
+                    </div>
                 </div>
             </form>
         </div>

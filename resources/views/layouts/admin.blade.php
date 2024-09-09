@@ -369,13 +369,22 @@
                             <!-- app user menu -->
                             <div>
                                 <a href="#" data-toggle="dropdown" title="{{Auth::user()->email}}" class="header-icon d-flex align-items-center justify-content-center ml-2">
-                                    <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern">
+                                    @if (Auth::user()->profile)
+                                        <img src="{{asset('storage/users/profile/'.Auth::user()->profile)}}" class="profile-image rounded-circle" alt="{{$item->name}}" style="width: 36px;height: 36px;object-fit: cover;">
+                                    @else
+                                        <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="{{$item->name}}">
+                                    @endif
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
                                     <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
                                         <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
                                             <span class="mr-2">
-                                                <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="rounded-circle profile-image" alt="Dr. Codex Lantern">
+                                                @if (Auth::user()->profile)
+                                                    <img src="{{asset('storage/users/profile/'.Auth::user()->profile)}}" class="profile-image rounded-circle" alt="{{$item->name}}" style="width: 36px;height: 36px;object-fit: cover;">
+                                                @else
+                                                    <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="{{$item->name}}">
+                                                @endif
+                                                {{-- <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="rounded-circle profile-image" alt="Dr. Codex Lantern"> --}}
                                             </span>
                                             <div class="info-card-text">
                                                 <div class="fs-lg text-truncate text-truncate-lg">{{Auth::user()->name}}</div>

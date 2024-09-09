@@ -52,12 +52,6 @@
                                 <label class="custom-file-label">Choose file</label>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Attachments:</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="e_attachment">
-                            </div>
-                        </div>
                     </div>
                 </div>
 

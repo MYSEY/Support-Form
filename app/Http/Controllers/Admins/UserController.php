@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Admins;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Online;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -110,48 +111,42 @@ class UserController extends Controller
         $rolePermissions = Role::orderBy('id', 'asc')->get();
         $department = DB::table('departments')->get();
         $branch = DB::table('branchs')->get();
-        return view('users.form-create', compact('rolePermissions','department','branch'));
+        return view('users.create', compact('rolePermissions','department','branch'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        try {
-            $request->validate(
-                [
-                    'password' => 'required',
-                    'confirm_password' => 'required',
-                ],
-                [
-                    'password.required' => 'The password field is required.',
-                    'confirm_password.min' => 'The confirm password must be at least :min characters.',
-                ]
-            );
-            if ($request->password != $request->confirm_password) {
-                return response()->json([
-                    'message' => "Password and Confirm password is incorrect. Please review!",
-                    'status'=>"error"
-                ]);
+        // try {
+            if($request->hasFile('profile')) {
+                $image = $request->file('profile');
+                $imageName = $image->getClientOriginalName();
+                $image->move(public_path('storage/users/profile'), $imageName);
             }
+            
             $data = $request->all();
             $data['created_by'] = Auth::user()->id;
+            $data['profile'] = $imageName;
             $data['status'] = 'Active';
             $data['password']   = Hash::make($request->password);
             $user = User::create($data);
-            $user->assignRole($request->role_id);
+            $roleName = Role::find($request->role_id)->name;
+            $user->assignRole($roleName);
 
-            return response()->json([
-                'message' => "User created successfully.",
-                'status'=>"success"
-            ]);
-            // Toastr::success('User created successfully.','Success');
-            // return redirect()->back();
+            // return response()->json([
+            //     'message' => "User created successfully.",
+            //     'status'=>"success"
+            // ]);
+            Toastr::success('User created successfully.','Success');
+            return redirect()->back();
             DB::commit();
-        } catch (\Throwable $exp) {
-            return response()->json(['errors' => $exp]);
-        }
+        // } catch (\Throwable $exp) {
+        //     DB::rollback();
+        //     Toastr::error('User created fail.','Error');
+        //     return redirect()->back();
+        // }
     }
 
     /**
@@ -175,9 +170,13 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit()
+    public function edit($id)
     {
-        return view('users.form-edit');
+        $roles = Role::orderBy('id', 'asc')->get();
+        $department = DB::table('departments')->select('id','name_khmer','name_english')->get();
+        $branch = DB::table('branchs')->select('id','branch_name_kh','branch_name_en')->get();
+        $data = User::find($id);
+        return view('users.edit',compact('data','roles','department','branch'));
     }
 
     /**
@@ -186,31 +185,21 @@ class UserController extends Controller
     public function update(Request $request)
     {
         try{
+            if($request->hasFile('profile')) {
+                $image = $request->file('profile');
+                $imageName = $image->getClientOriginalName();
+                $image->move(public_path('storage/users/profile'), $imageName);
+            }else{
+                $imageName = $request->old_profile;
+            }
             $data = $request->all();
+            $data['profile']                    = $imageName;
             $data['user']                       = $request->user;
             $data['name']                       = $request->name;
             $data['email']                      = $request->email;
-            $data['signature']                 = $request->signature;
-            $data['autoassign']                 = $request->autoassign;
-            $data["afterreply"]                 = $request->afterreply;
-            $data["autostart"]                  = $request->autostart;
-            $data["notify_customer_new"]        = $request->notify_customer_new;
-            $data["notify_customer_reply"]      = $request->notify_customer_reply;
-            $data["show_suggested"]             = $request->show_suggested;
-            $data["autoreload"]                 = $request->autoreload;
             $data["role_id"]                    = $request->role_id;
             $data["department_id"]              = $request->department_id;
             $data["branch_id"]                  = $request->branch_id;
-            $data["secmin"]                     = $request->secmin;
-            $data["notify_new_unassigned"]      = $request->notify_new_unassigned;
-            $data["notify_new_my"]              = $request->notify_new_my;
-            $data["notify_reply_unassigned"]    = $request->notify_reply_unassigned;
-            $data["notify_reply_my"]            = $request->notify_reply_my;
-            $data["notify_overdue_unassigned"]  = $request->notify_overdue_unassigned;
-            $data["notify_overdue_my"]          = $request->notify_overdue_my;
-            $data["notify_assigned"]            = $request->notify_assigned;
-            $data["notify_note"]                = $request->notify_note;
-            $data["notify_pm"]                  = $request->notify_pm;
             $data['status']                     = 'Active';
             $data['updated_by']                 = Auth::user()->id;
             $user = User::find($request->id);
@@ -221,16 +210,15 @@ class UserController extends Controller
                 if ($role) {
                     $user->syncRoles($role->name); // Use the role name
                 } else {
-                    return response()->json(['error' => 'Role not found'], 404);
+                    Toastr::error('Role not found.','Error');
                 }
-                return response()->json(['success' => 'User updated successfully']);
             }
-            return response()->json([
-                'message' => "Update created successfully.",
-                'status'=>"success"
-            ]);
-            // Toastr::success('User updated successfully.','Success');
-            // return redirect()->back();
+            Toastr::success('User updated successfully.','Success');
+            return redirect('admin/user');
+            // return response()->json([
+            //     'message' => "Update created successfully.",
+            //     'status'=>"success"
+            // ]);
         }catch(\Exception $e){
             DB::rollback();
             Toastr::error('User updated fail.','Error');
