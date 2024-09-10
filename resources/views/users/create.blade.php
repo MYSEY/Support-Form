@@ -100,6 +100,11 @@
                             <label class="form-label" for="password">Password <span class="text-danger">*</span></label>
                             <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
                             <p id="passwordError" style="color: red;"></p>
+                            @error('password')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -107,11 +112,6 @@
                             <label class="form-label" for="confirm_password">Confirm password <span class="text-danger">*</span></label>
                             <input type="password" id="confirm_password" class="form-control @error('confirm_password') is-invalid @enderror" name="confirm_password">
                         </div>
-                        @error('password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
                     </div>
                 </div>
                 <div class="row">

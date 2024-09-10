@@ -119,7 +119,7 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        // try {
+        try {
             if($request->hasFile('profile')) {
                 $image = $request->file('profile');
                 $imageName = $image->getClientOriginalName();
@@ -142,11 +142,11 @@ class UserController extends Controller
             Toastr::success('User created successfully.','Success');
             return redirect()->back();
             DB::commit();
-        // } catch (\Throwable $exp) {
-        //     DB::rollback();
-        //     Toastr::error('User created fail.','Error');
-        //     return redirect()->back();
-        // }
+        } catch (\Throwable $exp) {
+            DB::rollback();
+            Toastr::error('User created fail.','Error');
+            return redirect()->back();
+        }
     }
 
     /**
