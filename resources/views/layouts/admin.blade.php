@@ -138,20 +138,25 @@
                                 </a>
                             </div>
                         </div>
-                        {{-- <div class="info-card">
-                            <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern">
+                        <div class="info-card">
+                            @if (Auth::user()->profile)
+                                <img src="{{asset('storage/users/profile/'.Auth::user()->profile)}}" class="profile-image rounded-circle" alt="{{$item->name}}" style="width: 60px;height: 60px;object-fit: cover;">
+                            @else
+                                <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="{{$item->name}}">
+                            @endif
                             <div class="info-card-text">
-                                <a href="#" class="d-flex align-items-center text-white">
+                                <a href="javascript:void(0);" class="d-flex align-items-center text-white">
                                     <span class="text-truncate text-truncate-sm d-inline-block">
                                         {{Auth::user()->name}}
                                     </span>
                                 </a>
-                                <span class="d-inline-block text-truncate text-truncate-sm">Role: {{Auth::user()->RoleName}}</span>
-                                <span class="d-inline-block text-truncate text-truncate-sm">Department: {{Auth::user()->RoleName}}</span>
-                                <span class="d-inline-block text-truncate text-truncate-sm">Location: {{Auth::user()->RoleName}}</span>
+                                <span class="d-inline-block text-truncate text-truncate-sm">{{Auth::user()->RoleName}}</span>
                             </div>
-                            <img src="" class="cover" alt="cover">
-                        </div> --}}
+                            <img src="{{asset('admins/img/card-backgrounds/cover-2-lg.png')}}" class="cover" alt="cover">
+                            <a href="javascript:void(0);" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
+                                <i class="fal fa-angle-down"></i>
+                            </a>
+                        </div>
 
                         <ul id="js-nav-menu" class="nav-menu">
                             @if (Auth::user()->can('Dashboad View'))
