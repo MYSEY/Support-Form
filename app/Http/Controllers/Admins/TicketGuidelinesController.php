@@ -41,8 +41,8 @@ class TicketGuidelinesController extends Controller
                 $image = $request->file('attachments');
                 $AttachmentName = $image->getClientOriginalName();
                 $image->move(public_path('storage/attachments/'), $AttachmentName);
+                $data['attachments'] = $AttachmentName;
             }
-            $data['attachments'] = $AttachmentName;
             $data['created_by'] = Auth::user()->id;
             // dd($data);
             TicketGuideline::create($data);
