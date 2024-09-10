@@ -17,6 +17,7 @@ use App\Http\Controllers\Admins\DepartmentController;
 use App\Http\Controllers\Admins\PermissionController;
 use App\Http\Controllers\Admins\TicketReportController;
 use App\Http\Controllers\Admins\PermissionCategoryController;
+use App\Http\Controllers\Admins\TicketGuidelinesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -130,6 +131,11 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::resource('permission', PermissionController::class);
     Route::resource('permissions/category', PermissionCategoryController::class);
     Route::post('permissions/category/duplicate', [PermissionCategoryController::class, "duplicate"]);
+
+    Route::get('ticket-guideline/edit', [TicketGuidelinesController::class, "edit"]);
+    Route::post('ticket-guideline/update', [TicketGuidelinesController::class, "update"]);
+    Route::resource('ticket-guideline', TicketGuidelinesController::class);
+    
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

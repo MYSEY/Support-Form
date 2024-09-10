@@ -24,6 +24,7 @@
         <link rel="stylesheet" href="{{asset('admins/css/notifications/toastr/toastr.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('/admins/css/formplugins/select2/select2.bundle.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css')}}">
+        <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/summernote/summernote.css')}}">
         <style>
             .tooltip-inner {
                 text-align: left;
@@ -114,7 +115,7 @@
                 'Issue Type View',
                 'Reset Password User'
             ];
-            $segmentSetting =['branch','department','statuses','priority','issue-type','reset'];
+            $segmentSetting =['branch','department','ticket-guideline','statuses','priority','issue-type','reset'];
         @endphp
 
         <div class="page-wrapper">
@@ -226,8 +227,8 @@
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Knowledgebase View'))
-                                            <li>
-                                                <a href="" title="Knowledgebase" data-filter-tags="theme settings Knowledgebase">
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['ticket-guideline'])) active @endif">
+                                                <a href="{{url('admin/ticket-guideline')}}" title="Knowledgebase" data-filter-tags="theme settings Knowledgebase">
                                                     <span class="nav-link-text" data-i18n="nav.help_desk">Knowledgebase</span>
                                                 </a>
                                             </li>
@@ -821,6 +822,7 @@
         <script src="{{asset('admins/js/formplugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
         <script src="{{asset('admins/js/datagrid/datatables/datatables.export.js')}}"></script>
         <script src="{{asset('admins/js/dependency/moment/moment.js')}}"></script>
+        <script src="{{asset('admins/js/formplugins/summernote/summernote.js')}}"></script>
         {!! Toastr::message() !!}
         @yield('script')
         <script>
