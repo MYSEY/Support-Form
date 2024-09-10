@@ -9,7 +9,6 @@
     <div class="panel-container show">
         <div class="panel-content">
             <form>
-                <input type="hidden" name="" id="e_ticket_id">
                 <div class="row">
                     <div class="col-xl-6">
                         <div class="form-group">
@@ -48,7 +47,7 @@
                         <div class="form-group">
                             <label class="form-label">Attachments:</label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="attachments">
+                                <input type="file" class="custom-file-input" id="e_ticket-file">
                                 <label class="custom-file-label">Choose file</label>
                             </div>
                         </div>
@@ -60,6 +59,9 @@
                         <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/ticket')}}"  type="button">Cancel</a>
                         <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn-update" type="button">Submit</button>
                     </div>
+                    <input type="hidden" id="old_attachments">
+                    <input type="hidden" value="{{csrf_token()}}" id="token"/>
+                    <input type="hidden" name="" id="e_ticket_id">
                     <div class="btn-loading mt-3" style="display: none">
                         <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -81,9 +83,34 @@
             $("#e_ticket_id").val(ticket_id);
             dataShow(ticket_id);
 
-            $("#btn-update").on("click", function() {
+            $("#btn-update").on("click", function(e) {
                 $(".btn-hidden-show").hide();
                 $(".btn-loading").css('display', 'block');
+
+                e.preventDefault();
+                var formData = new FormData();
+                var token = $("#token").val();
+                var id =$("#e_ticket_id").val();
+                let subject = $("input[name=e_ticket-subject]").val();
+                var attachments = $('#e_ticket-file').prop('files')[0];
+                var priority = $("#e_ticket_priority").val();
+                var assignedby = $("#e_ticket-assign").val();
+                var due_date = $("#e_due_date").val();
+                var issue_type = $("#e_issue-type").val();
+                var description = $("#e_description").val();
+                var old_attachment = $("#old_attachments").val();
+                // var fileSize = attachments['size'];
+
+                formData.append('_token', token);
+                formData.append('id', id);
+                formData.append('attachments', attachments);
+                formData.append('subject', subject);
+                formData.append('priority', priority);
+                formData.append('assignedby', assignedby);
+                formData.append('due_date', due_date);
+                formData.append('issue_type', issue_type);
+                formData.append('message', description);
+                formData.append('old_attachment', old_attachment);
 
                 var num_miss = 0;
                 $(".form-group-select2").each(function(){
@@ -119,17 +146,11 @@
                     $.ajax({
                         type: "POST",
                         url: "{{ url('admin/ticket/update') }}",
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            id:         $("#e_ticket_id").val(),
-                            subject:    $("#e_ticket-subject").val(),
-                            message:    $("#e_description").val(),
-                            issue_type: $("#e_issue-type").val(),
-                            due_date:   $("#e_due_date").val(),
-                            priority:   $("#e_ticket_priority").val(),
-                            assignedby:   $("#e_ticket-assign").val(),
-                            // attachments:        $("#ticket-file").val(),
-                        },
+                        contentType: 'multipart/form-data',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
                         dataType: "JSON",
                         success: function(response) {
                             if (response.status == "error") {
@@ -157,14 +178,12 @@
                 success: function(response) {
                     let data = response.data;
                     let issuetype = response.issuetype;
-                    console.log(data);
                     if (data) {
                         $("#e_ticket-subject").val(data.subject);
                         $("#e_description").val(data.message);
                         $("#e_due_date").val(data.due_date);
                         $("#e_ticket-assign").val(data.assignedby);
-                        // $("#e_attachment").val(data.attachments);
-                        // $('#e_attachment').attr('src', "{{asset('/uploads/images')}}/"+(data.attachments));
+                        $("#old_attachments").val(data.attachments);
                         if (data.issue_type != '') {
                             $('#e_issue-type').html('<option selected value=""> -- Select --</option>');
                             $.each(issuetype, function(i, item) {

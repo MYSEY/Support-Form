@@ -140,9 +140,9 @@
                         </div>
                         <div class="info-card">
                             @if (Auth::user()->profile)
-                                <img src="{{asset('storage/users/profile/'.Auth::user()->profile)}}" class="profile-image rounded-circle" alt="{{$item->name}}" style="width: 60px;height: 60px;object-fit: cover;">
+                                <img src="{{asset('storage/users/profile/'.Auth::user()->profile)}}" class="profile-image rounded-circle" alt="{{Auth::user()->name}}" style="width: 60px;height: 60px;object-fit: cover;">
                             @else
-                                <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="{{$item->name}}">
+                                <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="{{Auth::user()->name}}">
                             @endif
                             <div class="info-card-text">
                                 <a href="javascript:void(0);" class="d-flex align-items-center text-white">
@@ -375,9 +375,9 @@
                             <div>
                                 <a href="#" data-toggle="dropdown" title="{{Auth::user()->email}}" class="header-icon d-flex align-items-center justify-content-center ml-2">
                                     @if (Auth::user()->profile)
-                                        <img src="{{asset('storage/users/profile/'.Auth::user()->profile)}}" class="profile-image rounded-circle" alt="{{$item->name}}" style="width: 36px;height: 36px;object-fit: cover;">
+                                        <img src="{{asset('storage/users/profile/'.Auth::user()->profile)}}" class="profile-image rounded-circle" alt="{{Auth::user()->name}}" style="width: 36px;height: 36px;object-fit: cover;">
                                     @else
-                                        <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="{{$item->name}}">
+                                        <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="{{Auth::user()->name}}">
                                     @endif
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
@@ -385,9 +385,9 @@
                                         <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
                                             <span class="mr-2">
                                                 @if (Auth::user()->profile)
-                                                    <img src="{{asset('storage/users/profile/'.Auth::user()->profile)}}" class="profile-image rounded-circle" alt="{{$item->name}}" style="width: 36px;height: 36px;object-fit: cover;">
+                                                    <img src="{{asset('storage/users/profile/'.Auth::user()->profile)}}" class="profile-image rounded-circle" alt="{{Auth::user()->name}}" style="width: 36px;height: 36px;object-fit: cover;">
                                                 @else
-                                                    <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="{{$item->name}}">
+                                                    <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="{{Auth::user()->name}}">
                                                 @endif
                                                 {{-- <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="rounded-circle profile-image" alt="Dr. Codex Lantern"> --}}
                                             </span>

@@ -99,8 +99,6 @@ class TicketController extends Controller
                 $image = $request->file('attachments');
                 $AttachmentName = $image->getClientOriginalName();
                 $image->move(public_path('storage/attachments/'), $AttachmentName);
-            }else{
-                $AttachmentName = $request->old_profile;
             }
             $status = CustomStatus::orderBy('id', 'asc')->first();
             $data = $request->all();
@@ -353,7 +351,15 @@ class TicketController extends Controller
     public function update(Request $request)
     {
         try{
+            if($request->hasFile('attachments')) {
+                $image = $request->file('attachments');
+                $AttachmentName = $image->getClientOriginalName();
+                $image->move(public_path('storage/attachments/'), $AttachmentName);
+            }else{
+                $AttachmentName = $request->old_attachment;
+            }
             $data = Ticket::find($request->id);
+            $data['attachments'] = $AttachmentName;
             $data['name'] = Auth::user()->name;
             $data['email'] = Auth::user()->email;
             $data['department_id'] = Auth::user()->department_id;
