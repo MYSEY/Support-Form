@@ -9,7 +9,7 @@
 <ul class="nav nav-pills" role="tablist">
     <li class="nav-item"><a class="nav-link active tab-tables" data-toggle="tab" data-permiss="1" href="#js_change_pill_direction-1">Open tickets {{$total_all_ticket}}</a></li>
     <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="2" href="#js_change_pill_direction-2">Assigned to me {{$total_assigned_ticket}}</a></li>
-    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="3" href="#js_change_pill_direction-3">Assigned to others {{$total_others_ticket}}</a></li>
+    {{-- <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="3" href="#js_change_pill_direction-3">Assigned to others {{$total_others_ticket}}</a></li> --}}
     <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="4" href="#js_change_pill_direction-4">Unassigned {{$total_unassigned_ticket}}</a></li>
     <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="5" href="#js_change_pill_direction-5">Due soon {{$total_due_soon_ticket}}</a></li>
     <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="6" href="#js_change_pill_direction-6">Overdue {{$total_overdue_ticket}}</a></li>
@@ -35,6 +35,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade show" id="modal-select" role="dialog" aria-modal="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -52,7 +53,7 @@
                                 {{-- <label class="form-label" for="simpleinput">Department</label> --}}
                                 <div class="dropdown-menu d-block position-relative float-none">
                                     @foreach ($department as $item)
-                                        <a class="dropdown-item" href="{{url('admin/ticket/create','department'.$item->id)}}">
+                                        <a class="dropdown-item" href="{{url('admin/ticket/view-guidelines/'.$item->id)}}">
                                             <span class="float-right"><i class="fal fa-angle-right" style="font-size: 20px"></i></span>{{$item->name_english}}
                                         </a>
                                     @endforeach
@@ -79,6 +80,7 @@
         </div>
     </div>
 </div>
+
 @endsection
 @section('script')
     @include('includs.datatables_export')

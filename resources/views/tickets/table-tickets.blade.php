@@ -6,11 +6,11 @@
                 <th>Submitted</th>
                 <th>Updated</th>
                 <th>Department/Branch</th>
-                <th>Name</th>
+                <th>Create By</th>
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
-                <th>Owner</th>
+                <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
                 <th>Sub Issue Type</th>
@@ -63,11 +63,11 @@
                 <th>Submitted</th>
                 <th>Updated</th>
                 <th>Department</th>
-                <th>Name</th>
+                <th>Create By</th>
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
-                <th>Owner</th>
+                <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
                 <th>Sub Issue Type</th>
@@ -87,11 +87,11 @@
                 <th>Submitted</th>
                 <th>Updated</th>
                 <th>Department</th>
-                <th>Name</th>
+                <th>Create By</th>
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
-                <th>Owner</th>
+                <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
                 <th>Sub Issue Type</th>
@@ -111,11 +111,11 @@
                 <th>Submitted</th>
                 <th>Updated</th>
                 <th>Department</th>
-                <th>Name</th>
+                <th>Create By</th>
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
-                <th>Owner</th>
+                <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
                 <th>Sub Issue Type</th>
@@ -135,11 +135,11 @@
                 <th>Submitted</th>
                 <th>Updated</th>
                 <th>Department</th>
-                <th>Name</th>
+                <th>Create By</th>
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
-                <th>Owner</th>
+                <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
                 <th>Sub Issue Type</th>
@@ -159,11 +159,11 @@
                 <th>Submitted</th>
                 <th>Updated</th>
                 <th>Department</th>
-                <th>Name</th>
+                <th>Create By</th>
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
-                <th>Owner</th>
+                <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
                 <th>Sub Issue Type</th>

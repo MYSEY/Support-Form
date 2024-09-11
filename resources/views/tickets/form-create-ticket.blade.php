@@ -123,11 +123,11 @@
             var url = window.location.href;
             var parts = url.split('/');
             var namURL = parts.pop() || parts.pop();
-            var department_id = namURL.split("department")[1];
-            var branch_id = namURL.split("branch")[1];
+            // var department_id = namURL.split("department")[1];
+            // var branch_id = namURL.split("branch")[1];
             let datas = {
-                branch_id: branch_id,
-                department_id: department_id
+                branch_id: "",
+                department_id: namURL
             };
             dataIssue(datas);
             $("#btn-save").on("click", function(e) {
@@ -143,9 +143,10 @@
                 var overdue_email_sent = $('input[name="ticket-notification"]:checked').val();
                 var satisfaction_email_sent = $('input[name="ticket-check-submiss"]:checked').val();
                 var description = $("#description").val();
-                var fileSize = attachments['size'];
-
+                var fileSize = attachments ? attachments['size'] : "";
                 formData.append('_token', token);
+                formData.append('department_id', datas.department_id);
+                formData.append('branch_id', datas.branch_id);
                 formData.append('attachments', attachments);
                 formData.append('subject', subject);
                 formData.append('priority', priority);

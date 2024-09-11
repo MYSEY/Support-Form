@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\Reply;
+use App\Models\TicketGuideline;
 
 class TicketController extends Controller
 {
@@ -95,19 +96,19 @@ class TicketController extends Controller
     {
         DB::beginTransaction();
         try {
+            $data = $request->all();
             if($request->hasFile('attachments')) {
                 $image = $request->file('attachments');
                 $AttachmentName = $image->getClientOriginalName();
                 $image->move(public_path('storage/attachments/'), $AttachmentName);
+                $data['attachments'] = $AttachmentName;
             }
             $status = CustomStatus::orderBy('id', 'asc')->first();
-            $data = $request->all();
             $data['trackid'] = $this->generateTicketID();
             $data['name'] = Auth::user()->name;
             $data['email'] = Auth::user()->email;
-            $data['department_id'] = Auth::user()->department_id;
-            $data['branch_id'] = Auth::user()->branch_id;
-            $data['attachments'] = $AttachmentName;
+            // $data['department_id'] = $request->department_id;
+            // $data['branch_id'] = $request->branch_id;
             $data['issue_type'] = $request->issue_type;
             $data['status'] = $status->id;
             $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -270,6 +271,18 @@ class TicketController extends Controller
         ->where("id", $request->id)
         ->first();
         return view('tickets.ticket-detail', compact('data_ticket','status', 'priority', 'user_support'));
+    }
+
+    public function viewGuidelines(Request $request){
+        $datas = TicketGuideline::where("department_id", $request->id)->get();
+        if (count($datas) > 0) {
+            return view('tickets.view_ticket_guideline',compact('datas'));
+        }else{
+            $issuetype= IssueType::orderBy('id','DESC')->get();
+            $user_support = User::where("autoassign",1)->get();
+            $priority= Priority::get();
+            return view('tickets.form-create-ticket', compact('issuetype', 'priority','user_support'));
+        }
     }
 
     public function status(Request $request){
