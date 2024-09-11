@@ -475,19 +475,19 @@ class TicketController extends Controller
                 "dataHistoryPriority"=> $dataHistoryPriority,
             ];
         
-            if (!$request->autoreload) {
-                // $mail_message = ModelsMail::first();
-                if ($assigned_to) {
-                    if ($assigned_to->email == Auth::user()->email) {
-                        Mail::to($data_tickets->createdBy->email)->send(new SendMail($datasSendEmail));
-                    }else if($data_tickets->createdBy->email == Auth::user()->email){
-                        Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                    }else{
-                        Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                    }
-                }
-            }
-            Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
+            // if (!$request->autoreload) {
+            //     // $mail_message = ModelsMail::first();
+            //     if ($assigned_to) {
+            //         if ($assigned_to->email == Auth::user()->email) {
+            //             Mail::to($data_tickets->createdBy->email)->send(new SendMail($datasSendEmail));
+            //         }else if($data_tickets->createdBy->email == Auth::user()->email){
+            //             Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //         }else{
+            //             Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //         }
+            //     }
+            // }
+            // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
            
             // Toastr::success('Updated successfully.','Success');
             DB::commit();

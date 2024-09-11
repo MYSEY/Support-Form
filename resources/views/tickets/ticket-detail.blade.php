@@ -51,7 +51,15 @@
                             <div class="form-group">
                                 <input type="file" id="attachments" class="form-control-file">
                             </div>
-                            <button class="btn btn-danger" id="btn-save-note">Submit</button>
+                            <div class="btn-loading-noted" style="display: none">
+                                <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Loading...
+                                </button>
+                            </div>
+                            <div class="btn-hidden-show-noted">
+                                <button class="btn btn-danger" id="btn-save-note">Submit</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -126,7 +134,15 @@
                                 </div>
                             </div><br>
                             @can('Ticket Reply')
-                                <button class="btn btn-danger" id="btn-reply-ticket">Submit Reply</button>
+                                <div class="btn-loading" style="display: none">
+                                    <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        Loading...
+                                    </button>
+                                </div>
+                                <div class="btn-hidden-show">
+                                    <button class="btn btn-danger" id="btn-reply-ticket">Submit Reply</button>
+                                </div>
                             @endcan
                         </div>
                     </div>
@@ -403,9 +419,14 @@
                 $('#delteNote').modal('show');
             });
             $("#btn-save-note").click(function() {
+                $(".btn-hidden-show-noted").hide();
+                $(".btn-loading-noted").css('display', 'block');
+
                 if ($("#ticket-textarea").val() == null || $("#ticket-textarea").val() == "") {
                     $("#ticket-textarea").addClass("is-invalid");
                     $("#ticket-textarea").removeClass("is-valid");
+                    $(".btn-hidden-show-noted").show();
+                    $(".btn-loading-noted").css('display', 'none');
                     toastr.error("Please input text!");
                 }else{
                     $.ajax({
@@ -423,7 +444,8 @@
                                 toastr.error(response.message);
                             }else{
                                 toastr.success('Data create successfully.');
-                                var url = "{{ URL('admin/ticket/detail/') }}/" + id;
+                                // var url = "{{ URL('admin/ticket/detail/') }}/" + id;
+                                var url = "{{ URL('admin/ticket/') }}";
                                 window.location.replace(url); 
                             }
                         },
@@ -437,9 +459,14 @@
             //** block reply ticket
             showReplies(id)
             $("#btn-reply-ticket").click(function() {
+                $(".btn-hidden-show").hide();
+                $(".btn-loading").css('display', 'block');
+
                 if ($("#ticket-reply").val() == null || $("#ticket-reply").val() == "") {
                     $("#ticket-reply").addClass("is-invalid");
                     $("#ticket-reply").removeClass("is-valid");
+                    $(".btn-hidden-show").show();
+                    $(".btn-loading").css('display', 'none');
                     toastr.error("Please input text!");
                 }else{
                     $.ajax({
@@ -462,7 +489,8 @@
                                 toastr.error(response.message);
                             }else{
                                 toastr.success(response.message);
-                                var url = "{{ URL('admin/ticket/detail/') }}/" + id;
+                                // var url = "{{ URL('admin/ticket/detail/') }}/" + id;
+                                var url = "{{ URL('admin/ticket/') }}";
                                 window.location.replace(url); 
                             }
                         },
