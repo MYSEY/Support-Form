@@ -87,7 +87,7 @@ class LoginController extends Controller
                 ]);
             }else{
                 return response()->json([
-                    'message' => "Your account has been shut down. Please contact support",
+                    'message' => "Your account has been disable. Please contact to help desk",
                     'status'=>"error"
                 ]);
             }

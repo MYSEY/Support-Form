@@ -49,23 +49,54 @@ class TicketController extends Controller
         $departmentCondition = function ($query) {
             $query->when(Auth::user()->department_id, function ($query) {
                 $query->where('department_id', Auth::user()->department_id);
+                $query->orWhere("created_by", Auth::user()->id);
+                $query->orWhere("assignedby", Auth::user()->id);
             });
         };
-        if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
-            $total_all_ticket = Ticket::where($departmentCondition)->where($statusCondition)->count();
-            $total_assigned_ticket = Ticket::where($departmentCondition)->where($statusCondition)->where("assignedby", Auth::user()->id)->count();
-
-            $total_others_ticket = Ticket::where($departmentCondition)->where($statusCondition)->whereNot("assignedby", Auth::user()->id)->count();
-            $total_unassigned_ticket = Ticket::where($departmentCondition)->where($statusCondition)->where("assignedby", "unassigned")->count();
-            $total_due_soon_ticket = Ticket::where($departmentCondition)->where($statusCondition)->where('due_date', '>=',$currentDate)->count();
-            $total_overdue_ticket = Ticket::where($departmentCondition)->where($statusCondition)->where('due_date', '<',$currentDate)->count();
+        $total_all_ticket = [];
+        $total_assigned_ticket = [];
+        $total_others_ticket = [];
+        $total_unassigned_ticket = [];
+        $total_due_soon_ticket = [];
+        $total_overdue_ticket = [];
+        if (Auth::user()->RolePermission=='staff') {
+            $total_all_ticket = Ticket::where("created_by", Auth::user()->id)->count();
+            // $total_assigned_ticket = Ticket::where("created_by", Auth::user()->id)->count();
+            $total_due_soon_ticket = Ticket::where("created_by", Auth::user()->id)->where('due_date', '>=',$currentDate)->count();
+            $total_overdue_ticket = Ticket::where("created_by", Auth::user()->id)->where('due_date', '<',$currentDate)->count();
+        }else
+        if (Auth::user()->RolePermission=='admin') {
+            $total_all_ticket = Ticket::where($departmentCondition)->orWhere("assignedby", Auth::user()->id)
+            // ->where($statusCondition)
+            ->count();
+            $total_assigned_ticket = Ticket::where("assignedby", Auth::user()->id)->count();
+            // $total_others_ticket = Ticket::where($departmentCondition)->where($statusCondition)->whereNot("assignedby", Auth::user()->id)->count();
+            $total_unassigned_ticket = Ticket::where($departmentCondition)
+            // ->where($statusCondition)
+            ->whereIn("assignedby", ["unassigned","auto-assign"])->count();
+            $total_due_soon_ticket = Ticket::where($departmentCondition)
+            // ->where($statusCondition)
+            ->where('due_date', '>=',$currentDate)->count();
+            $total_overdue_ticket = Ticket::where($departmentCondition)
+            // ->where($statusCondition)
+            ->where('due_date', '<',$currentDate)->count();
         }else {
             $total_all_ticket = Ticket::where($statusCondition)->count();
-            $total_assigned_ticket = Ticket::where("assignedby", Auth::user()->id)->where($statusCondition)->count();
-            $total_others_ticket = Ticket::whereNot("assignedby", Auth::user()->id)->where($statusCondition)->count();
-            $total_unassigned_ticket = Ticket::where("assignedby", "unassigned")->where($statusCondition)->count();
-            $total_due_soon_ticket = Ticket::where('due_date', '>=',$currentDate)->where($statusCondition)->count();
-            $total_overdue_ticket = Ticket::where('due_date', '<',$currentDate)->where($statusCondition)->count();
+            $total_assigned_ticket = Ticket::where("assignedby", Auth::user()->id)
+            // ->where($statusCondition)
+            ->count();
+            $total_others_ticket = Ticket::whereNot("assignedby", Auth::user()->id)
+            // ->where($statusCondition)
+            ->count();
+            $total_unassigned_ticket = Ticket::where("assignedby", "unassigned")
+            // ->where($statusCondition)
+            ->count();
+            $total_due_soon_ticket = Ticket::where('due_date', '>=',$currentDate)
+            // ->where($statusCondition)
+            ->count();
+            $total_overdue_ticket = Ticket::where('due_date', '<',$currentDate)
+            // ->where($statusCondition)
+            ->count();
         }
         return view('tickets.index', compact(
             'total_all_ticket',
@@ -138,12 +169,12 @@ class TicketController extends Controller
             ];
              
             //  $mail_message = ModelsMail::first();
-            if ($assigned_to) {
-                if ($assigned_to->email) {
-                    Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                }
-            }
-            Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
+            // if ($assigned_to) {
+            //     if ($assigned_to->email) {
+            //         Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //     }
+            // }
+            // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
 
             DB::commit();
             return response()->json([
@@ -170,15 +201,47 @@ class TicketController extends Controller
         $departmentCondition = function ($query) {
             $query->when(Auth::user()->department_id, function ($query) {
                 $query->where('department_id', Auth::user()->department_id);
+                $query->orWhere("created_by", Auth::user()->id);
+                $query->orWhere("assignedby", Auth::user()->id);
             });
         };
-        if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
+        // dd($request->status);
+        if (Auth::user()->RolePermission=='staff') {
             $data_tickets = Ticket::with("department")
             ->with("branch")->with("lastReplier")
             ->with("CustomStatus")->with("assignedBy")
             ->with("priorities")->with("createdBy")
             ->with("issueType")
-            ->where($departmentCondition)->where($statusCondition)
+            ->where("created_by", Auth::user()->id)
+            ->when($request->status, function ($query, $status) {
+                if ($status == 2) {
+                    $query->where("assignedby", Auth::user()->id);
+                }
+                if ($status == 3) {
+                    $query->whereNot("assignedby", Auth::user()->id);
+                }
+                if ($status == 4) {
+                    $query->whereIn("assignedby", ["unassigned","auto-assign"]);
+                }
+                if ($status == 5) {
+                    $currentDate = Carbon::now()->format('Y-m-d');
+                    $query->where('due_date', '>=',$currentDate);
+                }
+                if ($status == 6) {
+                    $currentDate = Carbon::now()->format('Y-m-d');
+                    $query->where('due_date', '<',$currentDate);
+                }
+            })
+            ->orderBy('id','DESC')
+            ->get();
+        }else if(Auth::user()->RolePermission=='admin'){
+            $data_tickets = Ticket::with("department")
+            ->with("branch")->with("lastReplier")
+            ->with("CustomStatus")->with("assignedBy")
+            ->with("priorities")->with("createdBy")
+            ->with("issueType")
+            ->where($departmentCondition)
+            // ->where($statusCondition)
             ->when($request->status, function ($query, $status) {
                 if ($status == 2) {
                     $query->where("assignedby", Auth::user()->id);
@@ -206,7 +269,7 @@ class TicketController extends Controller
             ->with("CustomStatus")->with("assignedBy")
             ->with("priorities")->with("createdBy")
             ->with("issueType")
-            ->where($statusCondition)
+            // ->where($statusCondition)
             ->when($request->status, function ($query, $status) {
                 if ($status == 2) {
                     $query->where("assignedby", Auth::user()->id);
