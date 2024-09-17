@@ -38,6 +38,7 @@
                         <p class="card-text">
                             {!! nl2br(e($data_ticket->message)) !!}
                         </p>
+                        <p class="card-text"><a href="{{url("storage/attachments",$data_ticket->attachments)}}" target="_blank">{{$data_ticket->attachments}}</a></p>
 
                         <div id="show-notes"> </div>
                         @can('Ticket Add Note')
@@ -140,6 +141,7 @@
                                         Loading...
                                     </button>
                                 </div>
+                                <input type="hidden" value="{{csrf_token()}}" id="token"/>
                                 <div class="btn-hidden-show">
                                     <button class="btn btn-danger" id="btn-reply-ticket">Submit Reply</button>
                                 </div>
@@ -458,10 +460,33 @@
 
             //** block reply ticket
             showReplies(id)
-            $("#btn-reply-ticket").click(function() {
+            $("#btn-reply-ticket").click(function(e) {
                 $(".btn-hidden-show").hide();
                 $(".btn-loading").css('display', 'block');
 
+                e.preventDefault();
+                var formData = new FormData();
+                var token = $("#token").val();
+                var reply_to = $("#e_id_ticket").val();
+                var ticketReply = $("#ticket-reply").val();
+                var message = $("#ticket-reply").val();
+                var message_html = $("#ticket-reply").val();
+                var priority = $("#ticket-priority").val();
+                var status = $("#ticket-status").val();
+                var assignedby = $("#ticket-assigned").val();
+                var autoreload = $('input[name="autoreload-send-email"]:checked').val();
+                var rp_attachments = $("#rp_attachments").prop('files')[0];
+
+                formData.append('_token', token);
+                formData.append('reply_to', reply_to);
+                formData.append('message', message);
+                formData.append('message_html', message_html);
+                formData.append('priority', priority);
+                formData.append('status', status);
+                formData.append('assignedby', assignedby);
+                formData.append('autoreload', autoreload);
+                formData.append('rp_attachments', rp_attachments);
+                
                 if ($("#ticket-reply").val() == null || $("#ticket-reply").val() == "") {
                     $("#ticket-reply").addClass("is-invalid");
                     $("#ticket-reply").removeClass("is-valid");
@@ -472,17 +497,12 @@
                     $.ajax({
                         type: "POST",
                         url: "{{url('admin/ticket/replies')}}",
-                        data: {
-                            "_token":                   "{{ csrf_token() }}",
-                            reply_to:                   $("#e_id_ticket").val(),
-                            message:                    $("#ticket-reply").val(),
-                            message_html:               $("#ticket-reply").val(),
-                            priority:                   $("#ticket-priority").val(),
-                            status:                     $("#ticket-status").val(),
-                            assignedby:                 $("#ticket-assigned").val(),
-                            autoreload:                 $('input[name="autoreload-send-email"]:checked').val(),
-                            // attachments:             $("#rp_attachments").val(),
-                        },
+                        data: formData,
+                        contentType: 'multipart/form-data',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
                         dataType: "JSON",
                         success: function (response) {
                             if (response.status == "error") {
@@ -600,6 +620,7 @@
                                         text += '<p class="card-text">Reply by: <strong>'+value.staff.user+'</strong> » '+created_at+'</p>'+
                                     '</div>'+
                                     '<p class="card-text mt-2">'+message+'</p>'+
+                                    '<p class="card-text"><a href="{{url("storage/attachments")}}/'+(value.attachments)+'">'+value.attachments+'</a></p>'+
                                 '</div>';
                                 reply_tr  +='<tr>'+
                                                 '<td class="table_tr">'+

@@ -462,7 +462,7 @@ class TicketController extends Controller
     public function replies(Request $request)
     {
         DB::beginTransaction();
-        try{
+        // try{
             $ticket_update = false;
             $data_assign = false;
             $dataHistoryStatus = [];
@@ -479,7 +479,6 @@ class TicketController extends Controller
                 $data_histoies_status['created_by'] = Auth::user()->id;
                 $historyStatus = TicketHistory::create($data_histoies_status);
                 $dataHistoryStatus = TicketHistory::where("id", $historyStatus->id)->with("statusFrom")->with("statusTo")->first();
-
             }
 
             // Add new history on priority
@@ -512,11 +511,18 @@ class TicketController extends Controller
             $data->save();
             
             // Add new reply
+            if($request->hasFile('rp_attachments')) {
+                $image = $request->file('rp_attachments');
+                $reAttachmentName = $image->getClientOriginalName();
+                $image->move(public_path('storage/attachments/'), $reAttachmentName);
+            }
             $dataReply['staff_id'] = Auth::user()->id;
             $dataReply['reply_to'] = $request->reply_to;
             $dataReply['message'] = $request->message;
             $dataReply['message_html'] = $request->message_html;
             $dataReply['name'] = Auth::user()->name;
+            $dataReply['attachments'] = $reAttachmentName;
+            $dataReply['dt'] = Carbon::now()->format('Y-m-d H:i:s');
             $dataReply['created_by'] = Auth::user()->id;
             $dataReply = Reply::create($dataReply);
 
@@ -558,11 +564,11 @@ class TicketController extends Controller
                 'message' => "Ticket replies successfully.",
                 'status'=>"success"
             ]);
-        }catch(\Exception $e){
-            DB::rollback();
-            // Toastr::error('Updated fail.','Error');
-            return redirect()->back();
-        }
+        // }catch(\Exception $e){
+        //     DB::rollback();
+        //     // Toastr::error('Updated fail.','Error');
+        //     return redirect()->back();
+        // }
     }
 
     /**

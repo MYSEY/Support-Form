@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('staff_id');
             $table->longText('message')->nullable();
             $table->mediumText('message_html')->nullable();
-            $table->bigInteger('dt')->nullable();
+            $table->dateTime('dt')->nullable();
             $table->mediumText('attachments')->nullable();
             $table->integer('rating')->nullable();
             $table->enum('read', ['0', '1'])->default('0');

@@ -157,7 +157,7 @@
                 formData.append('satisfaction_email_sent', satisfaction_email_sent);
                 formData.append('message', description);
 
-                if (fileSize < 1048576) {
+                if (fileSize < 1073741824) {
                     $(".btn-hidden-show").hide();
                     $(".btn-loading").css('display', 'block');
                     var num_miss = 0;
