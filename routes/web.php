@@ -59,6 +59,8 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/user/delete', [UserController::class, 'destroy']);
     Route::post('/user/online/delete', [UserController::class, 'userOnlineDelet']);
     Route::post('/user/duplicate', [UserController::class, 'duplicateUser']);
+    Route::get('/user/profile/{id}', [UserController::class, 'userProfile']);
+    Route::post('/user/profile/update', [UserController::class, 'userProfileUpdate']);
 
     // Ticket  
     Route::get('/ticket', [TicketController::class, 'index']);

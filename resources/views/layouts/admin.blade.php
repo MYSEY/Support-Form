@@ -402,6 +402,9 @@
                                     <a href="#" class="dropdown-item" data-action="app-reset">
                                         <span data-i18n="drpdwn.reset_layout">Reset Layout</span>
                                     </a>
+                                    <a href="{{url('admin/user/profile',Auth::user()->id)}}" class="dropdown-item">
+                                        <span>Profile</span>
+                                    </a>
                                     <a href="#" class="dropdown-item" data-toggle="modal" data-target=".js-modal-settings">
                                         <span data-i18n="drpdwn.settings">Settings</span>
                                     </a>

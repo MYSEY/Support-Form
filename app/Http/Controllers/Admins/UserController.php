@@ -291,4 +291,31 @@ class UserController extends Controller
             return redirect()->back();
         }
     }
+    public function userProfile($id){
+        $data = User::find($id);
+        return view('users.profile',compact('data',));
+    }
+    public function userProfileUpdate(Request $request){
+        try{
+            if($request->hasFile('profile')) {
+                $image = $request->file('profile');
+                $imageName = $image->getClientOriginalName();
+                $image->move(public_path('storage/users/profile'), $imageName);
+            }else{
+                $imageName = $request->old_profile;
+            }
+            User::where('id',$request->id)->update([
+                'updated_by'=> Auth::user()->id,
+                'profile'=> $imageName,
+            ]);
+            return response()->json([
+                'message' => "Update created successfully.",
+                'status'=>"success"
+            ]);
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('User updated fail.','Error');
+            return redirect()->back();
+        }
+    }
 }

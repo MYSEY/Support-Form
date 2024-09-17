@@ -86,17 +86,24 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsTo(Role::class,'role_id');
     }
+    public function department(){
+        return $this->belongsTo(Department::class,'department_id');
+    }
+    public function branch(){
+        return $this->belongsTo(Branch::class,'branch_id');
+    }
+
+
     public function getRolePermissionAttribute(){
         return optional($this->role)->role_type;
     }
     public function getRoleNameAttribute(){
         return optional($this->role)->name;
     }
-
-    public function department(){
-        return $this->belongsTo(Department::class,'department_id');
+    public function getDepartmentNameAttribute(){
+        return optional($this->department)->name_english;
     }
-    public function branch(){
-        return $this->belongsTo(Branch::class,'branch_id');
+    public function getBranchNameAttribute(){
+        return optional($this->branch)->branch_name_en;
     }
 }
