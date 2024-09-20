@@ -16,9 +16,9 @@
                         <label class="form-label">Message: <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="e_message_note" name="message" rows="5"></textarea>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <input type="file" id="e_attachments" name="attachments" class="form-control-file">
-                    </div>
+                    </div> --}}
                     <div class="float-lg-right">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save changes</button>

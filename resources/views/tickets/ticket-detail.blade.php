@@ -49,9 +49,9 @@
                                 <label class="form-label" for="ticket-textarea">Message: <span class="text-danger">*</span></label>
                                 <textarea class="form-control" id="ticket-textarea" rows="5"></textarea>
                             </div>
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <input type="file" id="attachments" class="form-control-file">
-                            </div>
+                            </div> --}}
                             <div class="btn-loading-noted" style="display: none">
                                 <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
