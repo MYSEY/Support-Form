@@ -49,8 +49,7 @@
                             <small class="m-0 l-h-n">Ticket Urgent</small>
                         </h3>
                     </div>
-                    <i class="fal fa-gem position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4"
-                        style="font-size: 6rem;"></i>
+                    <i class="fal fa-gem position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4" style="font-size: 6rem;"></i>
                 </div>
             </div>
         @endcan
@@ -63,8 +62,7 @@
                             <small class="m-0 l-h-n">Ticket Assign</small>
                         </h3>
                     </div>
-                    <i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6"
-                        style="font-size: 8rem;"></i>
+                    <i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
                 </div>
             </div>
         @endcan
@@ -77,8 +75,7 @@
                             <small class="m-0 l-h-n">Ticke Active</small>
                         </h3>
                     </div>
-                    <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4"
-                        style="font-size: 6rem;"></i>
+                    <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4" style="font-size: 6rem;"></i>
                 </div>
             </div>
         @endcan
@@ -115,106 +112,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div id="panel-2" class="panel panel-locked" data-panel-sortable data-panel-collapsed data-panel-close>
-                <div class="panel-hdr">
-                    <h2>
-                        Returning <span class="fw-300"><i>Target</i></span>
-                    </h2>
-                </div>
-                <div class="panel-container show">
-                    <div class="panel-content poisition-relative">
-                        <div
-                            class="p-1 position-absolute pos-right pos-top mt-3 mr-3 z-index-cloud d-flex align-items-center justify-content-center">
-                            <div
-                                class="border-faded border-top-0 border-left-0 border-bottom-0 py-2 pr-4 mr-3 hidden-sm-down">
-                                <div class="text-right fw-500 l-h-n d-flex flex-column">
-                                    <div class="h3 m-0 d-flex align-items-center justify-content-end">
-                                        <div class='icon-stack mr-2'>
-                                            <i class="base base-7 icon-stack-3x opacity-100 color-success-600"></i>
-                                            <i class="base base-7 icon-stack-2x opacity-100 color-success-500"></i>
-                                            <i class="fal fa-arrow-up icon-stack-1x opacity-100 color-white"></i>
-                                        </div>
-                                        $44.34 / GE
-                                    </div>
-                                    <span class="m-0 fs-xs text-muted">Increased Profit as per redux margins and
-                                        estimates</span>
-                                </div>
-                            </div>
-                            <div class="js-easy-pie-chart color-info-400 position-relative d-inline-flex align-items-center justify-content-center"
-                                data-percent="35" data-piesize="95" data-linewidth="10" data-scalelength="5">
-                                <div class="js-easy-pie-chart color-success-400 position-relative position-absolute pos-left pos-right pos-top pos-bottom d-flex align-items-center justify-content-center"
-                                    data-percent="65" data-piesize="60" data-linewidth="5" data-scalelength="1"
-                                    data-scalecolor="#fff">
-                                    <div
-                                        class="position-absolute pos-top pos-left pos-right pos-bottom d-flex align-items-center justify-content-center fw-500 fs-xl text-dark">
-                                        78%</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="flot-area" style="width:100%; height:300px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div id="panel-3" class="panel panel-locked" data-panel-sortable data-panel-collapsed data-panel-close>
-                <div class="panel-hdr">
-                    <h2>
-                        Effective <span class="fw-300"><i>Support Form</i></span>
-                    </h2>
-                </div>
-                <div class="panel-container show">
-                    <div class="panel-content poisition-relative">
-                        <div class="pb-5 pt-3">
-                            <div class="row">
-                                <div class="col-6 col-xl-3 d-sm-flex align-items-center">
-                                    <div class="p-2 mr-3 bg-info-200 rounded">
-                                        <span class="peity-bar"
-                                            data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">3,4,5,8,2</span>
-                                    </div>
-                                    <div>
-                                        <label class="fs-sm mb-0">Bounce Rate</label>
-                                        <h4 class="font-weight-bold mb-0">37.56%</h4>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-xl-3 d-sm-flex align-items-center">
-                                    <div class="p-2 mr-3 bg-info-300 rounded">
-                                        <span class="peity-bar"
-                                            data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">5,3,1,7,9</span>
-                                    </div>
-                                    <div>
-                                        <label class="fs-sm mb-0">Sessions</label>
-                                        <h4 class="font-weight-bold mb-0">759</h4>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-xl-3 d-sm-flex align-items-center">
-                                    <div class="p-2 mr-3 bg-success-300 rounded">
-                                        <span class="peity-bar"
-                                            data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">3,4,3,5,5</span>
-                                    </div>
-                                    <div>
-                                        <label class="fs-sm mb-0">New Sessions</label>
-                                        <h4 class="font-weight-bold mb-0">12.17%</h4>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-xl-3 d-sm-flex align-items-center">
-                                    <div class="p-2 mr-3 bg-success-500 rounded">
-                                        <span class="peity-bar"
-                                            data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 27, &quot;height&quot;: 27 }">6,4,7,5,6</span>
-                                    </div>
-                                    <div>
-                                        <label class="fs-sm mb-0">Clickthrough</label>
-                                        <h4 class="font-weight-bold mb-0">19.77%</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="flotVisit" style="width:100%; height:208px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
         @can('Dashboad User Online')
             <div class="col-lg-12 sortable-grid ui-sortable">
                 <div id="panel-4" class="panel panel-sortable" role="widget">
@@ -222,16 +119,12 @@
                         <h2 class="ui-sortable-handle">
                             Users <span class="fw-300"><i>Online</i></span>
                         </h2>
-                        <div class="panel-saving mr-2" style="display:none"><i
-                                class="fal fa-spinner-third fa-spin-4x fs-xl"></i></div>
-                        <div class="panel-toolbar" role="menu"><a href="#"
-                                class="btn btn-panel hover-effect-dot js-panel-collapse waves-effect waves-themed"
-                                data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></a> <a
-                                href="#"
-                                class="btn btn-panel hover-effect-dot js-panel-fullscreen waves-effect waves-themed"
-                                data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></a> <a
-                                href="#" class="btn btn-panel hover-effect-dot js-panel-close waves-effect waves-themed"
-                                data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></a></div>
+                        <div class="panel-saving mr-2" style="display:none"><i class="fal fa-spinner-third fa-spin-4x fs-xl"></i></div>
+                        <div class="panel-toolbar" role="menu">
+                            <a href="#" class="btn btn-panel hover-effect-dot js-panel-collapse waves-effect waves-themed" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></a> 
+                            <a href="#" class="btn btn-panel hover-effect-dot js-panel-fullscreen waves-effect waves-themed" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></a> 
+                            <a href="#" class="btn btn-panel hover-effect-dot js-panel-close waves-effect waves-themed" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></a>
+                        </div>
                         <div class="panel-toolbar" role="menu"><a href="#"
                                 class="btn btn-toolbar-master waves-effect waves-themed" data-toggle="dropdown"><i
                                     class="fal fa-ellipsis-v"></i></a>
@@ -279,8 +172,10 @@
                                             class="btn d-inline-block bg-faded width-2 height-2 p-0 rounded-0 js-panel-color hover-effect-dot waves-effect waves-themed"
                                             data-panel-setstyle="bg-faded" style="margin:1px;"></a></div>
                                 </div>
-                                <div class="dropdown-divider m-0"></div>
-                                    <a href="#" class="dropdown-item js-panel-reset"><span data-i18n="drpdwn.resetpanel">Reset Panel</span></a>
+                                <div class="dropdown-divider m-0">
+
+                                </div>
+                                <a href="#" class="dropdown-item js-panel-reset"><span data-i18n="drpdwn.resetpanel">Reset Panel</span></a>
                             </div>
                         </div>
                     </div>

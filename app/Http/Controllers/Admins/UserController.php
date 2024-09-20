@@ -124,6 +124,8 @@ class UserController extends Controller
                 $image = $request->file('profile');
                 $imageName = $image->getClientOriginalName();
                 $image->move(public_path('storage/users/profile'), $imageName);
+            }else{
+                $imageName = "";
             }
             
             $data = $request->all();

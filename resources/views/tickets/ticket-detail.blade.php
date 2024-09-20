@@ -94,7 +94,11 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <input type="file" id="rp_attachments" class="form-control-file">
+                                        <label class="form-label">Attachments:</label>
+                                        <div class="custom-file">
+                                            <input type="file" id="rp_attachments" class="custom-file-input">
+                                            <label class="custom-file-label">Choose file</label>
+                                        </div>
                                     </div>
                                     <div class="form-group frame-wrap">
                                         <div class="demo" style="display: flex">
@@ -620,7 +624,7 @@
                                         text += '<p class="card-text">Reply by: <strong>'+value.staff.user+'</strong> » '+created_at+'</p>'+
                                     '</div>'+
                                     '<p class="card-text mt-2">'+message+'</p>'+
-                                    '<p class="card-text"><a href="{{url("storage/attachments")}}/'+(value.attachments)+'">'+value.attachments+'</a></p>'+
+                                    '<p class="card-text"><i class="fal fa-trash-alt"></i> <a href="{{url("storage/attachments")}}/'+(value.attachments)+'" target="_blank">'+value.attachments+'</a></p>'+
                                 '</div>';
                                 reply_tr  +='<tr>'+
                                                 '<td class="table_tr">'+
