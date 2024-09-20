@@ -515,6 +515,8 @@ class TicketController extends Controller
                 $image = $request->file('rp_attachments');
                 $reAttachmentName = $image->getClientOriginalName();
                 $image->move(public_path('storage/attachments/'), $reAttachmentName);
+            }else{
+                $reAttachmentName = '';
             }
             $dataReply['staff_id'] = Auth::user()->id;
             $dataReply['reply_to'] = $request->reply_to;
