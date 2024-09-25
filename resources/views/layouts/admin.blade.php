@@ -25,6 +25,8 @@
         <link rel="stylesheet" media="screen, print" href="{{asset('/admins/css/formplugins/select2/select2.bundle.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/summernote/summernote.css')}}">
+        <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/statistics/c3/c3.css')}}">
+
         <style>
             .tooltip-inner {
                 text-align: left;
@@ -826,6 +828,10 @@
         <script src="{{asset('admins/js/datagrid/datatables/datatables.export.js')}}"></script>
         <script src="{{asset('admins/js/dependency/moment/moment.js')}}"></script>
         <script src="{{asset('admins/js/formplugins/summernote/summernote.js')}}"></script>
+        <script src="{{asset('admins/js/statistics/d3/d3.js')}}"></script>
+        <!-- c3 charts : MIT license -->
+        <script src="{{asset('admins/js/statistics/c3/c3.js')}}"></script>
+        <script src="{{asset('admins/js/statistics/demo-data/demo-c3.js')}}"></script>
         {!! Toastr::message() !!}
         @yield('script')
         <script>
@@ -836,7 +842,7 @@
             });
             // Example starter JavaScript for disabling form submissions if there are invalid fields
             (function()
-            {
+            {   
                 'use strict';
                 window.addEventListener('load', function()
                 {

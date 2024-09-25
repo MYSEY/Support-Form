@@ -38,7 +38,7 @@
                         <p class="card-text">
                             {!! nl2br(e($data_ticket->message)) !!}
                         </p>
-                        <p class="card-text"><a href="{{url("storage/attachments",$data_ticket->attachments)}}" target="_blank">{{$data_ticket->attachments}}</a></p>
+                        <p class="card-text"><a href="{{url("storage/attachments",$data_ticket->attachments)}}" target="_blank">{{$data_ticket->attachments == 'undefined' ? "" : $data_ticket->attachments}}</a></p>
 
                         <div id="show-notes"> </div>
                         @can('Ticket Add Note')
@@ -624,7 +624,7 @@
                                         text += '<p class="card-text">Reply by: <strong>'+value.staff.user+'</strong> » '+created_at+'</p>'+
                                     '</div>'+
                                     '<p class="card-text mt-2">'+message+'</p>'+
-                                    '<p class="card-text"><i class="fal fa-trash-alt"></i> <a href="{{url("storage/attachments")}}/'+(value.attachments)+'" target="_blank">'+value.attachments+'</a></p>'+
+                                    '<p class="card-text"><a href="{{url("storage/attachments")}}/'+(value.attachments)+'" target="_blank">'+value.attachments+'</a></p>'+
                                 '</div>';
                                 reply_tr  +='<tr>'+
                                                 '<td class="table_tr">'+
