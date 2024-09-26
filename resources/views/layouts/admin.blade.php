@@ -26,6 +26,7 @@
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/summernote/summernote.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/statistics/c3/c3.css')}}">
+        <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css')}}">
 
         <style>
             .tooltip-inner {
@@ -832,6 +833,9 @@
         <!-- c3 charts : MIT license -->
         <script src="{{asset('admins/js/statistics/c3/c3.js')}}"></script>
         <script src="{{asset('admins/js/statistics/demo-data/demo-c3.js')}}"></script>
+
+        <script src="{{asset('admins/js/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.js')}}"></script>
+
         {!! Toastr::message() !!}
         @yield('script')
         <script>
@@ -989,6 +993,31 @@
                     }
                     
             })();
+
+            $(function()
+            {
+                var start = moment().subtract(29, 'days');
+                var end = moment();
+                function cb(start, end)
+                {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                }
+                $('#datepicker-ranges').daterangepicker(
+                {
+                    startDate: start,
+                    endDate: end,
+                    ranges:
+                    {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    }
+                }, cb);
+                cb(start, end);
+            });
         </script>
     </body>
 </html>
