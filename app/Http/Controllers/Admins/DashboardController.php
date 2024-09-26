@@ -50,12 +50,11 @@ class DashboardController extends Controller
         $dataCustomStatuses = DB::table('custom_statuses')->get();
         $dataPriorities = DB::table('priorities')->get();
         if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
-            $dataTickets = DB::table('tickets')->where('department_id',Auth::user()->department_id)->get();
+            $dataTickets = DB::table('tickets')->where('department_id',Auth::user()->department_id)->where('deleted_at',null)->get();
         }else{
-            $dataTickets = DB::table('tickets')->get();
+            $dataTickets = DB::table('tickets')->where('deleted_at',null)->get();
            
         }
-       
         return response()->json([
             'dataTickets'=>$dataTickets,
             'customStatuses'=>$dataCustomStatuses,
