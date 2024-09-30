@@ -116,94 +116,25 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <div class="p-3">
-                        <div class="row fs-b fw-300">
-                            <div class="col text-left">
-                                New
+                    @foreach ($ticketStatus as $item)
+                        @php
+                            $statusTickets = $ticket->where('status', $item->id)->count();
+                            $percentage = $statusTickets / 100;
+                        @endphp
+                        <div class="p-3">
+                            <div class="row fs-b fw-300">
+                                <div class="col text-left">
+                                    {{$item->name}}
+                                </div>
+                                <div class="col text-right">
+                                    {{ round($percentage, 2) }}% / {{ count($ticket) }}
+                                </div>
                             </div>
-                            <div class="col text-right">
-                                26%
-                            </div>
-                        </div>
-                        <div class="progress progress-xs mt-2">
-                            <div class="progress-bar bg-primary-300 bg-primary-gradient" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="p-3">
-                        <div class="row fs-b fw-300">
-                            <div class="col text-left">
-                                Waiting Reply
-                            </div>
-                            <div class="col text-right">
-                                6%
+                            <div class="progress progress-xs mt-2">
+                                <div class="progress-bar" style="background-color: {{$item->color}};width: {{$percentage}};" role="progressbar"></div>
                             </div>
                         </div>
-                        <div class="progress progress-xs mt-2">
-                            <div class="progress-bar bg-primary-300 bg-primary-gradient" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="p-3">
-                        <div class="row fs-b fw-300">
-                            <div class="col text-left">
-                                Resolved
-                            </div>
-                            <div class="col text-right">
-                                46%
-                            </div>
-                        </div>
-                        <div class="progress progress-xs mt-2">
-                            <div class="progress-bar bg-primary-300 bg-primary-gradient" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="p-3">
-                        <div class="row fs-b fw-300">
-                            <div class="col text-left">
-                                On Hold
-                            </div>
-                            <div class="col text-right">
-                                16%
-                            </div>
-                        </div>
-                        <div class="progress progress-xs mt-2">
-                            <div class="progress-bar bg-primary-300 bg-primary-gradient" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="p-3">
-                        <div class="row fs-b fw-300">
-                            <div class="col text-left">
-                                Fixed
-                            </div>
-                            <div class="col text-right">
-                                56%
-                            </div>
-                        </div>
-                        <div class="progress progress-xs mt-2">
-                            <div class="progress-bar bg-danger-300 bg-warning-gradient" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="p-3">
-                        <div class="row fs-b fw-300">
-                            <div class="col text-left">
-                                Replied
-                            </div>
-                            <div class="col text-right">
-                                6%
-                            </div>
-                        </div>
-                        <div class="progress progress-xs mt-2">
-                            <div class="progress-bar bg-danger-300 bg-warning-gradient" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>

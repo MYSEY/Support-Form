@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admins;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Online;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\DB;
@@ -295,7 +296,9 @@ class UserController extends Controller
     }
     public function userProfile($id){
         $data = User::find($id);
-        return view('users.profile',compact('data',));
+        $ticket = Ticket::where('created_by',$id)->get();
+        $ticketStatus = DB::table('custom_statuses')->get();
+        return view('users.profile',compact('data','ticketStatus','ticket'));
     }
     public function userProfileUpdate(Request $request){
         try{
