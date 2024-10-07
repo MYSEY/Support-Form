@@ -138,11 +138,14 @@
                                 '<td>'+ row.name +'</td>'+
                                 '<td>'+ row.email +'</td>'+
                                 '<td>'+ row.dt +'</td>'+
-                                '<td>'+ row.department_id +'</td>'+
-                                '<td style="color:'+row.priorities.color+'">'+row.priorities.name+'</td>'+
+                                '<td>'+ row.category +'</td>'+
+                                '<td>'+row.priority+'</td>'+
+                                // '<td style="color:'+row.priorities.color+'">'+row.priorities.name+'</td>'+
                                 '<td>'+ (row.assigned_by ? row.assigned_by.name: "") +'</td>'+
-                                '<td>'+ row.issue_type +'</td>'+
-                                '<td style="color:'+row.custom_status.color+'">'+ row.custom_status.name +'</td>'+
+                                '<td>'+ row.custom2 +'</td>'+
+                                // '<td>'+ row.issue_type +'</td>'+
+                                '<td>'+ row.status +'</td>'+
+                                // '<td style="color:'+row.custom_status.color+'">'+ row.custom_status.name +'</td>'+
                             '</tr>';
                         });
                     } else {

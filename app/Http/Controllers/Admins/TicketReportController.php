@@ -38,39 +38,25 @@ class TicketReportController extends Controller
             $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s'); //2023-05-09 23:59:59
         }
         
+        $query = Ticket::with("department")
+        ->with("branch")->with("lastReplier")
+        ->with("CustomStatus")->with("assignedBy")
+        ->with("priorities")->with("createdBy")
+        ->with("issueType")
+        ->when($request->priority, function ($query, $priority) {
+            $query->where('tickets.priority', $priority);
+        })->when($from_date, function ($query, $from_date) {
+            $query->where('tickets.dt','>=', $from_date);
+        })->when($to_date, function ($query, $to_date) {
+            $query->where('tickets.dt','<=', $to_date);
+        })->when($request->status, function ($query, $status) {
+            $query->whereIn('tickets.status', $status);
+        });
+        // Apply additional filtering for role
         if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
-            $data = Ticket::with("department")
-            ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedBy")
-            ->with("priorities")->with("createdBy")
-            ->with("issueType")
-            ->where('department_id',Auth::user()->department_id)
-            ->when($request->priority, function ($query, $priority) {
-                $query->where('tickets.priority', $priority);
-            })->when($from_date, function ($query, $from_date) {
-                $query->where('tickets.dt','>=', $from_date);
-            })->when($to_date, function ($query, $to_date) {
-                $query->where('tickets.dt','<=', $to_date);
-            })->when($request->status, function ($query, $status) {
-                $query->whereIn('tickets.status', $status);
-            })->OrderBy('tickets.id','DESC')->get();     
-        }else{
-            $data = Ticket::with("department")
-            ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedBy")
-            ->with("priorities")->with("createdBy")
-            ->with("issueType")
-            ->when($request->priority, function ($query, $priority) {
-                $query->where('tickets.priority', $priority);
-            })->when($from_date, function ($query, $from_date) {
-                $query->where('tickets.dt','>=', $from_date);
-            })->when($to_date, function ($query, $to_date) {
-                $query->where('tickets.dt','<=', $to_date);
-            })->when($request->status, function ($query, $status) {
-                $query->whereIn('tickets.status', $status);
-            })->OrderBy('tickets.id','DESC')->get();
+            $query->where('department_id',Auth::user()->department_id);
         }
-        
+        $data = $query->OrderBy('tickets.id','DESC')->get();
         return response()->json([
             'success'=>$data,
         ]);

@@ -28,6 +28,8 @@ class UserController extends Controller
 
     public function index()
     {
+        $data = User::with('role')->with('department')->with("branch")->with("createdBy")->with("updatedBy")->get();
+
         if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
             $data = User::with('role')->with('department')->with("branch")->with("createdBy")->with("updatedBy")
             ->where('department_id',Auth::user()->department_id)
