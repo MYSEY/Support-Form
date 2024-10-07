@@ -68,35 +68,6 @@
         @endcan
     </div>
     <div class="row">
-        <div class="col-xl-12">
-            <div id="panel-1" class="panel">
-                <div class="panel-hdr">
-                    <h2>
-                        Kitchen <span class="fw-300"><i>Sink (example)</i></span>
-                    </h2>
-                    <div class="panel-toolbar">
-                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
-                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
-                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
-                    </div>
-                </div>
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        <div class="panel-tag">
-                            We use a combination of various plots to create a more intricate diagram. More basic examples of plot can be found below
-                        </div>
-                        <div id="js-checkbox-toggles" class="d-flex mb-3">
-                            <div class="custom-control custom-switch mr-2">
-                                <input type="checkbox" class="custom-control-input" name="gra-0" id="gra-0" checked="">
-                            </div>
-                        </div>
-                        <div id="flot-toggles" class="w-100 mt-4" style="height: 300px"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-xl-6">
             <div id="panel-9" class="panel">
                 <div class="panel-hdr">	
@@ -238,7 +209,6 @@
 @include('includs.datatable_basic')
     <script>
         $(function() {
-            flot_toggle();
             $('.btn_delete_user_onlin').on('click',function(){
                 let user_id = $(this).data("id");
                 $.ajax({
@@ -370,102 +340,6 @@
                     pattern: statusColor
                 }
             });
-        }
-        var dataTargetProfit = [
-            [1354586000000, 153],
-            [1364587000000, 658],
-            [1374588000000, 198],
-            [1384589000000, 663],
-            [1394590000000, 801],
-            [1404591000000, 1050],
-            [1414592000000, 353],
-            [1424593000000, 749],
-            [1434594000000, 523],
-            [1444595000000, 258],
-            [1454596000000, 688],
-            [1464597000000, 364]
-        ]
-   
-        
-        /* flot toggle example */
-        function flot_toggle()
-        {
-            var data = [
-                {
-                    label: "",
-                    data: dataTargetProfit,
-                    color: color.danger._500,
-                    bars:
-                    {
-                        show: true,
-                        align: "center",
-                        barWidth: 30 * 30 * 60 * 1000 * 80,
-                        lineWidth: 0,
-                        fillColor:
-                        {
-                            colors: [color.danger._900, color.danger._100]
-                        }
-                    },
-                    highlightColor: 'rgba(255,255,255,0.3)',
-                    shadowSize: 0
-                }
-            ]
-
-            var options = {
-                grid:
-                {
-                    hoverable: true,
-                    clickable: true,
-                    tickColor: '#f2f2f2',
-                    borderWidth: 1,
-                    borderColor: '#f2f2f2'
-                },
-                tooltip: true,
-                tooltipOpts:
-                {
-                    cssClass: 'tooltip-inner',
-                    defaultTheme: false
-                },
-                xaxis:
-                {
-                    mode: "time"
-                },
-                yaxes:
-                {
-                    tickFormatter: function(val, axis)
-                    {
-                        return "$" + val;
-                    },
-                    max: 1200
-                }
-            };
-
-            var plot2 = null;
-
-            function plotNow()
-            {
-                var d = [];
-                $("#js-checkbox-toggles").find(':checkbox').each(function()
-                {
-                    if ($(this).is(':checked'))
-                    {
-                        d.push(data[$(this).attr("name").substr(4, 1)]);
-                    }
-                });
-                if (d.length > 0)
-                {
-                    if (plot2)
-                    {
-                        plot2.setData(d);
-                        // plot2.draw();
-                    }
-                    else
-                    {
-                        plot2 = $.plot($("#flot-toggles"), d, options);
-                    }
-                }
-            };
-            plotNow()
         }
     </script>
 @endsection

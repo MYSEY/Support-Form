@@ -462,7 +462,7 @@ class TicketController extends Controller
     public function replies(Request $request)
     {
         DB::beginTransaction();
-        // try{
+        try{
             $ticket_update = false;
             $data_assign = false;
             $dataHistoryStatus = [];
@@ -499,9 +499,11 @@ class TicketController extends Controller
             }
             // Update ticket
             if ($ticket_update == true) {
-                $data['assignedby']  = $request->assignedby;
+                $data['assignedby']  = Auth::user()->id;
+                // $data['assignedby']  = $request->assignedby;
                 $data['status']  = $request->status;
                 $data['priority']  = $request->priority;
+                $data['owner']  = $request->assignedby;
                 // $data['lastreplier']  = Auth::user()->id;
                 // $data['updated_by']  = Auth::user()->id;
                 // $data->save();
@@ -566,11 +568,11 @@ class TicketController extends Controller
                 'message' => "Ticket replies successfully.",
                 'status'=>"success"
             ]);
-        // }catch(\Exception $e){
-        //     DB::rollback();
-        //     // Toastr::error('Updated fail.','Error');
-        //     return redirect()->back();
-        // }
+        }catch(\Exception $e){
+            DB::rollback();
+            // Toastr::error('Updated fail.','Error');
+            return redirect()->back();
+        }
     }
 
     /**
