@@ -75,7 +75,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 "Category" => $value->name_english,
                 "Priority" => $value->priority,
                 "Owner" => $value->owner,
-                "Issue Type" => $value->custom2,
+                "Issue Type" => $value->custom1,
                 "Status" => $value->status,
                 "close_date" => $value->closedat,
             ];
