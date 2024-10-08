@@ -36,7 +36,7 @@ return new class extends Migration
             $table->mediumInteger('closedby')->nullable();
             $table->smallInteger('replies')->nullable();
             $table->smallInteger('staffreplies')->nullable();
-            $table->smallInteger('owner')->nullable();
+            $table->string('owner')->nullable();
             $table->string('assignedby')->nullable();
             $table->time('time_worked')->nullable();
             $table->integer('lastreplier')->nullable();

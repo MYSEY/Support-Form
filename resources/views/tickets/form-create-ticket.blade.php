@@ -64,7 +64,6 @@
                             <label class="form-label" for="ticket-assign">Assign this ticket to:</label>
                             <select class="select2 form-control w-100 select2-hidden-accessible" id="ticket-assign">
                                 <option value="unassigned" selected> > Unassigned < </option>
-                                <option value="auto-assign">  > Auto-assign <  </option>
                                 @foreach ($user_support as $user)
                                     <option value="{{$user->id}}">{{ $user->name}}</option>
                                 @endforeach
@@ -137,7 +136,7 @@
                 let subject = $("input[name=ticket-subject]").val();
                 var attachments = $('#ticket-file').prop('files')[0];
                 var priority = $("#ticket-priority").val();
-                var assignedby = $("#ticket-assign").val();
+                var assign_to = $("#ticket-assign").val();
                 var due_date = $("#ticket-due-date").val();
                 var issue_type = $("#issue-type").val();
                 var overdue_email_sent = $('input[name="ticket-notification"]:checked').val();
@@ -150,7 +149,7 @@
                 formData.append('attachments', attachments);
                 formData.append('subject', subject);
                 formData.append('priority', priority);
-                formData.append('assignedby', assignedby);
+                formData.append('owner', assign_to);
                 formData.append('due_date', due_date);
                 formData.append('issue_type', issue_type);
                 formData.append('overdue_email_sent', overdue_email_sent);

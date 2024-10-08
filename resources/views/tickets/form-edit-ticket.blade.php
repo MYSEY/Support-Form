@@ -37,7 +37,6 @@
                             <label class="form-label" for="ticket-assign">Assign this ticket to:</label>
                             <select class="select2 form-control w-100 select2-hidden-accessible" id="e_ticket-assign">
                                 <option value="unassigned" selected> > Unassigned < </option>
-                                <option value="auto-assign">  > Auto-assign <  </option>
                             </select>
                         </div>
                         <div class="form-group">

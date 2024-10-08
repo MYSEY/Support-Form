@@ -77,6 +77,7 @@
                         <div id="show-replies"> </div>
                         <div class="form mt-3">
                             <div class="form-group">
+                                <label class="form-label" for="ticket-assigned">Description <span class="text-danger">*</span></label>
                                 <textarea class="form-control" id="ticket-reply" rows="5"></textarea>
                             </div>
                             <div class="row">
@@ -88,7 +89,7 @@
                                             <option value="auto-assign">> Auto-assign <</option>
                                             @if (count($user_support) > 0)
                                                 @foreach ($user_support as $item)
-                                                    <option @if($item->id == $data_ticket->assignedby) selected @endif value="{{$item->id}}">{{ $item->name}}</option>
+                                                    <option @if($item->id == $data_ticket->owner) selected @endif value="{{$item->id}}">{{ $item->name}}</option>
                                                 @endforeach
                                             @endif
                                         </select>

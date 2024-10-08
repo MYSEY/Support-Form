@@ -66,14 +66,14 @@ class TicketController extends Controller
             $total_overdue_ticket = Ticket::where("created_by", Auth::user()->id)->where('due_date', '<',$currentDate)->count();
         }else
         if (Auth::user()->RolePermission=='admin') {
-            $total_all_ticket = Ticket::where($departmentCondition)->orWhere("assignedby", Auth::user()->id)
+            $total_all_ticket = Ticket::where($departmentCondition)->orWhere("owner", Auth::user()->id)
             // ->where($statusCondition)
             ->count();
-            $total_assigned_ticket = Ticket::where("assignedby", Auth::user()->id)->count();
-            // $total_others_ticket = Ticket::where($departmentCondition)->where($statusCondition)->whereNot("assignedby", Auth::user()->id)->count();
+            $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)->count();
+            // $total_others_ticket = Ticket::where($departmentCondition)->where($statusCondition)->whereNot("owner", Auth::user()->id)->count();
             $total_unassigned_ticket = Ticket::where($departmentCondition)
             // ->where($statusCondition)
-            ->whereIn("assignedby", ["unassigned","auto-assign"])->count();
+            ->whereIn("owner", ["unassigned","auto-assign"])->count();
             $total_due_soon_ticket = Ticket::where($departmentCondition)
             // ->where($statusCondition)
             ->where('due_date', '>=',$currentDate)->count();
@@ -82,13 +82,13 @@ class TicketController extends Controller
             ->where('due_date', '<',$currentDate)->count();
         }else {
             $total_all_ticket = Ticket::where($statusCondition)->count();
-            $total_assigned_ticket = Ticket::where("assignedby", Auth::user()->id)
+            $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)
             // ->where($statusCondition)
             ->count();
-            $total_others_ticket = Ticket::whereNot("assignedby", Auth::user()->id)
+            $total_others_ticket = Ticket::whereNot("owner", Auth::user()->id)
             // ->where($statusCondition)
             ->count();
-            $total_unassigned_ticket = Ticket::where("assignedby", "unassigned")
+            $total_unassigned_ticket = Ticket::where("owner", "unassigned")
             // ->where($statusCondition)
             ->count();
             $total_due_soon_ticket = Ticket::where('due_date', '>=',$currentDate)
@@ -138,12 +138,11 @@ class TicketController extends Controller
             $data['trackid'] = $this->generateTicketID();
             $data['name'] = Auth::user()->name;
             $data['email'] = Auth::user()->email;
-            // $data['department_id'] = $request->department_id;
-            // $data['branch_id'] = $request->branch_id;
             $data['issue_type'] = $request->issue_type;
             $data['status'] = $status->id;
             $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');
             $data['created_by'] = Auth::user()->id;
+            $data['assignedby'] = Auth::user()->id;
             $ticket = Ticket::create($data);
 
             $data_histoies['trackid'] = $ticket->id;
@@ -202,26 +201,26 @@ class TicketController extends Controller
             $query->when(Auth::user()->department_id, function ($query) {
                 $query->where('department_id', Auth::user()->department_id);
                 $query->orWhere("created_by", Auth::user()->id);
-                $query->orWhere("assignedby", Auth::user()->id);
+                $query->orWhere("owner", Auth::user()->id);
             });
         };
         // dd($request->status);
         if (Auth::user()->RolePermission=='staff') {
             $data_tickets = Ticket::with("department")
             ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedBy")
+            ->with("CustomStatus")->with("assignedTo")
             ->with("priorities")->with("createdBy")
             ->with("issueType")
             ->where("created_by", Auth::user()->id)
             ->when($request->status, function ($query, $status) {
                 if ($status == 2) {
-                    $query->where("assignedby", Auth::user()->id);
+                    $query->where("owner", Auth::user()->id);
                 }
                 if ($status == 3) {
-                    $query->whereNot("assignedby", Auth::user()->id);
+                    $query->whereNot("owner", Auth::user()->id);
                 }
                 if ($status == 4) {
-                    $query->whereIn("assignedby", ["unassigned","auto-assign"]);
+                    $query->whereIn("owner", ["unassigned","auto-assign"]);
                 }
                 if ($status == 5) {
                     $currentDate = Carbon::now()->format('Y-m-d');
@@ -237,20 +236,20 @@ class TicketController extends Controller
         }else if(Auth::user()->RolePermission=='admin'){
             $data_tickets = Ticket::with("department")
             ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedBy")
+            ->with("CustomStatus")->with("assignedTo")
             ->with("priorities")->with("createdBy")
             ->with("issueType")
             ->where($departmentCondition)
             // ->where($statusCondition)
             ->when($request->status, function ($query, $status) {
                 if ($status == 2) {
-                    $query->where("assignedby", Auth::user()->id);
+                    $query->where("owner", Auth::user()->id);
                 }
                 if ($status == 3) {
-                    $query->whereNot("assignedby", Auth::user()->id);
+                    $query->whereNot("owner", Auth::user()->id);
                 }
                 if ($status == 4) {
-                    $query->whereIn("assignedby", ["unassigned","auto-assign"]);
+                    $query->whereIn("owner", ["unassigned"]);
                 }
                 if ($status == 5) {
                     $currentDate = Carbon::now()->format('Y-m-d');
@@ -266,19 +265,19 @@ class TicketController extends Controller
         }else {
             $data_tickets = Ticket::with("department")
             ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedBy")
+            ->with("CustomStatus")->with("assignedTo")
             ->with("priorities")->with("createdBy")
             ->with("issueType")
             // ->where($statusCondition)
             ->when($request->status, function ($query, $status) {
                 if ($status == 2) {
-                    $query->where("assignedby", Auth::user()->id);
+                    $query->where("owner", Auth::user()->id);
                 }
                 if ($status == 3) {
-                    $query->whereNotIn("assignedby", ["unassigned","auto-assign"]);
+                    $query->whereNotIn("owner", ["unassigned"]);
                 }
                 if ($status == 4) {
-                    $query->whereIn("assignedby", ["unassigned","auto-assign"]);
+                    $query->whereIn("owner", ["unassigned"]);
                 }
                 if ($status == 5) {
                     $currentDate = Carbon::now()->format('Y-m-d');

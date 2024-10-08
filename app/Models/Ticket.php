@@ -69,6 +69,9 @@ class Ticket extends Model
     public function assignedBy(){
         return $this->belongsTo(User::class,'assignedby');
     }
+    public function assignedTo(){
+        return $this->belongsTo(User::class,'owner');
+    }
     public function priorities(){
         return $this->belongsTo(Priority::class,'priority');
     }
