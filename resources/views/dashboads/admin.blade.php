@@ -247,7 +247,7 @@
                             if (item.priority == 1) {
                                 priority++;
                             }
-                            if (item.owner == 1) {
+                            if (item.owner != "") {
                                 assign++;
                             } 
                             
