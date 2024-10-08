@@ -39,7 +39,7 @@ class DashboardController extends Controller
         $query = DB::table('tickets')->where('deleted_at',null);
 
         // Apply additional filtering for role
-        if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
+        if (Auth::user()->RolePermission=='staff') {
             $query->where('department_id',Auth::user()->department_id)->where('created_by',Auth::user()->id);
         }
         $dataTickets = $query->orderBy('id','DESC')->get();
