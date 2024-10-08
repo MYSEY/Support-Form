@@ -53,7 +53,7 @@ class TicketReportController extends Controller
             $query->whereIn('tickets.status', $status);
         });
         // Apply additional filtering for role
-        if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
+        if (Auth::user()->RolePermission=='staff') {
             $query->where('department_id',Auth::user()->department_id);
         }
         $data = $query->OrderBy('tickets.id','DESC')->get();
