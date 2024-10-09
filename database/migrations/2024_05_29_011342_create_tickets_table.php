@@ -50,6 +50,7 @@ return new class extends Migration
             $table->integer('overdue_email_sent')->nullable();
             $table->integer('satisfaction_email_sent')->nullable();
             $table->date('satisfaction_email_dt')->nullable();
+            $table->integer('ticket_type')->nullable();
             $table->integer('issue_type')->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
