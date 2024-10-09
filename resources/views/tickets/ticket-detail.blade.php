@@ -121,7 +121,7 @@
                                             <option value=""></option>
                                             @if (count($status) > 0)
                                                 @foreach ($status as $item)
-                                                    <option @if($item->id == $data_ticket->status) selected @endif value="{{$item->id}}">{{ $item->name}}</option>
+                                                    <option @if($item->id == $data_ticket->status) selected @endif value="{{$item->id}}" name="{{ $item->name}}">{{ $item->name}}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -466,6 +466,8 @@
             //** block reply ticket
             showReplies(id)
             $("#btn-reply-ticket").click(function(e) {
+                var selectedOption = $('#ticket-status option:selected');
+                var nameAttr = selectedOption.attr('name');
                 $(".btn-hidden-show").hide();
                 $(".btn-loading").css('display', 'block');
 
@@ -492,12 +494,14 @@
                 formData.append('autoreload', autoreload);
                 formData.append('rp_attachments', rp_attachments);
                 
-                if ($("#ticket-reply").val() == null || $("#ticket-reply").val() == "") {
-                    $("#ticket-reply").addClass("is-invalid");
-                    $("#ticket-reply").removeClass("is-valid");
-                    $(".btn-hidden-show").show();
-                    $(".btn-loading").css('display', 'none');
-                    toastr.error("Please input text!");
+                if (nameAttr !="Closed" && nameAttr !="Resolved") {
+                    if ($("#ticket-reply").val() == null || $("#ticket-reply").val() == "") {
+                        $("#ticket-reply").addClass("is-invalid");
+                        $("#ticket-reply").removeClass("is-valid");
+                        $(".btn-hidden-show").show();
+                        $(".btn-loading").css('display', 'none');
+                        toastr.error("Please input text!");
+                    }
                 }else{
                     $.ajax({
                         type: "POST",
