@@ -243,7 +243,11 @@ class TicketController extends Controller
             ->with("issueType")
             ->where($departmentCondition)
             // ->where($statusCondition)
+            // ->orWhere("ticket_type", "1")
             ->when($request->status, function ($query, $status) {
+                if ($status == 1) {
+                    $query->orWhere("ticket_type", "1");
+                }
                 if ($status == 2) {
                     $query->where("owner", Auth::user()->id);
                 }
@@ -262,7 +266,6 @@ class TicketController extends Controller
                     $query->where('due_date', '<',$currentDate);
                 }
             })
-            ->orWhere("ticket_type", "1")
             ->orderBy('id','DESC')
             ->get();
         }else {
