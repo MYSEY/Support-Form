@@ -67,6 +67,7 @@ class TicketController extends Controller
         }else
         if (Auth::user()->RolePermission=='admin') {
             $total_all_ticket = Ticket::where($departmentCondition)->orWhere("owner", Auth::user()->id)
+            ->orWhere("ticket_type", "1")
             // ->where($statusCondition)
             ->count();
             $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)->count();
@@ -261,6 +262,7 @@ class TicketController extends Controller
                     $query->where('due_date', '<',$currentDate);
                 }
             })
+            ->orWhere("ticket_type", "1")
             ->orderBy('id','DESC')
             ->get();
         }else {
