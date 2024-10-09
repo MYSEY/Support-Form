@@ -51,6 +51,7 @@ class Ticket extends Model
         'overdue_email_sent',
         'satisfaction_email_sent',
         'satisfaction_email_dt',
+        'ticket_type',
         'issue_type',
         'created_by',
         'updated_by',

@@ -36,6 +36,13 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label class="form-label" for="ticket-subject">Ticket Type:</label>
+                            <select class="form-control" id="ticket_type" name="ticket_type">
+                                <option value=""> Normal </option>
+                                <option value="1"> Specail Case </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label class="form-label">Ticket templates (<a type="button" href="#" >Manage ticket templates</a>)</label>
                             <div class="demo">
                                 <div class="custom-control custom-radio">
@@ -139,6 +146,7 @@
                 var assign_to = $("#ticket-assign").val();
                 var due_date = $("#ticket-due-date").val();
                 var issue_type = $("#issue-type").val();
+                var ticket_type = $("#ticket_type").val();
                 var overdue_email_sent = $('input[name="ticket-notification"]:checked').val();
                 var satisfaction_email_sent = $('input[name="ticket-check-submiss"]:checked').val();
                 var description = $("#description").val();
@@ -152,6 +160,7 @@
                 formData.append('owner', assign_to);
                 formData.append('due_date', due_date);
                 formData.append('issue_type', issue_type);
+                formData.append('ticket_type', ticket_type);
                 formData.append('overdue_email_sent', overdue_email_sent);
                 formData.append('satisfaction_email_sent', satisfaction_email_sent);
                 formData.append('message', description);

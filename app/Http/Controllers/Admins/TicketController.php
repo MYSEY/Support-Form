@@ -139,6 +139,7 @@ class TicketController extends Controller
             $data['name'] = Auth::user()->name;
             $data['email'] = Auth::user()->email;
             $data['issue_type'] = $request->issue_type;
+            $data['ticket_type'] = $request->ticket_type;
             $data['status'] = $status->id;
             $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');
             $data['created_by'] = Auth::user()->id;
@@ -437,10 +438,11 @@ class TicketController extends Controller
             $data['attachments'] = $AttachmentName;
             $data['name'] = Auth::user()->name;
             $data['email'] = Auth::user()->email;
-            $data['department_id'] = Auth::user()->department_id;
-            $data['branch_id'] = Auth::user()->branch_id;
+            // $data['department_id'] = Auth::user()->department_id;
+            // $data['branch_id'] = Auth::user()->branch_id;
             $data['subject']  = $request->subject;
             $data['issue_type']  = $request->issue_type;
+            $data['ticket_type'] = $request->ticket_type;
             $data['priority']  = $request->priority;
             $data['message']  = $request->message;
             $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');

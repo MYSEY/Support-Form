@@ -24,6 +24,13 @@
                             <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="e_issue-type">
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label" for="ticket-subject">Ticket Type:</label>
+                            <select class="form-control" id="e_ticket_type" name="ticket_type">
+                                <option value=""> Normal </option>
+                                <option value="1"> Specail Case </option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="col-xl-6">
@@ -96,6 +103,7 @@
                 var assignedby = $("#e_ticket-assign").val();
                 var due_date = $("#e_due_date").val();
                 var issue_type = $("#e_issue-type").val();
+                var ticket_type = $("#e_ticket_type").val();
                 var description = $("#e_description").val();
                 var old_attachment = $("#old_attachments").val();
                 // var fileSize = attachments['size'];
@@ -108,6 +116,7 @@
                 formData.append('assignedby', assignedby);
                 formData.append('due_date', due_date);
                 formData.append('issue_type', issue_type);
+                formData.append('ticket_type', ticket_type);
                 formData.append('message', description);
                 formData.append('old_attachment', old_attachment);
 
@@ -192,6 +201,14 @@
                                     selected: item.id == data.issue_type
                                 }));
                             });
+                        };
+                        if (data.ticket_type != '') {
+                            $('#e_ticket_type').html('<option selected value=""> Normal </option>');
+                            $('#e_ticket_type').append($('<option>', {
+                                value: "1",
+                                text: "Specail Case",
+                                selected: data.ticket_type == 1
+                            }));
                         };
                         if (response.priority != '') {
                             $('#e_ticket_priority').html('<option selected value=""> -- Select --</option>');
