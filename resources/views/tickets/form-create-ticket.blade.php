@@ -36,9 +36,10 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="ticket-subject">Ticket Type:</label>
-                            <select class="form-control" id="ticket_type" name="ticket_type">
-                                <option value=""> Normal </option>
+                            <label class="form-label" for="ticket-subject">Ticket Type: <span class="text-danger">*</span></label>
+                            <select class="form-control required" id="ticket_type" name="ticket_type" required>
+                                <option value="">  </option>
+                                <option value="0"> Normal </option>
                                 <option value="1"> Specail Case </option>
                             </select>
                         </div>
