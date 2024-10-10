@@ -128,8 +128,13 @@
                             let updated_at = moment(value.updated_at).format('D-MMM-YYYY');
                             let due_date = value.due_date ? moment(value.due_date).format('D-MMM-YYYY') : "";
                             let assign_by = value.assignedTo;
+
                             if (value.assigned_to) {
                                 assign_by = "Assigned to: "+value.assigned_to.name;
+                            }
+                            let ticket_type = "Normal";
+                            if (value.ticket_type == 1) {
+                                ticket_type = "Specail Case";
                             }
                             // var message = nl2br(value.message);
                             // message = removeBrTags(value.message);
@@ -145,6 +150,7 @@
                                     '</td>'+
                                     '<td><a href="{{url("storage/attachments")}}/'+(value.attachments)+'" target="_blank">'+(value.attachments)+'</a></td>'+
                                     '<td style="color: '+value.custom_status.color+'">'+value.custom_status.name+'</td>'+
+                                    '<td >'+(ticket_type)+'</td>'+
                                     '<td>'+(value.assigned_to ? value.assigned_to.name : value.assignedTo)+'</td>'+
                                     '<td>'+(value.last_replier ? value.last_replier.name : value.name)+'</td>'+
                                     '<td>'+due_date+'</td>'+

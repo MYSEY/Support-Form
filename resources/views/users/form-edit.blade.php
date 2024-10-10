@@ -18,7 +18,7 @@
                     <div class="col-md-6">
                         <input type="hidden" name="id" class="e_id" value="">
                         <div class="form-group">
-                            <label class="form-label" for="e_user">Real name <span class="text-danger">*</span></label>
+                            <label class="form-label" for="e_user">Name <span class="text-danger">*</span></label>
                             <input type="text" id="e_user" class="form-control e_user_required" name="user" required>
                         </div>
                         <div class="form-group">
