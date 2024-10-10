@@ -30,6 +30,7 @@
                                         <option value="">-- Select --</option>
                                         <option value="super_admin" {{$role->role_type=='super_admin' ? 'selected' : ''}}>Super Admin</option>
                                         <option value="admin" {{$role->role_type=='admin' ? 'selected' : ''}}>Administrator</option>
+                                        <option value="admin_support" {{$role->role_type=='admin_support' ? 'selected' : ''}}>Admin Support</option>
                                         <option value="staff" {{$role->role_type=='staff' ? 'selected' : ''}}>Staff</option>
                                     </select>
                                 </div>

@@ -10,6 +10,7 @@
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
+                <th>Ticket Type</th>
                 <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
@@ -67,6 +68,7 @@
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
+                <th>Ticket Type</th>
                 <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
@@ -91,6 +93,7 @@
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
+                <th>Ticket Type</th>
                 <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
@@ -115,6 +118,7 @@
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
+                <th>Ticket Type</th>
                 <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
@@ -139,6 +143,7 @@
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
+                <th>Ticket Type</th>
                 <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>
@@ -163,6 +168,7 @@
                 <th>Subjesct</th>
                 <th>attachments</th>
                 <th>Status</th>
+                <th>Ticket Type</th>
                 <th>Assigned</th>
                 <th>Last Replier</th>
                 <th>Due Date</th>

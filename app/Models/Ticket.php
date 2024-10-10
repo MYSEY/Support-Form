@@ -18,6 +18,7 @@ class Ticket extends Model
         'name',
         'email',
         'trackid',
+        'department_id_from',
         'department_id',
         'branch_id',
         'priority',
