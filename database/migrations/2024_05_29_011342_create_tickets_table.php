@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('trackid')->nullable();
+            $table->integer('department_id_from')->nullable();
             $table->integer('department_id')->nullable();
             $table->integer('branch_id')->nullable();
             $table->integer('priority')->nullable();

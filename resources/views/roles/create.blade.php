@@ -26,6 +26,7 @@
                                         <option value="">-- Select --</option>
                                         <option value="super_admin">Super Admin</option>
                                         <option value="admin">Administrator</option>
+                                        <option value="admin_support">Admin Support</option>
                                         <option value="staff">Staff</option>
                                     </select>
                                 </div>

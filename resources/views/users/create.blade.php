@@ -29,7 +29,7 @@
                 <div class="row mb-2">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="user">Real name <span class="text-danger">*</span></label>
+                            <label class="form-label" for="user">Name <span class="text-danger">*</span></label>
                             <input type="text" id="user" class="form-control @error('user') is-invalid @enderror" name="user" value="{{old('user')}}">
                             @error('user')
                                 <div class="invalid-feedback">
@@ -42,6 +42,11 @@
                         <div class="form-group">
                             <label class="form-label" for="name">Username <span class="text-danger">*</span></label>
                             <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{old('name')}}">
+                            @error('name')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -50,6 +55,11 @@
                         <div class="form-group">
                             <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
                             <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{old('email')}}">
+                            @error('email')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -63,6 +73,11 @@
                                     @endforeach
                                 @endif
                             </select>
+                            @error('department_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -78,6 +93,11 @@
                                     @endforeach
                                 @endif
                             </select>
+                            @error('branch_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -91,6 +111,11 @@
                                     @endforeach
                                 @endif
                             </select>
+                            @error('role_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
                 </div>

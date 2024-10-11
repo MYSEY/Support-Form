@@ -33,7 +33,7 @@
                 <div class="row mb-2">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="user">Real name <span class="text-danger">*</span></label>
+                            <label class="form-label" for="user">Name <span class="text-danger">*</span></label>
                             <input type="text" id="user" class="form-control @error('user') is-invalid @enderror" name="user" value="{{$data->user}}">
                             @error('user')
                                 <div class="invalid-feedback">
