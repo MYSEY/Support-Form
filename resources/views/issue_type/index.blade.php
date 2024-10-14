@@ -53,7 +53,7 @@
                                                                 class="fal fa-times"></i></a>
                                                     @endcan
                                                     @can('Issue Type Edit')
-                                                        <a class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 data-show"
+                                                        <a class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 btn_edit"
                                                         data-id="{{ $item->id }}" title="Edit"><i
                                                             class="fal fa-edit"></i></a>
                                                     @endcan
@@ -277,7 +277,7 @@
             $("#btn-save").click(handleSaveClick);
             $("#btn-update").click(handleUpdateClick);
 
-            $('.data-show').on('click', function() {
+            $(document).on('click','.btn_edit', function() {
                 $(".e_department").css("display", "none");
                 let id = $(this).data("id");
                 $.ajax({

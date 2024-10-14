@@ -7,14 +7,14 @@
     </div>
 @endcan
 <ul class="nav nav-pills" role="tablist">
-    <li class="nav-item"><a class="nav-link active tab-tables" data-toggle="tab" data-permiss="1" href="#js_change_pill_direction-1">Open tickets {{$total_all_ticket}}</a></li>
+    <li class="nav-item"><a class="nav-link active tab-tables" data-toggle="tab" data-permiss="1" href="#open_ticket">Open tickets {{$total_all_ticket}}</a></li>
     @if (Auth::user()->RolePermission !='staff')
-        <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="2" href="#js_change_pill_direction-2">Assigned to me {{$total_assigned_ticket}}</a></li>
+        <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="2" href="#ticke_assigned">Assigned to me {{$total_assigned_ticket}}</a></li>
         {{-- <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="3" href="#js_change_pill_direction-3">Assigned to others {{$total_others_ticket}}</a></li> --}}
-        <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="4" href="#js_change_pill_direction-4">Unassigned {{$total_unassigned_ticket}}</a></li>
+        <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="4" href="#ticket_unassigned">Unassigned {{$total_unassigned_ticket}}</a></li>
     @endif
-    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="5" href="#js_change_pill_direction-5">Due soon {{$total_due_soon_ticket}}</a></li>
-    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="6" href="#js_change_pill_direction-6">Overdue {{$total_overdue_ticket}}</a></li>
+    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="5" href="#ticket_due_soon">Due soon {{$total_due_soon_ticket}}</a></li>
+    <li class="nav-item"><a class="nav-link tab-tables" data-toggle="tab" data-permiss="6" href="#tiecket_overdue">Overdue {{$total_overdue_ticket}}</a></li>
 </ul>
 
 <div class="row mt-3">

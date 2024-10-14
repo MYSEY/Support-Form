@@ -1,4 +1,4 @@
-<div class="tab-pane fade active show" id="js_change_pill_direction-1" role="tabpanel">
+<div class="tab-pane fade active show" id="open_ticket" role="tabpanel">
     <table id="dt-basic-all" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
@@ -56,7 +56,7 @@
         </tbody>
     </table>
 </div>
-<div class="tab-pane fade" id="js_change_pill_direction-2" role="tabpanel">
+<div class="tab-pane fade" id="ticke_assigned" role="tabpanel">
     <table id="dt-basic-assign" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
@@ -106,7 +106,7 @@
         </tbody>
     </table>
 </div>
-<div class="tab-pane fade" id="js_change_pill_direction-4" role="tabpanel">
+<div class="tab-pane fade" id="ticket_unassigned" role="tabpanel">
     <table id="dt-basic-unassigned" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
@@ -131,7 +131,7 @@
         </tbody>
     </table>
 </div>
-<div class="tab-pane fade" id="js_change_pill_direction-5" role="tabpanel">
+<div class="tab-pane fade" id="ticket_due_soon" role="tabpanel">
     <table id="dt-basic-due-soon" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
@@ -156,7 +156,7 @@
         </tbody>
     </table>
 </div>
-<div class="tab-pane fade" id="js_change_pill_direction-6" role="tabpanel">
+<div class="tab-pane fade" id="tiecket_overdue" role="tabpanel">
     <table id="dt-basic-overdue" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>

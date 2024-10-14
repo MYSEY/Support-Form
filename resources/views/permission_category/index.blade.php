@@ -205,7 +205,7 @@
                 })
             });
 
-            $('.btn_updated').on('click',function(){
+            $(document).on('click','.btn_updated',function(){
                 let id = $(this).data("id");
                 $.ajax({
                     type: "GET",
