@@ -289,6 +289,7 @@ class TicketController extends Controller
             ->with("branch")->with("lastReplier")
             ->with("CustomStatus")->with("assignedTo")
             ->with("priorities")->with("createdBy")
+            ->with("fromDepartment")
             ->with("issueType")
             ->where($departmentCondition)
             ->when($request->status, function ($query, $status) {
