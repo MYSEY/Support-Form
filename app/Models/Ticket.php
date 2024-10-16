@@ -59,6 +59,9 @@ class Ticket extends Model
         'deleted_at',
     ];
 
+    public function fromDepartment(){
+        return $this->belongsTo(Department::class,'department_id_from');
+    }
     public function department(){
         return $this->belongsTo(Department::class,'department_id');
     }

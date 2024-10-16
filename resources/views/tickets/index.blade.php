@@ -142,24 +142,25 @@
                             bodyTr +='<tr>'+
                                     '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(value.trackid)+'</a></td>'+
                                     '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(created_at)+'</a></td>'+
-                                    '<td>'+updated_at+'</td>'+
-                                    '<td>'+(value.department ? value.department.name_english: "")+'</td>'+
+                                    '<td>'+(value.from_department ? value.from_department.name_english : "")+(value.branch ? value.branch.branch_name_en : "")+'</td>'+
                                     '<td>'+value.name+'</td>'+
+                                    '<td>'+(value.department ? value.department.name_english: "")+'</td>'+
                                     '<td class="sub-issue-type sub-message" data-assign-by="'+(assign_by)+'" data-message="'+(value.message)+'">'+
                                         '<a href="javascript:void(0)">'+value.subject+'</a>'+
                                     '</td>'+
-                                    '<td><a href="{{url("storage/attachments")}}/'+(value.attachments)+'" target="_blank">'+(value.attachments)+'</a></td>'+
                                     '<td style="color: '+value.custom_status.color+'">'+value.custom_status.name+'</td>'+
                                     '<td >'+(ticket_type)+'</td>'+
-                                    '<td>'+(value.assigned_to ? value.assigned_to.name : value.assignedTo)+'</td>'+
-                                    '<td>'+(value.last_replier ? value.last_replier.name : value.name)+'</td>'+
-                                    '<td>'+due_date+'</td>'+
                                     '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="'+(value.issue_type ? value.issue_type.name : "")+'">'+(value.issue_type ? value.issue_type.name : "")+'</td>'+
                                     '<td>'+
                                         '<div style="display: flex">'+
                                             '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:'+value.priorities.color+'"></i> <span>'+(value.priority ? value.priorities.name : "")+'</span>'+
                                         '</div>'+
                                     '</td>'+
+                                    '<td>'+(value.assigned_to ? value.assigned_to.name : value.assignedTo)+'</td>'+
+                                    '<td>'+(value.last_replier ? value.last_replier.name : value.name)+'</td>'+
+                                    '<td>'+due_date+'</td>'+
+                                    '<td>'+updated_at+'</td>'+
+                                    '<td><a href="{{url("storage/attachments")}}/'+(value.attachments)+'" target="_blank">'+(value.attachments)+'</a></td>'+
                                 '</tr>';
                         });
                     }

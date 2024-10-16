@@ -483,7 +483,6 @@
                 var assignedby = $("#ticket-assigned").val();
                 var autoreload = $('input[name="autoreload-send-email"]:checked').val();
                 var rp_attachments = $("#rp_attachments").prop('files')[0];
-
                 formData.append('_token', token);
                 formData.append('reply_to', reply_to);
                 formData.append('message', message);
@@ -493,6 +492,8 @@
                 formData.append('assignedby', assignedby);
                 formData.append('autoreload', autoreload);
                 formData.append('rp_attachments', rp_attachments);
+
+                let status_rp = false;
                 
                 if (nameAttr !="Closed" && nameAttr !="Resolved") {
                     if ($("#ticket-reply").val() == null || $("#ticket-reply").val() == "") {
@@ -501,8 +502,14 @@
                         $(".btn-hidden-show").show();
                         $(".btn-loading").css('display', 'none');
                         toastr.error("Please input text!");
+                        status_rp = false;
+                    }else{
+                        status_rp = true;
                     }
                 }else{
+                    status_rp = true;
+                }
+                if (status_rp == true) {
                     $.ajax({
                         type: "POST",
                         url: "{{url('admin/ticket/replies')}}",

@@ -2,20 +2,21 @@
     <table id="dt-basic-all" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
-                <th>Tracking ID</th>
+                <th>Tracking_ID</th>
                 <th>Submitted</th>
-                <th>Updated</th>
-                <th>Department/Branch</th>
-                <th>Create By</th>
+                <th>From_Department/Branch</th>
+                <th>Create_By</th>
+                <th>To_Department</th>
                 <th>Subjesct</th>
-                <th>attachments</th>
                 <th>Status</th>
-                <th>Ticket Type</th>
-                <th>Assigned</th>
-                <th>Last Replier</th>
-                <th>Due Date</th>
-                <th>Sub Issue Type</th>
+                <th>Ticket_Type</th>
+                <th>Sub_Issue_Type</th>
                 <th>Priority</th>
+                <th>Assigned</th>
+                <th>Last_Replier</th>
+                <th>Due_Date</th>
+                <th>Updated</th>
+                <th>attachments</th>
             </tr>
         </thead>
         <tbody>
@@ -60,20 +61,21 @@
     <table id="dt-basic-assign" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
-                <th>Tracking ID</th>
+                <th>Tracking_ID</th>
                 <th>Submitted</th>
-                <th>Updated</th>
-                <th>Department</th>
-                <th>Create By</th>
+                <th>From_Department/Branch</th>
+                <th>Create_By</th>
+                <th>To_Department</th>
                 <th>Subjesct</th>
-                <th>attachments</th>
                 <th>Status</th>
-                <th>Ticket Type</th>
-                <th>Assigned</th>
-                <th>Last Replier</th>
-                <th>Due Date</th>
-                <th>Sub Issue Type</th>
+                <th>Ticket_Type</th>
+                <th>Sub_Issue_Type</th>
                 <th>Priority</th>
+                <th>Assigned</th>
+                <th>Last_Replier</th>
+                <th>Due_Date</th>
+                <th>Updated</th>
+                <th>attachments</th>
             </tr>
         </thead>
         <tbody>
@@ -85,20 +87,21 @@
     <table id="dt-basic-assign-other" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
-                <th>Tracking ID</th>
+                <th>Tracking_ID</th>
                 <th>Submitted</th>
-                <th>Updated</th>
-                <th>Department</th>
-                <th>Create By</th>
+                <th>From_Department/Branch</th>
+                <th>Create_By</th>
+                <th>To_Department</th>
                 <th>Subjesct</th>
-                <th>attachments</th>
                 <th>Status</th>
-                <th>Ticket Type</th>
-                <th>Assigned</th>
-                <th>Last Replier</th>
-                <th>Due Date</th>
-                <th>Sub Issue Type</th>
+                <th>Ticket_Type</th>
+                <th>Sub_Issue_Type</th>
                 <th>Priority</th>
+                <th>Assigned</th>
+                <th>Last_Replier</th>
+                <th>Due_Date</th>
+                <th>Updated</th>
+                <th>attachments</th>
             </tr>
         </thead>
         <tbody>
@@ -110,20 +113,21 @@
     <table id="dt-basic-unassigned" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
-                <th>Tracking ID</th>
+                <th>Tracking_ID</th>
                 <th>Submitted</th>
-                <th>Updated</th>
-                <th>Department</th>
-                <th>Create By</th>
+                <th>From_Department/Branch</th>
+                <th>Create_By</th>
+                <th>To_Department</th>
                 <th>Subjesct</th>
-                <th>attachments</th>
                 <th>Status</th>
-                <th>Ticket Type</th>
-                <th>Assigned</th>
-                <th>Last Replier</th>
-                <th>Due Date</th>
-                <th>Sub Issue Type</th>
+                <th>Ticket_Type</th>
+                <th>Sub_Issue_Type</th>
                 <th>Priority</th>
+                <th>Assigned</th>
+                <th>Last_Replier</th>
+                <th>Due_Date</th>
+                <th>Updated</th>
+                <th>attachments</th>
             </tr>
         </thead>
         <tbody>
@@ -135,20 +139,21 @@
     <table id="dt-basic-due-soon" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
-                <th>Tracking ID</th>
+                <th>Tracking_ID</th>
                 <th>Submitted</th>
-                <th>Updated</th>
-                <th>Department</th>
-                <th>Create By</th>
+                <th>From_Department/Branch</th>
+                <th>Create_By</th>
+                <th>To_Department</th>
                 <th>Subjesct</th>
-                <th>attachments</th>
                 <th>Status</th>
-                <th>Ticket Type</th>
-                <th>Assigned</th>
-                <th>Last Replier</th>
-                <th>Due Date</th>
-                <th>Sub Issue Type</th>
+                <th>Ticket_Type</th>
+                <th>Sub_Issue_Type</th>
                 <th>Priority</th>
+                <th>Assigned</th>
+                <th>Last_Replier</th>
+                <th>Due_Date</th>
+                <th>Updated</th>
+                <th>attachments</th>
             </tr>
         </thead>
         <tbody>
@@ -160,20 +165,21 @@
     <table id="dt-basic-overdue" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
-                <th>Tracking ID</th>
+                <th>Tracking_ID</th>
                 <th>Submitted</th>
-                <th>Updated</th>
-                <th>Department</th>
-                <th>Create By</th>
+                <th>From_Department/Branch</th>
+                <th>Create_By</th>
+                <th>To_Department</th>
                 <th>Subjesct</th>
-                <th>attachments</th>
                 <th>Status</th>
-                <th>Ticket Type</th>
-                <th>Assigned</th>
-                <th>Last Replier</th>
-                <th>Due Date</th>
-                <th>Sub Issue Type</th>
+                <th>Ticket_Type</th>
+                <th>Sub_Issue_Type</th>
                 <th>Priority</th>
+                <th>Assigned</th>
+                <th>Last_Replier</th>
+                <th>Due_Date</th>
+                <th>Updated</th>
+                <th>attachments</th>
             </tr>
         </thead>
         <tbody>

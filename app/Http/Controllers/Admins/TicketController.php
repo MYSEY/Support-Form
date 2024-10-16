@@ -98,7 +98,8 @@ class TicketController extends Controller
             // ->where($statusCondition)
             ->where('due_date', '<',$currentDate)->count();
         }else {
-            $total_all_ticket = Ticket::where($statusCondition)->count();
+            $total_all_ticket = Ticket::count();
+            // $total_all_ticket = Ticket::where($statusCondition)->count();
             $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)
             // ->where($statusCondition)
             ->count();
@@ -229,6 +230,7 @@ class TicketController extends Controller
             ->with("branch")->with("lastReplier")
             ->with("CustomStatus")->with("assignedTo")
             ->with("priorities")->with("createdBy")
+            ->with("fromDepartment")
             ->with("issueType")
             ->where("created_by", Auth::user()->id)
             ->when($request->status, function ($query, $status) {
@@ -288,6 +290,7 @@ class TicketController extends Controller
             ->with("branch")->with("lastReplier")
             ->with("CustomStatus")->with("assignedTo")
             ->with("priorities")->with("createdBy")
+            ->with("fromDepartment")
             ->with("issueType")
             ->where('department_id', Auth::user()->department_id)
             ->orWhere('department_id_from', Auth::user()->department_id)
@@ -321,6 +324,7 @@ class TicketController extends Controller
             ->with("branch")->with("lastReplier")
             ->with("CustomStatus")->with("assignedTo")
             ->with("priorities")->with("createdBy")
+            ->with("fromDepartment")
             ->with("issueType")
             // ->where($statusCondition)
             ->when($request->status, function ($query, $status) {
