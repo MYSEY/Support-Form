@@ -324,10 +324,11 @@ class TicketController extends Controller
             ->with("fromDepartment")
             ->with("issueType")
             ->where('department_id', Auth::user()->department_id)
-            ->orWhere('department_id_from', Auth::user()->department_id)
+            // ->orWhere('department_id_from', Auth::user()->department_id)
             ->when($request->status, function ($query, $status) {
                 if ($status == 1) {
                     $query->orWhere("ticket_type", "1");
+                    $query->orWhere('department_id_from', Auth::user()->department_id);
                 }
                 if ($status == 2) {
                     $query->where("owner", Auth::user()->id);
