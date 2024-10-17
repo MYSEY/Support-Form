@@ -184,11 +184,14 @@ class TicketController extends Controller
             $data['ticket_type'] = $request->ticket_type;
 
             $dataBranch = Branch::where("id", Auth::user()->branch_id)->first();
-            if($dataBranch->abbreviations == "HQ"){
-                $data['department_id_from'] = Auth::user()->department_id;
-            }else{
-                $data['branch_id'] = Auth::user()->branch_id;
+            if ($dataBranch) {
+                if($dataBranch->abbreviations == "HQ"){
+                    $data['department_id_from'] = Auth::user()->department_id;
+                }else{
+                    $data['branch_id'] = Auth::user()->branch_id;
+                }
             }
+            
             $data['status'] = $status->id;
             $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');
             $data['created_by'] = Auth::user()->id;
