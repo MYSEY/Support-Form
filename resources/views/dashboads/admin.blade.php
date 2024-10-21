@@ -235,6 +235,7 @@
                 dataType: "JSON",
                 success: function(response) {
                     let dataPriorities = response.priorities;
+                    let user_id = 0;
                     if (response.dataTickets.length > 0) {
                         var newTicket = 0;
                         var priority = 0;
@@ -247,14 +248,17 @@
                             if (item.priority == 1) {
                                 priority++;
                             }
-                            if (item.owner != "") {
-                                assign++;
-                            } 
+                            response.users.forEach(user => {
+                                if (item.owner == user.id) {
+                                    assign++;
+                                } 
+                            });
                             
                             if(item.status) {
                                 tickeActive++;
                             }
                         });
+                        console.log(assign);
                         $('#total-new-ticket').text(newTicket);
                         $('#total-priority').text(priority);
                         $('#total-assign').text(assign);

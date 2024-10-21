@@ -257,15 +257,14 @@ class TicketController extends Controller
                 $query->orWhere("owner", Auth::user()->id);
             });
         };
-        // dd($request->status);
+        $query = Ticket::with("department")
+        ->with("branch")->with("lastReplier")
+        ->with("CustomStatus")->with("assignedTo")
+        ->with("priorities")->with("createdBy")
+        ->with("fromDepartment")
+        ->with("issueType");
         if (Auth::user()->RolePermission=='staff') {
-            $data_tickets = Ticket::with("department")
-            ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedTo")
-            ->with("priorities")->with("createdBy")
-            ->with("fromDepartment")
-            ->with("issueType")
-            ->where("created_by", Auth::user()->id)
+            $query->where('created_by',Auth::user()->id)
             ->when($request->status, function ($query, $status) {
                 if ($status == 2) {
                     $query->where("owner", Auth::user()->id);
@@ -284,17 +283,10 @@ class TicketController extends Controller
                     $currentDate = Carbon::now()->format('Y-m-d');
                     $query->where('due_date', '<',$currentDate);
                 }
-            })
-            ->orderBy('id','DESC')
-            ->get();
-        }else if(Auth::user()->RolePermission=='admin_support'){
-            $data_tickets = Ticket::with("department")
-            ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedTo")
-            ->with("priorities")->with("createdBy")
-            ->with("fromDepartment")
-            ->with("issueType")
-            ->where($departmentCondition)
+            });
+        }
+        if (Auth::user()->RolePermission=='admin_support') {
+            $query->where($departmentCondition)
             ->when($request->status, function ($query, $status) {
                 if ($status == 1) {
                     $query->orWhere("ticket_type", "1");
@@ -316,18 +308,10 @@ class TicketController extends Controller
                     $currentDate = Carbon::now()->format('Y-m-d');
                     $query->where('due_date', '<',$currentDate);
                 }
-            })
-            ->orderBy('id','DESC')
-            ->get();
-        }else if(Auth::user()->RolePermission=='admin'){
-            $data_tickets = Ticket::with("department")
-            ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedTo")
-            ->with("priorities")->with("createdBy")
-            ->with("fromDepartment")
-            ->with("issueType")
-            ->where('department_id', Auth::user()->department_id)
-            // ->orWhere('department_id_from', Auth::user()->department_id)
+            });
+        }
+        if (Auth::user()->RolePermission=='admin') {
+            $query->where('department_id', Auth::user()->department_id)
             ->when($request->status, function ($query, $status) {
                 if ($status == 1) {
                     $query->orWhere("ticket_type", "1");
@@ -350,21 +334,11 @@ class TicketController extends Controller
                     $currentDate = Carbon::now()->format('Y-m-d');
                     $query->where('due_date', '<',$currentDate);
                 }
-            })
-            ->orderBy('id','DESC')
-            ->get();
-        }else if(Auth::user()->RolePermission=="admin_branch"){
-            $data_tickets = Ticket::with("department")
-            ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedTo")
-            ->with("priorities")->with("createdBy")
-            ->with("fromDepartment")
-            ->with("issueType")
-            ->where('branch_id', Auth::user()->branch_id)
+            });
+        }
+        if (Auth::user()->RolePermission=='admin_branch') {
+            $query->where('branch_id', Auth::user()->branch_id)
             ->when($request->status, function ($query, $status) {
-                // if ($status == 1) {
-                //     $query->orWhere("ticket_type", "1");
-                // }
                 if ($status == 2) {
                     $query->where("owner", Auth::user()->id);
                 }
@@ -382,39 +356,187 @@ class TicketController extends Controller
                     $currentDate = Carbon::now()->format('Y-m-d');
                     $query->where('due_date', '<',$currentDate);
                 }
-            })
-            ->orderBy('id','DESC')
-            ->get();
-        }else{
-            $data_tickets = Ticket::with("department")
-            ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedTo")
-            ->with("priorities")->with("createdBy")
-            ->with("fromDepartment")
-            ->with("issueType")
-            // ->where($statusCondition)
-            ->when($request->status, function ($query, $status) {
-                if ($status == 2) {
-                    $query->where("owner", Auth::user()->id);
-                }
-                if ($status == 3) {
-                    $query->whereNotIn("owner", ["unassigned"]);
-                }
-                if ($status == 4) {
-                    $query->whereIn("owner", ["unassigned"]);
-                }
-                if ($status == 5) {
-                    $currentDate = Carbon::now()->format('Y-m-d');
-                    $query->where('due_date', '>=',$currentDate);
-                }
-                if ($status == 6) {
-                    $currentDate = Carbon::now()->format('Y-m-d');
-                    $query->where('due_date', '<',$currentDate);
-                }
-            })
-            ->orderBy('id','DESC')
-            ->get();
+            });
         }
+        $query->when($request->status, function ($query, $status) {
+            if ($status == 2) {
+                $query->where("owner", Auth::user()->id);
+            }
+            if ($status == 3) {
+                $query->whereNotIn("owner", ["unassigned"]);
+            }
+            if ($status == 4) {
+                $query->whereIn("owner", ["unassigned"]);
+            }
+            if ($status == 5) {
+                $currentDate = Carbon::now()->format('Y-m-d');
+                $query->where('due_date', '>=',$currentDate);
+            }
+            if ($status == 6) {
+                $currentDate = Carbon::now()->format('Y-m-d');
+                $query->where('due_date', '<',$currentDate);
+            }
+        });
+        $data_tickets = $query->orderBy('id','DESC')->get();
+
+        // dd($request->status);
+        // if (Auth::user()->RolePermission=='staff') {
+        //     $data_tickets = Ticket::with("department")
+        //     ->with("branch")->with("lastReplier")
+        //     ->with("CustomStatus")->with("assignedTo")
+        //     ->with("priorities")->with("createdBy")
+        //     ->with("fromDepartment")
+        //     ->with("issueType")
+        //     ->where("created_by", Auth::user()->id)
+        //     ->when($request->status, function ($query, $status) {
+        //         if ($status == 2) {
+        //             $query->where("owner", Auth::user()->id);
+        //         }
+        //         if ($status == 3) {
+        //             $query->whereNot("owner", Auth::user()->id);
+        //         }
+        //         if ($status == 4) {
+        //             $query->whereIn("owner", ["unassigned","auto-assign"]);
+        //         }
+        //         if ($status == 5) {
+        //             $currentDate = Carbon::now()->format('Y-m-d');
+        //             $query->where('due_date', '>=',$currentDate);
+        //         }
+        //         if ($status == 6) {
+        //             $currentDate = Carbon::now()->format('Y-m-d');
+        //             $query->where('due_date', '<',$currentDate);
+        //         }
+        //     })
+        //     ->orderBy('id','DESC')
+        //     ->get();
+        // }else if(Auth::user()->RolePermission=='admin_support'){
+        //     $data_tickets = Ticket::with("department")
+        //     ->with("branch")->with("lastReplier")
+        //     ->with("CustomStatus")->with("assignedTo")
+        //     ->with("priorities")->with("createdBy")
+        //     ->with("fromDepartment")
+        //     ->with("issueType")
+        //     ->where($departmentCondition)
+        //     ->when($request->status, function ($query, $status) {
+        //         if ($status == 1) {
+        //             $query->orWhere("ticket_type", "1");
+        //         }
+        //         if ($status == 2) {
+        //             $query->where("owner", Auth::user()->id);
+        //         }
+        //         if ($status == 3) {
+        //             $query->whereNot("owner", Auth::user()->id);
+        //         }
+        //         if ($status == 4) {
+        //             $query->whereIn("owner", ["unassigned"]);
+        //         }
+        //         if ($status == 5) {
+        //             $currentDate = Carbon::now()->format('Y-m-d');
+        //             $query->where('due_date', '>=',$currentDate);
+        //         }
+        //         if ($status == 6) {
+        //             $currentDate = Carbon::now()->format('Y-m-d');
+        //             $query->where('due_date', '<',$currentDate);
+        //         }
+        //     })
+        //     ->orderBy('id','DESC')
+        //     ->get();
+        // }else if(Auth::user()->RolePermission=='admin'){
+        //     $data_tickets = Ticket::with("department")
+        //     ->with("branch")->with("lastReplier")
+        //     ->with("CustomStatus")->with("assignedTo")
+        //     ->with("priorities")->with("createdBy")
+        //     ->with("fromDepartment")
+        //     ->with("issueType")
+        //     ->where('department_id', Auth::user()->department_id)
+        //     // ->orWhere('department_id_from', Auth::user()->department_id)
+        //     ->when($request->status, function ($query, $status) {
+        //         if ($status == 1) {
+        //             $query->orWhere("ticket_type", "1");
+        //             $query->orWhere('department_id_from', Auth::user()->department_id);
+        //         }
+        //         if ($status == 2) {
+        //             $query->where("owner", Auth::user()->id);
+        //         }
+        //         if ($status == 3) {
+        //             $query->whereNot("owner", Auth::user()->id);
+        //         }
+        //         if ($status == 4) {
+        //             $query->whereIn("owner", ["unassigned"]);
+        //         }
+        //         if ($status == 5) {
+        //             $currentDate = Carbon::now()->format('Y-m-d');
+        //             $query->where('due_date', '>=',$currentDate);
+        //         }
+        //         if ($status == 6) {
+        //             $currentDate = Carbon::now()->format('Y-m-d');
+        //             $query->where('due_date', '<',$currentDate);
+        //         }
+        //     })
+        //     ->orderBy('id','DESC')
+        //     ->get();
+        // }else if(Auth::user()->RolePermission=="admin_branch"){
+        //     $data_tickets = Ticket::with("department")
+        //     ->with("branch")->with("lastReplier")
+        //     ->with("CustomStatus")->with("assignedTo")
+        //     ->with("priorities")->with("createdBy")
+        //     ->with("fromDepartment")
+        //     ->with("issueType")
+        //     ->where('branch_id', Auth::user()->branch_id)
+        //     ->when($request->status, function ($query, $status) {
+        //         // if ($status == 1) {
+        //         //     $query->orWhere("ticket_type", "1");
+        //         // }
+        //         if ($status == 2) {
+        //             $query->where("owner", Auth::user()->id);
+        //         }
+        //         if ($status == 3) {
+        //             $query->whereNot("owner", Auth::user()->id);
+        //         }
+        //         if ($status == 4) {
+        //             $query->whereIn("owner", ["unassigned"]);
+        //         }
+        //         if ($status == 5) {
+        //             $currentDate = Carbon::now()->format('Y-m-d');
+        //             $query->where('due_date', '>=',$currentDate);
+        //         }
+        //         if ($status == 6) {
+        //             $currentDate = Carbon::now()->format('Y-m-d');
+        //             $query->where('due_date', '<',$currentDate);
+        //         }
+        //     })
+        //     ->orderBy('id','DESC')
+        //     ->get();
+        // }else{
+        //     $data_tickets = Ticket::with("department")
+        //     ->with("branch")->with("lastReplier")
+        //     ->with("CustomStatus")->with("assignedTo")
+        //     ->with("priorities")->with("createdBy")
+        //     ->with("fromDepartment")
+        //     ->with("issueType")
+        //     // ->where($statusCondition)
+        //     ->when($request->status, function ($query, $status) {
+        //         if ($status == 2) {
+        //             $query->where("owner", Auth::user()->id);
+        //         }
+        //         if ($status == 3) {
+        //             $query->whereNotIn("owner", ["unassigned"]);
+        //         }
+        //         if ($status == 4) {
+        //             $query->whereIn("owner", ["unassigned"]);
+        //         }
+        //         if ($status == 5) {
+        //             $currentDate = Carbon::now()->format('Y-m-d');
+        //             $query->where('due_date', '>=',$currentDate);
+        //         }
+        //         if ($status == 6) {
+        //             $currentDate = Carbon::now()->format('Y-m-d');
+        //             $query->where('due_date', '<',$currentDate);
+        //         }
+        //     })
+        //     ->orderBy('id','DESC')
+        //     ->get();
+        // }
        
         DB::commit();
         return response()->json([
