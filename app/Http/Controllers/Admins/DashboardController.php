@@ -29,8 +29,13 @@ class DashboardController extends Controller
         );
         // Apply additional filtering for role
         if (Auth::user()->RolePermission=='staff') {
-            $query->where('department_id',Auth::user()->department_id);
+            $query->where("id", Auth::user()->id);
+        }else if(Auth::user()->RolePermission=='admin_support' || Auth::user()->RolePermission=='admin'){
+            $query->where('department_id', Auth::user()->department_id);
+        }else if(Auth::user()->RolePermission=="admin_branch"){
+            $query->where('branch_id', Auth::user()->branch_id);
         }
+        
         $data = $query->orderBy('onlines.id','DESC')->get();
         return view('dashboads.admin',compact('data'));
     }
@@ -53,20 +58,16 @@ class DashboardController extends Controller
 
         // Apply additional filtering for role
         if (Auth::user()->RolePermission=='staff') {
-            $query->where('tickets.created_by', Auth::user()->id);
-        }
-        if (Auth::user()->RolePermission=='admin_support') {
+            $query->where("tickets.created_by", Auth::user()->id);
+        }else if(Auth::user()->RolePermission=='admin_support'){
             $query->where('tickets.department_id', Auth::user()->department_id)
             ->orWhere("tickets.created_by", Auth::user()->id)
-            ->orWhere("tickets.assignedby", Auth::user()->id)
-            ->orWhere("tickets.owner", Auth::user()->id)
-            ->orWhere("tickets.owner", "unassigned");
-        }
-        if (Auth::user()->RolePermission=='admin') {
-            $query->where('department_id', Auth::user()->department_id)
-            ->orWhere('department_id_from', Auth::user()->department_id)
-            ->orWhere("owner", Auth::user()->id)
-            ->orWhere("owner", "unassigned");
+            ->orWhere("tickets.owner", Auth::user()->id);
+        }else if(Auth::user()->RolePermission=='admin'){
+            $query->where('tickets.department_id', Auth::user()->department_id)
+            ->orWhere('tickets.department_id_from', Auth::user()->department_id);
+        }else if(Auth::user()->RolePermission=="admin_branch"){
+            $query->where('tickets.branch_id', Auth::user()->branch_id);
         }
         $dataTickets = $query->orderBy('id','DESC')->get();
         return response()->json([
