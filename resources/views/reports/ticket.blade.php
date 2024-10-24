@@ -63,7 +63,22 @@
                             <table id="dt-basic-ticket-report" class="table table-bordered table-hover table-striped w-100">
                                 <thead>
                                     <tr>
-                                        <th>Tranking ID</th>
+                                        <th>Tracking_ID</th>
+                                        <th>Submitted</th>
+                                        <th>From_Department/Branch</th>
+                                        <th>Create_By</th>
+                                        <th>To_Department</th>
+                                        <th>Subjesct</th>
+                                        <th>Status</th>
+                                        <th>Ticket_Type</th>
+                                        <th>Sub_Issue_Type</th>
+                                        <th>Priority</th>
+                                        <th>Assigned</th>
+                                        <th>Last_Replier</th>
+                                        <th>Due_Date</th>
+                                        <th>Updated</th>
+
+                                        {{-- <th>Tranking ID</th>
                                         <th>Subject</th>
                                         <th>Name</th>
                                         <th>Email</th>
@@ -72,10 +87,11 @@
                                         <th>Priority</th>
                                         <th>Owner</th>
                                         <th>Issue Type</th>
-                                        <th>Status</th>
+                                        <th>Status</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
                                 </tbody>
                             </table>
                             <!-- datatable end -->
@@ -131,18 +147,36 @@
                     var tr = "";
                     if (rows.length > 0) {
                         $(rows).each(function(index, row) {
-                            let dt = moment(row.dt).format('D-MMM-YYYY')
+                            let created_at = moment(row.created_at).format('D-MMM-YYYY');
+                            let updated_at = moment(row.updated_at).format('D-MMM-YYYY');
+                            let due_date = row.due_date ? moment(row.due_date).format('D-MMM-YYYY') : "";
+                            let assign_by = row.assignedTo;
+                            let dt = moment(row.dt).format('D-MMM-YYYY');
+                            let ticket_type = "Normal";
+                            if (row.ticket_type == 1) {
+                                ticket_type = "Specail Case";
+                            }
                             tr += '<tr class="odd">'+
-                                '<td>'+ row.trackid +'</td>'+
-                                '<td>'+ row.subject +'</td>'+
-                                '<td>'+ row.name +'</td>'+
-                                '<td>'+ row.email +'</td>'+
-                                '<td>'+ row.dt +'</td>'+
-                                '<td>'+ row.department.name_english +'</td>'+
-                                '<td style="color:'+row.priorities.color+'">'+row.priorities.name+'</td>'+
-                                '<td>'+ (row.assigned_by ? row.assigned_by.name: "") +'</td>'+
-                                '<td>'+ row.issue_type +'</td>'+
-                                '<td style="color:'+row.custom_status.color+'">'+ row.custom_status.name +'</td>'+
+                                '<td><a href="{{url("admin/ticket/detail")}}/'+(row.id)+'">'+(row.trackid)+'</a></td>'+
+                                    '<td><a href="{{url("admin/ticket/detail")}}/'+(row.id)+'">'+(created_at)+'</a></td>'+
+                                    '<td>'+(row.from_department ? row.from_department.name_english : "")+(row.branch ? row.branch.branch_name_en : "")+'</td>'+
+                                    '<td>'+row.name+'</td>'+
+                                    '<td>'+(row.department ? row.department.name_english: "")+'</td>'+
+                                    '<td class="sub-issue-type sub-message" data-assign-by="'+(assign_by)+'" data-message="'+(row.message)+'">'+
+                                        '<a href="javascript:void(0)">'+row.subject+'</a>'+
+                                    '</td>'+
+                                    '<td style="color: '+row.custom_status.color+'">'+row.custom_status.name+'</td>'+
+                                    '<td >'+(ticket_type)+'</td>'+
+                                    '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="'+(row.issue_type ? row.issue_type.name : "")+'">'+(row.issue_type ? row.issue_type.name : "")+'</td>'+
+                                    '<td>'+
+                                        '<div style="display: flex">'+
+                                            '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:'+row.priorities.color+'"></i> <span>'+(row.priority ? row.priorities.name : "")+'</span>'+
+                                        '</div>'+
+                                    '</td>'+
+                                    '<td>'+(row.assigned_to ? row.assigned_to.name : row.assignedTo)+'</td>'+
+                                    '<td>'+(row.last_replier ? row.last_replier.name : row.name)+'</td>'+
+                                    '<td>'+due_date+'</td>'+
+                                    '<td>'+updated_at+'</td>'+
                             '</tr>';
                         });
                     } else {
@@ -150,6 +184,33 @@
                     }
                     $("#dt-basic-ticket-report tbody").html(tr);
                     $('#dt-basic-ticket-report').dataTable();
+
+                    $('.sub-issue-type').each(function() {
+                        var text = $(this).text();
+                        var limit = 20; // Set your character limit
+                        if (text.length > limit) {
+                            var truncated = text.substring(0, limit) + '...';
+                            $(this).text(truncated);
+                        }
+                    });
+                    $(document).ready(function() {
+                        function removeBrTags(input) {
+                            return input.replace(/<br\s*\/?>/gi, '');
+                        }
+                        $('.sub-message').each(function() {
+                            var assignBy = $(this).data('assign-by');
+                            var message = $(this).data('message');
+
+                            var cleanedMessage = removeBrTags(message);
+                            var tooltipContent = assignBy + ' » ' + cleanedMessage;
+
+                            $(this).attr('data-toggle', 'tooltip')
+                                .attr('data-html', 'true')
+                                .attr('title', tooltipContent);
+                        });
+                    });
+                    
+                    $('[data-toggle="tooltip"]').tooltip();
                 }
             });
         }
