@@ -30,23 +30,28 @@ class UserController extends Controller
     {
         $query = User::with('role')->with('department')->with("branch")->with("createdBy")->with("updatedBy");
         // Apply additional filtering for role
-        if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
-            $query->where('department_id',Auth::user()->department_id)->where('branch_id',Auth::user()->branch_id);
+        if (Auth::user()->RolePermission=='staff') {
+            $query->where("id", Auth::user()->id);
+        }else if(Auth::user()->RolePermission=='admin_support' || Auth::user()->RolePermission=='admin'){
+            $query->where('department_id', Auth::user()->department_id);
+        }else if(Auth::user()->RolePermission=="admin_branch"){
+            $query->where('branch_id', Auth::user()->branch_id);
         }
+
         $data = $query->orderBy('id','DESC')->get();
 
-        // if (Auth::user()->RolePermission=='staff' || Auth::user()->RolePermission=='admin') {
-        //     $data = User::with('role')->with('department')->with("branch")->with("createdBy")->with("updatedBy")
-        //     ->where('department_id',Auth::user()->department_id)
-        //     ->where('branch_id',Auth::user()->branch_id)
-        //     ->get();
-        // } else {
-        //     $data = User::with('role')->with('department')->with("branch")->with("createdBy")->with("updatedBy")->get();
-        // }
         return view('users.index', compact('data'));
     }
     public function formResetPassword(){
-        $users = DB::table('users')->get();
+        $query = User::with('role');
+        if (Auth::user()->RolePermission=='staff') {
+            $query->where("id", Auth::user()->id);
+        }else if(Auth::user()->RolePermission=='admin_support' || Auth::user()->RolePermission=='admin'){
+            $query->where('department_id', Auth::user()->department_id);
+        }else if(Auth::user()->RolePermission=="admin_branch"){
+            $query->where('branch_id', Auth::user()->branch_id);
+        }
+        $users = $query->get();
         return view('auth.forgot_password', compact('users'));
     }
 
