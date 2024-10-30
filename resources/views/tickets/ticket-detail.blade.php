@@ -34,7 +34,7 @@
                         <h5 class="card-title">Contact: <span class="text-primary">{{$data_ticket->name}} ,</span>
                             <span class="ml-3">{{ \Carbon\Carbon::parse($data_ticket->created_at)->format('d-M-Y h:i A') ?? '' }}</span>
                         </h5>
-                        <p class="card-text">Issue Type: {{$data_ticket->issueType->name}}</p>
+                        <p class="card-text">Issue Type: {{$data_ticket->issueType ? $data_ticket->issueType->name : ""}}</p>
                         <p class="card-text">
                             {!! nl2br(e($data_ticket->message)) !!}
                         </p>
@@ -232,41 +232,47 @@
                         </div>
                         <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#History">
                             <div class="card-body">
+                                {{-- @dd($data_ticket->histories) --}}
                                 <ul>
                                     @if (count($data_ticket->histories) > 0)
                                         @foreach ($data_ticket->histories as $item)
-                                            @if ($item->type == "new")
-                                                <li><strong>Ticket created by</strong>
-                                                    <ul style="list-style-type:none;">
-                                                        <li>{{$item->createdBy->user}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
-                                                    </ul>
-                                                </li>
-                                                {{-- <li> <p>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">ticket created by {{$item->createdBy->name}}</strong></p></li> --}}
+                                            @if ($item->createdBy)
+                                                @if ($item->type == "new")
+                                                    <li><strong>Ticket created by</strong>
+                                                        <ul style="list-style-type:none;">
+                                                            <li>{{$item->createdBy->user}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                        </ul>
+                                                    </li>
+                                                    {{-- <li> <p>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">ticket created by {{$item->createdBy->name}}</strong></p></li> --}}
+                                                @endif
+                                                @if ($item->type == "status")
+                                                    <li><strong>Status changed </strong>
+                                                        <ul style="list-style-type:none;">
+                                                            <li>From <strong style="color: {{$item->statusFrom->color}}">{{$item->statusFrom->name}}</strong> to <strong style="color: {{$item->statusTo->color}}">{{$item->statusTo->name}}</strong> by user change {{$item->createdBy->user}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                        </ul>
+                                                    </li>
+                                                {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Status changed from {{$item->statusFrom->name}} to {{$item->statusTo->name}} by user change {{$item->createdBy->name}}</strong></p></li>  --}}
+                                                @endif
+                                                @if ($item->type == "priority")
+                                                    <li><strong>Priority changed </strong>
+                                                        <ul style="list-style-type:none;">
+                                                            <li>From <strong style="color: {{$item->priorityFrom->color}}">{{$item->priorityFrom->name}}</strong> to <strong style="color: {{$item->priorityTo->color}}">{{$item->priorityTo->name}}</strong> by user change {{$item->createdBy->user}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                        </ul>
+                                                    </li>
+                                                {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Priority changed from {{$item->priorityFrom->name}} to {{$item->priorityTo->name}} by user change {{$item->createdBy->name}}</strong></p></li>  --}}
+                                                @endif
+                                                @if ($item->type == "assign")
+                                                    <li><strong>Assignee</strong>
+                                                        <ul style="list-style-type:none;">
+                                                            <li>From <strong>{{$item->assignedBy ? $item->assignedBy->user : "null"}}</strong> to <strong>{{$item->recipient ? $item->recipient->user : "null"}}</strong> at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
+                                                        </ul>
+                                                    </li>
+                                                {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Assignee from {{$item->assignedBy->name}} to {{$item->recipient->name}}</strong></p></li>  --}}
+                                                @endif
+                                            @else
+                                                {!! $item->message_html !!}
                                             @endif
-                                            @if ($item->type == "status")
-                                                <li><strong>Status changed </strong>
-                                                    <ul style="list-style-type:none;">
-                                                        <li>From <strong style="color: {{$item->statusFrom->color}}">{{$item->statusFrom->name}}</strong> to <strong style="color: {{$item->statusTo->color}}">{{$item->statusTo->name}}</strong> by user change {{$item->createdBy->user}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
-                                                    </ul>
-                                                </li>
-                                            {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Status changed from {{$item->statusFrom->name}} to {{$item->statusTo->name}} by user change {{$item->createdBy->name}}</strong></p></li>  --}}
-                                            @endif
-                                            @if ($item->type == "priority")
-                                                <li><strong>Priority changed </strong>
-                                                    <ul style="list-style-type:none;">
-                                                        <li>From <strong style="color: {{$item->priorityFrom->color}}">{{$item->priorityFrom->name}}</strong> to <strong style="color: {{$item->priorityTo->color}}">{{$item->priorityTo->name}}</strong> by user change {{$item->createdBy->user}} at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
-                                                    </ul>
-                                                </li>
-                                            {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Priority changed from {{$item->priorityFrom->name}} to {{$item->priorityTo->name}} by user change {{$item->createdBy->name}}</strong></p></li>  --}}
-                                            @endif
-                                            @if ($item->type == "assign")
-                                                <li><strong>Assignee</strong>
-                                                    <ul style="list-style-type:none;">
-                                                        <li>From <strong>{{$item->assignedBy ? $item->assignedBy->user : "null"}}</strong> to <strong>{{$item->recipient ? $item->recipient->user : "null"}}</strong> at {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}</li>
-                                                    </ul>
-                                                </li>
-                                            {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Assignee from {{$item->assignedBy->name}} to {{$item->recipient->name}}</strong></p></li>  --}}
-                                            @endif
+                                            
                                         @endforeach
                                     @endif
                                 </ul>

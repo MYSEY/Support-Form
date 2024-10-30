@@ -1,5 +1,5 @@
 <div class="tab-pane fade active show" id="open_ticket" role="tabpanel">
-    <table id="dt-basic-all" class="table table-bordered table-hover table-striped w-100">
+    <table data-order='[[ 4, "desc" ]]' id="dt-basic-all" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
                 <th>Tracking_ID</th>
@@ -58,7 +58,7 @@
     </table>
 </div>
 <div class="tab-pane fade" id="ticke_assigned" role="tabpanel">
-    <table id="dt-basic-assign" class="table table-bordered table-hover table-striped w-100">
+    <table data-order='[[ 4, "desc" ]]' id="dt-basic-assign" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
                 <th>Tracking_ID</th>
@@ -84,7 +84,7 @@
     </table>
 </div>
 <div class="tab-pane fade" id="js_change_pill_direction-3" role="tabpanel">
-    <table id="dt-basic-assign-other" class="table table-bordered table-hover table-striped w-100">
+    <table data-order='[[ 4, "desc" ]]' id="dt-basic-assign-other" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
                 <th>Tracking_ID</th>
@@ -110,7 +110,7 @@
     </table>
 </div>
 <div class="tab-pane fade" id="ticket_unassigned" role="tabpanel">
-    <table id="dt-basic-unassigned" class="table table-bordered table-hover table-striped w-100">
+    <table data-order='[[ 4, "desc" ]]' id="dt-basic-unassigned" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
                 <th>Tracking_ID</th>
@@ -136,7 +136,7 @@
     </table>
 </div>
 <div class="tab-pane fade" id="ticket_due_soon" role="tabpanel">
-    <table id="dt-basic-due-soon" class="table table-bordered table-hover table-striped w-100">
+    <table data-order='[[ 4, "desc" ]]' id="dt-basic-due-soon" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
                 <th>Tracking_ID</th>
@@ -162,7 +162,7 @@
     </table>
 </div>
 <div class="tab-pane fade" id="tiecket_overdue" role="tabpanel">
-    <table id="dt-basic-overdue" class="table table-bordered table-hover table-striped w-100">
+    <table data-order='[[ 4, "desc" ]]' id="dt-basic-overdue" class="table table-bordered table-hover table-striped w-100">
         <thead>
             <tr>
                 <th>Tracking_ID</th>

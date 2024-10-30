@@ -88,7 +88,7 @@ class Ticket extends Model
     }
 
     public function histories(){
-        return $this->hasMany(TicketHistory::class,'trackid','id')->with("createdBy")->with("statusFrom")->with("statusTo")->with("priorityFrom")->with("priorityTo")->with("assignedBy")->with("recipient");
+        return $this->hasMany(TicketHistory::class,'trackid','trackid')->with("createdBy")->with("statusFrom")->with("statusTo")->with("priorityFrom")->with("priorityTo")->with("assignedBy")->with("recipient");
     }
 
     public function createdBy()

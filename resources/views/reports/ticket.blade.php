@@ -60,7 +60,7 @@
                     <div class="panel-content">
                         <div class="table-responsive">
                             <!-- datatable start -->
-                            <table id="dt-basic-ticket-report" class="table table-bordered table-hover table-striped w-100">
+                            <table data-order='[[ 4, "desc" ]]'  id="dt-basic-ticket-report" class="table table-bordered table-hover table-striped w-100">
                                 <thead>
                                     <tr>
                                         <th>Tracking_ID</th>

@@ -199,7 +199,7 @@ class TicketController extends Controller
             $data['assignedby'] = Auth::user()->id;
             $ticket = Ticket::create($data);
 
-            $data_histoies['trackid'] = $ticket->id;
+            $data_histoies['trackid'] = $ticket->trackid;
             $data_histoies['type'] = "new";
             $data_histoies['created_by'] = Auth::user()->id;
             TicketHistory::create($data_histoies);
@@ -460,7 +460,7 @@ class TicketController extends Controller
                 $query->where('due_date', '<',$currentDate);
             }
         });
-        $data_tickets = $query->orderBy('id','DESC')->get();
+        $data_tickets = $query->orderBy('created_at','desc')->get();
 
         // dd($request->status);
         // if (Auth::user()->RolePermission=='staff') {
@@ -807,7 +807,7 @@ class TicketController extends Controller
             // Add new history on status
             if ($data->status != $request->status) {
                 $ticket_update = true;
-                $data_histoies_status['trackid'] = $data->id;
+                $data_histoies_status['trackid'] = $data->trackid;
                 $data_histoies_status['type'] = "status";
                 $data_histoies_status['from_status'] = $data->status;
                 $data_histoies_status['to_status'] = $request->status;
@@ -819,7 +819,7 @@ class TicketController extends Controller
             // Add new history on priority
             if ($data->priority !=  $request->priority) {
                 $ticket_update = true;
-                $data_histoies_priority['trackid'] = $data->id;
+                $data_histoies_priority['trackid'] = $data->trackid;
                 $data_histoies_priority['type'] = "priority";
                 $data_histoies_priority['from_priority_id'] = $data->priority;
                 $data_histoies_priority['to_priority_id'] = $request->priority;

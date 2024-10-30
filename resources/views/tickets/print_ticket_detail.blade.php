@@ -64,7 +64,7 @@
                             </tr>
                             <tr>
                                 <td class="table_tr">Issue Types:</td>
-                                <td class="table_tr">{{$data_ticket->issueType->name}}</td>
+                                <td class="table_tr">{{$data_ticket->issueType ? $data_ticket->issueType->name: ""}}</td>
                             </tr>
                         </table>
                     </div>
