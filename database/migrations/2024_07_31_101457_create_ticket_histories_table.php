@@ -16,6 +16,8 @@ return new class extends Migration
             $table->id();
             $table->string('trackid');
             $table->string('type');
+            $table->longText('message')->nullable();
+            $table->mediumText('message_html')->nullable();
             $table->integer('from_department_id')->nullable();
             $table->integer('to_department_id')->nullable();
             $table->integer('from_branch_id')->nullable();

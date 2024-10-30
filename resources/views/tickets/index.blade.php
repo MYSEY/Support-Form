@@ -4,6 +4,7 @@
     <div class="demo">
         {{-- href="{{url('admin/ticket/create')}}" --}}
         <a type="button" id="btn-crearte" href="#" data-toggle="modal" data-target="#modal-select" class="btn btn-danger waves-effect waves-themed float-right">Create New Ticket</a>
+        <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger waves-effect waves-themed float-right">Import</a>
     </div>
 @endcan
 <ul class="nav nav-pills" role="tablist">
@@ -83,6 +84,48 @@
     </div>
 </div>
 
+{{-- import datas --}}
+<div class="modal fade show" id="modal-import" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><strong>Import datas!</strong></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">Import excel/ XLS,XLSX or CSV</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="col-md-12 alert thanLess" style="display:none;background-color:#F7D7DA">
+                                <span id="thanLess"></span>
+                            </div>
+                            <div class="col-md-12" style="padding-left: 2%;">
+                                <input type="file" id="result_file">
+                            </div>
+                        </div><br>
+                        <div class="text-end float-right">
+                            <div class="btn-hidden-show">
+                                <button class="btn btn-primary waves-effect waves-themed submit-btn upload_file_data" type="button">Submit</button>
+                            </div>
+                            <div class="btn-impot-loading mt-3" style="display: none">
+                                <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Loading...
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 @section('script')
     @include('includs.datatables_export')
@@ -105,6 +148,65 @@
             $(".tab-tables").on("click", function(){
                 let tab_status = $(this).attr('data-permiss');
                 showDatas(tab_status);
+            });
+
+            $(".upload_file_data").on("click", function() {
+                if ($('#result_file').val() == "") {
+                    $("#thanLess").text("Please select a xls,xlsx and csv file and size less then 1MB").css(
+                        "color", "red");
+                    $(".thanLess").show();
+                    return false;
+                }
+                var file_data = $('#result_file').prop('files')[0];
+                var fileName = file_data['name'];
+                var form_data = new FormData();
+                var fileExtension = fileName.split('.').pop();
+                var fileSize = file_data['size'];
+                form_data.append('file', file_data);
+                form_data.append('_token', "{{ csrf_token() }}");
+                if (fileExtension == "xls" || fileExtension == "xlsx" || fileExtension == "csv" && fileSize < 1048576) {
+
+                    $(".upload_file_data").prop('disabled', true);
+                    $(".btn-hidden-show").hide();
+                    $(".btn-impot-loading").css('display', 'block');
+
+                    $("#modal-import").modal("show");
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ url('admin/ticket/import') }}",
+                        data: form_data,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        success: function(data) {
+                            if (data == 1) {
+                                $("#modal-import").modal("hide");
+                                toastr.success('Data has been save success');
+                                window.location.replace("{{ URL('admin/ticket') }}");
+                            }
+                            if (data == 2) {
+                                $("#modal-import").modal("hide");
+                                $("#thanLess").text("Data duplicate").css("color", "red");
+                                $(".thanLess").show();
+                            }
+                            if (data == 0) {
+                                $("#modal-import").modal("show");
+                                data == 0;
+                                $("#thanLess").text(
+                                    "Please select a xls,xlsx and csv file and size less then 1MB"
+                                    ).css("color", "red");
+                                $(".thanLess").show();
+                            }
+                            $(".btn-hidden-show").show();
+                            $(".btn-impot-loading").css('display', 'none');
+                            $(".upload_file_data").prop("disabled",false);
+                        }
+                    });
+                }else{
+                    $("#thanLess").text("Please select a xls,xlsx and csv file and size less then 1MB").css(
+                        "color", "red");
+                    $(".thanLess").show();
+                }
             });
         });
         function nl2br(str) {

@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\Reply;
 use App\Models\TicketGuideline;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class TicketController extends Controller
 {
@@ -235,6 +236,88 @@ class TicketController extends Controller
             ]);
         } catch (\Throwable $exp) {
             return response()->json(['errors' => $exp]);
+        }
+    }
+
+    public function import(Request $request){
+        DB::beginTransaction();
+        try{
+            $file = $request->file;
+            $filesize = filesize($file);
+            $extension = $request->file->extension();
+            $spreadsheet = IOFactory::load($file);
+            // $allDataInSheet = $spreadsheet->getActiveSheet()->toArray();
+            $allDataInSheet =  $spreadsheet->getSheetByName('data_upload_tickets')->toArray();
+        
+            if ($extension == "xlsx" || $extension == "xls" || $extension == "csv") {
+                $i = 0;
+                foreach ($allDataInSheet as $csv) {
+                    $i++;
+                    if ($i != 1) {
+                        $dt = $csv[12] ? Carbon::createFromFormat('d/m/Y H:i', $csv[12])->format('Y-m-d H:i:s') : Null;
+                        $lastchange = $csv[13] ? Carbon::createFromFormat('d/m/Y H:i', $csv[13])->format('Y-m-d H:i:s') : Null;
+                        $firstreply = $csv[14] ? Carbon::createFromFormat('d/m/Y H:i', $csv[14])->format('Y-m-d H:i:s') : Null;
+                        $closedat = $csv[15] ? Carbon::createFromFormat('d/m/Y H:i', $csv[15])->format('Y-m-d H:i:s') : Null;
+                        $due_date = $csv[34] ? Carbon::createFromFormat('d/m/Y H:i', $csv[34])->format('Y-m-d H:i:s') : Null;
+                        $arr = [
+                            'trackid'                   =>  $csv[0],
+                            'name'                      =>  $csv[1],
+                            'email'                     =>  ( $csv[2] ? $csv[2] : ""),
+                            'created_by'                =>  $csv[3],
+                            'department_id_from'        =>  $csv[4],
+                            'branch_id'                 =>  $csv[5],
+                            'department_id'             =>  $csv[6],
+                            'ticket_type'               =>  $csv[7],
+                            'priority'                  =>  $csv[8],
+                            'subject'                   =>  $csv[9],
+                            'message'                   =>  $csv[10],
+                            'message_html'              =>  $csv[11],
+                            'dt'                        =>  $dt,
+                            'lastchange'                =>  $lastchange,
+                            'firstreply'                =>  $firstreply,
+                            'closedat'                  =>  $closedat,
+                            'articles'                  =>  $csv[16],
+                            'ip'                        =>  $csv[17],
+                            'language'                  =>  $csv[18],
+                            'openedby'                  =>  $csv[19],
+                            'status'                    =>  $csv[20],
+                            'firstreplyby'              =>  $csv[21],
+                            'closedby'                  =>  $csv[22],
+                            'replies'                   =>  $csv[23],
+                            'staffreplies'              =>  $csv[24],
+                            'owner'                     =>  $csv[25],
+                            'assignedby'                =>  $csv[26],
+                            'time_worked'               =>  $csv[27],
+                            'replierid'                 =>  $csv[28],
+                            'archive'                   =>  $csv[29],
+                            'locked'                    =>  $csv[30],
+                            'attachments'               =>  $csv[31],
+                            'merged'                    =>  $csv[32],
+                            'due_date'                  =>  $due_date,
+                            // 'issue_type'                =>  "",
+                            'created_at'                =>  $dt,
+                        ];
+
+                        $tickets = DB::table('tickets')->insert($arr);
+                        $historie = [
+                            'trackid'           => $csv[0],
+                            'type'              => "new",
+                            'message_html'      => $csv[33],
+                            // 'created_at'        => Carbon::now(),
+                        ];
+                        $tickets = DB::table('ticket_histories')->insert($historie);
+
+                    }
+                }
+                DB::commit();
+                return 1;
+            } else {
+                return 0;
+            }
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollback();
+            return 0;
         }
     }
 
