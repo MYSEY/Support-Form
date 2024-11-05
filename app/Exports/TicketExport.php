@@ -82,7 +82,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             $dataExport[] = [
                 "id"                        => $key+1,
                 "trackid"                   => $value->trackid,
-                "submitted"                 => $value->created_at,
+                "submitted"                 => $value->dt,
                 "from_department_branch"    => $from_department_branch,
                 "create_by"                 => $value->name, 
                 'to_department'             => ($value->department ? $value->department->name_english: ""),
