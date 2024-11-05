@@ -167,7 +167,8 @@
                                     '</td>'+
                                     '<td style="color: '+row.custom_status.color+'">'+row.custom_status.name+'</td>'+
                                     '<td >'+(ticket_type)+'</td>'+
-                                    '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="'+(row.issue_type ? row.issue_type.name : "")+'">'+(row.issue_type ? row.issue_type.name : "")+'</td>'+
+                                    '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="">'+(row.custom1)+'</td>'+
+                                    // '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="'+(row.issue_type ? row.issue_type.name : "")+'">'+(row.issue_type ? row.issue_type.name : "")+'</td>'+
                                     '<td>'+
                                         '<div style="display: flex">'+
                                             '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px;"></i> <span>'+(row.priority)+'</span>'+
