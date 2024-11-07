@@ -29,7 +29,7 @@ class DashboardController extends Controller
         );
         // Apply additional filtering for role
         if (Auth::user()->RolePermission=='staff') {
-            $query->where("id", Auth::user()->id);
+            $query->where("onlines.user_id", Auth::user()->id);
         }else if(Auth::user()->RolePermission=='admin_support' || Auth::user()->RolePermission=='admin'){
             $query->where('department_id', Auth::user()->department_id);
         }else if(Auth::user()->RolePermission=="admin_branch"){
