@@ -18,7 +18,7 @@
                         </div>
                         <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                             <div class="form-group">
-                                <select class="select2-placeholder-multiple form-control select2-hidden-accessible" id="priority" data-select2-id="select2-data-2-c0n2" name="priority">
+                                <select class="form-control" id="priority" data-select2-id="select2-data-2-c0n2" name="priority">
                                     <option value="">-- Select Priority --</option>
                                     @foreach ($priority as $key => $item)
                                         <option value="{{$item->id}}">{{$item->name}}</option>
@@ -28,9 +28,7 @@
                         </div>
                         <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                             <div class="form-group" data-select2-id="105">
-                                <select class="select2-placeholder-multiple form-control select2-hidden-accessible"
-                                    multiple="" id="status" data-select2-id="multiple-placeholder"
-                                    tabindex="-1" aria-hidden="true">
+                                <select class="select2-placeholder-multiple form-control" multiple="" id="status" data-select2-id="multiple-placeholder" tabindex="-1" aria-hidden="true">
                                     @foreach ($status as $key => $item)
                                         <option value="{{$item->id}}">{{$item->name}}</option>
                                     @endforeach
@@ -43,7 +41,7 @@
                                 <span class="nav-link-text" data-i18n="nav.datatables_export">Export</span>
                             </a> --}}
                             @can('Ticket Report Export')
-                                <a  href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
+                                <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
                             @endcan
                         </div>
                     </div>

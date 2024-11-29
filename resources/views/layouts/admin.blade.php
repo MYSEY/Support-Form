@@ -884,7 +884,7 @@
 
                     $(".select2-placeholder-multiple").select2(
                     {
-                        placeholder: "Select State"
+                        placeholder: "Select status"
                     });
                     $(".js-hide-search").select2(
                     {
