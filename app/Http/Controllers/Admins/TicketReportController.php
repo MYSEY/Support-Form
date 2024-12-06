@@ -23,10 +23,70 @@ class TicketReportController extends Controller
         RolePermission($this, 'Ticket Report');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $status = CustomStatus::get();
         $priority = Priority::get();
+        $from_date = null;
+        $to_date = null;
+        if ($request->from_date || $request->to_date) {
+            $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d H:i:s');
+            $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s');
+        }
+        if (request()->ajax()) {
+            // Define the base query
+            $query = DB::table('tickets')
+            ->leftJoin('departments','tickets.department_id','=','departments.id')
+            ->leftJoin('branchs','tickets.branch_id','=','branchs.id')
+            ->leftJoin('custom_statuses','tickets.status','=','custom_statuses.id')
+            ->leftJoin('users','tickets.owner','=','users.id')
+            ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
+            ->leftJoin('priorities','tickets.priority','=','priorities.id')
+            ->select(
+                'tickets.*',
+                'departments.name_khmer',
+                'departments.name_english',
+                'branchs.branch_name_en',
+                'branchs.branch_name_kh',
+                'custom_statuses.name as status_name',
+                'custom_statuses.color',
+                'users.name as owner_name',
+                'users.name as lastreplier',
+                'users.name as assign_by',
+                'issue_types.name as issue_type_name',
+                'priorities.name as prioritie_name',
+                'priorities.color as priority_color',
+            )->when($request->priority, function ($query, $priority) {
+                $query->where('tickets.priority', $priority);
+            })->when($request->status, function ($query, $status) {
+                $query->whereIn('tickets.status', $status);
+            });
+
+            if ($from_date && $to_date) {
+                $query->whereBetween('tickets.dt',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
+            }
+            // Apply additional filtering for 'Staff' role
+            if (Auth::user()->RolePermission == 'Staff') {
+                $query->where('tickets.created_by',Auth::user()->id);
+            }
+
+            // Fetch paginated data
+            $recordsTotal = Ticket::where('id', Auth::user()->id)->count();
+            $recordsFiltered = $query->count();
+            // Apply pagination for the actual data retrieval
+            $start = intval($request->input('start', 0));
+            $limit = intval($request->input('length', 10));
+            $data = $query->orderBy('tickets.id', 'DESC')->offset($start)->limit($limit)->get();
+            
+            // Return JSON response
+            return response()->json([
+                'draw' => intval($request->input('draw')),  // Optional: for client-side tracking
+                'recordsTotal' => $recordsTotal,
+                'recordsFiltered' => $recordsFiltered,
+                'data' => $data
+            ]);
+        }
+
         return view('reports.ticket', compact("status", "priority"));
     }
 

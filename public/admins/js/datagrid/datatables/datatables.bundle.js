@@ -11509,7 +11509,8 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoFiltered": "(filtered from _MAX_ total entries)",
+			"sInfoFiltered": "",
+			// "sInfoFiltered": "(filtered from _MAX_ total entries)",
 	
 	
 			/**

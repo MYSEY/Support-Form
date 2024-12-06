@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-
 @section('content')
     <div class="row">
         <div class="col-xl-12">
@@ -28,7 +27,7 @@
                         </div>
                         <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                             <div class="form-group" data-select2-id="105">
-                                <select class="select2-placeholder-multiple form-control" multiple="" id="status" data-select2-id="multiple-placeholder" tabindex="-1" aria-hidden="true">
+                                <select class="select2-placeholder-multiple form-control" multiple="" name="status" id="status" data-select2-id="multiple-placeholder" tabindex="-1" aria-hidden="true">
                                     @foreach ($status as $key => $item)
                                         <option value="{{$item->id}}">{{$item->name}}</option>
                                     @endforeach
@@ -37,9 +36,6 @@
                         </div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4" style="text-align: right;">
                             <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed" id="btnSearch">Search</a>
-                            {{-- <a href="#" title="Export" data-filter-tags="datatables datagrid export tables pdf excel print csv">
-                                <span class="nav-link-text" data-i18n="nav.datatables_export">Export</span>
-                            </a> --}}
                             @can('Ticket Report Export')
                                 <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
                             @endcan
@@ -58,34 +54,23 @@
                     <div class="panel-content">
                         <div class="table-responsive">
                             <!-- datatable start -->
-                            <table data-order='[[ 4, "desc" ]]'  id="dt-basic-ticket-report" class="table table-bordered table-hover table-striped w-100">
+                            <table data-order='[[ 4, "desc" ]]' id="tbl_ticket_report" class="table table-bordered table-hover table-striped">
                                 <thead>
                                     <tr>
                                         <th>Tracking_ID</th>
-                                        <th>Submitted</th>
+                                        <th>Submitted_Date</th>
                                         <th>From_Department/Branch</th>
                                         <th>Create_By</th>
                                         <th>To_Department</th>
                                         <th>Subjesct</th>
-                                        <th>Status</th>
+                                        <th>Ticket_Status</th>
                                         <th>Ticket_Type</th>
                                         <th>Sub_Issue_Type</th>
-                                        <th>Priority</th>
+                                        <th>Ticket_Priority</th>
                                         <th>Assigned</th>
                                         <th>Last_Replier</th>
-                                        <th>Due_Date</th>
+                                        <th>Ticket_Due_Date</th>
                                         <th>Updated</th>
-
-                                        {{-- <th>Tranking ID</th>
-                                        <th>Subject</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Submited Date</th>
-                                        <th>Department</th>
-                                        <th>Priority</th>
-                                        <th>Owner</th>
-                                        <th>Issue Type</th>
-                                        <th>Status</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -103,19 +88,18 @@
 @section('script')
     @include('includs.datatable_basic')
     <script>
+        let from_date = null;
+        let to_date = null;
         $(document).ready(function(){
-            showTickeReport();
-            $("#btnSearch").on("click", function() {
-                // $("#dt-basic-ticket-report tbody").empty();
-                // let param = {
-                //     "_token": "{{ csrf_token() }}",
-                //     status: $("#status").val(),
-                //     priority: $("#priority").val(),
-                //     from_date: $("#from_date").val(),
-                //     to_date: $("#to_date").val(),
-                // }
-                showTickeReport();
+            $('#btnSearch').on('click', function() {
+                from_date = $('#from_date').val();
+                to_date = $('#to_date').val();
+                let priority = $('select[name="priority"]').val();
+                let status = $('select[name="status"]').val();
+                $('#tbl_ticket_report').DataTable().ajax.reload();
             });
+            dataTables();
+
             $('#btn-export').on('click',function(){
                 let query = {
                     status: $("#status").val(),
@@ -126,92 +110,237 @@
                 var url = "{{URL::to('admin/ticket/report/export')}}?" + $.param(query)
                 window.location = url;
             });
+            $('.sub-issue-type').each(function() {
+                var text = $(this).text();
+                var limit = 20; // Set your character limit
+                if (text.length > limit) {
+                    var truncated = text.substring(0, limit) + '...';
+                    $(this).text(truncated);
+                }
+            });
+            $(document).ready(function() {
+                function removeBrTags(input) {
+                    return input.replace(/<br\s*\/?>/gi, '');
+                }
+                $('.sub-message').each(function() {
+                    var assignBy = $(this).data('assign-by');
+                    var message = $(this).data('message');
+                    var cleanedMessage = removeBrTags(message);
+                    var tooltipContent = assignBy + ' » ' + cleanedMessage;
+                    $(this).attr('data-toggle', 'tooltip').attr('data-html', 'true').attr('title', tooltipContent);
+                });
+            });
+            
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
-        function showTickeReport(){
-            $.ajax({
-                type: "POST",
-                url: "{{url('admin/ticket/report/search')}}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    status: $("#status").val(),
-                    priority: $("#priority").val(),
-                    from_date: $("#from_date").val(),
-                    to_date: $("#to_date").val(),
-                },
-                dataType: "JSON",
-                success: function (response) {
-                    var rows = response.success;
-                    var tr = "";
-                    if (rows.length > 0) {
-                        $(rows).each(function(index, row) {
-                            let created_at = moment(row.created_at).format('D-MMM-YYYY');
-                            let updated_at = moment(row.updated_at).format('D-MMM-YYYY');
-                            let due_date = row.due_date ? moment(row.due_date).format('D-MMM-YYYY') : "";
-                            let assign_by = row.assignedTo;
-                            let dt = moment(row.dt).format('D-MMM-YYYY');
-                            let ticket_type = "Normal";
-                            if (row.ticket_type == 1) {
-                                ticket_type = "Specail Case";
-                            }
-                            tr += '<tr class="odd">'+
-                                '<td><a href="{{url("admin/ticket/detail")}}/'+(row.id)+'">'+(row.trackid)+'</a></td>'+
-                                    '<td><a href="{{url("admin/ticket/detail")}}/'+(row.id)+'">'+(dt)+'</a></td>'+
-                                    '<td>'+(row.from_department ? row.from_department.name_english : "")+(row.branch ? row.branch.branch_name_en : "")+'</td>'+
-                                    '<td>'+row.name+'</td>'+
-                                    '<td>'+(row.department ? row.department.name_english: "")+'</td>'+
-                                    '<td class="sub-issue-type sub-message" data-assign-by="'+(assign_by)+'" data-message="'+(row.message)+'">'+
-                                        '<a href="javascript:void(0)">'+row.subject+'</a>'+
-                                    '</td>'+
-                                    '<td style="color: '+row.custom_status.color+'">'+row.custom_status.name+'</td>'+
-                                    '<td >'+(ticket_type)+'</td>'+
-                                    '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="">'+(row.custom1)+'</td>'+
-                                    // '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="'+(row.issue_type ? row.issue_type.name : "")+'">'+(row.issue_type ? row.issue_type.name : "")+'</td>'+
-                                    '<td>'+
-                                        '<div style="display: flex">'+
-                                            '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px;"></i> <span>'+(row.priority)+'</span>'+
-                                            // '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:'+row.priorities.color+'"></i> <span>'+(row.priority ? row.priorities.name : "")+'</span>'+
-                                        '</div>'+
-                                    '</td>'+
-                                    '<td>'+(row.assigned_to ? row.assigned_to.name : row.assignedTo)+'</td>'+
-                                    '<td>'+(row.last_replier ? row.last_replier.name : row.name)+'</td>'+
-                                    '<td>'+due_date+'</td>'+
-                                    '<td>'+updated_at+'</td>'+
-                            '</tr>';
-                        });
-                    } else {
-                        var tr ='<tr><td colspan=11 align="center">No data available in table</td></tr>';
-                    }
-                    $("#dt-basic-ticket-report tbody").html(tr);
-                    $('#dt-basic-ticket-report').dataTable();
+        // function showTickeReport(){
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "{{url('admin/ticket/report/search')}}",
+        //         data: {
+        //             "_token": "{{ csrf_token() }}",
+        //             status: $("#status").val(),
+        //             priority: $("#priority").val(),
+        //             from_date: $("#from_date").val(),
+        //             to_date: $("#to_date").val(),
+        //         },
+        //         dataType: "JSON",
+        //         success: function (response) {
+        //             var rows = response.success;
+        //             var tr = "";
+        //             if (rows.length > 0) {
+        //                 $(rows).each(function(index, row) {
+        //                     let created_at = moment(row.created_at).format('D-MMM-YYYY');
+        //                     let updated_at = moment(row.updated_at).format('D-MMM-YYYY');
+        //                     let due_date = row.due_date ? moment(row.due_date).format('D-MMM-YYYY') : "";
+        //                     let assign_by = row.assignedTo;
+        //                     let dt = moment(row.dt).format('D-MMM-YYYY');
+        //                     let ticket_type = "Normal";
+        //                     if (row.ticket_type == 1) {
+        //                         ticket_type = "Specail Case";
+        //                     }
+        //                     tr += '<tr class="odd">'+
+        //                         '<td><a href="{{url("admin/ticket/detail")}}/'+(row.id)+'">'+(row.trackid)+'</a></td>'+
+        //                             '<td><a href="{{url("admin/ticket/detail")}}/'+(row.id)+'">'+(dt)+'</a></td>'+
+        //                             '<td>'+(row.from_department ? row.from_department.name_english : "")+(row.branch ? row.branch.branch_name_en : "")+'</td>'+
+        //                             '<td>'+row.name+'</td>'+
+        //                             '<td>'+(row.department ? row.department.name_english: "")+'</td>'+
+        //                             '<td class="sub-issue-type sub-message" data-assign-by="'+(assign_by)+'" data-message="'+(row.message)+'">'+
+        //                                 '<a href="javascript:void(0)">'+row.subject+'</a>'+
+        //                             '</td>'+
+        //                             '<td style="color: '+row.custom_status.color+'">'+row.custom_status.name+'</td>'+
+        //                             '<td >'+(ticket_type)+'</td>'+
+        //                             '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="">'+(row.custom1)+'</td>'+
+        //                             // '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="'+(row.issue_type ? row.issue_type.name : "")+'">'+(row.issue_type ? row.issue_type.name : "")+'</td>'+
+        //                             '<td>'+
+        //                                 '<div style="display: flex">'+
+        //                                     // '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px;"></i> <span>'+(row.priority)+'</span>'+
+        //                                     '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:'+row.priorities.color+'"></i> <span>'+(row.priority ? row.priorities.name : "")+'</span>'+
+        //                                 '</div>'+
+        //                             '</td>'+
+        //                             '<td>'+(row.assigned_to ? row.assigned_to.name : row.assignedTo)+'</td>'+
+        //                             '<td>'+(row.last_replier ? row.last_replier.name : row.name)+'</td>'+
+        //                             '<td>'+due_date+'</td>'+
+        //                             '<td>'+updated_at+'</td>'+
+        //                     '</tr>';
+        //                 });
+        //             } else {
+        //                 var tr ='<tr><td colspan=11 align="center">No data available in table</td></tr>';
+        //             }
+        //             $("#dt-basic-ticket-report tbody").html(tr);
+        //             $('#dt-basic-ticket-report').dataTable();
 
-                    $('.sub-issue-type').each(function() {
-                        var text = $(this).text();
-                        var limit = 20; // Set your character limit
-                        if (text.length > limit) {
-                            var truncated = text.substring(0, limit) + '...';
-                            $(this).text(truncated);
-                        }
-                    });
-                    $(document).ready(function() {
-                        function removeBrTags(input) {
-                            return input.replace(/<br\s*\/?>/gi, '');
-                        }
-                        $('.sub-message').each(function() {
-                            var assignBy = $(this).data('assign-by');
-                            var message = $(this).data('message');
+        //             $('.sub-issue-type').each(function() {
+        //                 var text = $(this).text();
+        //                 var limit = 20; // Set your character limit
+        //                 if (text.length > limit) {
+        //                     var truncated = text.substring(0, limit) + '...';
+        //                     $(this).text(truncated);
+        //                 }
+        //             });
+        //             $(document).ready(function() {
+        //                 function removeBrTags(input) {
+        //                     return input.replace(/<br\s*\/?>/gi, '');
+        //                 }
+        //                 $('.sub-message').each(function() {
+        //                     var assignBy = $(this).data('assign-by');
+        //                     var message = $(this).data('message');
 
-                            var cleanedMessage = removeBrTags(message);
-                            var tooltipContent = assignBy + ' » ' + cleanedMessage;
+        //                     var cleanedMessage = removeBrTags(message);
+        //                     var tooltipContent = assignBy + ' » ' + cleanedMessage;
 
-                            $(this).attr('data-toggle', 'tooltip')
-                                .attr('data-html', 'true')
-                                .attr('title', tooltipContent);
-                        });
-                    });
+        //                     $(this).attr('data-toggle', 'tooltip')
+        //                         .attr('data-html', 'true')
+        //                         .attr('title', tooltipContent);
+        //                 });
+        //             });
                     
-                    $('[data-toggle="tooltip"]').tooltip();
-                }
+        //             $('[data-toggle="tooltip"]').tooltip();
+        //         }
+        //     });
+        // }
+
+        function dataTables() {
+            $('#tbl_ticket_report').DataTable({
+                // dom: 'Blfrtip',
+                pageLength: 10,
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                order: [[0, 'desc']],
+                lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
+                ajax: {
+                    url: '{{ URL("admin/report/ticket") }}',
+                    type: 'GET',
+                    data: function(d) {
+                        d.from_date = from_date;
+                        d.to_date = to_date;
+                        d.priority = $('select[name="priority"]').val();
+                        d.status = $('select[name="status"]').val();
+                    }
+                },
+                columns: [
+                    {
+                        data: 'trackid',
+                        name: 'trackid',
+                        render: function(data, type, row) {
+                            return `<a href="{{url("admin/ticket/detail")}}/${row.id}">${row.trackid}</a></td>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'dt',
+                        name: 'dt',
+                        render: function(data, type, row) {
+                            return `<a href="{{url("admin/ticket/detail")}}/${row.id}">${moment(row.dt).format('D-MMM-YYYY')}</a></td>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name_english',
+                        name: 'name_english',
+                        render: function(data, type, row) {
+                            return row.name_english  ? row.name_english : row.branch_name_en
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'name_english',
+                        name: 'name_english'
+                    },
+                    {
+                        data: 'subject',
+                        name: 'subject',
+                        render: function(data, type, row) {
+                            return `<div class="sub-issue-type sub-message" data-assign-by="${row.assign_by}" data-message="${row.message}"><a href="{{url("admin/ticket/detail")}}/${row.id}">${row.subject}</a></div>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'status_name',
+                        name: 'status_name',
+                        render: function(data, type, row) {
+                            const iconColor = row.color || '#000';
+                            return `<span style="color: ${iconColor};">${data}</span>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'ticket_type',
+                        name: 'ticket_type',
+                        render: function(data, type, row) {
+                            return row.ticket_type == 1 ? "Specail Case" : "Normal"
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'issue_type_name',
+                        name: 'issue_type_name'
+                    },
+                    {
+                        data: 'prioritie_name',
+                        name: 'prioritie_name',
+                        render: function(data, type, row) {
+                            const colorStyle = row.priority_color;
+                            return `<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:${colorStyle}"></i> <span>${row.prioritie_name}</span>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'owner_name',
+                        name: 'owner_name',
+                    },
+                    {
+                        data: 'lastreplier',
+                        name: 'lastreplier'
+                    },
+                    {
+                        data: 'due_date',
+                        name: 'due_date',
+                        render: function(data, type, row) {
+                            return row.due_date ? `${moment(row.due_date).format('D-MMM-YYYY')}` : "";
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'updated_at',
+                        name: 'updated_at'
+                    }
+                ],
+                order: [[0, 'desc']]
             });
         }
     </script>
