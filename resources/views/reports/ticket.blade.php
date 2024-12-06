@@ -53,8 +53,7 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <div class="table-responsive">
-                            <!-- datatable start -->
-                            <table data-order='[[ 4, "desc" ]]' id="tbl_ticket_report" class="table table-bordered table-hover table-striped">
+                            <table id="tbl_ticket_report" class="table table-bordered table-hover table-striped">
                                 <thead>
                                     <tr>
                                         <th>Tracking_ID</th>
@@ -77,7 +76,6 @@
                                     
                                 </tbody>
                             </table>
-                            <!-- datatable end -->
                         </div>
                     </div>
                 </div>
@@ -86,7 +84,6 @@
     </div>
 @endsection
 @section('script')
-    @include('includs.datatable_basic')
     <script>
         let from_date = null;
         let to_date = null;
@@ -133,93 +130,6 @@
             
             $('[data-toggle="tooltip"]').tooltip();
         });
-
-        // function showTickeReport(){
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "{{url('admin/ticket/report/search')}}",
-        //         data: {
-        //             "_token": "{{ csrf_token() }}",
-        //             status: $("#status").val(),
-        //             priority: $("#priority").val(),
-        //             from_date: $("#from_date").val(),
-        //             to_date: $("#to_date").val(),
-        //         },
-        //         dataType: "JSON",
-        //         success: function (response) {
-        //             var rows = response.success;
-        //             var tr = "";
-        //             if (rows.length > 0) {
-        //                 $(rows).each(function(index, row) {
-        //                     let created_at = moment(row.created_at).format('D-MMM-YYYY');
-        //                     let updated_at = moment(row.updated_at).format('D-MMM-YYYY');
-        //                     let due_date = row.due_date ? moment(row.due_date).format('D-MMM-YYYY') : "";
-        //                     let assign_by = row.assignedTo;
-        //                     let dt = moment(row.dt).format('D-MMM-YYYY');
-        //                     let ticket_type = "Normal";
-        //                     if (row.ticket_type == 1) {
-        //                         ticket_type = "Specail Case";
-        //                     }
-        //                     tr += '<tr class="odd">'+
-        //                         '<td><a href="{{url("admin/ticket/detail")}}/'+(row.id)+'">'+(row.trackid)+'</a></td>'+
-        //                             '<td><a href="{{url("admin/ticket/detail")}}/'+(row.id)+'">'+(dt)+'</a></td>'+
-        //                             '<td>'+(row.from_department ? row.from_department.name_english : "")+(row.branch ? row.branch.branch_name_en : "")+'</td>'+
-        //                             '<td>'+row.name+'</td>'+
-        //                             '<td>'+(row.department ? row.department.name_english: "")+'</td>'+
-        //                             '<td class="sub-issue-type sub-message" data-assign-by="'+(assign_by)+'" data-message="'+(row.message)+'">'+
-        //                                 '<a href="javascript:void(0)">'+row.subject+'</a>'+
-        //                             '</td>'+
-        //                             '<td style="color: '+row.custom_status.color+'">'+row.custom_status.name+'</td>'+
-        //                             '<td >'+(ticket_type)+'</td>'+
-        //                             '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="">'+(row.custom1)+'</td>'+
-        //                             // '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="'+(row.issue_type ? row.issue_type.name : "")+'">'+(row.issue_type ? row.issue_type.name : "")+'</td>'+
-        //                             '<td>'+
-        //                                 '<div style="display: flex">'+
-        //                                     // '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px;"></i> <span>'+(row.priority)+'</span>'+
-        //                                     '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:'+row.priorities.color+'"></i> <span>'+(row.priority ? row.priorities.name : "")+'</span>'+
-        //                                 '</div>'+
-        //                             '</td>'+
-        //                             '<td>'+(row.assigned_to ? row.assigned_to.name : row.assignedTo)+'</td>'+
-        //                             '<td>'+(row.last_replier ? row.last_replier.name : row.name)+'</td>'+
-        //                             '<td>'+due_date+'</td>'+
-        //                             '<td>'+updated_at+'</td>'+
-        //                     '</tr>';
-        //                 });
-        //             } else {
-        //                 var tr ='<tr><td colspan=11 align="center">No data available in table</td></tr>';
-        //             }
-        //             $("#dt-basic-ticket-report tbody").html(tr);
-        //             $('#dt-basic-ticket-report').dataTable();
-
-        //             $('.sub-issue-type').each(function() {
-        //                 var text = $(this).text();
-        //                 var limit = 20; // Set your character limit
-        //                 if (text.length > limit) {
-        //                     var truncated = text.substring(0, limit) + '...';
-        //                     $(this).text(truncated);
-        //                 }
-        //             });
-        //             $(document).ready(function() {
-        //                 function removeBrTags(input) {
-        //                     return input.replace(/<br\s*\/?>/gi, '');
-        //                 }
-        //                 $('.sub-message').each(function() {
-        //                     var assignBy = $(this).data('assign-by');
-        //                     var message = $(this).data('message');
-
-        //                     var cleanedMessage = removeBrTags(message);
-        //                     var tooltipContent = assignBy + ' » ' + cleanedMessage;
-
-        //                     $(this).attr('data-toggle', 'tooltip')
-        //                         .attr('data-html', 'true')
-        //                         .attr('title', tooltipContent);
-        //                 });
-        //             });
-                    
-        //             $('[data-toggle="tooltip"]').tooltip();
-        //         }
-        //     });
-        // }
 
         function dataTables() {
             $('#tbl_ticket_report').DataTable({
@@ -280,7 +190,12 @@
                         data: 'subject',
                         name: 'subject',
                         render: function(data, type, row) {
-                            return `<div class="sub-issue-type sub-message" data-assign-by="${row.assign_by}" data-message="${row.message}"><a href="{{url("admin/ticket/detail")}}/${row.id}">${row.subject}</a></div>`;
+                            const truncatedSubject = row.subject.length > 20  ? row.subject.substring(0, 20) + '...' : row.subject;
+                            return `<div class="sub-issue-type sub-message" data-assign-by="${row.assign_by}"  data-message="${row.message}">
+                                    <a href="{{url('admin/ticket/detail')}}/${row.id}">
+                                        ${truncatedSubject}
+                                    </a>
+                                </div>`;
                         },
                         orderable: false,
                         searchable: false
@@ -306,7 +221,14 @@
                     },
                     {
                         data: 'issue_type_name',
-                        name: 'issue_type_name'
+                        name: 'issue_type_name',
+                        render: function(data, type, row) {
+                            const issueTypeName = row.issue_type_name || '';
+                            const issue_type = issueTypeName.length > 20  ? issueTypeName.substring(0, 20) + '...' : issueTypeName;
+                            return `<span title="${issueTypeName}">${issue_type}</span>`;
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'prioritie_name',

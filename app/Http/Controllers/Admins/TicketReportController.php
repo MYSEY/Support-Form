@@ -69,6 +69,16 @@ class TicketReportController extends Controller
             if (Auth::user()->RolePermission == 'Staff') {
                 $query->where('tickets.created_by',Auth::user()->id);
             }
+            if (Auth::user()->RolePermission == 'admin_support') {
+                $query->where('tickets.department_id', Auth::user()->department_id)->orWhere("tickets.created_by", Auth::user()->id)->orWhere("tickets.owner", Auth::user()->id);
+            }
+            if (Auth::user()->RolePermission == 'admin') {
+                $query->where('tickets.department_id', Auth::user()->department_id)
+                ->orWhere('tickets.department_id_from', Auth::user()->department_id);
+            }
+            if (Auth::user()->RolePermission == 'admin_branch') {
+                $query->where('tickets.branch_id', Auth::user()->branch_id);
+            }
 
             // Fetch paginated data
             $recordsTotal = Ticket::where('id', Auth::user()->id)->count();
@@ -159,34 +169,6 @@ class TicketReportController extends Controller
     public function show(Request $request)
     {
         
-        $data = Ticket::
-        with("department")
-        ->with("branch")->with("lastReplier")
-        ->with("CustomStatus")->with("assignedTo")
-        ->with("priorities")->with("createdBy")
-        ->with("fromDepartment")
-        ->with("issueType");
-        if (Auth::user()->RolePermission=='staff') {
-            $data->where("created_by", Auth::user()->id)->get();
-        }else if(Auth::user()->RolePermission=='admin_support'){
-            $data->where('department_id', Auth::user()->department_id)
-            ->orWhere("created_by", Auth::user()->id)
-            ->orWhere("owner", Auth::user()->id)
-            ->get();
-        }else if(Auth::user()->RolePermission=='admin'){
-            $data->where('department_id', Auth::user()->department_id)
-            ->orWhere('department_id_from', Auth::user()->department_id)
-            ->get();
-        }else if(Auth::user()->RolePermission=="admin_branch"){
-            $data->where('branch_id', Auth::user()->branch_id)
-            ->get();
-        }else{
-            $data->get();
-        }
-
-        return response()->json([
-            'success'=>$data,
-        ]);
     }
 
     /**
