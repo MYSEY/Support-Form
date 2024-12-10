@@ -159,6 +159,7 @@
                 formData.append('subject', subject);
                 formData.append('priority', priority);
                 formData.append('owner', assign_to);
+                formData.append('assignedby', assign_to);
                 formData.append('due_date', due_date);
                 formData.append('issue_type', issue_type);
                 formData.append('ticket_type', ticket_type);
