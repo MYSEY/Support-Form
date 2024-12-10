@@ -15,6 +15,10 @@ class TicketGuidelinesController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        RolePermission($this, 'Knowledgebase');
+    }
     public function index()
     {
         $department = Department::orderBy('id', 'DESC')->get();

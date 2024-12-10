@@ -1,8 +1,11 @@
 @extends('layouts.admin')
 @section('content')
-<div class="demo">
-    <button class="btn btn-success btn-sm float-right" data-toggle="modal" data-target="#ticket-guyline-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
-</div>
+
+@can('Knowledgebase Create')
+    <div class="demo">
+        <button class="btn btn-success btn-sm float-right" data-toggle="modal" data-target="#ticket-guyline-create" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+    </div>
+@endcan
 <div class="panel-content">
     <div class="card-deck justify-content-center">
         <div class="row w-100">
@@ -15,8 +18,12 @@
                            {{$item->attachments ? "* Click to view the guide": ""}} <a href="{{url("storage/attachments")}}/{{$item->attachments}}" target="_blank">{{$item->attachments}}</a>
                         </div>
                         <div class="card-footer text-lg-right">
-                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 guideline-delete" data-toggle="modal" data-target="#delete_" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                            @can('Knowledgebase Delete')
+                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 guideline-delete" data-toggle="modal" data-target="#delete_" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
+                            @endcan
+                            @can('Knowledgebase Edit')
                             <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 btn-update" title="Edit" data-id="{{$item->id}}"><i class="fal fa-edit"></i></a>
+                            @endcan
                         </div>
                     </div>
                 </div>

@@ -4,7 +4,9 @@
     <div class="demo">
         {{-- href="{{url('admin/ticket/create')}}" --}}
         <a type="button" id="btn-crearte" href="#" data-toggle="modal" data-target="#modal-select" class="btn btn-danger waves-effect waves-themed float-right">Create New Ticket</a>
-        <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger waves-effect waves-themed float-right">Import</a>
+        @can('Ticket Import')
+            <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger waves-effect waves-themed float-right">Import</a>
+        @endcan
     </div>
 @endcan
 <ul class="nav nav-pills" role="tablist">
