@@ -250,6 +250,7 @@ class TicketController extends Controller
             $allDataInSheet =  $spreadsheet->getSheetByName('data_upload_tickets')->toArray();
         
             if ($extension == "xlsx" || $extension == "xls" || $extension == "csv") {
+                
                 $i = 0;
                 foreach ($allDataInSheet as $csv) {
                     $i++;
@@ -294,7 +295,7 @@ class TicketController extends Controller
                             'attachments'               =>  $csv[31],
                             'merged'                    =>  $csv[32],
                             'due_date'                  =>  $due_date,
-                            // 'issue_type'                =>  "",
+                            'custom1'                   =>  $csv[35],
                             'created_at'                =>  $dt,
                         ];
 

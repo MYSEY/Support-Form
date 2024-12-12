@@ -34,7 +34,7 @@
                         <h5 class="card-title">Contact: <span class="text-primary">{{$data_ticket->name}} ,</span>
                             <span class="ml-3">{{ \Carbon\Carbon::parse($data_ticket->created_at)->format('d-M-Y h:i A') ?? '' }}</span>
                         </h5>
-                        <p class="card-text">Issue Type: {{$data_ticket->issueType ? $data_ticket->issueType->name : ""}}</p>
+                        <p class="card-text">Issue Type: {{$data_ticket->issueType ? $data_ticket->issueType->name : $data_ticket->custom1}}</p>
                         <p class="card-text">
                             {!! nl2br(e($data_ticket->message)) !!}
                         </p>

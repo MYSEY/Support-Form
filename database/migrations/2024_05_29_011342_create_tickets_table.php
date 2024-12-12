@@ -53,6 +53,7 @@ return new class extends Migration
             $table->date('satisfaction_email_dt')->nullable();
             $table->integer('ticket_type')->nullable();
             $table->integer('issue_type')->nullable();
+            $table->string('custom1')->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
             $table->dateTime('deleted_at')->nullable();

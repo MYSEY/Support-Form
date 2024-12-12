@@ -254,7 +254,7 @@
                                     '</td>'+
                                     '<td style="color: '+value.custom_status.color+'">'+value.custom_status.name+'</td>'+
                                     '<td >'+(ticket_type)+'</td>'+
-                                    '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="'+(value.issue_type ? value.issue_type.name : "")+'">'+(value.issue_type ? value.issue_type.name : "")+'</td>'+
+                                    '<td class="sub-issue-type" data-toggle="tooltip" data-html="true" title="'+(value.issue_type ? value.issue_type.name : value.custom1)+'">'+(value.issue_type ? value.issue_type.name : value.custom1)+'</td>'+
                                     '<td>'+
                                         '<div style="display: flex">'+
                                             '<i class="fal fa-bookmark fa-rotate-270 mr-2" style="font-size: 20px; color:'+value.priorities.color+'"></i> <span>'+(value.priority ? value.priorities.name : "")+'</span>'+
