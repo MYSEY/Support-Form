@@ -40,10 +40,13 @@ class TicketGuidelinesController extends Controller
     public function store(Request $request)
     {
         try {
+            $request->validate([
+                'attachments' => 'file|max:10240|mimes:jpeg,png,jpg,pdf,doc,docx', // 10 MB limit
+            ]);
             $data = $request->all();
             if($request->hasFile('attachments')) {
                 $image = $request->file('attachments');
-                $AttachmentName = $image->getClientOriginalName();
+                $AttachmentName = time() . '_' . $image->getClientOriginalName();
                 $image->move(public_path('storage/attachments/'), $AttachmentName);
                 $data['attachments'] = $AttachmentName;
             }
