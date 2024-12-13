@@ -248,22 +248,24 @@ class TicketController extends Controller
             $spreadsheet = IOFactory::load($file);
             // $allDataInSheet = $spreadsheet->getActiveSheet()->toArray();
             $allDataInSheet =  $spreadsheet->getSheetByName('data_upload_tickets')->toArray();
+            
         
             if ($extension == "xlsx" || $extension == "xls" || $extension == "csv") {
-                
                 $i = 0;
                 foreach ($allDataInSheet as $csv) {
                     $i++;
                     if ($i != 1) {
-                        $dt = $csv[12] ? Carbon::createFromFormat('d/m/Y H:i', $csv[12])->format('Y-m-d H:i:s') : Null;
-                        $lastchange = $csv[13] ? Carbon::createFromFormat('d/m/Y H:i', $csv[13])->format('Y-m-d H:i:s') : Null;
-                        $firstreply = $csv[14] ? Carbon::createFromFormat('d/m/Y H:i', $csv[14])->format('Y-m-d H:i:s') : Null;
-                        $closedat = $csv[15] ? Carbon::createFromFormat('d/m/Y H:i', $csv[15])->format('Y-m-d H:i:s') : Null;
-                        $due_date = $csv[34] ? Carbon::createFromFormat('d/m/Y H:i', $csv[34])->format('Y-m-d H:i:s') : Null;
+                        $dt = $csv[12] ? Carbon::parse($csv[12])->format('Y-m-d H:i:s') : Null;
+                        // $dt = $csv[12] ? Carbon::createFromFormat('d-m-Y H:i', $csv[12])->format('Y-m-d H:i:s') : Null;
+                        $lastchange = $csv[13] ? Carbon::parse($csv[13])->format('Y-m-d H:i:s') : Null;
+                        $firstreply = $csv[14] ? Carbon::parse($csv[14])->format('Y-m-d H:i:s') : Null;
+                        $closedat = $csv[15] ? Carbon::parse($csv[15])->format('Y-m-d H:i:s') : Null;
+                        $due_date = $csv[34] ? Carbon::parse($csv[34])->format('Y-m-d H:i:s') : Null;
+                        
                         $arr = [
                             'trackid'                   =>  $csv[0],
                             'name'                      =>  $csv[1],
-                            'email'                     =>  ( $csv[2] ? $csv[2] : ""),
+                            'email'                     =>  ($csv[2] ? $csv[2] : ""),
                             'created_by'                =>  $csv[3],
                             'department_id_from'        =>  $csv[4],
                             'branch_id'                 =>  $csv[5],
@@ -298,7 +300,6 @@ class TicketController extends Controller
                             'custom1'                   =>  $csv[35],
                             'created_at'                =>  $dt,
                         ];
-
                         $tickets = DB::table('tickets')->insert($arr);
                         $historie = [
                             'trackid'           => $csv[0],
