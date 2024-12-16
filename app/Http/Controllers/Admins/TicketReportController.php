@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admins;
 
+use App\Models\User;
+use App\Models\Ticket;
+use App\Models\Priority;
+use App\Models\CustomStatus;
 use Illuminate\Http\Request;
 use App\Exports\TicketExport;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\CustomStatus;
-use App\Models\Priority;
-use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -27,12 +28,14 @@ class TicketReportController extends Controller
     {
         $status = CustomStatus::get();
         $priority = Priority::get();
+        $user = User::select('id','name')->get();
         $from_date = null;
         $to_date = null;
         if ($request->from_date || $request->to_date) {
             $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d H:i:s');
             $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s');
         }
+        // dd($request->$user_id);
         if (request()->ajax()) {
             // Define the base query
             $query = DB::table('tickets')
@@ -60,6 +63,8 @@ class TicketReportController extends Controller
                 $query->where('tickets.priority', $priority);
             })->when($request->status, function ($query, $status) {
                 $query->whereIn('tickets.status', $status);
+            })->when($request->user_id, function ($query, $user_id) {
+                $query->where('tickets.created_by', $user_id);
             });
 
             if ($from_date && $to_date) {
@@ -97,7 +102,7 @@ class TicketReportController extends Controller
             ]);
         }
 
-        return view('reports.ticket', compact("status", "priority"));
+        return view('reports.ticket', compact("status", "priority",'user'));
     }
 
     public function search(Request $request){

@@ -34,7 +34,17 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4" style="text-align: right;">
+                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                            <div class="form-group" data-select2-id="105">
+                                <select class="form-control" name="user_id" id="user_id">
+                                    <option value="">-- Select Users --</option>
+                                    @foreach ($user as $key => $item)
+                                        <option value="{{$item->id}}">{{$item->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2" style="text-align: right;">
                             <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed" id="btnSearch">Search</a>
                             @can('Ticket Report Export')
                                 <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
@@ -93,12 +103,14 @@
                 to_date = $('#to_date').val();
                 let priority = $('select[name="priority"]').val();
                 let status = $('select[name="status"]').val();
+                let user_id = $('select[name="user_id"]').val();
                 $('#tbl_ticket_report').DataTable().ajax.reload();
             });
             dataTables();
 
             $('#btn-export').on('click',function(){
                 let query = {
+                    user_id: $("#user_id").val(),
                     status: $("#status").val(),
                     priority: $("#priority").val(),
                     from_date: $("#from_date").val(),
@@ -148,6 +160,7 @@
                         d.to_date = to_date;
                         d.priority = $('select[name="priority"]').val();
                         d.status = $('select[name="status"]').val();
+                        d.user_id = $('select[name="user_id"]').val();
                     }
                 },
                 columns: [
