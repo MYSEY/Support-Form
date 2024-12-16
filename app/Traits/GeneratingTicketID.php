@@ -18,23 +18,24 @@ trait GeneratingTicketID
         if (!empty($geticketID)) {
             for ($i = 0; $i < count($geticketID); $i++) {
                 // $current = $geticketID[$i]->trackid;
-                $current = (int) substr($geticketID[$i]->trackid,4);
+                $current = (int) substr($geticketID[$i]->trackid,8);
                 if ($i + 1 < count($geticketID)) {
-                    $next = (int) substr($geticketID[$i + 1]->trackid,4);
+                    $next = (int) substr($geticketID[$i + 1]->trackid,8);
                 }
                 
                 if (isset($next) && $current + 1 != $next) {
-                    $count = (int) substr($geticketID[$i]->trackid,4);
+                    $count = (int) substr($geticketID[$i]->trackid,8);
                     // $count = (int) substr(strrchr($geticketID[$i]->trackid, "0"), 1);
                     break;
                 } else {
                     // $count = (int) substr($geticketID[$i]->trackid,1);
-                    $count = (int) substr($geticketID[$i]->trackid,4);
+                    $count = (int) substr($geticketID[$i]->trackid,8);
                 }
             }
         }
+        
         do {
-            $ticketID = $currentYear->format('ymd').str_pad(($count+ 1), 2, "0", STR_PAD_LEFT);
+            $ticketID = $currentYear->format('ymd').str_pad(($count+ 1), 4, "0", STR_PAD_LEFT);
             $alreadyExist = Ticket::select('trackid')->where('trackid', $ticketID)->first()->trackid ?? null;
             $count++;
         } while ($alreadyExist);
