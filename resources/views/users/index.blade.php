@@ -164,13 +164,14 @@
             </div>
         </div>
     </div>
-@endsection
-@can('User Export')
+    @can('User Export')
     <input type="text" hidden value="1" id="permission-export">
-@endcan
-@can('User Print')
-    <input type="text" hidden value="1" id="permission-print">
-@endcan
+    @endcan
+    @can('User Print')
+        <input type="text" hidden value="1" id="permission-print">
+    @endcan
+@endsection
+
 @section('script')
     <script>
         $(document).ready(function(){

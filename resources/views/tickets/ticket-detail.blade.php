@@ -36,7 +36,8 @@
                         </h5>
                         <p class="card-text">Issue Type: {{$data_ticket->issueType ? $data_ticket->issueType->name : $data_ticket->custom1}}</p>
                         <p class="card-text">
-                            {!! nl2br(e($data_ticket->message)) !!}
+                            {!! $data_ticket->message !!}
+                            {{-- {!! nl2br(e($data_ticket->message)) !!} --}}
                         </p>
                         <p class="card-text"><a href="{{url("storage/attachments",$data_ticket->attachments)}}" target="_blank">{{$data_ticket->attachments == 'undefined' ? "" : $data_ticket->attachments}}</a></p>
 
