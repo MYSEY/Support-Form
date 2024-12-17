@@ -246,7 +246,7 @@
                             bodyTr +='<tr>'+
                                     '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(value.trackid)+'</a></td>'+
                                     '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(created_at)+'</a></td>'+
-                                    '<td>'+(value.from_department ? value.from_department.name_english : "")+(value.branch ? value.branch.branch_name_en : "")+'</td>'+
+                                    '<td>'+(value.from_department ? value.from_department.name_english : "")+ (value.from_department && value.branch ? " / ": "" ) +(value.branch ? value.branch.branch_name_en : "")+'</td>'+
                                     '<td>'+value.name+'</td>'+
                                     '<td>'+(value.department ? value.department.name_english: "")+'</td>'+
                                     '<td class="sub-issue-type sub-message" data-assign-by="'+(assign_by)+'" data-message="'+(value.message)+'">'+
