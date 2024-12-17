@@ -52,6 +52,7 @@ class TicketController extends Controller
                 $query->where('department_id', Auth::user()->department_id);
                 $query->orWhere("created_by", Auth::user()->id);
                 $query->orWhere("assignedby", Auth::user()->id);
+                $query->orWhere('department_id_from', Auth::user()->department_id);
             });
         };
         $branchCondition = function ($query) {
@@ -75,7 +76,6 @@ class TicketController extends Controller
         if (Auth::user()->RolePermission=='admin_support') {
 
             $total_all_ticket = Ticket::where($departmentCondition)->where($statusCondition)->count();
-            // ->orWhere("ticket_type", "1")
             
             $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)->where($statusCondition)->count();
 
@@ -83,19 +83,15 @@ class TicketController extends Controller
             $total_due_soon_ticket = Ticket::where($departmentCondition)->where($statusCondition)->where('due_date', '>=',$currentDate)->count();
             $total_overdue_ticket = Ticket::where($departmentCondition)->where($statusCondition)->where('due_date', '<',$currentDate)->count();
         } if(Auth::user()->RolePermission=='admin'){
-            $total_all_ticket = Ticket::where($departmentCondition)->orWhere('department_id_from', Auth::user()->department_id)->where($statusCondition)->count();
-            // ->orWhere("ticket_type", "1")
-            
+            $total_all_ticket = Ticket::where($statusCondition)->count();
            
-            $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)->count();
+            $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)->where($statusCondition)->count();
 
             $total_unassigned_ticket = Ticket::where($departmentCondition)->where($statusCondition)->whereIn("owner", ["unassigned","auto-assign"])->count();
             $total_due_soon_ticket = Ticket::where($departmentCondition)->where($statusCondition)->where('due_date', '>=',$currentDate)->count();
             $total_overdue_ticket = Ticket::where($departmentCondition)->where($statusCondition)->where('due_date', '<',$currentDate)->count();
         } if(Auth::user()->RolePermission=="admin_branch"){
             $total_all_ticket = Ticket::where('branch_id', Auth::user()->branch_id)->where($statusCondition)->count();
-            // ->orWhere("ticket_type", "1")
-            
             
             $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)->count();
 
@@ -105,7 +101,6 @@ class TicketController extends Controller
         }
         if(Auth::user()->RolePermission=='super_admin'){
             $total_all_ticket = Ticket::where($statusCondition)->count();
-            // $total_all_ticket = Ticket::where($statusCondition)->count();
             $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)->where($statusCondition)->count();
             $total_others_ticket = Ticket::whereNot("owner", Auth::user()->id)->where($statusCondition)->count();
             $total_unassigned_ticket = Ticket::where("owner", "unassigned")->where($statusCondition)->count();
@@ -156,12 +151,17 @@ class TicketController extends Controller
             $data['ticket_type'] = $request->ticket_type;
 
             $dataBranch = Branch::where("id", Auth::user()->branch_id)->first();
+
             if ($dataBranch) {
                 if($dataBranch->abbreviations == "HQ"){
                     $data['department_id_from'] = Auth::user()->department_id;
                 }else{
+                    
                     $data['branch_id'] = Auth::user()->branch_id;
                 }
+            }
+            if ($request->ticket_type == 1) {
+                $data['department_id_from'] = Auth::user()->department_id;
             }
             
             $data['status'] = $status->id;
@@ -192,13 +192,13 @@ class TicketController extends Controller
                 "status"=> "new",
             ];
              
-            $mail_message = ModelsMail::first();
-            if ($assigned_to) {
-                if ($assigned_to->email) {
-                    Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                }
-            }
-            Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
+            // $mail_message = ModelsMail::first();
+            // if ($assigned_to) {
+            //     if ($assigned_to->email) {
+            //         Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //     }
+            // }
+            // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
 
             DB::commit();
             return response()->json([
@@ -305,6 +305,7 @@ class TicketController extends Controller
                 $query->where('department_id', Auth::user()->department_id);
                 $query->orWhere("created_by", Auth::user()->id);
                 $query->orWhere("owner", Auth::user()->id);
+                $query->orWhere('department_id_from', Auth::user()->department_id);
             });
         };
         $query = Ticket::with("department")
@@ -362,12 +363,12 @@ class TicketController extends Controller
             });
         }
         if (Auth::user()->RolePermission=='admin') {
-            $query->where('department_id', Auth::user()->department_id)
+            $query->where($departmentCondition)
             ->when($request->status, function ($query, $status) {
-                if ($status == 1) {
-                    $query->orWhere("ticket_type", "1");
-                    $query->orWhere('department_id_from', Auth::user()->department_id);
-                }
+                // if ($status == 1) {
+                //     // $query->orWhere("ticket_type", "1");
+                //     $query->orWhere('department_id_from', Auth::user()->department_id);
+                // }
                 if ($status == 2) {
                     $query->where("owner", Auth::user()->id);
                 }
@@ -409,26 +410,30 @@ class TicketController extends Controller
                 }
             });
         }
-        $query->when($request->status, function ($query, $status) {
-            if ($status == 2) {
-                $query->where("owner", Auth::user()->id);
-            }
-            if ($status == 3) {
-                $query->whereNotIn("owner", ["unassigned"]);
-            }
-            if ($status == 4) {
-                $query->whereIn("owner", ["unassigned"]);
-            }
-            if ($status == 5) {
-                $currentDate = Carbon::now()->format('Y-m-d');
-                $query->where('due_date', '>=',$currentDate);
-            }
-            if ($status == 6) {
-                $currentDate = Carbon::now()->format('Y-m-d');
-                $query->where('due_date', '<',$currentDate);
-            }
-        });
-        $status = CustomStatus::where("name","Resolved")->first();
+
+        if(Auth::user()->RolePermission=='super_admin'){
+            $query->when($request->status, function ($query, $status) {
+                if ($status == 2) {
+                    $query->where("owner", Auth::user()->id);
+                }
+                if ($status == 3) {
+                    $query->whereNot("owner", Auth::user()->id);
+                }
+                if ($status == 4) {
+                    $query->whereIn("owner", ["unassigned"]);
+                }
+                if ($status == 5) {
+                    $currentDate = Carbon::now()->format('Y-m-d');
+                    $query->where('due_date', '>=',$currentDate);
+                }
+                if ($status == 6) {
+                    $currentDate = Carbon::now()->format('Y-m-d');
+                    $query->where('due_date', '<',$currentDate);
+                }
+            });
+        }
+
+        $status = CustomStatus::where("name", "Closed")->orWhere("name","Resolved")->first();
         $data_tickets = $query->whereNot('status', $status->id)->orderBy('created_at','desc')->get();
         DB::commit();
         return response()->json([
@@ -582,6 +587,9 @@ class TicketController extends Controller
             }else{
                 $data['branch_id'] = Auth::user()->branch_id;
                 $data['department_id_from'] = null;
+            }
+            if ($request->ticket_type == 1) {
+                $data['department_id_from'] = Auth::user()->department_id;
             }
             $data['subject']  = $request->subject;
             $data['issue_type']  = $request->issue_type;

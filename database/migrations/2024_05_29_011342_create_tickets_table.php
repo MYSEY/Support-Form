@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('trackid')->nullable();
             $table->integer('department_id_from')->nullable();
             $table->integer('department_id')->nullable();
@@ -43,7 +43,7 @@ return new class extends Migration
             $table->integer('lastreplier')->nullable();
             $table->integer('replierid')->nullable();
             $table->integer('archive')->default('0')->nullable();
-            $table->integer('locked')->default('0');
+            $table->integer('locked')->default('0')->nullable();
             $table->mediumText('attachments')->nullable();
             $table->mediumText('merged')->nullable();
             $table->mediumText('history')->nullable();
