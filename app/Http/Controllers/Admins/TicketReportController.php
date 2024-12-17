@@ -147,6 +147,8 @@ class TicketReportController extends Controller
             ->orWhere('department_id_from', Auth::user()->department_id);
         }else if(Auth::user()->RolePermission=="admin_branch"){
             $query->where('branch_id', Auth::user()->branch_id);
+        }elseif(Auth::user()->RolePermission=='super_admin'){
+            $query->where('owner',Auth::user()->id);
         }
         $data = $query->OrderBy('tickets.id','DESC')->get();
         return response()->json([
