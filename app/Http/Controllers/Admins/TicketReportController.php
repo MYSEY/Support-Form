@@ -28,7 +28,7 @@ class TicketReportController extends Controller
     {
         $status = CustomStatus::get();
         $priority = Priority::get();
-        $user = User::where('department_id',Auth::user()->department_id)->select('id','name')->get();
+        $user = User::select('id','name')->get();
         $from_date = null;
         $to_date = null;
         if ($request->from_date || $request->to_date) {

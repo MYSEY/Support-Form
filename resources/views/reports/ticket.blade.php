@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                             <div class="form-group" data-select2-id="105">
-                                <select class="form-control" name="user_id" id="user_id">
+                                <select class="select2 form-control w-100 select2-hidden-accessible" name="user_id" id="user_id">
                                     <option value="">-- Select Users --</option>
                                     @foreach ($user as $key => $item)
                                         <option value="{{$item->id}}">{{$item->name}}</option>
