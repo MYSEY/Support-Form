@@ -59,7 +59,8 @@ class TicketReportController extends Controller
                 'issue_types.name as issue_type_name',
                 'priorities.name as prioritie_name',
                 'priorities.color as priority_color',
-            )->when($request->priority, function ($query, $priority) {
+            )->where('tickets.deleted_at',null)
+            ->when($request->priority, function ($query, $priority) {
                 $query->where('tickets.priority', $priority);
             })->when($request->status, function ($query, $status) {
                 $query->whereIn('tickets.status', $status);
