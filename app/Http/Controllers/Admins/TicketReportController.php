@@ -28,7 +28,7 @@ class TicketReportController extends Controller
     {
         $status = CustomStatus::get();
         $priority = Priority::get();
-        $user = User::select('id','name')->get();
+        $user = User::where('department_id',Auth::user()->department_id)->select('id','name')->get();
         $from_date = null;
         $to_date = null;
         if ($request->from_date || $request->to_date) {
@@ -76,17 +76,13 @@ class TicketReportController extends Controller
                 $query->where('tickets.created_by',Auth::user()->id);
             }
             if (Auth::user()->RolePermission == 'admin_support') {
-                $query->where('tickets.department_id', Auth::user()->department_id)->orWhere("tickets.created_by", Auth::user()->id)->orWhere("tickets.owner", Auth::user()->id);
+                $query->where('tickets.department_id_from', Auth::user()->department_id);
             }
             if (Auth::user()->RolePermission == 'admin') {
-                $query->where('tickets.department_id', Auth::user()->department_id)
-                ->orWhere('tickets.department_id_from', Auth::user()->department_id);
+                $query->where('tickets.department_id', Auth::user()->department_id)->orWhere('tickets.department_id_from', Auth::user()->department_id);
             }
             if (Auth::user()->RolePermission == 'admin_branch') {
                 $query->where('tickets.branch_id', Auth::user()->branch_id);
-            }
-            if(Auth::user()->RolePermission=='super_admin'){
-                $query->where('owner',Auth::user()->id)->where('department_id', Auth::user()->department_id);
             }
 
             // Fetch paginated data
