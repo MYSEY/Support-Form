@@ -93,7 +93,7 @@ class TicketController extends Controller
         } if(Auth::user()->RolePermission=="admin_branch"){
             $total_all_ticket = Ticket::where('branch_id', Auth::user()->branch_id)->where($statusCondition)->count();
             
-            $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)->count();
+            $total_assigned_ticket = Ticket::where("owner", Auth::user()->id)->where($statusCondition)->count();
 
             $total_unassigned_ticket = Ticket::where($branchCondition)->where($statusCondition)->whereIn("owner", ["unassigned","auto-assign"])->count();
             $total_due_soon_ticket = Ticket::where($branchCondition)->where($statusCondition)->where('due_date', '>=',$currentDate)->count();
