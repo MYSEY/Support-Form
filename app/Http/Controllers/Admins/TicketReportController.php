@@ -35,7 +35,6 @@ class TicketReportController extends Controller
             $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d H:i:s');
             $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s');
         }
-        // dd($request->$user_id);
         if (request()->ajax()) {
             // Define the base query
             $query = DB::table('tickets')
@@ -85,6 +84,20 @@ class TicketReportController extends Controller
                 $query->where('tickets.branch_id', Auth::user()->branch_id);
             }
 
+            // **Search Handling**
+            $searchValue = request()->input('search.value');
+            if (!empty($searchValue)) {
+                $query->where(function ($q) use ($searchValue) {
+                    $q->where('tickets.trackid', 'like', "%{$searchValue}%")
+                    ->orWhere('departments.name_english', 'like', "%{$searchValue}%")
+                    ->orWhere('branchs.branch_name_en', 'like', "%{$searchValue}%")
+                    ->orWhere('users.name', 'like', "%{$searchValue}%")
+                    ->orWhere('issue_types.name', 'like', "%{$searchValue}%")
+                    ->orWhere('custom_statuses.name', 'like', "%{$searchValue}%")
+                    ->orWhere('priorities.name', 'like', "%{$searchValue}%");
+                });
+            }
+            
             // Fetch paginated data
             $recordsTotal = Ticket::where('id', Auth::user()->id)->count();
             $recordsFiltered = $query->count();
