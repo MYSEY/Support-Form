@@ -69,9 +69,9 @@ class TicketController extends Controller
         $total_due_soon_ticket = [];
         $total_overdue_ticket = [];
         if (Auth::user()->RolePermission=='staff') {
-            $total_all_ticket = Ticket::where("created_by", Auth::user()->id)->count();
-            $total_due_soon_ticket = Ticket::where("created_by", Auth::user()->id)->where('due_date', '>=',$currentDate)->count();
-            $total_overdue_ticket = Ticket::where("created_by", Auth::user()->id)->where('due_date', '<',$currentDate)->count();
+            $total_all_ticket = Ticket::where("created_by", Auth::user()->id)->where($statusCondition)->count();
+            $total_due_soon_ticket = Ticket::where("created_by", Auth::user()->id)->where($statusCondition)->where('due_date', '>=',$currentDate)->count();
+            $total_overdue_ticket = Ticket::where("created_by", Auth::user()->id)->where($statusCondition)->where('due_date', '<',$currentDate)->count();
         }
         if (Auth::user()->RolePermission=='admin_support') {
 
