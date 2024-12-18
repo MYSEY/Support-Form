@@ -335,6 +335,9 @@ class TicketController extends Controller
                     $currentDate = Carbon::now()->format('Y-m-d');
                     $query->where('due_date', '<',$currentDate);
                 }
+                if ($status == 7) {
+                    $query->whereNot("owner", Auth::user()->id);
+                }
             });
         }
         if (Auth::user()->RolePermission=='admin_support') {
@@ -434,7 +437,7 @@ class TicketController extends Controller
         }
 
         $status = CustomStatus::where("name", "Closed")->orWhere("name","Resolved")->first();
-        $data_tickets = $query->whereNot('status', $status->id)->orderBy('created_at','desc')->get();
+        $data_tickets = $query->orderBy('created_at','desc')->get();
         DB::commit();
         return response()->json([
             'datas'=>$data_tickets
