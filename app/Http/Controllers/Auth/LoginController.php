@@ -68,6 +68,7 @@ class LoginController extends Controller
                         [
                             'user_id' => $user->id,
                             'dt' => Carbon::now(),
+                            'updated_at' => Carbon::now()->addHour(),
                         ]);
                         return response()->json([
                             'message' => "Login successfully",

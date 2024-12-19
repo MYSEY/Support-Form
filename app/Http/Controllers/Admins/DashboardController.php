@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admins;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,7 @@ class DashboardController extends Controller
         $query = DB::table('onlines')
         ->leftJoin('users','onlines.user_id','=','users.id')
         ->leftJoin('branchs','branchs.id','=','users.branch_id')
+        ->leftJoin('roles','roles.id','=','users.role_id')
         ->select(
             'onlines.*',
             'users.id',
@@ -26,6 +28,7 @@ class DashboardController extends Controller
             'users.user',
             'branchs.branch_name_kh',
             'branchs.branch_name_en',
+            'roles.name as role_name',
         );
         // Apply additional filtering for role
         if (Auth::user()->RolePermission=='staff') {
@@ -36,7 +39,7 @@ class DashboardController extends Controller
             $query->where('branch_id', Auth::user()->branch_id);
         }
         
-        $data = $query->orderBy('onlines.id','DESC')->get();
+        $data = $query->where('onlines.updated_at', '>=', Carbon::now()->subMinutes(59))->orderBy('onlines.id','DESC')->get();
         return view('dashboads.admin',compact('data'));
     }
     public function show(Request $request){
