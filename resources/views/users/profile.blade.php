@@ -18,7 +18,7 @@
                         @if ($data->profile)
                             <img src="{{asset('storage/users/profile/'.$data->profile)}}" class="rounded-circle shadow-2 img-thumbnail" alt="{{$data->name}}" style="width: 160px; height:160px; object-fit: cover;">
                         @else
-                            <img src="{{asset('admins/img/demo/avatars/avatar-admin-lg.png')}}" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                            <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="rounded-circle shadow-2 img-thumbnail" alt="">
                         @endif
 
                         <h5 class="mb-0 fw-700 text-center mt-3">
