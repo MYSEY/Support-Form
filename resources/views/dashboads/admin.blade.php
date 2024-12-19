@@ -178,7 +178,14 @@
                                                     @foreach ($data as $item)
                                                         <tr role="row" class="odd">
                                                             <td class="sorting_1" tabindex="0">
-                                                                <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern" style="width: 36px;height: 36px;">
+                                                                <img
+                                                                    src="{{ $item->profile ? asset('storage/users/profile/' . $item->profile) : asset('admins/img/demo/avatars/avatar-m.png') }}" 
+                                                                    class="profile-image rounded-circle" 
+                                                                    alt="{{ $item->name }}" 
+                                                                    style="width: 50px; cursor: pointer;"
+                                                                    data-bs-toggle="modal" 
+                                                                    data-bs-target="#profileImageModal"
+                                                                    onclick="showProfileImage('{{ $item->profile ? asset('storage/users/profile/' . $item->profile) : asset('admins/img/demo/avatars/avatar-m.png') }}')">
                                                             </td>
                                                             <td>{{$item->name}}</td>
                                                             <td>{{$item->email}}</td>
@@ -204,10 +211,23 @@
             </div>
         @endcan
     </div>
+    <div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center" style="padding:0% !important">
+                    <img id="modalProfileImage" src="" alt="Profile Picture" class="img-fluid rounded" style="width: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
 @include('includs.datatable_basic')
     <script>
+        function showProfileImage(imageUrl) {
+            $("#profileImageModal").modal("show");
+            document.getElementById('modalProfileImage').src = imageUrl;
+        }
         $(function() {
             $('.btn_delete_user_onlin').on('click',function(){
                 let user_id = $(this).data("id");
