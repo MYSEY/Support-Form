@@ -1,5 +1,12 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .avatar-upload img {
+    border: 2px solid #f0f0f0;
+    padding: 5px;
+    background: #ffffff;
+}
+</style>
 <div class="subheader">
     <h1 class="subheader-title">
         <i class="subheader-icon fal fa-plus-circle"></i> Profile
@@ -9,30 +16,27 @@
     </h1>
 </div>
 <div class="row">
-    <div class="col-lg-6 col-xl-3 order-lg-1 order-xl-1">
-        <!-- profile summary -->
-        <div class="card mb-g rounded-top">
-            <div class="row no-gutters row-grid">
-                <div class="col-12">
-                    <div class="d-flex flex-column align-items-center justify-content-center p-4">
-                        @if ($data->profile)
-                            <img src="{{asset('storage/users/profile/'.$data->profile)}}" class="rounded-circle shadow-2 img-thumbnail" alt="{{$data->name}}" style="width: 160px; height:160px; object-fit: cover;">
-                        @else
-                            <img src="{{asset('admins/img/demo/avatars/avatar-m.png')}}" class="rounded-circle shadow-2 img-thumbnail" alt="">
-                        @endif
-
-                        <h5 class="mb-0 fw-700 text-center mt-3">
-                            {{$data->name}}
-                            <small class="text-muted mb-0">{{$data->RoleName}}, {{$data->DepartmentName}}</small>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-12 col-xl-6 order-lg-3 order-xl-2">
+    <div class="col-lg-6 col-xl-8">
         <div class="card border mb-g">
             <div class="card-body">
+                <div class="profile-layout text-center">
+                    <div class="avatar-upload mb-3">
+                        <img id="previewImage" 
+                                src="{{ $data->profile ? asset('storage/users/profile/' . $data->profile) : asset('admins/img/demo/avatars/avatar-m.png') }}" 
+                                alt="Profile Picture Preview" 
+                                class="rounded-circle" 
+                                width="120">
+                    </div>
+        
+                    {{-- <h5 class="mt-3">{{ auth()->user()->name }}</h5> --}}
+                    <!-- Form -->
+                    <div class="form-group">
+                        <label for="profile" class="btn btn-secondary btn-sm">
+                            Select Picture
+                            <input type="file" name="profile" id="profile" accept="image/*" hidden onchange="previewSelectedImage(this)">
+                        </label>
+                    </div>
+                </div>
                 <div class="row mb-2">
                     <div class="col-md-12">
                         <div class="form-group">
@@ -81,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-2">
+                {{-- <div class="row mb-2">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label class="form-label">Profile</label>
@@ -91,7 +95,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="row mb-2">
                     <div class="col-md-12" style="text-align: right;">
                         <input type="hidden" value="{{csrf_token()}}" id="token">
@@ -104,7 +108,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-6 col-xl-3 order-lg-2 order-xl-3">
+    <div class="col-lg-6 col-xl-4">
         <!-- rating -->
         <div class="card mb-g">
             <div class="row row-grid no-gutters">
@@ -144,7 +148,17 @@
 
 @section('script')
     <script>
+         function previewSelectedImage(input) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        document.getElementById('previewImage').src = e.target.result;
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
         $(function(){
+           
             $("#btnUpdate").on('click',function(e){
                 e.preventDefault();
                 var formData = new FormData();

@@ -25,6 +25,7 @@ class DashboardController extends Controller
             'users.id',
             'users.name',
             'users.email',
+            'users.profile',
             'users.user',
             'branchs.branch_name_kh',
             'branchs.branch_name_en',
