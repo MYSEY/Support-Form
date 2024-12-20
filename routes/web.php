@@ -17,6 +17,7 @@ use App\Http\Controllers\Admins\DepartmentController;
 use App\Http\Controllers\Admins\PermissionController;
 use App\Http\Controllers\Admins\TicketReportController;
 use App\Http\Controllers\Admins\PermissionCategoryController;
+use App\Http\Controllers\Admins\ResponsesTicketController;
 use App\Http\Controllers\Admins\TicketGuidelinesController;
 
 /*
@@ -139,6 +140,8 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('ticket-guideline/edit', [TicketGuidelinesController::class, "edit"]);
     Route::post('ticket-guideline/update', [TicketGuidelinesController::class, "update"]);
     Route::resource('ticket-guideline', TicketGuidelinesController::class);
+
+    Route::resource('ticket-responses', ResponsesTicketController::class);
     
 });
 

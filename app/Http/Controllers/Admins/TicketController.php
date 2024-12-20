@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\Reply;
+use App\Models\ResponsesTicket;
 use App\Models\TicketGuideline;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -467,6 +468,7 @@ class TicketController extends Controller
         $priority= Priority::get();
         $status = CustomStatus::orderBy('id', 'asc')->get();
         $user_support = User::where("autoassign",1)->get();
+        $responses_tickets = ResponsesTicket::where("department_id",Auth::user()->department_id)->get();
         $data_ticket = Ticket::with("department")
         ->with("branch")->with("lastReplier")
         ->with("CustomStatus")->with("assignedBy")
@@ -475,7 +477,7 @@ class TicketController extends Controller
         ->with("histories")
         ->where("id", $request->id)
         ->first();
-        return view('tickets.ticket-detail', compact('data_ticket','status', 'priority', 'user_support'));
+        return view('tickets.ticket-detail', compact('data_ticket','status', 'priority', 'user_support', 'responses_tickets'));
     }
 
     public function viewGuidelines(Request $request){

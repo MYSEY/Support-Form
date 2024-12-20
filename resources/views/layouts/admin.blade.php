@@ -116,9 +116,19 @@
                 'Branch View', 
                 'Priority View', 
                 'Issue Type View',
+                'Responses Ticket View',
                 'Reset Password User'
             ];
-            $segmentSetting =['branch','department','ticket-guideline','statuses','priority','issue-type','reset'];
+            $segmentSetting =[
+                'branch',
+                'department',
+                'ticket-guideline',
+                'statuses',
+                'priority',
+                'issue-type', 
+                'ticket-responses',
+                'reset'
+            ];
         @endphp
 
         <div class="page-wrapper">
@@ -268,6 +278,13 @@
                                             <li class="@if (in_array(Request::instance()->segment(2), ['issue-type'])) active @endif">
                                                 <a href="{{url('admin/issue-type')}}" title="issue-type" data-filter-tags="theme settings issue-type">
                                                     <span class="nav-link-text">Issue Type</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Responses Ticket View'))
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['ticket-responses'])) active @endif">
+                                                <a href="{{url('admin/ticket-responses')}}" title="ticket-responses" data-filter-tags="theme settings ticket-responses">
+                                                    <span class="nav-link-text">Responses Ticket</span>
                                                 </a>
                                             </li>
                                         @endif
