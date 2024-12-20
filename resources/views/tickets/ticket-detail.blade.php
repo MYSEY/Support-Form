@@ -94,7 +94,7 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" x-placement="bottom-start" style="position: absolute; will-change: top, left; top: 36px; left: 0px;">
                                         @foreach ($responses_tickets as $item)
-                                            <a class="dropdown-item btn-select-responses-ticket" href="javascript:void(0);" data-message="{{$item->message}}"> {{$item->title}}</a>
+                                            <a class="dropdown-item btn-select-responses-ticket" href="javascript:void(0);" data-message="Dear {{$data_ticket->name."\n". $item->message}}"> {{$item->title}}</a>
                                         @endforeach
                                     </div>
                             </div>
