@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Online;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -16,7 +17,7 @@ class DashboardController extends Controller
         RolePermission($this, 'Dashboad');
     }
     public function index(){
-        $query = DB::table('onlines')
+        $query = Online::with("userOnline")
         ->leftJoin('users','onlines.user_id','=','users.id')
         ->leftJoin('branchs','branchs.id','=','users.branch_id')
         ->leftJoin('roles','roles.id','=','users.role_id')
@@ -39,8 +40,8 @@ class DashboardController extends Controller
         }else if(Auth::user()->RolePermission=="admin_branch"){
             $query->where('branch_id', Auth::user()->branch_id);
         }
-        
-        $data = $query->where('onlines.updated_at', '>=', Carbon::now()->subMinutes(59))->orderBy('onlines.id','DESC')->get();
+        $today = Carbon::today()->toDateString();
+        $data = $query->whereDate('onlines.updated_at', $today)->orderBy('onlines.id','DESC')->get();
         return view('dashboads.admin',compact('data'));
     }
     public function show(Request $request){
