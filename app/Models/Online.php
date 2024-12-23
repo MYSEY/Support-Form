@@ -13,7 +13,13 @@ class Online extends Model
     
     protected $fillable = [
         'user_id',
+        'token_expries',
         'dt',
         'tmp',
     ];
+
+    public function userOnline()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
