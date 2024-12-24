@@ -78,7 +78,9 @@ class TicketReportController extends Controller
                 $query->where('tickets.department_id_from', Auth::user()->department_id);
             }
             if (Auth::user()->RolePermission == 'admin') {
-                $query->where('tickets.department_id', Auth::user()->department_id)->orWhere('tickets.department_id_from', Auth::user()->department_id);
+                $query->where('tickets.department_id', Auth::user()->department_id)
+                ->orWhere('tickets.department_id_from', Auth::user()->department_id)
+                ->whereBetween('tickets.dt',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
             }
             if (Auth::user()->RolePermission == 'admin_branch') {
                 $query->where('tickets.branch_id', Auth::user()->branch_id);
