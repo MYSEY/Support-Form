@@ -119,6 +119,18 @@
                 var url = "{{URL::to('admin/ticket/report/export')}}?" + $.param(query)
                 window.location = url;
             });
+
+            $(document).on('mouseenter', '.sub-message', function() {
+                function removeBrTags(input) {
+                    return input.replace(/<br\s*\/?>/gi, '');
+                }
+                var assignBy = $(this).data('assign-by');
+                var message = $(this).data('message');
+                var cleanedMessage = removeBrTags(message);
+                var tooltipContent = assignBy + ' » ' + cleanedMessage;
+                $(this).attr('data-toggle:','tooltip').attr('data-html', 'true').attr('title', tooltipContent);
+            });
+
             $('.sub-issue-type').each(function() {
                 var text = $(this).text();
                 var limit = 20; // Set your character limit
@@ -127,22 +139,8 @@
                     $(this).text(truncated);
                 }
             });
-            $(document).ready(function() {
-                function removeBrTags(input) {
-                    return input.replace(/<br\s*\/?>/gi, '');
-                }
-                $('.sub-message').each(function() {
-                    var assignBy = $(this).data('assign-by');
-                    var message = $(this).data('message');
-                    var cleanedMessage = removeBrTags(message);
-                    var tooltipContent = assignBy + ' » ' + cleanedMessage;
-                    $(this).attr('data-toggle', 'tooltip').attr('data-html', 'true').attr('title', tooltipContent);
-                });
-            });
-            
             $('[data-toggle="tooltip"]').tooltip();
         });
-
         function dataTables() {
             $('#tbl_ticket_report').DataTable({
                 // dom: 'Blfrtip',
@@ -203,12 +201,13 @@
                         data: 'subject',
                         name: 'subject',
                         render: function(data, type, row) {
-                            const truncatedSubject = row.subject.length > 20  ? row.subject.substring(0, 20) + '...' : row.subject;
-                            return `<div class="sub-issue-type sub-message" data-assign-by="${row.assign_by}"  data-message="${row.message}">
-                                    <a href="{{url('admin/ticket/detail')}}/${row.id}">
-                                        ${truncatedSubject}
-                                    </a>
-                                </div>`;
+                            const truncatedSubject = row.subject.length > 20 ? row.subject.substring(0, 20) + '...' : row.subject;
+                            const detailUrl = `/admin/ticket/detail/${row.id}`; // Use relative URL or generate full URL dynamically
+                            return `<div class="sub-issue-type sub-message" data-assign-by="${row.assign_by}" data-message="${row.message}">
+                                        <a href="${detailUrl}">
+                                            ${truncatedSubject}
+                                        </a>
+                                    </div>`;
                         },
                         orderable: false,
                         searchable: false
