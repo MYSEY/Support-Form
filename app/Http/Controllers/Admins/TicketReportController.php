@@ -75,7 +75,8 @@ class TicketReportController extends Controller
                 $query->where('tickets.created_by',Auth::user()->id);
             }
             if (Auth::user()->RolePermission == 'admin_support') {
-                $query->where('tickets.department_id_from', Auth::user()->department_id);
+                $query->where('tickets.department_id', Auth::user()->department_id);
+                $query->orWhere('tickets.department_id_from', Auth::user()->department_id);
             }
             if (Auth::user()->RolePermission == 'admin') {
                 $query->where('tickets.department_id', Auth::user()->department_id)

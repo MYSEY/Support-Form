@@ -142,7 +142,6 @@
                 var formData = new FormData();
                 var token = $("#token").val();
                 let subject = $("input[name=ticket-subject]").val();
-                var attachments = $('#ticket-file').prop('files')[0];
                 var priority = $("#ticket-priority").val();
                 var assign_to = $("#ticket-assign").val();
                 var due_date = $("#ticket-due-date").val();
@@ -151,7 +150,10 @@
                 var overdue_email_sent = $('input[name="ticket-notification"]:checked').val();
                 var satisfaction_email_sent = $('input[name="ticket-check-submiss"]:checked').val();
                 var description = $("#description").val();
-                var fileSize = attachments ? attachments['size'] : "";
+                var attachments = $('#ticket-file').prop('files')[0];
+                // var fileSize = attachments ? attachments['size'] : "";
+                var fileSize = attachments ? (attachments['size'] / 1024) : "";
+
                 formData.append('_token', token);
                 formData.append('department_id', datas.department_id);
                 formData.append('branch_id', datas.branch_id);
@@ -166,8 +168,7 @@
                 formData.append('overdue_email_sent', overdue_email_sent);
                 formData.append('satisfaction_email_sent', satisfaction_email_sent);
                 formData.append('message', description);
-
-                if (fileSize < 1073741824) {
+                if (fileSize <= 10240) {  // ** 10 MB in KB **/
                     $(".btn-hidden-show").hide();
                     $(".btn-loading").css('display', 'block');
                     var num_miss = 0;
@@ -221,7 +222,10 @@
                         })
                     }
                 }else{
-                    $("#thanLess").text("please check file size").css("color", "red");
+                    $(".btn-hidden-show").show();
+                    $(".btn-loading").css('display', 'none');
+                    $("#thanLess").text("Please check file size less than or equal to 10MB").css("color", "red");
+                    return false;
                 }
             });
         });
