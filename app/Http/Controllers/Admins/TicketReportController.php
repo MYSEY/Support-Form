@@ -92,6 +92,8 @@ class TicketReportController extends Controller
                 $query->where(function ($q) use ($searchValue) {
                     $q->where('tickets.trackid', 'like', "%{$searchValue}%")
                     ->orWhere('tickets.name', 'like', "%{$searchValue}%")
+                    ->orWhere('tickets.subject', 'like', "%{$searchValue}%")
+                    ->orWhere('tickets.status', 'like', "%{$searchValue}%")
                     ->orWhere('departments.name_english', 'like', "%{$searchValue}%")
                     ->orWhere('branchs.branch_name_en', 'like', "%{$searchValue}%")
                     ->orWhere('users.name', 'like', "%{$searchValue}%")
