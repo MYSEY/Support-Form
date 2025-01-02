@@ -641,10 +641,22 @@ class TicketController extends Controller
             $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');
             $data['updated_by']  = Auth::user()->id;
             $data->save();
-
+            
             $itemNotify = notification::where("ticket_id",$data->id)->first();
-            $itemNotify["to_user_id"] = ($request->assignedby ? $request->assignedby: "");
-            $itemNotify->save();
+            if ($itemNotify) {
+                $itemNotify["to_user_id"] = ($request->assignedby ? $request->assignedby: "");
+                $itemNotify->save();
+            }else{
+                $item = new notification();
+                if (Auth::user()->id == $request->assignedby) {
+                    $item->is_send = 1;
+                }else{
+                    $item->to_user_id = ($request->assignedby ? $request->assignedby: "");
+                }
+                $item->from_user_id = $data->owner;
+                $item->ticket_id = $data->id;
+                $item->save();
+            }
 
             // Toastr::success('Updated successfully.','Success');
             return response()->json([
@@ -760,8 +772,21 @@ class TicketController extends Controller
             // }
             // // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
             $itemNotify = notification::where("ticket_id",$data->id)->first();
-            $itemNotify["to_user_id"] = ($request->assignedby ? $request->assignedby: "");
-            $itemNotify->save();
+            if ($itemNotify) {
+                $itemNotify["to_user_id"] = ($request->assignedby ? $request->assignedby: "");
+                $itemNotify->save();
+            }else{
+                $item = new notification();
+                if (Auth::user()->id == $request->assignedby) {
+                    $item->is_send = 1;
+                }else{
+                    $item->to_user_id = ($request->assignedby ? $request->assignedby: "");
+                }
+                $item->from_user_id = $data->owner;
+                $item->ticket_id = $data->id;
+                $item->save();
+            }
+            
            
             // Toastr::success('Updated successfully.','Success');
             DB::commit();
