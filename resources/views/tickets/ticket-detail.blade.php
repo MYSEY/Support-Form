@@ -122,14 +122,14 @@
                                         <select
                                             class="select2 form-control w-100 select2-hidden-accessible required select2-option"
                                             id="ticket-assigned" required>
-                                            <option value="unassigned">> Unassigned << /option>
-                                            <option value="auto-assign">> Auto-assign << /option>
-                                                    @if (count($user_support) > 0)
-                                                        @foreach ($user_support as $item)
-                                            <option @if ($item->id == $data_ticket->owner) selected @endif
-                                                value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endforeach
-                                            @endif
+                                            <option value="unassigned"> Unassigned </option>
+                                            <option value="auto-assign"> Auto-assign </option>
+                                                @if (count($user_support) > 0)
+                                                    @foreach ($user_support as $item)
+                                                        <option @if ($item->id == $data_ticket->owner) selected @endif
+                                                            value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    @endforeach
+                                                @endif
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -586,6 +586,15 @@
                 var assignedby = $("#ticket-assigned").val();
                 var autoreload = $('input[name="autoreload-send-email"]:checked').val();
                 var rp_attachments = $("#rp_attachments").prop('files')[0];
+                var fileSize = rp_attachments ? (rp_attachments['size'] / 1024) : "";
+
+                if (fileSize > 10240) {  // ** 10 MB in KB **/
+                    $(".btn-hidden-show").show();
+                    $(".btn-loading").css('display', 'none');
+                    toastr.error("Please check file size less than or equal to 10MB");
+                    return false;
+                }
+                
                 formData.append('_token', token);
                 formData.append('reply_to', reply_to);
                 formData.append('message', message);

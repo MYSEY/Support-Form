@@ -14,10 +14,12 @@ use App\Http\Controllers\Admins\StatusesController;
 use App\Http\Controllers\Admins\DashboardController;
 use App\Http\Controllers\Admins\IssueTypeController;
 use App\Http\Controllers\Admins\DepartmentController;
+use App\Http\Controllers\Admins\NotificationController;
 use App\Http\Controllers\Admins\PermissionController;
 use App\Http\Controllers\Admins\TicketReportController;
 use App\Http\Controllers\Admins\PermissionCategoryController;
 use App\Http\Controllers\Admins\ResponsesTicketController;
+use App\Http\Controllers\Admins\SSEController;
 use App\Http\Controllers\Admins\TicketGuidelinesController;
 
 /*
@@ -142,7 +144,15 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::resource('ticket-guideline', TicketGuidelinesController::class);
 
     Route::resource('ticket-responses', ResponsesTicketController::class);
+
+    // *** send notification **/
+    Route::get('/sse-update', [SSEController::class, 'sendSSE']);
+    Route::get('/notification', [NotificationController::class, 'index']);
+    Route::get('/notification/totals', [NotificationController::class, 'totalNotification']);
+    Route::post('/create-notification', [NotificationController::class, 'create']);
+    Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead']);
     
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
