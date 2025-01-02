@@ -46,7 +46,7 @@ class NotificationController extends Controller
         )
         ->when($departmentId, function ($query, $department_id) use ($roleName, $userId){
             $query->where("tickets.department_id", $department_id);
-            if ($roleName == "admin_support" || $roleName == "admin") {
+            if ($roleName == "admin_support" || $roleName == "admin" || $roleName == "super_admin") {
                 $query->where("notifications.to_user_id", "unassigned");
                 $query->orWhere("notifications.to_user_id", $userId);
             }else {
