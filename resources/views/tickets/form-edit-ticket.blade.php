@@ -13,7 +13,7 @@
                     <div class="col-xl-6">
                         <div class="form-group">
                             <label class="form-label">Subject: <span class="text-danger">*</span></label>
-                            <input type="text" name="ticket-subject" class="form-control required" id="e_ticket-subject">
+                            <input type="text" name="e_ticket-subject" class="form-control required" id="e_ticket-subject">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="ticket-textarea">Description: <span class="text-danger">*</span></label>
@@ -43,7 +43,7 @@
                         <div class="form-group">
                             <label class="form-label" for="ticket-assign">Assign this ticket to:</label>
                             <select class="select2 form-control w-100 select2-hidden-accessible" id="e_ticket-assign">
-                                <option value="unassigned" selected> > Unassigned < </option>
+                                {{-- <option value="unassigned" selected> > Unassigned < </option> --}}
                             </select>
                         </div>
                         <div class="form-group">
@@ -185,12 +185,13 @@
                 dataType: "JSON",
                 success: function(response) {
                     let data = response.data;
+                    
                     let issuetype = response.issuetype;
                     if (data) {
                         $("#e_ticket-subject").val(data.subject);
                         $("#e_description").val(data.message);
                         $("#e_due_date").val(data.due_date);
-                        $("#e_ticket-assign").val(data.assignedby);
+                        // $("#e_ticket-assign").val(data.assignedby);
                         $("#old_attachments").val(data.attachments);
                         if (data.issue_type != '') {
                             $('#e_issue-type').html('<option selected value=""> -- Select --</option>');
@@ -217,6 +218,16 @@
                                     value: item.id,
                                     text: item.name,
                                     selected: item.id == data.priority
+                                }));
+                            });
+                        };
+                        if (response.user_support != '') {
+                            $('#e_ticket-assign').html('<option value="unassigned"> > Unassigned < </option>');
+                            $.each(response.user_support, function(i, item) {
+                                $('#e_ticket-assign').append($('<option>', {
+                                    value: item.id,
+                                    text: item.name,
+                                    selected: item.id == data.owner
                                 }));
                             });
                         };

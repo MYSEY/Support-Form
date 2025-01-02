@@ -20,6 +20,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
+use App\Models\notification;
 use App\Models\Reply;
 use App\Models\ResponsesTicket;
 use App\Models\TicketGuideline;
@@ -122,10 +123,17 @@ class TicketController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $issuetype= IssueType::orderBy('id','DESC')->get();
-        $user_support = User::where("autoassign",1)->get();
+        $user_support = User::where("department_id",$request->id)
+        ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+        ->select(
+            'users.*',
+            'roles.role_type',
+        )
+        ->whereNot("roles.role_type","staff")
+        ->get();
         $priority= Priority::get();
         return view('tickets.form-create-ticket', compact('issuetype', 'priority','user_support'));
     }
@@ -138,6 +146,7 @@ class TicketController extends Controller
         DB::beginTransaction();
         try {
             $data = $request->all();
+
             if($request->hasFile('attachments')) {
                 $image = $request->file('attachments');
                 $AttachmentName = $image->getClientOriginalName();
@@ -200,6 +209,13 @@ class TicketController extends Controller
             //     }
             // }
             // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
+
+            $item = new notification();
+            $item->from_user_id = Auth::user()->id;
+            $item->to_user_id = ($request->assignedby ? $request->assignedby: "");
+            $item->ticket_id = $ticket->id;
+            $item->is_send = ($request->assignedby == "unassigned"? 1: 0);
+            $item->save();
 
             DB::commit();
             return response()->json([
@@ -446,11 +462,20 @@ class TicketController extends Controller
         $issuetype= IssueType::orderBy('id','DESC')->get();
         $Priority= Priority::orderBy('id','DESC')->get();
         $data_ticket = Ticket::where("id", $request->id)->first();
+        $user_support = User::where("users.department_id",$data_ticket->department_id)
+        ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+        ->select(
+            'users.*',
+            'roles.role_type',
+        )
+        ->whereNot("roles.role_type","staff")
+        ->get();
         DB::commit();
         return response()->json([
             'data'=>$data_ticket,
             'issuetype'=>$issuetype,
             'priority'=>$Priority,
+            'user_support'=>$user_support,
         ]);
     }
 
@@ -467,7 +492,6 @@ class TicketController extends Controller
         $branch = Branch::get();
         $priority= Priority::get();
         $status = CustomStatus::orderBy('id', 'asc')->get();
-        $user_support = User::where("autoassign",1)->get();
         $responses_tickets = ResponsesTicket::where("department_id",Auth::user()->department_id)->get();
         $data_ticket = Ticket::with("department")
         ->with("branch")->with("lastReplier")
@@ -477,6 +501,14 @@ class TicketController extends Controller
         ->with("histories")
         ->where("id", $request->id)
         ->first();
+        $user_support = User::where("users.department_id",$data_ticket->department_id)
+        ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+        ->select(
+            'users.*',
+            'roles.role_type',
+        )
+        ->whereNot("roles.role_type","staff")
+        ->get();
         return view('tickets.ticket-detail', compact('data_ticket','status', 'priority', 'user_support', 'responses_tickets'));
     }
 
@@ -486,7 +518,14 @@ class TicketController extends Controller
             return view('tickets.view_ticket_guideline',compact('datas'));
         }else{
             $issuetype= IssueType::orderBy('id','DESC')->get();
-            $user_support = User::where("autoassign",1)->get();
+            $user_support = User::where("department_id",$request->id)
+            ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+            ->select(
+                'users.*',
+                'roles.role_type',
+            )
+        ->whereNot("roles.role_type","staff")
+            ->get();
             $priority= Priority::get();
             return view('tickets.form-create-ticket', compact('issuetype', 'priority','user_support'));
         }
@@ -580,27 +619,32 @@ class TicketController extends Controller
             }
             $data = Ticket::find($request->id);
             $data['attachments'] = $AttachmentName;
-            $data['name'] = Auth::user()->name;
-            $data['email'] = Auth::user()->email;
-            $dataBranch = Branch::where("id", Auth::user()->branch_id)->first();
-            if($dataBranch->abbreviations == "HQ"){
-                $data['department_id_from'] = Auth::user()->department_id;
-                $data['branch_id'] = null;
-            }else{
-                $data['branch_id'] = Auth::user()->branch_id;
-                $data['department_id_from'] = null;
-            }
-            if ($request->ticket_type == 1) {
-                $data['department_id_from'] = Auth::user()->department_id;
-            }
+            // $data['name'] = Auth::user()->name;
+            // $data['email'] = Auth::user()->email;
+            // $dataBranch = Branch::where("id", Auth::user()->branch_id)->first();
+            // if($dataBranch->abbreviations == "HQ"){
+            //     $data['department_id_from'] = Auth::user()->department_id;
+            //     $data['branch_id'] = null;
+            // }else{
+            //     $data['branch_id'] = Auth::user()->branch_id;
+            //     $data['department_id_from'] = null;
+            // }
+            // if ($request->ticket_type == 1) {
+            //     $data['department_id_from'] = Auth::user()->department_id;
+            // }
             $data['subject']  = $request->subject;
             $data['issue_type']  = $request->issue_type;
             $data['ticket_type'] = $request->ticket_type;
             $data['priority']  = $request->priority;
             $data['message']  = $request->message;
+            $data['owner']  = $request->assignedby;
             $data['dt'] = Carbon::now()->format('Y-m-d H:i:s');
             $data['updated_by']  = Auth::user()->id;
             $data->save();
+
+            $itemNotify = notification::where("ticket_id",$data->id)->first();
+            $itemNotify["to_user_id"] = ($request->assignedby ? $request->assignedby: "");
+            $itemNotify->save();
 
             // Toastr::success('Updated successfully.','Success');
             return response()->json([
@@ -702,19 +746,22 @@ class TicketController extends Controller
                 "dataHistoryPriority"=> $dataHistoryPriority,
             ];
         
-            if (!$request->autoreload) {
-                // $mail_message = ModelsMail::first();
-                if ($assigned_to) {
-                    if ($assigned_to->email == Auth::user()->email) {
-                        Mail::to($data_tickets->createdBy->email)->send(new SendMail($datasSendEmail));
-                    }else if($data_tickets->createdBy->email == Auth::user()->email){
-                        Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                    }else{
-                        Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                    }
-                }
-            }
-            Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
+            // if (!$request->autoreload) {
+            //     // $mail_message = ModelsMail::first();
+            //     if ($assigned_to) {
+            //         if ($assigned_to->email == Auth::user()->email) {
+            //             Mail::to($data_tickets->createdBy->email)->send(new SendMail($datasSendEmail));
+            //         }else if($data_tickets->createdBy->email == Auth::user()->email){
+            //             Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //         }else{
+            //             Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //         }
+            //     }
+            // }
+            // // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
+            $itemNotify = notification::where("ticket_id",$data->id)->first();
+            $itemNotify["to_user_id"] = ($request->assignedby ? $request->assignedby: "");
+            $itemNotify->save();
            
             // Toastr::success('Updated successfully.','Success');
             DB::commit();

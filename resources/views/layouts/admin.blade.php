@@ -386,12 +386,49 @@
                                 </a>
                             </div>
                             <!-- app notification -->
-                            {{-- <div>
-                                <a href="#" class="header-icon" data-toggle="dropdown" title="You got 11 notifications">
-                                    <i class="fal fa-bell"></i>
-                                    <span class="badge badge-icon">11</span>
-                                </a>
-                            </div> --}}
+                            @if (Auth::user()->RolePermission !="staff")
+                                <div>
+                                    <a href="#" id="btn-notification" class="header-icon" data-toggle="dropdown" title="You got 1 notifications">
+                                        <i class="fal fa-bell"></i>
+                                        <span style="display: none" class="badge badge-icon" id="total_new_notifications"></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-animated dropdown-xl">
+                                        <div class="dropdown-header bg-trans-gradient d-flex justify-content-center align-items-center rounded-top mb-2">
+                                            <h4 class="m-0 text-center color-white">
+                                                <span id="total_notifications"></span> New
+                                                <small class="mb-0 opacity-80">User Notifications</small>
+                                            </h4>
+                                        </div>
+                                        <ul class="nav nav-tabs nav-tabs-clean" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link px-4 fs-md js-waves-on fw-500" data-toggle="tab" href="#tab-messages" data-i18n="drpdwn.messages">Messages</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content tab-notification">
+                                            {{-- <div class="tab-pane active p-3 text-center">
+                                                <h5 class="mt-4 pt-4 fw-500">
+                                                    <span class="d-block fa-3x pb-4 text-muted">
+                                                        <i class="ni ni-arrow-up text-gradient opacity-70"></i>
+                                                    </span> Select a tab above to activate
+                                                    <small class="mt-3 fs-b fw-400 text-muted">
+                                                        This blank page message helps protect your privacy, or you can show the first message here automatically through
+                                                        <a href="#">settings page</a>
+                                                    </small>
+                                                </h5>
+                                            </div> --}}
+                                            <div class="tab-pane" id="tab-messages" role="tabpanel">
+                                                <div class="custom-scroll h-100" id="notification-container">
+                                                    <ul class="notification" id="ul-notification">
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="py-2 px-3 bg-faded d-block rounded-bottom text-right border-faded border-bottom-0 border-right-0 border-left-0">
+                                            <a href="{{url('admin/ticket')}}" class="fs-xs fw-500 ml-auto">View all tickets</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                             <!-- app user menu -->
                             <div>
                                 <a href="#" data-toggle="dropdown" title="{{Auth::user()->email}}" class="header-icon d-flex align-items-center justify-content-center ml-2">
@@ -824,6 +861,9 @@
         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
             @csrf
         </form>
+        <input type="hidden" id="user_id" value="{{Auth::user()->id}}">
+        <input type="hidden" id="user_department_id" value="{{Auth::user()->department_id}}">
+        <input type="hidden" id="user_role_admin_support" value="{{Auth::user()->RolePermission}}">
         <!-- END Page Settings -->
         <script src="{{asset('admins/js/vendors.bundle.js')}}"></script>
         <script src="{{asset('admins/js/app.bundle.js')}}"></script>
@@ -852,10 +892,148 @@
         <script src="{{asset('admins/js/statistics/demo-data/demo-c3.js')}}"></script>
 
         <script src="{{asset('admins/js/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.js')}}"></script>
-
+        
         {!! Toastr::message() !!}
+
         @yield('script')
         <script>
+            if ($("#user_role_admin_support").val() != "staff") {
+                var source = new EventSource("{{ URL('/admin/sse-update') }}");
+                // var source = new EventSource("{{ URL('/admin/sse-update') }}?role=" + encodeURIComponent(userRole));
+                source.onmessage = function(event) {
+                    try {
+                        let ac = JSON.parse(event.data);
+                        if ($("#user_id").val() == ac.user_id) {
+                            toastr["info"](ac.message);
+                            source.close();
+                            source = null;
+                        }
+                    } catch (error) {
+                        console.error("Error parsing JSON:", error);
+                    } 
+                };
+                $(document).ready(function(){
+                    function callNotification() {
+                        const departmentId = $("#user_department_id").val();
+                        const userRole = $("#user_role_admin_support").val();
+                        $("#total_new_notifications").css('display', 'none');
+                        totals(departmentId); // Call the custom function with parameters
+                    }
+
+                    // Call notification immediately on page load
+                    callNotification();
+
+                    // Set a timer to call showNotification every 5 seconds
+                    const intervalTime = 10000; // Time in milliseconds (5 seconds)
+                    setInterval(callNotification, intervalTime);
+                    
+                    $("#btn-notification").on("click", function () {
+                        callNotification();
+                    })
+
+                    $('#btn-notification').on('click', function () {
+                        showNotification()
+                    });
+                });
+
+                function calculateTimeAgo(timestamp) {
+                    const now = new Date();
+                    const createdAt = new Date(timestamp);
+                    const diffInSeconds = Math.floor((now - createdAt) / 1000);
+
+                    if (diffInSeconds < 60) {
+                        return `${diffInSeconds} seconds ago`;
+                    } else if (diffInSeconds < 3600) {
+                        return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+                    } else if (diffInSeconds < 86400) {
+                        return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+                    } else {
+                        return `${Math.floor(diffInSeconds / 86400)} days ago`;
+                    }
+                }
+
+                function totals(department_id){
+                    $.ajax({
+                        type: 'get',
+                        header: {
+                            'Authorization': 'Bearer '+ localStorage.getItem('token')
+                        },
+                        url: '{{URL('admin/notification/totals')}}',
+                        data: {
+                            '_token': "{{csrf_token()}}",
+                            'department_id': department_id,
+                        },
+                        success: function(data){
+                            if (data.TotalNew > 0) {
+                                $("#total_new_notifications").css('display', 'block');
+                                $("#total_new_notifications").text(data.TotalNew);
+                            }
+                        }
+                    });
+                };
+                
+                function showNotification(){
+                    $.ajax({
+                        type: 'get',
+                        header: {
+                            'Authorization': 'Bearer '+ localStorage.getItem('token')
+                        },
+                        url: '{{URL('admin/notification')}}',
+                        data: {
+                            '_token': "{{csrf_token()}}",
+                        },
+                        success: function(data){
+                            const notifications = data.notifications || [];
+                            const ul = $('#ul-notification');
+                            let li = '';
+                            let readNotificationIds =[];
+                            if (notifications.length > 0)  {
+                                notifications.forEach(notification => {
+                                    readNotificationIds.push(notification.id);
+                                    const timeAgo = calculateTimeAgo(notification.created_at);
+                                    const profileImage = '{{ asset('admins/img/demo/avatars/avatar-m.png') }}';
+                                    const branch = notification.branch_name_en || '';
+                                    const dept = notification.name_english ? `${notification.name_english}/` : '';
+                                    li +=`<li class="notification-item unread li-notification-item" data-id="${notification.id}">
+                                            <a href="{{url("admin/ticket/detail")}}/${notification.ticket_id}" class="d-flex align-items-center">
+                                                <span class="status mr-2">
+                                                    <span class="profile-image rounded-circle d-inline-block" 
+                                                        style="background-image:url('${profileImage}');"></span>
+                                                </span>
+                                                <span class="d-flex flex-column flex-1 ml-1">
+                                                    <span class="name">${notification.ticket_by || 'Unknown User'}</span>
+                                                    <span class="msg-a fs-sm"><strong>From Dept or Branch:</strong> ${dept + branch}</span>
+                                                    <span class="msg-a fs-sm"><strong>Subject:</strong> ${notification.ticket_subject || 'No subject'}</span>
+                                                    <span class="msg-a fs-sm"><strong>Assigned to:</strong> ${notification.to_user_name || 'Unassigned'}</span>
+                                                    <span class="fs-nano text-muted mt-1">${timeAgo}</span>
+                                                </span>
+                                            </a>
+                                        </li>`;
+                                });
+                            }
+                            $("#ul-notification").html(li);
+                            markAsRead(readNotificationIds); // Update in the backend
+                        }
+                    });
+                }
+                function markAsRead(notificationIds) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{URL('admin/notifications/mark-as-read')}}',
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        data: { ids: notificationIds },
+                        success: function (response) {
+                            console.log(response.message);
+                        },
+                        error: function () {
+                            console.error('Error marking notifications as read');
+                        }
+                    });
+                }
+            }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
