@@ -66,20 +66,20 @@
                             <table id="tbl_ticket_report" class="table table-bordered table-hover table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Tracking_ID</th>
-                                        <th>Submitted_Date</th>
-                                        <th>From_Department/Branch</th>
-                                        <th>Create_By</th>
-                                        <th>To_Department</th>
-                                        <th>Subjesct</th>
-                                        <th>Ticket_Status</th>
-                                        <th>Ticket_Type</th>
-                                        <th>Sub_Issue_Type</th>
-                                        <th>Ticket_Priority</th>
-                                        <th>Assigned</th>
-                                        <th>Last_Replier</th>
-                                        <th>Ticket_Due_Date</th>
-                                        <th>Updated</th>
+                                        <th style="min-width: 100px;">Tracking ID</th>
+                                        <th style="min-width: 100px;">Submitted Date</th>
+                                        <th style="min-width: 150px;">From Department Branch</th>
+                                        <th style="min-width: 100px;">Create By</th>
+                                        <th style="min-width: 100px;">To Department</th>
+                                        <th style="min-width: 100px;">Subjesct</th>
+                                        <th style="min-width: 100px;">Ticket Status</th>
+                                        <th style="min-width: 100px;">Ticket Type</th>
+                                        <th style="min-width: 100px;">Sub Issue Type</th>
+                                        <th style="min-width: 100px;">Ticket Priority</th>
+                                        <th style="min-width: 100px;">Assigned</th>
+                                        <th style="min-width: 100px;">Last Replier</th>
+                                        <th style="min-width: 100px;">Ticket Due Date</th>
+                                        <th style="min-width: 100px;">Updated</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -202,12 +202,11 @@
                         name: 'subject',
                         render: function(data, type, row) {
                             const truncatedSubject = row.subject.length > 20 ? row.subject.substring(0, 20) + '...' : row.subject;
-                            const detailUrl = `/admin/ticket/detail/${row.id}`; // Use relative URL or generate full URL dynamically
                             return `<div class="sub-issue-type sub-message" data-assign-by="${row.assign_by}" data-message="${row.message}">
-                                        <a href="${detailUrl}">
-                                            ${truncatedSubject}
-                                        </a>
-                                    </div>`;
+                                    <a href="#">
+                                        ${truncatedSubject}
+                                    </a>
+                                </div>`;
                         },
                         orderable: false,
                         searchable: false

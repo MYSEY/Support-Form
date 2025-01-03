@@ -74,15 +74,6 @@ class TicketReportController extends Controller
             if (Auth::user()->RolePermission == 'Staff') {
                 $query->where('tickets.created_by',Auth::user()->id);
             }
-            if (Auth::user()->RolePermission == 'admin_support') {
-                $query->where('tickets.department_id', Auth::user()->department_id);
-                $query->orWhere('tickets.department_id_from', Auth::user()->department_id);
-            }
-            if (Auth::user()->RolePermission == 'admin') {
-                $query->where('tickets.department_id', Auth::user()->department_id)
-                ->orWhere('tickets.department_id_from', Auth::user()->department_id)
-                ->whereBetween('tickets.dt',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
-            }
             if (Auth::user()->RolePermission == 'admin_branch') {
                 $query->where('tickets.branch_id', Auth::user()->branch_id);
             }
@@ -92,14 +83,13 @@ class TicketReportController extends Controller
             if (!empty($searchValue)) {
                 $query->where(function ($q) use ($searchValue) {
                     $q->where('tickets.trackid', 'like', "%{$searchValue}%")
+                    ->orWhere('custom_statuses.name',$searchValue)
                     ->orWhere('tickets.name', 'like', "%{$searchValue}%")
                     ->orWhere('tickets.subject', 'like', "%{$searchValue}%")
-                    ->orWhere('tickets.status', 'like', "%{$searchValue}%")
                     ->orWhere('departments.name_english', 'like', "%{$searchValue}%")
                     ->orWhere('branchs.branch_name_en', 'like', "%{$searchValue}%")
                     ->orWhere('users.name', 'like', "%{$searchValue}%")
                     ->orWhere('issue_types.name', 'like', "%{$searchValue}%")
-                    ->orWhere('custom_statuses.name', 'like', "%{$searchValue}%")
                     ->orWhere('priorities.name', 'like', "%{$searchValue}%");
                 });
             }
@@ -122,54 +112,6 @@ class TicketReportController extends Controller
         }
 
         return view('reports.ticket', compact("status", "priority",'user'));
-    }
-
-    public function search(Request $request){
-        $from_date = null;
-        $to_date = null;
-        if ($request->from_date || $request->to_date) {
-            $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d H:i:s'); //2023-05-09 00:00:00
-            $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s'); //2023-05-09 23:59:59
-        }
-        
-        $query = Ticket::
-        with("fromDepartment")
-        ->with("department")
-        ->with("branch")->with("lastReplier")
-        ->with("CustomStatus")->with("assignedBy")
-        ->with("priorities")->with("createdBy")
-        ->with("issueType")->with("assignedTo")
-        
-        ->when($request->priority, function ($query, $priority) {
-            $query->where('tickets.priority', $priority);
-        })->when($from_date, function ($query, $from_date) {
-            $query->where('tickets.dt','>=', $from_date);
-        })->when($to_date, function ($query, $to_date) {
-            $query->where('tickets.dt','<=', $to_date);
-        })->when($request->status, function ($query, $status) {
-            $query->whereIn('tickets.status', $status);
-        });
-
-        // Apply additional filtering for role
-        // if (Auth::user()->RolePermission=='staff') {
-        //     $query->where('department_id',Auth::user()->department_id);
-        // }
-        if (Auth::user()->RolePermission=='staff') {
-            $query->where("created_by", Auth::user()->id);
-        }else if(Auth::user()->RolePermission=='admin_support'){
-            $query->where('department_id', Auth::user()->department_id)
-            ->orWhere("created_by", Auth::user()->id)
-            ->orWhere("owner", Auth::user()->id);
-        }else if(Auth::user()->RolePermission=='admin'){
-            $query->where('department_id', Auth::user()->department_id)
-            ->orWhere('department_id_from', Auth::user()->department_id);
-        }else if(Auth::user()->RolePermission=="admin_branch"){
-            $query->where('branch_id', Auth::user()->branch_id);
-        }
-        $data = $query->OrderBy('tickets.id','DESC')->get();
-        return response()->json([
-            'success'=>$data,
-        ]);
     }
     /**
      * Show the form for creating a new resource.

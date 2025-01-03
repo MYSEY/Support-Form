@@ -23,6 +23,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
     */
     protected $num;
     protected $export_datas;
+    protected $submittedDate;
     
     public function __construct($request)
     {
@@ -33,47 +34,42 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d H:i:s'); //2023-05-09 00:00:00
             $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s'); //2023-05-09 23:59:59
         }
-        $data = Ticket::
-        with("fromDepartment")
-        ->with("department")
-        ->with("branch")->with("lastReplier")
-        ->with("CustomStatus")->with("assignedBy")
-        ->with("priorities")->with("createdBy")
-        ->with("issueType")->with("assignedTo")
-        ->when($request->tracking_id, function ($query, $tracking_id) {
+        $data = Ticket::with([
+            'fromDepartment',
+            'department',
+            'branch',
+            'lastReplier',
+            'CustomStatus',
+            'assignedBy',
+            'priorities',
+            'createdBy',
+            'issueType',
+            'assignedTo'
+        ])->when($request->tracking_id, function ($query, $tracking_id) {
             $query->where('trackid', $tracking_id);
-        })
-        ->when($request->name, function ($query, $name) {
+        })->when($request->name, function ($query, $name) {
             $query->where('name', $name);
-        })
-        ->when($request->priority, function ($query, $priority) {
+        })->when($request->priority, function ($query, $priority) {
             $query->where('priority', $priority);
-        })
-        ->when($from_date, function ($query, $from_date) {
+        })->when($from_date, function ($query, $from_date) {
             $query->where('dt', '>=', $from_date);
-        })
-        ->when($to_date, function ($query, $to_date) {
+        })->when($to_date, function ($query, $to_date) {
             $query->where('dt','<=', $to_date);
-        })
-        ->when($request->status, function ($query, $status) {
+        })->when($request->status, function ($query, $status) {
             $query->whereIn('status', $status);
-        })
-        ->when(Auth::user()->RolePermission, function($query, $RolePermission){
-            if ($RolePermission=='staff') {
-                $query->where("created_by", Auth::user()->id);
-            }else if($RolePermission=='admin_support'){
-                $query->where('department_id', Auth::user()->department_id)
-                ->orWhere("created_by", Auth::user()->id)
-                ->orWhere("owner", Auth::user()->id);
-            }else if($RolePermission=='admin'){
-                $query->where('department_id', Auth::user()->department_id)
-                ->orWhere('department_id_from', Auth::user()->department_id);
-            }else if($RolePermission=="admin_branch"){
-                $query->where('branch_id', Auth::user()->branch_id);
-            }
-        })->orderBy('id','DESC')->get();
-
+        });
+        if (Auth::user()->RolePermission == 'Staff') {
+            $data->where('tickets.created_by',Auth::user()->id);
+        }
+        if (Auth::user()->RolePermission == 'admin_branch') {
+            $data->where('tickets.branch_id', Auth::user()->branch_id);
+        }
+        $data = $data->orderBy('id', 'DESC')->get();
+        $i = 0;
         foreach ($data as $key=>$value) {
+            $i++;
+            $this->num = $i;
+            $this->submittedDate = $value->dt;
             $ticket_type = "Normal";
             if ($value->ticket_type == 1) {
                 $ticket_type = "Specail Case";
@@ -112,7 +108,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
         return [
             'No',
             'Tracking ID',
-            'Submitted',
+            'Submitted Date',
             'From Department/Branch',
             'Create By',
             'To Department',
@@ -133,7 +129,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
         return [
             'A' => 5,
             'B' => 10,
-            'C' => 40,
+            'C' => 20,
             'D' => 20,
             'E' => 26,
             'F' => 14,
@@ -142,10 +138,10 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             'I' => 17,
             'J' => 30,
             'K' => 10,
-            'L' => 10,
-            'M' => 10,
-            'N' => 10,
-            'O' => 10,
+            'L' => 15,
+            'M' => 15,
+            'N' => 18,
+            'O' => 18,
         ];
     }
     public function startCell(): string
@@ -158,7 +154,6 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             AfterSheet::class    => function(AfterSheet $event) {
                 $sheet = $event->sheet;
                 $rows = count($this->export_datas) + 5 + 1;
-
                 $event->sheet->getDelegate()->getStyle('A2')->getFont()->getColor()->setARGB('DD4B39');
                 $event->sheet->getDelegate()->getStyle('A3')->getFont()->getColor()->setARGB('0000CC');
                 $event->sheet->getDelegate()->getStyle('A4')->getFont()->getColor()->setARGB('3923A9');
@@ -194,12 +189,11 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                     ],
                 ]);
 
-                $sheet->getDelegate()->getStyle('A6:O5')->getFont()->getColor()->setARGB('3923A9');
-                $sheet->getDelegate()->getStyle('A6:O5')->getFont()->setSize(9)->setName('Khmer OS Battambang')->setSize(9);
-                $event->sheet->getDelegate()->getStyle('A6:O5')->getAlignment()
+                $sheet->getDelegate()->getStyle('A5:O5')->getFont()->getColor()->setARGB('3923A9');
+                $sheet->getDelegate()->getStyle('A5:O5')->getFont()->setSize(9)->setName('Khmer OS Battambang')->setSize(9);
+                $event->sheet->getDelegate()->getStyle('A5:O5')->getAlignment()
                 ->setWrapText(true)
                 ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
 
                 $sheet->mergeCells('A2:O2');
                 $sheet->setCellValue('A2', "ខេមា​ មីក្រូហិរញ្ញវត្ថុ លីមីតធីត");
@@ -216,16 +210,11 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 ->setWrapText(true)
                 ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-                $month = Carbon::now()->format('d-M-Y');
+                $month = Carbon::parse($this->submittedDate)->format('d-M-Y');
                 $sheet->mergeCells('A4:O4');
                 $sheet->setCellValue('A4',"As of :" .$month);
                 $sheet->getDelegate()->getStyle('A4:O4')->getFont()->setSize(9)->setName('Khmer OS Fasthand')->setSize(10);
                 $event->sheet->getDelegate()->getStyle('A4:O4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-
-                //footer
-                $sheet->mergeCells('A'.$rows.':O'.$rows);
-                $sheet->getDelegate()->getStyle("A".$rows.':O'.$rows)->getFont()->setName('Khmer OS Muol Light')->setSize(9);
-                $event->sheet->getDelegate()->getStyle("A".$rows.':O'.$rows)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
             },
         ];
     }
