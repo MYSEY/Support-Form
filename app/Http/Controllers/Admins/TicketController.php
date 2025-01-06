@@ -191,7 +191,7 @@ class TicketController extends Controller
             $data_tickets = Ticket::where("id", $ticket->id)
             ->with("department")
             ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedBy")
+            ->with("CustomStatus")->with("assignedBy")->with("assignedTo")
             ->with("issueType")
             ->with("priorities")
             ->with("createdBy")
@@ -743,7 +743,7 @@ class TicketController extends Controller
             $data_tickets = Ticket::where("id", $data->id)
             ->with("department")
             ->with("branch")->with("lastReplier")
-            ->with("CustomStatus")->with("assignedBy")
+            ->with("CustomStatus")->with("assignedBy")->with("assignedTo")
             ->with("issueType")
             ->with("priorities")
             ->with("createdBy")
@@ -758,18 +758,19 @@ class TicketController extends Controller
                 "dataHistoryPriority"=> $dataHistoryPriority,
             ];
         
-            // if (!$request->autoreload) {
-            //     // $mail_message = ModelsMail::first();
-            //     if ($assigned_to) {
-            //         if ($assigned_to->email == Auth::user()->email) {
-            //             Mail::to($data_tickets->createdBy->email)->send(new SendMail($datasSendEmail));
-            //         }else if($data_tickets->createdBy->email == Auth::user()->email){
-            //             Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-            //         }else{
-            //             Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-            //         }
-            //     }
-            // }
+            if($request->autoreload) {
+                // $mail_message = ModelsMail::first();
+                if ($assigned_to && $assigned_to->email) {
+                    if ($assigned_to->email !=Auth::user()->email) {
+                        Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+                    }
+                }
+                if ($data_tickets->createdBy) {
+                    if ($data_tickets->createdBy->email != Auth::user()->email) {
+                        Mail::to($data_tickets->createdBy->email)->send(new SendMail($datasSendEmail));
+                    }
+                }
+            }
             // // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
             $itemNotify = notification::where("ticket_id",$data->id)->first();
             if ($itemNotify) {

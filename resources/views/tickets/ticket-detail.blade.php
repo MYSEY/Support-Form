@@ -584,7 +584,15 @@
                 var priority = $("#ticket-priority").val();
                 var status = $("#ticket-status").val();
                 var assignedby = $("#ticket-assigned").val();
-                var autoreload = $('input[name="autoreload-send-email"]:checked').val();
+                // var autoreload = $('#autoreload-send-email').val();
+                var autoreload = true;
+                let checkbox = document.getElementById("autoreload-send-email");
+                if (checkbox.checked) {
+                    autoreload = false;
+                } else {
+                    autoreload = true;
+                }
+                
                 var rp_attachments = $("#rp_attachments").prop('files')[0];
                 var fileSize = rp_attachments ? (rp_attachments['size'] / 1024) : "";
 
