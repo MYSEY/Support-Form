@@ -26,12 +26,12 @@
                             @if ($data["data_tickets"]->createdBy)
                                 {{$data["data_tickets"]->createdBy->name}}
                             @else
-                                {{$data["data_tickets"]->assignedby}}
+                                {{$data["data_tickets"]->assignedTo}}
                             @endif
                         @endif
                         to 
                         {{
-                            $data["data_tickets"]->assignedBy ? $data["data_tickets"]->assignedBy->name : $data["data_tickets"]->assignedby
+                            $data["data_tickets"]->assignedTo ? $data["data_tickets"]->assignedTo->name : $data["data_tickets"]->assignedTo
                         }}
                     </li>
                 @endif
@@ -60,7 +60,7 @@
             <li><strong>Create by:</strong> {{$data["data_tickets"]->createdBy->name}}</li>
             <li><strong>Status:</strong> {{$data["data_tickets"]->CustomStatus->name}}</li>
             <li><strong>Priority:</strong> {{$data["data_tickets"]->priorities->name}}</li>
-            <li><strong>Assignee:</strong> {{$data["data_tickets"]->assignedBy ? $data["data_tickets"]->assignedBy->name : $data["data_tickets"]->assignedby}}</li>
+            <li><strong>Assignee:</strong> {{$data["data_tickets"]->assignedTo ? $data["data_tickets"]->assignedTo->name : $data["data_tickets"]->assignedTo}}</li>
             <li><strong>Platform:</strong> Web</li>
             <li><strong>Issue Classification:</strong> {{$data["data_tickets"]->issueType->name}}</li>
         </ul>
