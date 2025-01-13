@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('to_user_id')->nullable();
             $table->integer('ticket_id')->nullable();
             $table->boolean('is_send')->nullable();
+            $table->string('status')->nullable();
             $table->longText('message')->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->timestamps();

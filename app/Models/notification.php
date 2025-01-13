@@ -16,7 +16,7 @@ class notification extends Model
         'to_user_id',
         'ticket_id',
         'is_send',
-        'is_read',
+        'status',
         'message'
     ];
 
@@ -31,5 +31,9 @@ class notification extends Model
     public function ticket()
     {
         return $this->belongsTo(Ticket::class, 'ticket_id');
+    }
+    public function replies()
+    {
+        return $this->hasMany(Reply::class, 'reply_to', 'ticket_id');
     }
 }
