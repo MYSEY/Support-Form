@@ -385,10 +385,10 @@
                                     <i class="fal fa-cog"></i>
                                 </a>
                             </div>
-                            <!-- app notification -->
-                            @if (Auth::user()->RolePermission !="staff")
+                            {{-- <!-- app notification -->
+                            @if (Auth::user()->RolePermission !="staff") --}}
                                 <div>
-                                    <a href="#" id="btn-notification" class="header-icon" data-toggle="dropdown" title="You got 1 notifications">
+                                    <a href="#" id="btn-notification" class="header-icon" data-toggle="dropdown" title="Notifications">
                                         <i class="fal fa-bell"></i>
                                         <span style="display: none" class="badge badge-icon" id="total_new_notifications"></span>
                                     </a>
@@ -416,7 +416,7 @@
                                                     </small>
                                                 </h5>
                                             </div> --}}
-                                            <div class="tab-pane" id="tab-messages" role="tabpanel">
+                                            <div class="tab-pane active" id="tab-messages" role="tabpanel">
                                                 <div class="custom-scroll h-100" id="notification-container">
                                                     <ul class="notification" id="ul-notification">
                                                     </ul>
@@ -428,7 +428,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endif
+                            {{-- @endif --}}
                             <!-- app user menu -->
                             <div>
                                 <a href="#" data-toggle="dropdown" title="{{Auth::user()->email}}" class="header-icon d-flex align-items-center justify-content-center ml-2">
@@ -892,148 +892,170 @@
         <script src="{{asset('admins/js/statistics/demo-data/demo-c3.js')}}"></script>
 
         <script src="{{asset('admins/js/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.js')}}"></script>
+        <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
         
         {!! Toastr::message() !!}
 
         @yield('script')
         <script>
-            if ($("#user_role_admin_support").val() != "staff") {
-                var source = new EventSource("{{ URL('/admin/sse-update') }}");
-                // var source = new EventSource("{{ URL('/admin/sse-update') }}?role=" + encodeURIComponent(userRole));
-                source.onmessage = function(event) {
-                    try {
-                        let ac = JSON.parse(event.data);
-                        if ($("#user_id").val() == ac.user_id) {
-                            toastr["info"](ac.message);
-                            source.close();
-                            source = null;
-                        }
-                    } catch (error) {
-                        console.error("Error parsing JSON:", error);
-                    } 
-                };
-                $(document).ready(function(){
-                    function callNotification() {
-                        const departmentId = $("#user_department_id").val();
-                        const userRole = $("#user_role_admin_support").val();
-                        $("#total_new_notifications").css('display', 'none');
-                        totals(departmentId); // Call the custom function with parameters
-                    }
+            $(document).ready(function() {
+                callNotification();
+                $("#btn-notification").on("click", function () {
+                    showNotification();
+                })
 
-                    // Call notification immediately on page load
-                    callNotification();
-
-                    // Set a timer to call showNotification every 5 seconds
-                    const intervalTime = 10000; // Time in milliseconds (5 seconds)
-                    setInterval(callNotification, intervalTime);
-                    
-                    $("#btn-notification").on("click", function () {
-                        callNotification();
-                    })
-
-                    $('#btn-notification').on('click', function () {
-                        showNotification()
-                    });
+                var pusher = new Pusher('01aab6a7bc64ae90cc82', {
+                    cluster: 'mt1'
                 });
-
-                function calculateTimeAgo(timestamp) {
-                    const now = new Date();
-                    const createdAt = new Date(timestamp);
-                    const diffInSeconds = Math.floor((now - createdAt) / 1000);
-
-                    if (diffInSeconds < 60) {
-                        return `${diffInSeconds} seconds ago`;
-                    } else if (diffInSeconds < 3600) {
-                        return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-                    } else if (diffInSeconds < 86400) {
-                        return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-                    } else {
-                        return `${Math.floor(diffInSeconds / 86400)} days ago`;
+                var channel = pusher.subscribe('my-channel');
+                channel.bind('my-event', function(data) {
+                    if (data.status == "Reply") {
+                        if ($("#user_id").val() == data.to_user_id) {
+                            toastr["info"]("There is a reply issue ticket request.", data.status)
+                        }
+                        if((data.to_user_id == "" || data.to_user_id == null) && data.department_id == $("#user_department_id").val()){
+                            let message = (data.department_name_english ? data.department_name_english+"/" :"")+(data.branch_name_en? data.branch_name_en : "");
+                            toastr["info"]("There is a reply issue ticket request: "+message, data.status);
+                        }
                     }
-                }
+                    if (data.status == "New") {
+                        if ($("#user_id").val() == data.to_user_id) {
+                            toastr["info"]("There is a new issue ticket request.", data.status)
+                        }
+                        if((data.to_user_id == "" || data.to_user_id == null) && data.department_id == $("#user_department_id").val()){
+                            let message = (data.department_name_english ? data.department_name_english+"/" :"")+(data.branch_name_en? data.branch_name_en : "");
+                            toastr["info"]("There is a new issue ticket request from Dept or Branch: "+message, data.status);
+                        }
+                    }
+                    callNotification();
+                });
+            });
 
-                function totals(department_id){
-                    $.ajax({
-                        type: 'get',
-                        header: {
-                            'Authorization': 'Bearer '+ localStorage.getItem('token')
-                        },
-                        url: '{{URL('admin/notification/totals')}}',
-                        data: {
-                            '_token': "{{csrf_token()}}",
-                            'department_id': department_id,
-                        },
-                        success: function(data){
-                            if (data.TotalNew > 0) {
-                                $("#total_new_notifications").css('display', 'block');
-                                $("#total_new_notifications").text(data.TotalNew);
-                            }
-                        }
-                    });
-                };
-                
-                function showNotification(){
-                    $.ajax({
-                        type: 'get',
-                        header: {
-                            'Authorization': 'Bearer '+ localStorage.getItem('token')
-                        },
-                        url: '{{URL('admin/notification')}}',
-                        data: {
-                            '_token': "{{csrf_token()}}",
-                        },
-                        success: function(data){
-                            const notifications = data.notifications || [];
-                            const ul = $('#ul-notification');
-                            let li = '';
-                            let readNotificationIds =[];
-                            if (notifications.length > 0)  {
-                                notifications.forEach(notification => {
-                                    readNotificationIds.push(notification.id);
-                                    const timeAgo = calculateTimeAgo(notification.created_at);
-                                    const profileImage = '{{ asset('admins/img/demo/avatars/avatar-m.png') }}';
-                                    const branch = notification.branch_name_en || '';
-                                    const dept = notification.name_english ? `${notification.name_english}/` : '';
-                                    li +=`<li class="notification-item unread li-notification-item" data-id="${notification.id}">
-                                            <a href="{{url("admin/ticket/detail")}}/${notification.ticket_id}" class="d-flex align-items-center">
-                                                <span class="status mr-2">
-                                                    <span class="profile-image rounded-circle d-inline-block" 
-                                                        style="background-image:url('${profileImage}');"></span>
-                                                </span>
-                                                <span class="d-flex flex-column flex-1 ml-1">
-                                                    <span class="name">${notification.ticket_by || 'Unknown User'}</span>
-                                                    <span class="msg-a fs-sm"><strong>From Dept or Branch:</strong> ${dept + branch}</span>
-                                                    <span class="msg-a fs-sm"><strong>Subject:</strong> ${notification.ticket_subject || 'No subject'}</span>
-                                                    <span class="msg-a fs-sm"><strong>Assigned to:</strong> ${notification.to_user_name || 'Unassigned'}</span>
-                                                    <span class="fs-nano text-muted mt-1">${timeAgo}</span>
-                                                </span>
-                                            </a>
-                                        </li>`;
-                                });
-                            }
-                            $("#ul-notification").html(li);
-                            markAsRead(readNotificationIds); // Update in the backend
-                        }
-                    });
-                }
-                function markAsRead(notificationIds) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{URL('admin/notifications/mark-as-read')}}',
-                        headers: {
-                            'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        data: { ids: notificationIds },
-                        success: function (response) {
-                            console.log(response.message);
-                        },
-                        error: function () {
-                            console.error('Error marking notifications as read');
-                        }
-                    });
+            function callNotification() {
+                const departmentId = $("#user_department_id").val();
+                const userRole = $("#user_role_admin_support").val();
+                $("#total_new_notifications").css('display', 'none');
+                totals(departmentId);
+            }
+
+            function calculateTimeAgo(timestamp) {
+                const now = new Date();
+                const createdAt = new Date(timestamp);
+                const diffInSeconds = Math.floor((now - createdAt) / 1000);
+
+                if (diffInSeconds < 60) {
+                    return `${diffInSeconds} seconds ago`;
+                } else if (diffInSeconds < 3600) {
+                    return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+                } else if (diffInSeconds < 86400) {
+                    return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+                } else {
+                    return `${Math.floor(diffInSeconds / 86400)} days ago`;
                 }
             }
+
+            function totals(department_id){
+                $.ajax({
+                    type: 'get',
+                    header: {
+                        'Authorization': 'Bearer '+ localStorage.getItem('token')
+                    },
+                    url: '{{URL('admin/notification/totals')}}',
+                    data: {
+                        '_token': "{{csrf_token()}}",
+                        'department_id': department_id,
+                    },
+                    success: function(data){
+                        if (data.TotalNew > 0) {
+                            $("#total_new_notifications").css('display', 'block');
+                            $("#total_new_notifications").text(data.TotalNew);
+                        }
+                    }
+                });
+            };
+            
+            function showNotification(){
+                $.ajax({
+                    type: 'get',
+                    header: {
+                        'Authorization': 'Bearer '+ localStorage.getItem('token')
+                    },
+                    url: '{{URL('admin/notification')}}',
+                    data: {
+                        '_token': "{{csrf_token()}}",
+                    },
+                    success: function(data){
+                        const notifications = data.notifications || [];
+                        const ul = $('#ul-notification');
+                        let li = '';
+                        let readNotificationIds =[];
+                        if (notifications.length > 0)  {
+                            notifications.forEach(notification => {
+                                readNotificationIds.push(notification.id);
+                                const timeAgo = calculateTimeAgo(notification.created_at);
+                                const profileImage = '{{ asset('admins/img/demo/avatars/avatar-m.png') }}';
+                                const branch = notification.branch_name_en || '';
+                                const dept = notification.name_english ? `${notification.name_english}/` : '';
+                                if (notification.status == "New") {
+                                    li +=`<li class="notification-item unread li-notification-item" data-id="${notification.id}">
+                                        <a href="{{url("admin/ticket/detail")}}/${notification.ticket_id}" class="d-flex align-items-center">
+                                            <span class="status mr-2">
+                                                <span class="profile-image rounded-circle d-inline-block" 
+                                                    style="background-image:url('${profileImage}');"></span>
+                                            </span>
+                                            <span class="d-flex flex-column flex-1 ml-1">
+                                                <span class="name">${notification.ticket_by || 'Unknown User'}</span>
+                                                <span class="msg-a fs-sm"><strong>From Dept or Branch:</strong> ${dept + branch}</span>
+                                                <span class="msg-a fs-sm"><strong>Subject:</strong> ${notification.ticket_subject || 'No subject'}</span>
+                                                <span class="msg-a fs-sm"><strong>Assigned to:</strong> ${notification.to_user_name || 'Unassigned'}</span>
+                                                <span class="fs-nano text-muted mt-1">${timeAgo}</span>
+                                            </span>
+                                        </a>
+                                    </li>`;
+                                }
+                                if (notification.status == "Reply") {
+                                    li +=`<li class="notification-item unread li-notification-item" data-id="${notification.id}">
+                                        <a href="{{url("admin/ticket/detail")}}/${notification.ticket_id}" class="d-flex align-items-center">
+                                            <span class="status mr-2">
+                                                <span class="profile-image rounded-circle d-inline-block" 
+                                                    style="background-image:url('${profileImage}');"></span>
+                                            </span>
+                                            <span class="d-flex flex-column flex-1 ml-1">
+                                                <span class="name">${notification.from_user_name || 'Unknown User'}</span>
+                                                <span class="msg-a fs-sm">${notification.message || 'No subject'}</span>
+                                                <span class="fs-nano text-muted mt-1">${timeAgo}</span>
+                                            </span>
+                                        </a>
+                                    </li>`;
+                                }
+                                
+                            });
+                        }
+                        $("#ul-notification").html(li);
+                        markAsRead(readNotificationIds); // Update in the backend
+                        $("#total_new_notifications").css('display', 'none');
+                        $("#total_new_notifications").text("");
+                    }
+                });
+            }
+            function markAsRead(notificationIds) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{URL('admin/notifications/mark-as-read')}}',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    data: { ids: notificationIds },
+                    success: function (response) {
+                        console.log(response.message);
+                    },
+                    error: function () {
+                        console.error('Error marking notifications as read');
+                    }
+                });
+            }
+            // }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

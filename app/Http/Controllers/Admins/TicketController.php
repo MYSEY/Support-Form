@@ -144,7 +144,7 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
-        try {
+        // try {
             $data = $request->all();
 
             if($request->hasFile('attachments')) {
@@ -203,28 +203,33 @@ class TicketController extends Controller
             ];
              
             // $mail_message = ModelsMail::first();
-            // if ($assigned_to) {
-            //     if ($assigned_to->email) {
-            //         Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-            //     }
-            // }
+            if ($assigned_to) {
+                if ($assigned_to->email) {
+                    Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+                }
+            }
             // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
 
-            $item = new notification();
-            $item->from_user_id = Auth::user()->id;
-            $item->to_user_id = ($request->assignedby ? $request->assignedby: "");
-            $item->ticket_id = $ticket->id;
-            $item->is_send = ($request->assignedby == "unassigned"? 1: 0);
-            $item->save();
+            $notify = [
+                "status"        =>  "New",
+                "from_user_id"  =>  Auth::user()->id,
+                "ticket_id"     =>  $ticket->id,
+                "is_send"       =>  1,
+                "message"       =>  "",
+                "to_user_id"    =>  ($request->assignedby ? $request->assignedby: ""),
+            ];
+
+            $notificationController = new NotificationController();
+            $notificationController->create($notify);
 
             DB::commit();
             return response()->json([
                 'message' => "Ticket created successfully.",
                 'status'=>"success"
             ]);
-        } catch (\Throwable $exp) {
-            return response()->json(['errors' => $exp]);
-        }
+        // } catch (\Throwable $exp) {
+        //     return response()->json(['errors' => $exp]);
+        // }
     }
 
     public function import(Request $request){
@@ -644,6 +649,7 @@ class TicketController extends Controller
             
             $itemNotify = notification::where("ticket_id",$data->id)->first();
             if ($itemNotify) {
+                $itemNotify["from_user_id"] = Auth::user()->id;
                 $itemNotify["to_user_id"] = ($request->assignedby ? $request->assignedby: "");
                 $itemNotify->save();
             }else{
@@ -651,9 +657,10 @@ class TicketController extends Controller
                 if (Auth::user()->id == $request->assignedby) {
                     $item->is_send = 1;
                 }else{
+                    $item->is_send = 0;
                     $item->to_user_id = ($request->assignedby ? $request->assignedby: "");
                 }
-                $item->from_user_id = $data->owner;
+                $item->from_user_id = Auth::user()->id;
                 $item->ticket_id = $data->id;
                 $item->save();
             }
@@ -738,6 +745,7 @@ class TicketController extends Controller
             $dataReply['attachments'] = $reAttachmentName;
             $dataReply['dt'] = Carbon::now()->format('Y-m-d H:i:s');
             $dataReply['created_by'] = Auth::user()->id;
+
             $dataReply = Reply::create($dataReply);
 
             $data_tickets = Ticket::where("id", $data->id)
@@ -772,23 +780,20 @@ class TicketController extends Controller
                 }
             }
             // // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
-            $itemNotify = notification::where("ticket_id",$data->id)->first();
-            if ($itemNotify) {
-                $itemNotify["to_user_id"] = ($request->assignedby ? $request->assignedby: "");
-                $itemNotify->save();
-            }else{
-                $item = new notification();
-                if (Auth::user()->id == $request->assignedby) {
-                    $item->is_send = 1;
-                }else{
-                    $item->to_user_id = ($request->assignedby ? $request->assignedby: "");
-                }
-                $item->from_user_id = $data->owner;
-                $item->ticket_id = $data->id;
-                $item->save();
-            }
+
+            $notify = [
+                "status"        =>  "Reply",
+                "from_user_id"  =>  Auth::user()->id,
+                "ticket_id"     =>  $data->id,
+                "is_send"       =>  1,
+                "message"       =>  $request->message,
+                "to_user_id"    =>  ($data_tickets->owner == Auth::user()->id ?  $data_tickets->created_by : $data_tickets->owner),
+            ];
+
+
+            $notificationController = new NotificationController();
+            $notificationController->create($notify);
             
-           
             // Toastr::success('Updated successfully.','Success');
             DB::commit();
             return response()->json([

@@ -146,7 +146,6 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::resource('ticket-responses', ResponsesTicketController::class);
 
     // *** send notification **/
-    Route::get('/sse-update', [SSEController::class, 'sendSSE']);
     Route::get('/notification', [NotificationController::class, 'index']);
     Route::get('/notification/totals', [NotificationController::class, 'totalNotification']);
     Route::post('/create-notification', [NotificationController::class, 'create']);
