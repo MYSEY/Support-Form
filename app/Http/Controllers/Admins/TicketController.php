@@ -203,11 +203,11 @@ class TicketController extends Controller
             ];
              
             // $mail_message = ModelsMail::first();
-            if ($assigned_to) {
-                if ($assigned_to->email) {
-                    Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                }
-            }
+            // if ($assigned_to) {
+            //     if ($assigned_to->email) {
+            //         Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //     }
+            // }
             // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
 
             $notify = [
@@ -766,19 +766,19 @@ class TicketController extends Controller
                 "dataHistoryPriority"=> $dataHistoryPriority,
             ];
         
-            if($request->autoreload) {
-                // $mail_message = ModelsMail::first();
-                if ($assigned_to && $assigned_to->email) {
-                    if ($assigned_to->email !=Auth::user()->email) {
-                        Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
-                    }
-                }
-                if ($data_tickets->createdBy) {
-                    if ($data_tickets->createdBy->email != Auth::user()->email) {
-                        Mail::to($data_tickets->createdBy->email)->send(new SendMail($datasSendEmail));
-                    }
-                }
-            }
+            // if($request->autoreload) {
+            //     // $mail_message = ModelsMail::first();
+            //     if ($assigned_to && $assigned_to->email) {
+            //         if ($assigned_to->email !=Auth::user()->email) {
+            //             Mail::to($assigned_to->email)->send(new SendMail($datasSendEmail));
+            //         }
+            //     }
+            //     if ($data_tickets->createdBy) {
+            //         if ($data_tickets->createdBy->email != Auth::user()->email) {
+            //             Mail::to($data_tickets->createdBy->email)->send(new SendMail($datasSendEmail));
+            //         }
+            //     }
+            // }
             // // Mail::to("vibol.sok@camma.com.kh")->send(new SendMail($datasSendEmail));
 
             $notify = [

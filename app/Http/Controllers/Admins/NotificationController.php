@@ -8,6 +8,8 @@ use App\Models\notification;
 use App\Models\NotificationUserRead;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
 use Pusher\Pusher;
 
 class NotificationController extends Controller
@@ -101,14 +103,14 @@ class NotificationController extends Controller
     private function sendNotification($nt)
     {
         $options = [
-            'cluster' => env('PUSHER_APP_CLUSTER', 'eu'),
-            'useTLS' => true
+            'cluster' => 'mt1',
+            'useTLS' => false
         ];
 
         $pusher = new Pusher(
-            env('PUSHER_APP_KEY'),
-            env('PUSHER_APP_SECRET'),
-            env('PUSHER_APP_ID'),
+            "01aab6a7bc64ae90cc82",
+            "3fc9ba26c53b0c0d7146",
+            "1924769",
             $options
         );
 
@@ -157,6 +159,12 @@ class NotificationController extends Controller
             'branch_name_kh'            => $dataNotify->branch_name_kh,
             'branch_name_en'            => $dataNotify->branch_name_en,
         ];
+
+        // $info = $pusher->getChannelInfo('presence-channel-name', ['info' => 'user_count']);
+        // $channelInfo = $pusher->get('/channels/presence-access-today');
+        // $data = json_decode($channelInfo);
+        // dd("Active connections:", $data);
+
         $pusher->trigger('my-channel', 'my-event', $data);
     }
 

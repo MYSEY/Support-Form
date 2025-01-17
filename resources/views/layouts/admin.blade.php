@@ -892,7 +892,7 @@
         <script src="{{asset('admins/js/statistics/demo-data/demo-c3.js')}}"></script>
 
         <script src="{{asset('admins/js/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.js')}}"></script>
-        <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+        <script src="{{asset('admins/js/pusher/service-pusher.js')}}"></script>
         
         {!! Toastr::message() !!}
 
