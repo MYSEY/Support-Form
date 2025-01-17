@@ -51,7 +51,9 @@
 
                         <div id="show-notes"> </div>
                         @can('Ticket Add Note')
-                            <button class="btn btn-outline-success" id="btn-add-note">Add note</button>
+                            @if ($data_ticket->CustomStatus->name !="Resolved" && $data_ticket->CustomStatus->name!="Closed")
+                                <button class="btn btn-outline-success" id="btn-add-note">Add note</button>
+                            @endif
                         @endcan
                         <div class="form-noted mt-3" style="display: none;">
                             <div class="form-group">
@@ -198,9 +200,11 @@
                                     </button>
                                 </div>
                                 <input type="hidden" value="{{ csrf_token() }}" id="token" />
-                                <div class="btn-hidden-show">
-                                    <button class="btn btn-danger" id="btn-reply-ticket">Submit Reply</button>
-                                </div>
+                                @if ($data_ticket->CustomStatus->name !="Resolved" && $data_ticket->CustomStatus->name!="Closed")
+                                    <div class="btn-hidden-show">
+                                        <button class="btn btn-danger" id="btn-reply-ticket">Submit Reply</button>
+                                    </div>
+                                @endif
                             @endcan
                         </div>
                     </div>
@@ -211,8 +215,10 @@
         <div class="col-md-4">
             <div class="btn-group btn-group-custom d-flex justify-content-end" role="group" aria-label="Print Options">
                 @can('Ticket Edit')
-                    <a class="btn btn-outline-primary" href="{{ url('admin/ticket/edit') }}/{{ $data_ticket->id }}"><i
-                            class="fal fa-edit"></i> Edit</a>
+                    @if ($data_ticket->CustomStatus->name !="Resolved" && $data_ticket->CustomStatus->name!="Closed")
+                        <a class="btn btn-outline-primary" href="{{ url('admin/ticket/edit') }}/{{ $data_ticket->id }}"><i
+                        class="fal fa-edit"></i> Edit</a>
+                    @endif
                 @endcan
                 @can('Ticket Print')
                     <button type="button" class="btn btn-outline-primary btn-print"> <span class="fal fa-print mr-1"></span>
@@ -229,8 +235,10 @@
                         <a class="dropdown-item" href="#"><i class="fal fa-arrow-to-bottom"></i> Export to Excel</a>
                     @endcan
                     @can('Ticket Delete')
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_ticket"><i
+                        @if ($data_ticket->CustomStatus->name !="Resolved" && $data_ticket->CustomStatus->name!="Closed")
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_ticket"><i
                                 class="fal fa-trash-alt"></i> Delete ticket</a>
+                        @endif
                     @endcan
                 </div>
             </div>
