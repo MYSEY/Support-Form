@@ -12,22 +12,22 @@ use Illuminate\Queue\SerializesModels;
 
 class FormSubmitted implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, SerializesModels;
 
-    public string $message;
+    public $data;
 
-    public function __construct(string $message)
+    public function __construct($data)
     {
-        $this->message = $message;
+        $this->data = $data;
     }
 
     public function broadcastOn()
     {
-        return ['public'];
+        return new Channel('my-channel');  // The same channel name in the frontend
     }
 
     public function broadcastAs()
     {
-        return 'chat';
+        return 'my-event';  // The same event name in the frontend
     }
 }

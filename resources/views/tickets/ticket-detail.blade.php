@@ -689,7 +689,7 @@
                     let note_tr = "";
                     if (datas.length > 0) {
                         datas.forEach(function(value, index) {
-                            var message = nl2br(value.message);
+                            var message = value.message ? nl2br(value.message) :"";
                             let created_at = moment(value.updated_at).format('D-MMM-YYYY h:mm');
                             text += '<div class="panel-tag">' +
                                 '<div>';
@@ -746,7 +746,7 @@
                     if (datas.length > 0) {
                         let btn_delete = "";
                         datas.forEach(function(value, index) {
-                            var message = nl2br(value.message);
+                            var message = value.message ? nl2br(value.message) :"";
                             let created_at = moment(value.updated_at).format('D-MMM-YYYY h:mm');
                             if (userPermissions.includes('Ticket Delete Reply')) {
                                 btn_delete =
