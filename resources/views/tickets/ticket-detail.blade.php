@@ -96,7 +96,7 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" x-placement="bottom-start" style="position: absolute; will-change: top, left; top: 36px; left: 0px;">
                                         @foreach ($responses_tickets as $item)
-                                            <a class="dropdown-item btn-select-responses-ticket" href="javascript:void(0);" data-message="Dear {{$data_ticket->name."\n". $item->message}}"> {{$item->title}}</a>
+                                            <a class="dropdown-item btn-select-responses-ticket" href="javascript:void(0);" data-message="Dear {{ $data_ticket->name }}&#10;{{ $item->message }}"> {{$item->title}}</a>
                                         @endforeach
                                     </div>
                             </div>
@@ -112,10 +112,14 @@
                         @endif
                         
                         <div class="form mt-3">
-                            <div class="form-group">
-                                <label class="form-label" for="ticket-assigned">Description <span
-                                        class="text-danger">*</span></label>
+                            {{-- <div class="form-group">
+                                <label class="form-label" for="ticket-assigned">Description <span class="text-danger">*</span></label>
                                 <textarea class="form-control" id="ticket-reply" rows="5"></textarea>
+                            </div> --}}
+                            <div class="form-group">
+                                <label class="form-label" for="ticket-assigned">Description <span class="text-danger">*</span></label>
+                                <div class="js-summernote" id="ticket-reply"></div>
+                                <input type="hidden" name="remark" id="content">
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -412,6 +416,7 @@
 @endsection
 @section('script')
     @include('includs.datatable_basic')
+    @include('includs.summernote')
     <script type="text/javascript" src="{{ asset('/admins/js/printThis.js') }}"></script>
     <script type="text/javascript">
         var userPermissions = @json(Auth::user()->getAllPermissions()->pluck('name'));
@@ -491,9 +496,9 @@
             });
 
             $(".btn-select-responses-ticket").on("click", function() {
-                $("#ticket-reply").val("");
-                let text = $(this).data("message");
-                $("#ticket-reply").val(text);
+                $('#ticket-reply').summernote('code', " ");
+                let message = $(this).data("message");
+                $('#ticket-reply').summernote('code', message.replace(/\n/g, '<br>'));
                 
             });
 
@@ -581,14 +586,19 @@
                 var nameAttr = selectedOption.attr('name');
                 $(".btn-hidden-show").hide();
                 $(".btn-loading").css('display', 'block');
+                var summernoteContent = $('#ticket-reply').summernote('code');
+
+                // console.log("data:: ",summernoteContent);
+                // return false;
+                
 
                 e.preventDefault();
                 var formData = new FormData();
                 var token = $("#token").val();
                 var reply_to = $("#e_id_ticket").val();
-                var ticketReply = $("#ticket-reply").val();
-                var message = $("#ticket-reply").val();
-                var message_html = $("#ticket-reply").val();
+                var ticketReply = summernoteContent;
+                var message = summernoteContent;
+                var message_html = summernoteContent;
                 var priority = $("#ticket-priority").val();
                 var status = $("#ticket-status").val();
                 var assignedby = $("#ticket-assigned").val();
@@ -624,12 +634,12 @@
                 let status_rp = false;
 
                 if (nameAttr != "Closed" && nameAttr != "Resolved") {
-                    if ($("#ticket-reply").val() == null || $("#ticket-reply").val() == "") {
-                        $("#ticket-reply").addClass("is-invalid");
-                        $("#ticket-reply").removeClass("is-valid");
+                    if (summernoteContent == null || summernoteContent == "") {
+                        // $("#ticket-reply").addClass("is-invalid");
+                        // $("#ticket-reply").removeClass("is-valid");
                         $(".btn-hidden-show").show();
                         $(".btn-loading").css('display', 'none');
-                        toastr.error("Please input text!");
+                        toastr.error("Please input to Description!");
                         status_rp = false;
                     } else {
                         status_rp = true;
