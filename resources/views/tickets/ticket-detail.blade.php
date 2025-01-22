@@ -670,10 +670,9 @@
                     });
                 }
             });
-            $(document).on('click', '#btn-reply-edit', function() {
+            $(document).on('click', '.btn-reply-edit', function() {
                 let id = $(this).data("id");
-                let message = $(this).find(".e_message").html();
-                
+                let message = $(".e_message"+id).html();
                 $("#e_id_reply").val(id);
                 $('#e_ticket-reply').summernote('code', message);
                 $('#editReplyTicket').modal('show');
@@ -784,11 +783,11 @@
                                 '</div>';
                             if (userPermissions.includes('Ticket Edit Reply')) {
                                 text +=
-                                    '<a style="float: right;" href="javascript:void(0);" class="mr-2 btn btn-outline-secondary btn-sm btn-icon waves-effect waves-themed" id="btn-reply-edit" data-id="' +
+                                    '<a style="float: right;" href="javascript:void(0);" class="mr-2 btn btn-outline-secondary btn-sm btn-icon waves-effect waves-themed btn-reply-edit" data-id="' +
                                     value.id + '" data-toggle="tooltip" title="Edit">'+
-                                    '<div style="display: none;" class="e_message">'+(value.message)+'</div>'+
                                     '<i class="fal fa-edit"></i>'+
-                                    '</a>';
+                                    '</a>'+
+                                    '<div style="display: none;" class="e_message'+value.id+'">'+value.message+'</div>';
                             }
                             text += '<p class="card-text">Reply by: <strong>' + value.staff.user +
                                 '</strong> » ' + created_at + '</p>' +
