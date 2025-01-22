@@ -33,13 +33,13 @@ class DashboardController extends Controller
             'roles.name as role_name',
         );
         // Apply additional filtering for role
-        if (Auth::user()->RolePermission=='staff') {
-            $query->where("onlines.user_id", Auth::user()->id);
-        }else if(Auth::user()->RolePermission=='admin_support' || Auth::user()->RolePermission=='admin'){
-            $query->where('department_id', Auth::user()->department_id);
-        }else if(Auth::user()->RolePermission=="admin_branch"){
-            $query->where('branch_id', Auth::user()->branch_id);
-        }
+        // if (Auth::user()->RolePermission=='staff') {
+        //     $query->where("onlines.user_id", Auth::user()->id);
+        // }else if(Auth::user()->RolePermission=='admin_support' || Auth::user()->RolePermission=='admin'){
+        //     $query->where('department_id', Auth::user()->department_id);
+        // }else if(Auth::user()->RolePermission=="admin_branch"){
+        //     $query->where('branch_id', Auth::user()->branch_id);
+        // }
         $today = Carbon::today()->toDateString();
         $data = $query->whereDate('onlines.updated_at', $today)->orderBy('onlines.id','DESC')->get();
         return view('dashboads.admin',compact('data'));
