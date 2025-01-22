@@ -48,9 +48,13 @@
                         </div>
                         <label for="">Permission Name</label>
                         <div class="row">
-                            @foreach ($permissionCategory as $cate)
+                            @foreach ($permissionCategory as $key=>$cate)
                                 <?php
                                     $permission = \Spatie\Permission\Models\Permission::where('permission_category_id', $cate->id)->get();
+                                    // Check if all permissions in the category are checked
+                                    $allChecked = $permission->every(function($permis) use ($rolePermission) {
+                                        return in_array($permis->id, $rolePermission);
+                                    });
                                 ?>
                                 <div class="col-md-3 mb-2">
                                     <div class="form-group">
@@ -59,14 +63,14 @@
                                             <div class="card-body">
                                                 <div class="mb-1">
                                                     <div class="custom-control custom-checkbox custom-control-inline">
-                                                        <input type="checkbox" class="custom-control-input check_all" id="checkAll_{{$cate->id}}" onClick="toggle_{{ $cate->id }}(this)">
+                                                        <input type="checkbox" class="custom-control-input check_all check_all_{{$cate->id}}" id="checkAll_{{$cate->id}}" {{ $allChecked ? 'checked' : '' }} onClick="toggle_{{ $cate->id }}(this)">
                                                         <label class="custom-control-label" for="checkAll_{{$cate->id}}">Check All</label>
                                                     </div>
                                                 </div>
                                                 @foreach ($permission as $item)
                                                     <div class="mb-1">
                                                         <div class="custom-control custom-checkbox custom-control-inline">
-                                                            <input type="checkbox" name="permission[]" class="custom-control-input check_all ch_all_{{ $cate->id }}" id="defaultInline_{{ $item->id }}" value="{{ $item->id }}" {{ in_array($item->id, $rolePermission) ? 'checked' : '' }}>
+                                                            <input type="checkbox" name="permission[]" class="custom-control-input check_all ch_all_{{ $cate->id }}" onClick="togglePermis({{count($permission)}}, {{$cate->id}})" id="defaultInline_{{ $item->id }}" value="{{ $item->id }}" {{ in_array($item->id, $rolePermission) ? 'checked' : '' }}>
                                                             <label class="custom-control-label" for="defaultInline_{{ $item->id }}">{{$item->name}}</label>
                                                         </div>
                                                     </div>
@@ -128,6 +132,14 @@
             checkboxes = $('.check_all');
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = source.checked;
+            }
+        }
+        function togglePermis(permission, id) {
+            let totalChecked = $('.ch_all_' + id + ':checked').length;
+            if (permission === totalChecked) {
+                $('.check_all_'+id).prop("checked", true);
+            } else {
+                $('.check_all_'+id).prop("checked", false);
             }
         }
     </script>
