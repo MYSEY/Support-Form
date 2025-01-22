@@ -56,14 +56,14 @@
                                             <div class="card-body">
                                                 <div class="mb-1">
                                                     <div class="custom-control custom-checkbox custom-control-inline">
-                                                        <input type="checkbox" class="custom-control-input check_all" id="checkAll_{{$cate->id}}" onClick="toggle_{{ $cate->id }}(this)">
+                                                        <input type="checkbox" class="custom-control-input check_all check_all_{{$cate->id}}" id="checkAll_{{$cate->id}}" onClick="toggle_{{ $cate->id }}(this)">
                                                         <label class="custom-control-label" for="checkAll_{{$cate->id}}">Check All</label>
                                                     </div>
                                                 </div>
                                                 @foreach ($permission as $item)
                                                     <div class="mb-1">
                                                         <div class="custom-control custom-checkbox custom-control-inline">
-                                                            <input type="checkbox" class="custom-control-input check_all ch_all_{{ $cate->id }}" name="permission[]" id="defaultInline_{{ $item->id }}" value="{{$item->id}}">
+                                                            <input type="checkbox" class="custom-control-input check_all ch_all_{{ $cate->id }}" name="permission[]" onClick="togglePermis({{count($permission)}}, {{$cate->id}})" id="defaultInline_{{ $item->id }}" value="{{$item->id}}">
                                                             <label class="custom-control-label" for="defaultInline_{{ $item->id }}">{{$item->name}}</label>
                                                         </div>
                                                     </div>
@@ -127,6 +127,14 @@
             checkboxes = $('.check_all');
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = source.checked;
+            }
+        }
+        function togglePermis(permission, id) {
+            let totalChecked = $('.ch_all_' + id + ':checked').length;
+            if (permission === totalChecked) {
+                $('.check_all_'+id).prop("checked", true);
+            } else {
+                $('.check_all_'+id).prop("checked", false);
             }
         }
     </script>
