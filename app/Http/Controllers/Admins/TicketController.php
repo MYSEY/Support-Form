@@ -680,7 +680,6 @@ class TicketController extends Controller
     {
         DB::beginTransaction();
         try{
-            $ticket_update = false;
             $data_assign = false;
             $dataHistoryStatus = [];
             $dataHistoryPriority = [];
@@ -688,7 +687,6 @@ class TicketController extends Controller
             $assigned_to = User::where("id", $request->assignedby)->first();
             // Add new history on status
             if ($data->status != $request->status) {
-                $ticket_update = true;
                 $data_histoies_status['trackid'] = $data->trackid;
                 $data_histoies_status['type'] = "status";
                 $data_histoies_status['from_status'] = $data->status;
@@ -696,11 +694,11 @@ class TicketController extends Controller
                 $data_histoies_status['created_by'] = Auth::user()->id;
                 $historyStatus = TicketHistory::create($data_histoies_status);
                 $dataHistoryStatus = TicketHistory::where("id", $historyStatus->id)->with("statusFrom")->with("statusTo")->first();
+                $data['status']  = $request->status;
             }
 
             // Add new history on priority
             if ($data->priority !=  $request->priority) {
-                $ticket_update = true;
                 $data_histoies_priority['trackid'] = $data->trackid;
                 $data_histoies_priority['type'] = "priority";
                 $data_histoies_priority['from_priority_id'] = $data->priority;
@@ -708,23 +706,22 @@ class TicketController extends Controller
                 $data_histoies_priority['created_by'] = Auth::user()->id;
                 $historyPriority = TicketHistory::create($data_histoies_priority);
                 $dataHistoryPriority = TicketHistory::where("id", $historyPriority->id)->with("priorityFrom")->with("priorityTo")->first();
+                $data['priority']  = $request->priority;
             }
             
-            if ($data->assignedby != $request->assignedby) {
-                $ticket_update = true;
+            // Add new history on assign to user
+            if ($data->owner != $request->assignedby) {
+                $data_histoies_assign['trackid'] = $data->trackid;
+                $data_histoies_assign['type'] = "assign";
+                $data_histoies_assign['assignedby'] = $data->owner;
+                $data_histoies_assign['recipient_id'] = $request->assignedby;
+                $data_histoies_assign['created_by'] = Auth::user()->id;
+                $historyassign = TicketHistory::create($data_histoies_assign);
+                $data['assignedby']  = Auth::user()->id;
+                $data['owner']  = $request->assignedby;
                 $data_assign = true;
             }
-            // Update ticket
-            if ($ticket_update == true) {
-                $data['assignedby']  = Auth::user()->id;
-                // $data['assignedby']  = $request->assignedby;
-                $data['status']  = $request->status;
-                $data['priority']  = $request->priority;
-                $data['owner']  = $request->assignedby;
-                // $data['lastreplier']  = Auth::user()->id;
-                // $data['updated_by']  = Auth::user()->id;
-                // $data->save();
-            }
+
             $data['lastreplier']  = Auth::user()->id;
             $data['updated_by']  = Auth::user()->id;
             $data->save();
@@ -794,7 +791,6 @@ class TicketController extends Controller
             $notificationController = new NotificationController();
             $notificationController->create($notify);
             
-            // Toastr::success('Updated successfully.','Success');
             DB::commit();
             return response()->json([
                 'message' => "Ticket replies successfully.",
@@ -802,7 +798,6 @@ class TicketController extends Controller
             ]);
         }catch(\Exception $e){
             DB::rollback();
-            // Toastr::error('Updated fail.','Error');
             return redirect()->back();
         }
     }
