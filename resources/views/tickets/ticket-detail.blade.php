@@ -363,7 +363,8 @@
                                                             <li>From
                                                                 <strong>{{ $item->assignedBy ? $item->assignedBy->user : 'null' }}</strong>
                                                                 to
-                                                                <strong>{{ $item->recipient ? $item->recipient->user : 'null' }}</strong>
+                                                                <strong>{{ $item->recipient ? $item->recipient->user : 'null' }}</strong>,
+                                                                Change by {{ $item->createdBy->user }} 
                                                                 at
                                                                 {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}
                                                             </li>
