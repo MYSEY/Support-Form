@@ -5,14 +5,15 @@ namespace App\Exports;
 use App\Models\Ticket;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
@@ -154,6 +155,19 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             AfterSheet::class    => function(AfterSheet $event) {
                 $sheet = $event->sheet;
                 $rows = count($this->export_datas) + 5 + 1;
+
+                // Insert Logo
+                $drawing = new Drawing();
+                $drawing->setName('Logo');
+                $drawing->setDescription('Company Logo');
+                $drawing->setPath(public_path('/admins/img/logo/commalogo1.png')); // Change this path to your logo
+                $drawing->setHeight(80); // Adjust height
+                $drawing->setCoordinates('A1'); // Position of the logo
+                $drawing->setOffsetX(250); // X Offset
+                $drawing->setOffsetY(5); // Y Offset
+                $drawing->setWorksheet($sheet->getDelegate());
+
+                
                 $event->sheet->getDelegate()->getStyle('A2')->getFont()->getColor()->setARGB('DD4B39');
                 $event->sheet->getDelegate()->getStyle('A3')->getFont()->getColor()->setARGB('0000CC');
                 $event->sheet->getDelegate()->getStyle('A4')->getFont()->getColor()->setARGB('3923A9');
@@ -191,24 +205,17 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
 
                 $sheet->getDelegate()->getStyle('A5:O5')->getFont()->getColor()->setARGB('3923A9');
                 $sheet->getDelegate()->getStyle('A5:O5')->getFont()->setSize(9)->setName('Khmer OS Battambang')->setSize(9);
-                $event->sheet->getDelegate()->getStyle('A5:O5')->getAlignment()
-                ->setWrapText(true)
-                ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $event->sheet->getDelegate()->getStyle('A5:O5')->getAlignment()->setWrapText(true)->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
                 $sheet->mergeCells('A2:O2');
                 $sheet->setCellValue('A2', "ខេមា​ មីក្រូហិរញ្ញវត្ថុ លីមីតធីត");
-                $sheet->getDelegate()->getStyle('A2:O2')->getFont()->setName('Khmer OS Muol Light')
-                ->setSize(12)->setUnderline('A2:O2');
-                $event->sheet->getDelegate()->getStyle('A2:O2')
-                ->getAlignment()
-                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $sheet->getDelegate()->getStyle('A2:O2')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A2:O2')->setBold(true);
+                $event->sheet->getDelegate()->getStyle('A2:O2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
                 $sheet->mergeCells('A3:O3');
                 $sheet->setCellValue('A3', "Ticket Summay IT Helpdesk");
                 $sheet->getDelegate()->getStyle('A3:O3')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A3:L3');
-                $event->sheet->getDelegate()->getStyle('A3:O3')->getAlignment()
-                ->setWrapText(true)
-                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $event->sheet->getDelegate()->getStyle('A3:O3')->getAlignment()->setWrapText(true)->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
                 $month = Carbon::parse($this->submittedDate)->format('d-M-Y');
                 $sheet->mergeCells('A4:O4');
