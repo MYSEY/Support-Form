@@ -161,10 +161,17 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 $drawing->setName('Logo');
                 $drawing->setDescription('Company Logo');
                 $drawing->setPath(public_path('/admins/img/logo/commalogo1.png')); // Change this path to your logo
-                $drawing->setHeight(80); // Adjust height
-                $drawing->setCoordinates('A2'); // Position of the logo
-                $drawing->setOffsetX(250); // X Offset
-                $drawing->setOffsetY(5); // Y Offset
+                $drawing->setHeight(90); // Adjust height
+
+               // Set the column and row to center the logo
+                $centerColumn = 'F'; // Adjust based on your sheet width
+                $centerRow = 2;
+                $drawing->setCoordinates($centerColumn . $centerRow);
+
+                // Adjust offsets to fine-tune centering
+                $drawing->setOffsetX(70); // Adjust X Offset
+                $drawing->setOffsetY(5); // Adjust Y Offset
+
                 $drawing->setWorksheet($sheet->getDelegate());
 
                 
