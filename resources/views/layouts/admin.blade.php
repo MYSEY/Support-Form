@@ -127,7 +127,10 @@
                 'priority',
                 'issue-type', 
                 'ticket-responses',
-                'reset'
+                'reset',
+                'task',
+                'category',
+                'asset',
             ];
         @endphp
 
@@ -295,6 +298,21 @@
                                                 </a>
                                             </li>
                                         @endif
+                                        <li class="@if (in_array(Request::instance()->segment(2), ['asset'])) active @endif">
+                                            <a href="{{url('admin/asset')}}" title="Asset" data-filter-tags="theme Asset">
+                                                <span class="nav-link-text">Asset</span>
+                                            </a>
+                                        </li>
+                                        <li class="@if (in_array(Request::instance()->segment(2), ['category'])) active @endif">
+                                            <a href="{{url('admin/category')}}" title="category" data-filter-tags="theme category">
+                                                <span class="nav-link-text">Category</span>
+                                            </a>
+                                        </li>
+                                        <li class="@if (in_array(Request::instance()->segment(2), ['task'])) active @endif">
+                                            <a href="{{url('admin/task')}}" title="task" data-filter-tags="theme task">
+                                                <span class="nav-link-text">Task</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                             @endif

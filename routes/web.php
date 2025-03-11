@@ -2,25 +2,28 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admins\SSEController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admins\NoteController;
 use App\Http\Controllers\Admins\RoleController;
+use App\Http\Controllers\Admins\TaskController;
 use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\Admins\ReplyController;
 use App\Http\Controllers\Admins\BranchController;
 use App\Http\Controllers\Admins\TicketController;
+use App\Http\Controllers\Admins\CategoryController;
 use App\Http\Controllers\Admins\PriorityController;
 use App\Http\Controllers\Admins\StatusesController;
 use App\Http\Controllers\Admins\DashboardController;
 use App\Http\Controllers\Admins\IssueTypeController;
 use App\Http\Controllers\Admins\DepartmentController;
-use App\Http\Controllers\Admins\NotificationController;
+use App\Http\Controllers\Admins\FixedAssetController;
 use App\Http\Controllers\Admins\PermissionController;
+use App\Http\Controllers\Admins\NotificationController;
 use App\Http\Controllers\Admins\TicketReportController;
-use App\Http\Controllers\Admins\PermissionCategoryController;
 use App\Http\Controllers\Admins\ResponsesTicketController;
-use App\Http\Controllers\Admins\SSEController;
 use App\Http\Controllers\Admins\TicketGuidelinesController;
+use App\Http\Controllers\Admins\PermissionCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -144,6 +147,11 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::resource('ticket-guideline', TicketGuidelinesController::class);
 
     Route::resource('ticket-responses', ResponsesTicketController::class);
+    Route::resource('task', TaskController::class);
+    Route::post('/task/import', [TaskController::class, 'import']);
+
+    Route::resource('category', CategoryController::class);
+    Route::resource('asset', FixedAssetController::class);
 
     // *** send notification **/
     Route::get('/notification', [NotificationController::class, 'index']);

@@ -155,7 +155,7 @@
                 <div class="modal-btn delete-action">
                     <form action="{{url('admin/branch/delete')}}" method="POST">
                         @csrf
-                        <input type="hidden"  name="id" class="e_id" value="">
+                        <input type="hidden" name="id" class="e_id" value="">
                         <div class="float-lg-right">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-danger waves-effect waves-themed">Delete</button>
