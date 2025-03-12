@@ -5,18 +5,18 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Task List
+                        Category 
                     </h2>
                 </div>
                 
                 <div class="panel-container show">
-                    @can('Task Create')
+                    @can('Category Create')
                         <div class="panel-tag">
                             <div class="text-lg-right">
-                                @can('Task Import')
+                                @can('Category Import')
                                     <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger btn-sm mr-1">Import</a>
-                                @endcan 
-                                <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#taskCreate" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                                @endcan
+                                <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#CategoryCreate" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
                             </div>
                         </div>
                     @endcan
@@ -27,8 +27,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>CategoryName</th>
                                         <th>TaskName</th>
-                                        <th>Description</th>
                                         <th>CreatedAt</th>
                                         <th>Action</th>
                                     </tr>
@@ -39,24 +39,20 @@
                                             <tr>
                                                 <td>{{$item->id}}</td>
                                                 <td>{{$item->name}}</td>
-                                                <td>{{$item->description}}</td>
+                                                <td>{{$item->task_name}}</td>
                                                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') ?? '' }}</td>
                                                 <td>
                                                     <div class="d-flex demo">
-                                                        @can('Task Delete')
+                                                        @can('Category Delete')
                                                             <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="{{$item->id}}"><i class="fal fa-times"></i></a>
                                                         @endcan
-                                                        @can('Task Edit')
+                                                        @can('Category Edit')
                                                             <a href="javascript:void(0);" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
                                                         @endcan
                                                     </div>
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    @else
-                                        <tr>
-                                            <td colspan="7" style="text-align: center">No record to display</td>
-                                        </tr>
                                     @endif
                                 </tbody>
                             </table>
@@ -67,7 +63,7 @@
             </div>
         </div>
     </div>
-    <!-- Delete Branch Modal -->
+    <!-- Delete Category Modal -->
     <div class="modal custom-modal fade" id="delete_task" role="dialog">
         <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content">
@@ -77,7 +73,7 @@
                         <p>Are you sure want to delete?</p>
                     </div>
                     <div class="modal-btn delete-action">
-                        <form action="{{url('admin/task/delete')}}" method="POST">
+                        <form action="{{url('admin/category/delete')}}" method="POST">
                             @csrf
                             @method('Delete')
                             <input type="hidden" name="id" class="e_id" value="">
@@ -91,13 +87,13 @@
             </div>
         </div>
     </div>
-    @include('tasks.import')
-    @include('tasks.create')
-    @include('tasks.edit')
+    @include('category.import')
+    @include('category.create')
+    @include('category.edit')
 @endsection
 
 @section('script')
-    @include('includs.datatable_basic')
+@include('includs.datatable_basic')
     <script>
         $(function(){
             $(".upload_file_data").on("click", function() {
@@ -122,7 +118,7 @@
                     $("#modal-import").modal("show");
                     $.ajax({
                         type: 'POST',
-                        url: "{{ url('admin/task/import') }}",
+                        url: "{{ url('admin/category/import') }}",
                         data: form_data,
                         contentType: false,
                         cache: false,
@@ -131,7 +127,7 @@
                             if (data.mg == 'success') {
                                 $("#modal-import").modal("hide");
                                 toastr.success('Data has been save success');
-                                window.location.replace("{{ URL('admin/task') }}");
+                                window.location.replace("{{ URL('admin/category') }}");
                             }
                         },error: function(xhr, status, error) {
                             // Display error message if AJAX request fails
@@ -147,22 +143,22 @@
                 let id = $(this).data("id");
                 $.ajax({
                     type: "GET",
-                    url: `{{ url('/admin/task/${id}') }}`,
+                    url: `{{ url('/admin/category/${id}') }}`,
                     dataType: "JSON",
                     success: function (response) {
                         if (response.success) {
                             $('#e_id').val(response.success.id);
                             $('#e_name').val(response.success.name);
-                            $('#e_description').val(response.success.description);
-                            $('#modalTaskEdit').modal('show');
+                            $('#e_task_id').val(response.success.task_id);
+                            $('#CategoryEdit').modal('show');
                         }
                     }
                 });
             });
-            $(document).on('click','.btnDelete', function(){
-                let id = $(this).data("id");
-                $('.e_id').val(id);
-            });
+        });
+        $(document).on('click','.btnDelete', function(){
+            let id = $(this).data("id");
+            $('.e_id').val(id);
         });
     </script>
 @endsection

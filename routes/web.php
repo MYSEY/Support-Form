@@ -151,6 +151,8 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/task/import', [TaskController::class, 'import']);
 
     Route::resource('category', CategoryController::class);
+    Route::post('/category/import', [CategoryController::class, 'import']);
+
     Route::resource('asset', FixedAssetController::class);
 
     // *** send notification **/

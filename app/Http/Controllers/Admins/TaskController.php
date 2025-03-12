@@ -10,7 +10,6 @@ use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class TaskController extends Controller
 {
@@ -19,7 +18,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $data = Task::get();
+        $data = Task::orderBy('id','DESC')->get();
         return view('tasks.index',compact('data'));
     }
 
