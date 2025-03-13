@@ -5,21 +5,20 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Task List
+                        Rooms
                     </h2>
                 </div>
-                
                 <div class="panel-container show">
-                    @can('Task Create')
+                    {{-- @can('Task Create') --}}
                         <div class="panel-tag">
                             <div class="text-lg-right">
                                 @can('Task Import')
                                     <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger btn-sm mr-1">Import</a>
                                 @endcan 
-                                <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#taskCreate" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                                <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#roomCreate" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
                             </div>
                         </div>
-                    @endcan
+                    {{-- @endcan --}}
                     <div class="panel-content">
                         <div class="table-responsive">
                             <!-- datatable start -->
@@ -27,9 +26,7 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>TaskName</th>
-                                        <th>Type</th>
-                                        <th>Description</th>
+                                        <th>Name</th>
                                         <th>CreatedAt</th>
                                         <th>Action</th>
                                     </tr>
@@ -40,17 +37,15 @@
                                             <tr>
                                                 <td>{{$item->id}}</td>
                                                 <td>{{$item->name}}</td>
-                                                <td>{{$item->type}}</td>
-                                                <td>{{$item->description}}</td>
                                                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') ?? '' }}</td>
                                                 <td>
                                                     <div class="d-flex demo">
                                                         @can('Task Delete')
                                                             <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="{{$item->id}}"><i class="fal fa-times"></i></a>
                                                         @endcan
-                                                        @can('Task Edit')
+                                                        {{-- @can('Task Edit') --}}
                                                             <a href="javascript:void(0);" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
-                                                        @endcan
+                                                        {{-- @endcan --}}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -78,7 +73,7 @@
                         <form action="{{url('admin/task/delete')}}" method="POST">
                             @csrf
                             @method('Delete')
-                            <input type="hidden" name="id" class="e_id" value="">
+                            <input type="hidden" name="id" class="e_id" id="e_id" value="">
                             <div class="float-lg-right">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-danger waves-effect waves-themed">Delete</button>
@@ -89,9 +84,9 @@
             </div>
         </div>
     </div>
-    @include('tasks.import')
-    @include('tasks.create')
-    @include('tasks.edit')
+    {{-- @include('rooms.import') --}}
+    @include('rooms.create')
+    @include('rooms.edit')
 @endsection
 
 @section('script')
@@ -145,15 +140,13 @@
                 let id = $(this).data("id");
                 $.ajax({
                     type: "GET",
-                    url: `{{ url('/admin/task/${id}') }}`,
+                    url: `{{ url('/admin/room/${id}') }}`,
                     dataType: "JSON",
-                    success: function (response) {
+                    success: function (response) {                        
                         if (response.success) {
-                            $('#e_id').val(response.success.id);
+                            $('#e_room_id').val(response.success.id);
                             $('#e_name').val(response.success.name);
-                            $('#e_type').val(response.success.type);
-                            $('#e_description').val(response.success.description);
-                            $('#modalTaskEdit').modal('show');
+                            $('#roomEdit').modal('show');
                         }
                     }
                 });

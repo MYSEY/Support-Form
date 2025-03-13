@@ -12,11 +12,11 @@
                 <form action="{{url('admin/category')}}" method="POST" class="needs-validation" novalidate>
                     @csrf
                     <div class="form-group">
-                        <label class="form-label">Category Name</label>
+                        <label class="form-label">Category Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name" id="name" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="task">Task</label>
+                        <label class="form-label" for="task">Task <span class="text-danger">*</span></label>
                         <select class="custom-select form-control" id="task_id" name="task_id" required>
                             <option value="">-- Select --</option>
                             @foreach ($task as $item)

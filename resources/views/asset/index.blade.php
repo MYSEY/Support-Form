@@ -32,7 +32,7 @@
                     {{-- @can('User Create') --}}
                         <div class="panel-tag">
                             <div class="text-lg-right">
-                                <a href="{{url('admin/fixed/asset/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
+                                <a href="{{url('admin/asset/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
                             </div>
                         </div>
                     {{-- @endcan --}}

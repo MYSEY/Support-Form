@@ -6,6 +6,7 @@ use App\Http\Controllers\Admins\SSEController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admins\NoteController;
 use App\Http\Controllers\Admins\RoleController;
+use App\Http\Controllers\Admins\RoomController;
 use App\Http\Controllers\Admins\TaskController;
 use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\Admins\ReplyController;
@@ -154,6 +155,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/category/import', [CategoryController::class, 'import']);
 
     Route::resource('asset', FixedAssetController::class);
+    Route::resource('room', RoomController::class);
 
     // *** send notification **/
     Route::get('/notification', [NotificationController::class, 'index']);

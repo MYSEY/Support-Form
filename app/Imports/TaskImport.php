@@ -23,7 +23,8 @@ class TaskImport implements ToCollection
             if ($i != 1) {
                 Task::firstOrCreate([
                     'name' => $item[0],
-                    'description'  => $item[1],
+                    'type'  => $item[1],
+                    'description'  => $item[2],
                     'created_by'  => Auth::user()->id,
                 ]);
             }

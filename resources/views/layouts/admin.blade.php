@@ -131,6 +131,7 @@
                 'task',
                 'category',
                 'asset',
+                'room',
             ];
         @endphp
 
@@ -313,42 +314,47 @@
                                                 <span class="nav-link-text">Task</span>
                                             </a>
                                         </li>
+                                        <li class="@if (in_array(Request::instance()->segment(2), ['room'])) active @endif">
+                                            <a href="{{url('admin/room')}}" title="task" data-filter-tags="theme task">
+                                                <span class="nav-link-text">Rooms</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                             @endif
 
                             {{-- Access Permission --}}
                             @if (userHasAnyPermission($permissionsRoles))
-                            <li class="@if (in_array(Request::instance()->segment(2), $segmentRole)) active @endif">
-                                <a href="javascript:void(0);" title="Access Permission" data-filter-tags="application intel Access Permission">
-                                    <i class="ni ni-user-follow"></i>
-                                    <span class="nav-link-text" data-i18n="nav.Access Permission">Role Access</span>
-                                </a>
-                                <ul>
-                                    @if (Auth::user()->can('Role View'))
-                                        <li class="@if (Request::instance()->segment(2) == 'role') active @endif">
-                                            <a href="{{url('admin/role')}}" title="Role" data-filter-tags="Role">
-                                                <span class="nav-link-text" data-i18n="nav.role">Role</span>
-                                            </a>
-                                        </li>
-                                    @endif
-                                    @if (Auth::user()->can('Permission View'))
-                                        <li class="@if (Request::instance()->segment(2) == 'permission') active @endif">
-                                            <a href="{{url('admin/permission')}}" title="permission" data-filter-tags="permission">
-                                                <span class="nav-link-text" data-i18n="nav.permission">Permission</span>
-                                            </a>
-                                        </li>
-                                    @endif
-                                    @if (Auth::user()->can('Permission Category View'))
-                                        <li class="@if (Request::instance()->segment(2) == 'permissions' && Request::instance()->segment(3) == 'category') active @endif">
-                                            <a href="{{url('admin/permissions/category')}}" title="permission category" data-filter-tags="permission category">
-                                                <span class="nav-link-text" data-i18n="nav.permission category">Category Permission</span>
-                                            </a>
-                                        </li>
-                                    @endif
-                                </ul>
-                            </li>
-                         @endif
+                                <li class="@if (in_array(Request::instance()->segment(2), $segmentRole)) active @endif">
+                                    <a href="javascript:void(0);" title="Access Permission" data-filter-tags="application intel Access Permission">
+                                        <i class="ni ni-user-follow"></i>
+                                        <span class="nav-link-text" data-i18n="nav.Access Permission">Role Access</span>
+                                    </a>
+                                    <ul>
+                                        @if (Auth::user()->can('Role View'))
+                                            <li class="@if (Request::instance()->segment(2) == 'role') active @endif">
+                                                <a href="{{url('admin/role')}}" title="Role" data-filter-tags="Role">
+                                                    <span class="nav-link-text" data-i18n="nav.role">Role</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Permission View'))
+                                            <li class="@if (Request::instance()->segment(2) == 'permission') active @endif">
+                                                <a href="{{url('admin/permission')}}" title="permission" data-filter-tags="permission">
+                                                    <span class="nav-link-text" data-i18n="nav.permission">Permission</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Permission Category View'))
+                                            <li class="@if (Request::instance()->segment(2) == 'permissions' && Request::instance()->segment(3) == 'category') active @endif">
+                                                <a href="{{url('admin/permissions/category')}}" title="permission category" data-filter-tags="permission category">
+                                                    <span class="nav-link-text" data-i18n="nav.permission category">Category Permission</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                </li>
+                            @endif
                         </ul>
                         <div class="filter-message js-filter-message bg-success-600"></div>
                     </nav>

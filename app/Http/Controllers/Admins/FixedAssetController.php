@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admins;
 
-use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class FixedAssetController extends Controller
 {
@@ -12,7 +13,7 @@ class FixedAssetController extends Controller
      */
     public function index()
     {
-        return view('fixed_asset.index');
+        return view('asset.index');
     }
 
     /**
@@ -20,7 +21,8 @@ class FixedAssetController extends Controller
      */
     public function create()
     {
-        //
+        $cateagory = Category::all();
+        return view('asset.create',compact('cateagory'));
     }
 
     /**

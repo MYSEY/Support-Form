@@ -11,11 +11,19 @@
             <div class="modal-body">
                 <form action="{{url('admin/task')}}" method="POST" class="needs-validation" novalidate>
                     @csrf
-                    <div class="form-group">
-                        <label class="form-label">Name</label>
+                    <div class="mb-2">
+                        <label class="form-label">Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name" required>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
+                        <label class="form-label">Type <span class="text-danger">*</span></label>
+                        <select class="custom-select form-control" id="type" name="type" required>
+                            <option value="">-- Select --</option>
+                            <option value="Hardware">Hardware</option>
+                            <option value="Software">Software</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
                         <label class="form-label">Description</label>
                         <textarea class="form-control" id="description" name="description" rows="6" maxlength="1000"></textarea>
                     </div>
