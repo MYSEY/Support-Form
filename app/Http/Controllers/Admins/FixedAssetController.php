@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admins;
 
+use App\Models\Room;
+use App\Models\Branch;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -22,7 +24,9 @@ class FixedAssetController extends Controller
     public function create()
     {
         $cateagory = Category::all();
-        return view('asset.create',compact('cateagory'));
+        $location = Room::all();
+        $office = Branch::all();
+        return view('asset.create',compact('cateagory','location','office'));
     }
 
     /**

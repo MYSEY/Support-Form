@@ -156,6 +156,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     Route::resource('asset', FixedAssetController::class);
     Route::resource('room', RoomController::class);
+    Route::post('/room/import', [RoomController::class, 'roomImport']);
 
     // *** send notification **/
     Route::get('/notification', [NotificationController::class, 'index']);

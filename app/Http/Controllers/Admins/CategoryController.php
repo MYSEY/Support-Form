@@ -105,14 +105,24 @@ class CategoryController extends Controller
                 'updated_by' => Auth::user()->id,
             ]);
             // Step 2: Delete old CategoryTask records
-            CategoryTask::where('task_id', $request->task_id)->delete();
+            // CategoryTask::where('task_id', $request->task_id)->delete();
             // Step 3: Insert new CategoryTask for each task_id
             foreach ($request->task as $task_id) {
-                CategoryTask::create([
-                    'category_id' => $request->category_id,
-                    'task_id' => $task_id,
-                    'updated_by' => Auth::user()->id,
-                ]);
+                CategoryTask::updateOrCreate(
+                    [
+                        'category_id' => $request->category_id, // Use $request->id directly
+                        'task_id' => $task_id, // Check by task_id
+                    ],
+                    [
+                        'created_by' => Auth::user()->id,
+                        'updated_by' => Auth::user()->id, // Insert or update created_by
+                    ]
+                );
+                // CategoryTask::create([
+                //     'category_id' => $request->category_id,
+                //     'task_id' => $task_id,
+                //     'updated_by' => Auth::user()->id,
+                // ]);
             }
 
             DB::commit();

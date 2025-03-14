@@ -43,11 +43,15 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
-                                        <th>category name</th>
-                                        <th>Noted</th>
+                                        <th>Serial</th>
+                                        <th>Category</th>
+                                        <th>DeviceName</th>
+                                        <th>Office</th>
+                                        <th>Location</th>
+                                        <th>End User</th>
+                                        <th>Postion</th>
+                                        <th>Lifecycle (Month)</th>
                                         <th>Created At</th>
-                                        <th>Updated At</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -65,6 +69,7 @@
 @endsection
 
 @section('script')
+@include('includs.datatable_basic')
     <script>
     </script>
 @endsection

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Models\Room;
+use App\Imports\RoomInport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
@@ -99,6 +101,21 @@ class RoomController extends Controller
             DB::rollback();
             Toastr::error('Room delete fail.','Error');
             return redirect()->back();
+        }
+    }
+
+    public function roomImport(Request $request){
+        try{
+            $request->validate([
+                'file' => 'required|mimes:xlsx,xls',
+            ]);
+            $extension = $request->file('file')->extension();
+            if ($extension == "xlsx" || $extension == "xls" || $extension == "csv") {
+                Excel::import(new RoomInport, $request->file('file'));
+            }
+            return response()->json(['mg'=>'success'], 200);
+        }catch(\Exception $e){
+            return response()->json(['error'=>$e->getMessage()]);
         }
     }
 }

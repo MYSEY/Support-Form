@@ -26,8 +26,8 @@
                         </select>
                     </div>
                     <div class="float-lg-right">
-                        <input type="text" value="" name="category_id" id="e_category_id">
-                        <input type="text" value="" name="task_id" id="e_task_id">
+                        <input type="hidden" value="" name="category_id" id="e_category_id">
+                        <input type="hidden" value="" name="task_id" id="e_task_id">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>

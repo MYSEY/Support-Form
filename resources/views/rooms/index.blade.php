@@ -84,7 +84,7 @@
             </div>
         </div>
     </div>
-    {{-- @include('rooms.import') --}}
+    @include('rooms.import')
     @include('rooms.create')
     @include('rooms.edit')
 @endsection
@@ -115,7 +115,7 @@
                     $("#modal-import").modal("show");
                     $.ajax({
                         type: 'POST',
-                        url: "{{ url('admin/task/import') }}",
+                        url: "{{ url('admin/room/import') }}",
                         data: form_data,
                         contentType: false,
                         cache: false,
@@ -124,7 +124,7 @@
                             if (data.mg == 'success') {
                                 $("#modal-import").modal("hide");
                                 toastr.success('Data has been save success');
-                                window.location.replace("{{ URL('admin/task') }}");
+                                window.location.replace("{{ URL('admin/room') }}");
                             }
                         },error: function(xhr, status, error) {
                             // Display error message if AJAX request fails

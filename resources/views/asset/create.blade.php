@@ -33,14 +33,14 @@
                         <div class="row mb-2">
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="Serial">Serial: <span class="text-danger">*</span></label>
-                                    <input type="text" name="Serial" class="form-control required" id="Serial" required>
+                                    <label class="form-label" for="Serial">Serial</label>
+                                    <input type="text" name="serial" class="form-control required" id="serial" required>
                                 </div>
                             </div>
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="Serial">Category: <span class="text-danger">*</span></label>
-                                    <select class="select2 custom-select form-control" id="category_id" name="category_id" required>
+                                    <label class="form-label" for="category_id">Category <span class="text-danger">*</span></label>
+                                    <select class="select2 form-control w-100 select2-hidden-accessible" id="category_id" name="category_id" required>
                                         <option value="">-- Select --</option>
                                         @foreach ($cateagory as $item)
                                             <option value="{{$item->id}}">{{ $item->name}}</option>
@@ -52,14 +52,38 @@
                         <div class="row mb-2">
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="Serial">Device Name: <span class="text-danger">*</span></label>
-                                    <input type="text" name="Serial" class="form-control required" id="Serial" required>
+                                    <label class="form-label" for="Device Name">Device Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="device_name" class="form-control required" id="device_name" required>
                                 </div>
                             </div>
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="Serial">Office: <span class="text-danger">*</span></label>
-                                    <select class="custom-select form-control" id="category_id" name="category_id" required>
+                                    <label class="form-label" for="Serial">Office <span class="text-danger">*</span></label>
+                                    <select class="select2 form-control w-100 select2-hidden-accessible" id="office" name="office" required>
+                                        <option value="">-- Select --</option>
+                                        @foreach ($office as $item)
+                                            <option value="{{$item->id}}">{{ $item->branch_name_en}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-xl-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="Serial">Location <span class="text-danger">*</span></label>
+                                    <select class="select2 form-control w-100 select2-hidden-accessible" id="location" name="location" required>
+                                        <option value="">-- Select --</option>
+                                        @foreach ($location as $item)
+                                            <option value="{{$item->id}}">{{ $item->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="end_user">End User</label>
+                                    <select class="custom-select form-control" id="end_user" name="end_user" required>
                                         <option value="">-- Select --</option>
                                         {{-- @foreach ($task as $item)
                                             <option value="{{$item->id}}">{{ $item->name}}</option>
@@ -71,37 +95,13 @@
                         <div class="row mb-2">
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="Serial">Location: <span class="text-danger">*</span></label>
-                                    <select class="custom-select form-control" id="category_id" name="category_id" required>
-                                        <option value="">-- Select --</option>
-                                        {{-- @foreach ($task as $item)
-                                            <option value="{{$item->id}}">{{ $item->name}}</option>
-                                        @endforeach --}}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-xl-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="Serial">End User: <span class="text-danger">*</span></label>
-                                    <select class="custom-select form-control" id="category_id" name="category_id" required>
-                                        <option value="">-- Select --</option>
-                                        {{-- @foreach ($task as $item)
-                                            <option value="{{$item->id}}">{{ $item->name}}</option>
-                                        @endforeach --}}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-xl-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="Serial">date: <span class="text-danger">*</span></label>
+                                    <label class="form-label" for="Serial">date <span class="text-danger">*</span></label>
                                     <input type="date" name="Serial" class="form-control required" id="Serial" required>
                                 </div>
                             </div>
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="Lifecycle">Lifecycle (Month): <span class="text-danger">*</span></label>
+                                    <label class="form-label" for="Lifecycle">Lifecycle (Month)</label>
                                     <input type="text" name="Lifecycle" class="form-control required" id="Lifecycle" required>
                                 </div>
                             </div>
@@ -109,7 +109,7 @@
         
                         <div class="text-md-right">
                             <div class="btn-hidden-show">
-                                <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/ticket')}}"  type="button">Cancel</a>
+                                <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/asset')}}"  type="button">Cancel</a>
                                 <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn-save" type="button">Submit</button>
                             </div>
                             <input type="hidden" value="{{csrf_token()}}" id="token"/>
