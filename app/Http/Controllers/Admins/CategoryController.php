@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admins;
 
 use App\Models\Task;
 use App\Models\Category;
+use App\Models\CategoryTask;
 use Illuminate\Http\Request;
 use App\Imports\CategoryImport;
 use Illuminate\Support\Facades\DB;
@@ -19,13 +20,16 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $task = Task::orderBy('id','DESC')->get();
-        $data = Category::leftJoin('tasks','categories.task_id','=','tasks.id')
+        $task = Task::whereNull('deleted_at')->get();
+        $data = CategoryTask::leftJoin('tasks','category_tasks.task_id','=','tasks.id')
+        ->leftJoin('categories','categories.id','=','category_tasks.category_id')
         ->select(
-            'categories.*',
+            'category_tasks.*',
+            'categories.name as category_name',
             'tasks.name as task_name',
             'tasks.description',
-        )->orderBy('categories.task_id','DESC')->get();
+        )->whereNull('category_tasks.deleted_at')->whereNull('tasks.deleted_at')->orderBy('categories.id','DESC')->get();
+        // $data = Category::all();
         return view('category.index',compact('task','data'));
     }
 
@@ -43,12 +47,20 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
             $data = $request->all();
             $data['created_by'] = Auth::user()->id;
-            Category::create($data);
+            $category = Category::create($data);
+            foreach ($request->task as $value) {
+                CategoryTask::create([
+                    'category_id' => $category->id, 
+                    'task_id' => $value, 
+                    'created_by' => Auth::user()->id, 
+                ]);
+            }
+            DB::commit();
             Toastr::success('Category create successfully.','Success');
             return redirect()->back();
-            DB::commit();
         } catch (\Throwable $exp) {
             return response()->json(['errors' => $exp]);
         }
@@ -60,7 +72,14 @@ class CategoryController extends Controller
     public function show(string $id)
     {
         try{
-            $data = Category::find($id);
+            // $data = Category::find($id);
+            $data = CategoryTask::leftJoin('tasks','category_tasks.task_id','=','tasks.id')
+            ->leftJoin('categories','categories.id','=','category_tasks.category_id')
+            ->select(
+                'category_tasks.*',
+                'categories.name as category_name',
+                'tasks.name as task_name',
+            )->where('category_tasks.task_id',$id)->first();
             return response()->json(['success'=>$data]);
         }catch(\Exception $e){
             return response()->json(['error'=>$e->getMessage()]);
@@ -81,11 +100,21 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         try{
-            Category::where('id',$request->id)->update([
-                'task_id'  => $request->task_id,
-                'name'  => $request->name,
+            Category::where('id', $request->category_id)->update([
+                'name' => $request->name,
                 'updated_by' => Auth::user()->id,
             ]);
+            // Step 2: Delete old CategoryTask records
+            CategoryTask::where('task_id', $request->task_id)->delete();
+            // Step 3: Insert new CategoryTask for each task_id
+            foreach ($request->task as $task_id) {
+                CategoryTask::create([
+                    'category_id' => $request->category_id,
+                    'task_id' => $task_id,
+                    'updated_by' => Auth::user()->id,
+                ]);
+            }
+
             DB::commit();
             Toastr::success('Category updated successfully.','Success');
             return redirect('admin/category');
@@ -102,9 +131,15 @@ class CategoryController extends Controller
     public function destroy(Request $request)
     {
         try{
-            Category::destroy($request->id);
-            Toastr::success('Category deleted successfully.','Success');
+            DB::beginTransaction(); // Start Transaction
+            CategoryTask::where('task_id', $request->id)->delete();
+            
+            DB::commit(); // Commit Transaction
+            Toastr::success('Category deleted successfully.', 'Success');
             return redirect()->back();
+            // Category::destroy($request->id);
+            // Toastr::success('Category deleted successfully.','Success');
+            // return redirect()->back();
         }catch(\Exception $e){
             DB::rollback();
             Toastr::error('Category delete fail.','Error');

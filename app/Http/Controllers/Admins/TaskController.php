@@ -16,10 +16,55 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Task::orderBy('id','DESC')->get();
-        return view('tasks.index',compact('data'));
+        if (request()->ajax()) {
+            // Define the base query
+            $query = DB::table('tasks')
+            ->select(
+                'tasks.*',
+            )->where('tasks.deleted_at',null);
+            
+            // **Search Handling**
+            $searchValue = request()->input('search.value');
+            if (!empty($searchValue)) {
+                $query->where(function ($q) use ($searchValue) {
+                    $q->where('tasks.id', 'like', "%{$searchValue}%")
+                    ->orWhere('tasks.name',$searchValue)
+                    ->orWhere('tasks.type',$searchValue)
+                    ->orWhere('tasks.description', 'like', "%{$searchValue}%");
+                });
+            }
+            // **Sorting Handling**
+            if ($request->has('order')) {
+                $orderColumnIndex = $request->input('order.0.column'); // Column index
+                $orderColumnName = $request->input('columns.' . $orderColumnIndex . '.data'); // Column name
+                $orderDirection = $request->input('order.0.dir'); // Sort direction (asc or desc)
+        
+                // Dynamically sort by the column name
+                if (!empty($orderColumnName)) {
+                    $query->orderBy($orderColumnName, $orderDirection);
+                }
+            }
+            
+            // **Pagination Handling**
+            $recordsTotal = DB::table('tasks')->where('tasks.deleted_at',null)->count(); // Total records
+            $recordsFiltered = $query->count(); // Filtered records
+            
+            // Apply pagination for the actual data retrieval
+            $start = intval($request->input('start', 0));
+            $limit = intval($request->input('length', 10));
+            $data = $query->offset($start)->limit($limit)->get();
+            
+            // Return JSON response
+            return response()->json([
+                'draw' => intval($request->input('draw')),  // Optional: for client-side tracking
+                'recordsTotal' => $recordsTotal,
+                'recordsFiltered' => $recordsFiltered,
+                'data' => $data
+            ]);
+        }
+        return view('tasks.index');
     }
 
     /**
@@ -76,6 +121,7 @@ class TaskController extends Controller
         try{
             Task::where('id',$request->id)->update([
                 'name'  => $request->name,
+                'type'  => $request->type,
                 'description'  => $request->description,
                 'updated_by' => Auth::user()->id,
             ]);

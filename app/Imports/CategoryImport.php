@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Category;
+use App\Models\CategoryTask;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -17,16 +18,19 @@ class CategoryImport implements ToCollection
     */
     public function collection(Collection $rows)
     {
-        $i = 0;
-        foreach ($rows as $item) {
-            $i++;
-            if ($i != 1) {
-                Category::firstOrCreate([
-                    'task_id' => $item[0],
-                    'name'  => $item[1],
-                    'created_by'  => Auth::user()->id,
-                ]);
-            }
+        $user_id = Auth::id(); // Store the Auth ID once
+        foreach ($rows as $index => $row) {
+            if ($index == 0) continue; // Skip the header row
+            $category = Category::firstOrCreate([
+                'name'  => $row[0],
+                'created_by'  => $user_id,
+            ]);
+
+            CategoryTask::create([
+                'category_id' => $category->id,
+                'task_id' => $row[1],
+                'created_by' => $user_id,
+            ]);
         }
     }
 }

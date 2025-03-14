@@ -89,8 +89,16 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        try{
+            Room::destroy($request->id);
+            Toastr::success('Room deleted successfully.','Success');
+            return redirect()->back();
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('Room delete fail.','Error');
+            return redirect()->back();
+        }
     }
 }

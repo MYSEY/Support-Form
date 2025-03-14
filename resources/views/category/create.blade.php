@@ -1,6 +1,6 @@
- <!-- Modal Create Task -->
+ <!-- Modal Create Category -->
  <div class="modal fade" id="CategoryCreate" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Add Category</h5>
@@ -17,10 +17,10 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="task">Task <span class="text-danger">*</span></label>
-                        <select class="custom-select form-control" id="task_id" name="task_id" required>
+                        <select class="select2 form-control w-100 select2-hidden-accessible" name="task[]" id="createTask" multiple>
                             <option value="">-- Select --</option>
                             @foreach ($task as $item)
-                                <option value="{{$item->id}}">{{ $item->name}}</option>
+                                <option value="{{$item->id}}">{{$item->name}}</option>
                             @endforeach
                         </select>
                     </div>

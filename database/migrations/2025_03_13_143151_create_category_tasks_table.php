@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('category_tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('category_id');
+            $table->foreignId('task_id');
             $table->foreignId('created_by');
             $table->foreignId('updated_by')->nullable();
             $table->dateTime('deleted_at')->nullable();
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('category_tasks');
     }
 };

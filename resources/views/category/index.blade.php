@@ -1,5 +1,22 @@
 @extends('layouts.admin')
 @section('content')
+    <div class="row mb-2">
+        <div class="col-xl-12">
+            @if(Auth::user()->can('Category Create') || Auth::user()->can('Task Import'))
+                <div class="">
+                    <div class="text-lg-right">
+                        @can('Task Import')
+                            <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger btn-sm mr-1">Import</a>
+                        @endcan
+                        @can('Category Create')
+                            <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#CategoryCreate" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
+                        @endcan
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-xl-12">
             <div id="panel-1" class="panel">
@@ -10,16 +27,6 @@
                 </div>
                 
                 <div class="panel-container show">
-                    @can('Category Create')
-                        <div class="panel-tag">
-                            <div class="text-lg-right">
-                                @can('Category Import')
-                                    <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger btn-sm mr-1">Import</a>
-                                @endcan
-                                <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#CategoryCreate" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
-                            </div>
-                        </div>
-                    @endcan
                     <div class="panel-content">
                         <div class="table-responsive">
                             <!-- datatable start -->
@@ -38,16 +45,17 @@
                                         @foreach ($data as $key=>$item)
                                             <tr>
                                                 <td>{{$item->id}}</td>
-                                                <td>{{$item->name}}</td>
+                                                <td>{{$item->category_name}}</td>
                                                 <td>{{$item->task_name}}</td>
-                                                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') ?? '' }}</td>
+                                                <td>{{ $item->created_at }}</td>
+                                                {{-- <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') ?? '' }}</td> --}}
                                                 <td>
                                                     <div class="d-flex demo">
                                                         @can('Category Delete')
-                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="{{$item->id}}"><i class="fal fa-times"></i></a>
+                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="{{$item->task_id}}"><i class="fal fa-times"></i></a>
                                                         @endcan
                                                         @can('Category Edit')
-                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
+                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="{{$item->task_id}}" title="Edit"><i class="fal fa-edit"></i></a>
                                                         @endcan
                                                     </div>
                                                 </td>
@@ -96,6 +104,12 @@
 @include('includs.datatable_basic')
     <script>
         $(function(){
+            $('#createTask').select2({
+                dropdownParent: $('#CategoryCreate')
+            });
+            $('#e_task').select2({
+                dropdownParent: $('#CategoryEdit')
+            });
             $(".upload_file_data").on("click", function() {
                 if ($('#result_file').val() == "") {
                     $("#thanLess").text("Please select a xls,xlsx and csv file and size less then 1MB").css("color", "red");
@@ -145,11 +159,13 @@
                     type: "GET",
                     url: `{{ url('/admin/category/${id}') }}`,
                     dataType: "JSON",
-                    success: function (response) {
+                    success: function (response) {                        
                         if (response.success) {
-                            $('#e_id').val(response.success.id);
-                            $('#e_name').val(response.success.name);
+                            $('#e_category_id').val(response.success.category_id);
                             $('#e_task_id').val(response.success.task_id);
+                            $('#e_name').val(response.success.category_name);
+                            let taskIds = response.success.task_id;
+                            $('.e_task').val(taskIds).trigger('change');
                             $('#CategoryEdit').modal('show');
                         }
                     }

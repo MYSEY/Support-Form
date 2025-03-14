@@ -70,7 +70,7 @@
                         <p>Are you sure want to delete?</p>
                     </div>
                     <div class="modal-btn delete-action">
-                        <form action="{{url('admin/task/delete')}}" method="POST">
+                        <form action="{{url('admin/room/delete')}}" method="POST">
                             @csrf
                             @method('Delete')
                             <input type="hidden" name="id" class="e_id" id="e_id" value="">
