@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('end_user')->nullable();
             $table->string('serial')->nullable();
             $table->string('device_name');
-            $table->string('lifecycle_month')->nullable();
+            $table->date('date')->nullable();
             $table->foreignId('created_by');
             $table->foreignId('updated_by')->nullable();
             $table->dateTime('deleted_at')->nullable();

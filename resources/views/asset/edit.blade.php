@@ -29,14 +29,15 @@
                 </div>
                 
                 <div class="panel-container show">
-                    <form action="{{url('admin/asset')}}" method="POST" class="needs-validation" novalidate>
+                    <form action="{{url('admin/asset/update')}}" method="POST" class="needs-validation" novalidate>
                         @csrf
+                        @method('PUT')
                         <div class="panel-content">
                             <div class="row mb-2">
                                 <div class="col-xl-6">
                                     <div class="form-group">
                                         <label class="form-label" for="Serial">Serial</label>
-                                        <input type="text" name="serial" class="form-control required" id="serial">
+                                        <input type="text" name="serial" class="form-control required" id="serial" value="{{$data->serial}}">
                                     </div>
                                 </div>
                                 <div class="col-xl-6">
@@ -45,7 +46,7 @@
                                         <select class="select2 form-control w-100 select2-hidden-accessible" id="category_id" name="category_id" required>
                                             <option value="">-- Select --</option>
                                             @foreach ($cateagory as $item)
-                                                <option value="{{$item->id}}">{{ $item->name}}</option>
+                                                <option value="{{$item->id}}" {{$data->category_id == $item->id ? 'selected' : ''}}>{{ $item->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -55,7 +56,7 @@
                                 <div class="col-xl-6">
                                     <div class="form-group">
                                         <label class="form-label" for="Device Name">Device Name <span class="text-danger">*</span></label>
-                                        <input type="text" name="device_name" class="form-control required" id="device_name" required>
+                                        <input type="text" name="device_name" class="form-control required" id="device_name" value="{{$data->device_name}}" required>
                                     </div>
                                 </div>
                                 <div class="col-xl-6">
@@ -64,7 +65,7 @@
                                         <select class="select2 form-control w-100 select2-hidden-accessible" id="office" name="office" required>
                                             <option value="">-- Select --</option>
                                             @foreach ($office as $item)
-                                                <option value="{{$item->id}}">{{ $item->branch_name_en}}</option>
+                                                <option value="{{$item->id}}" {{$data->office == $item->id ? 'selected' : ''}}>{{ $item->branch_name_en}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -77,7 +78,7 @@
                                         <select class="select2 form-control w-100 select2-hidden-accessible" id="location" name="location" required>
                                             <option value="">-- Select --</option>
                                             @foreach ($location as $item)
-                                                <option value="{{$item->id}}">{{ $item->name}}</option>
+                                                <option value="{{$item->id}}" {{$data->location == $item->id ? 'selected' : ''}}>{{ $item->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -88,7 +89,7 @@
                                         <select class="select2 form-control w-100 select2-hidden-accessible" id="end_user" name="end_user" required>
                                             <option value="">-- Select --</option>
                                             @foreach ($users as $item)
-                                                <option value="{{$item->id}}">{{ $item->name}}</option>
+                                                <option value="{{$item->id}}" {{$data->end_user == $item->id ? 'selected' : ''}}>{{ $item->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -98,7 +99,7 @@
                                 <div class="col-xl-6">
                                     <div class="form-group">
                                         <label class="form-label" for="date">date <span class="text-danger">*</span></label>
-                                        <input type="date" name="date" class="form-control required" id="date" required>
+                                        <input type="date" name="date" class="form-control required" id="date" value="{{$data->date}}" required>
                                     </div>
                                 </div>
                                 {{-- <div class="col-xl-6">
@@ -114,6 +115,7 @@
                                     <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/asset')}}"  type="button">Cancel</a>
                                     <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" type="submit">Submit</button>
                                 </div>
+                                <input type="hidden" name="id" id="id" value="{{$data->id}}">
                                 <input type="hidden" value="{{csrf_token()}}" id="token"/>
                                 <div class="btn-loading mt-3" style="display: none">
                                     <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">

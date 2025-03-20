@@ -76,7 +76,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{url('admin/branch/store ')}}" method="POST" class="needs-validation" novalidate>
+                <form action="{{url('admin/branch/store')}}" method="POST" class="needs-validation" novalidate>
                     @csrf
                     <div class="form-group">
                         <label class="form-label">Name(KH)</label>
