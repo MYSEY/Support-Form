@@ -6,6 +6,7 @@ use App\Models\Room;
 use App\Models\Asset;
 use App\Models\Branch;
 use App\Models\Category;
+use App\Models\connectionDBHR;
 use App\Imports\AssetImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,67 +22,29 @@ class FixedAssetController extends Controller
      */
     public function index(Request $request)
     {
-        // if (request()->ajax()) {
-        //     // Define the base query
-        //     $query = DB::table('assets')
-        //     ->leftJoin('categories','assets.category_id','=','categories.id')
-        //     ->leftJoin('branchs','assets.office','=','branchs.id')
-        //     ->leftJoin('rooms','assets.location','=','rooms.id')
-        //     ->select(
-        //         'assets.*',
-        //         'categories.name as cate_name',
-        //         'branchs.branch_name_en as office',
-        //         'rooms.name as location',
-        //         DB::raw("
-        //             CASE 
-        //                 WHEN assets.lifecycle_month >= 60 THEN 
-        //                     CONCAT(FLOOR(assets.lifecycle_month / 12), ' Years ', MOD(assets.lifecycle_month, 12), ' Months')
-        //                 ELSE 
-        //                     CONCAT(assets.lifecycle_month, ' Months')
-        //             END as lifecycle_month
-        //         ")
-        //     )->where('assets.deleted_at',null);
-            
-        //     // **Search Handling**
-        //     $searchValue = request()->input('search.value');
-        //     if (!empty($searchValue)) {
-        //         $query->where(function ($q) use ($searchValue) {
-        //             $q->where('assets.id', 'like', "%{$searchValue}%")
-        //             ->orWhere('assets.name',$searchValue)
-        //             ->orWhere('assets.type',$searchValue)
-        //             ->orWhere('assets.description', 'like', "%{$searchValue}%");
-        //         });
-        //     }
-        //     // **Sorting Handling**
-        //     if ($request->has('order')) {
-        //         $orderColumnIndex = $request->input('order.0.column'); // Column index
-        //         $orderColumnName = $request->input('columns.' . $orderColumnIndex . '.data'); // Column name
-        //         $orderDirection = $request->input('order.0.dir'); // Sort direction (asc or desc)
-        
-        //         // Dynamically sort by the column name
-        //         if (!empty($orderColumnName)) {
-        //             $query->orderBy($orderColumnName, $orderDirection);
-        //         }
-        //     }
-            
-        //     // **Pagination Handling**
-        //     $recordsTotal = DB::table('assets')->where('assets.deleted_at',null)->count(); // Total records
-        //     $recordsFiltered = $query->count(); // Filtered records
-            
-        //     // Apply pagination for the actual data retrieval
-        //     $start = intval($request->input('start', 0));
-        //     $limit = intval($request->input('length', 10));
-        //     $data = $query->offset($start)->limit($limit)->get();
-            
-        //     // Return JSON response
-        //     return response()->json([
-        //         'draw' => intval($request->input('draw')),  // Optional: for client-side tracking
-        //         'recordsTotal' => $recordsTotal,
-        //         'recordsFiltered' => $recordsFiltered,
-        //         'data' => $data
-        //     ]);
-        // }
-        $data = Asset::orderBy('id','asc')->get();
+        // Fetch assets from the default database
+        $assets = Asset::orderBy('id','asc')->get();
+        // Fetch users from the HRMS database
+        $employees = DB::connection('mysqlhrconnection')->table('users')
+        ->leftJoin('positions', 'users.position_id', '=', 'positions.id')
+        ->select(
+            'number_employee', 
+            'employee_name_kh', 
+            'employee_name_en',
+            'positions.name_english'
+        )->get();
+        // Merge users into assets
+        $data = $assets->map(function ($asset) use ($employees) {
+            $employee = $employees->get($asset->end_user);
+            $asset->employee = $employee ? [
+                'number_employee'   => $employee->number_employee,
+                'employee_name_kh'  => $employee->employee_name_kh,
+                'employee_name_en'  => $employee->employee_name_en,
+                'name_english'  => $employee->name_english,
+            ] : null;
+            return $asset;
+        });
+        // $data = Asset::orderBy('id','asc')->get();
         return view('asset.index',compact('data'));
     }
 
@@ -93,7 +56,13 @@ class FixedAssetController extends Controller
         $cateagory = Category::all();
         $location = Room::all();
         $office = Branch::all();
-        $users = DB::table('users')->get();
+        $users = connectionDBHR::whereIn('emp_status',['Probation','1','10','2'])
+        ->select(
+            'users.id',
+            'users.number_employee',
+            'users.employee_name_kh',
+            'users.employee_name_en',
+        )->get();
         return view('asset.create',compact('cateagory','location','office','users'));
     }
 
@@ -130,7 +99,13 @@ class FixedAssetController extends Controller
         $cateagory = Category::all();
         $location = Room::all();
         $office = Branch::all();
-        $users = DB::table('users')->get();
+        $users = connectionDBHR::whereIn('emp_status',['Probation','1','10','2'])
+        ->select(
+            'users.id',
+            'users.number_employee',
+            'users.employee_name_kh',
+            'users.employee_name_en',
+        )->get();
         $data = Asset::where('id',$id)->first();
         return view('asset.edit',compact('data','cateagory','location','office','users'));
     }

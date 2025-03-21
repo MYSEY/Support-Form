@@ -132,6 +132,7 @@
                 'category',
                 'asset',
                 'room',
+                'employee',
             ];
         @endphp
 
@@ -317,6 +318,11 @@
                                         <li class="@if (in_array(Request::instance()->segment(2), ['room'])) active @endif">
                                             <a href="{{url('admin/room')}}" title="task" data-filter-tags="theme task">
                                                 <span class="nav-link-text">Rooms</span>
+                                            </a>
+                                        </li>
+                                        <li class="@if (in_array(Request::instance()->segment(2), ['employee'])) active @endif">
+                                            <a href="{{url('admin/employee')}}" title="employee" data-filter-tags="theme employee">
+                                                <span class="nav-link-text">Employee</span>
                                             </a>
                                         </li>
                                     </ul>

@@ -29,14 +29,14 @@
                 </div>
                 
                 <div class="panel-container show">
-                    {{-- @can('User Create') --}}
+                    @can('Asset Create')
                         <div class="panel-tag">
                             <div class="text-lg-right">
                                 <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger btn-sm mr-1"><i class="fal fa-file"></i> Import</a>
                                 <a href="{{url('admin/asset/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
                             </div>
                         </div>
-                    {{-- @endcan --}}
+                    @endcan
                     <div class="panel-content">
                         <div class="table-responsive">
                             <!-- datatable start -->
@@ -65,20 +65,19 @@
                                                 <td>{{$item->device_name}}</td>
                                                 <td>{{$item->OfficeName}}</td>
                                                 <td>{{$item->RoomName}}</td>
-                                                <td>{{$item->end_user}}</td>
-                                                <td>{{$item->end_user}}</td>
+                                                <td>{{ $item->employee['employee_name_en']}}</td>
+                                                <td>{{$item->employee['name_english']}}</td>
                                                 <td>{{ $item->date }}</td>
-                                                {{-- <td>{{ \Carbon\Carbon::parse($item->date)->format('d-M-Y') ?? '' }}</td> --}}
                                                 <td>{{$item->LifecycleMonthDiff}}</td>
                                                 <td>{{$item->created_at}}</td>
                                                 <td>
                                                     <div class="d-flex demo">
-                                                        {{-- @can('Asset Delete') --}}
+                                                        @can('Asset Delete')
                                                             <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#btnDeleteAsset" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
-                                                        {{-- @endcan --}}
-                                                        {{-- @can('Asset Edit') --}}
+                                                        @endcan
+                                                        @can('Asset Edit')
                                                             <a href="{{url('admin/asset/'.$item->id)}}/edit" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1" title="Edit" data-id="{{$item->id}}"><i class="fal fa-edit"></i></a>
-                                                        {{-- @endcan --}}
+                                                        @endcan
                                                     </div>
                                                 </td>
                                             </tr>

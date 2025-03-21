@@ -13,6 +13,7 @@ use App\Http\Controllers\Admins\ReplyController;
 use App\Http\Controllers\Admins\BranchController;
 use App\Http\Controllers\Admins\TicketController;
 use App\Http\Controllers\Admins\CategoryController;
+use App\Http\Controllers\Admins\EmployeeController;
 use App\Http\Controllers\Admins\PriorityController;
 use App\Http\Controllers\Admins\StatusesController;
 use App\Http\Controllers\Admins\DashboardController;
@@ -122,6 +123,9 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     // Priority
     Route::resource('priority', PriorityController::class);
+
+    //Employee
+    Route::resource('employee', EmployeeController::class);
 
     // Issue Type
     Route::get('/issue-type/duplicate', [IssueTypeController::class,'duplicateIssueType']);
