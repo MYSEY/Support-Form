@@ -21,6 +21,7 @@ use App\Http\Controllers\Admins\IssueTypeController;
 use App\Http\Controllers\Admins\DepartmentController;
 use App\Http\Controllers\Admins\FixedAssetController;
 use App\Http\Controllers\Admins\PermissionController;
+use App\Http\Controllers\Admins\MaintenanceController;
 use App\Http\Controllers\Admins\NotificationController;
 use App\Http\Controllers\Admins\TicketReportController;
 use App\Http\Controllers\Admins\ResponsesTicketController;
@@ -126,6 +127,8 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     //Employee
     Route::resource('employee', EmployeeController::class);
+    Route::resource('maintenance', MaintenanceController::class);
+    Route::get('/serial', [MaintenanceController::class,'OnChangeSerial']);
 
     // Issue Type
     Route::get('/issue-type/duplicate', [IssueTypeController::class,'duplicateIssueType']);

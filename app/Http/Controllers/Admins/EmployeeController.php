@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Models\Employee;
-use App\Models\connectionDBHR;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +13,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $data = connectionDBHR::whereIn('emp_status',['Probation','1','10','2'])
+        $data = Employee::whereIn('emp_status',['Probation','1','10','2'])
         ->leftJoin('positions','users.position_id','=','positions.id')
         ->leftJoin('departments','users.department_id','=','departments.id')
         ->leftJoin('branchs','users.branch_id','=','branchs.id')

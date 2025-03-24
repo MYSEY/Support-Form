@@ -194,6 +194,12 @@
                                     </a>
                                 </li>
                             @endif
+                            <li class="@if (Request::instance()->segment(2) == 'maintenance') active @endif">
+                                <a href="{{url('admin/maintenance')}}" title="Maintenance" data-filter-tags="Maintenance">
+                                    <i class="fal fa-ticket-alt"></i>
+                                    <span class="nav-link-text" data-i18n="nav.Maintenance">Maintenance</span>
+                                </a>
+                            </li>
                             @if (Auth::user()->can('User View'))
                                 <li class="@if (Request::instance()->segment(2) == 'user') active @endif">
                                     <a href="{{url('admin/user')}}" title="Users" data-filter-tags="users">

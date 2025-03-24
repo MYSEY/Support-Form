@@ -1,24 +1,5 @@
 @extends('layouts.admin')
 @section('content')
-    <style>
-        .rating {
-            font-size: 24px;
-            color: gold; /* Default color of stars */
-            display: inline-block;
-        }
-
-        .rating .star {
-            cursor: pointer;
-            float: left;
-            font-size: 24px;
-            color: #ccc; /* Default color of inactive stars */
-        }
-
-        .rating .star:hover,
-        .rating .star.active {
-            color: gold; /* Color of active stars */
-        }
-    </style>
     <div class="row">
         <div class="col-xl-12">
             <div id="panel-1" class="panel">

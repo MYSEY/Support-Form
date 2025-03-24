@@ -6,7 +6,7 @@ use App\Models\Room;
 use App\Models\Asset;
 use App\Models\Branch;
 use App\Models\Category;
-use App\Models\connectionDBHR;
+use App\Models\Employee;
 use App\Imports\AssetImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +56,7 @@ class FixedAssetController extends Controller
         $cateagory = Category::all();
         $location = Room::all();
         $office = Branch::all();
-        $users = connectionDBHR::whereIn('emp_status',['Probation','1','10','2'])
+        $users = Employee::whereIn('emp_status',['Probation','1','10','2'])
         ->select(
             'users.id',
             'users.number_employee',
@@ -99,7 +99,7 @@ class FixedAssetController extends Controller
         $cateagory = Category::all();
         $location = Room::all();
         $office = Branch::all();
-        $users = connectionDBHR::whereIn('emp_status',['Probation','1','10','2'])
+        $users = Employee::whereIn('emp_status',['Probation','1','10','2'])
         ->select(
             'users.id',
             'users.number_employee',
@@ -151,7 +151,7 @@ class FixedAssetController extends Controller
     }
 
     public function import(Request $request){
-        // try{
+        try{
             $request->validate([
                 'file' => 'required|mimes:xlsx,xls',
             ]);
@@ -160,8 +160,8 @@ class FixedAssetController extends Controller
                 Excel::import(new AssetImport, $request->file('file'));
             }
             return response()->json(['mg'=>'success'], 200);
-        // }catch(\Exception $e){
-        //     return response()->json(['error'=>$e->getMessage()]);
-        // }
+        }catch(\Exception $e){
+            return response()->json(['error'=>$e->getMessage()]);
+        }
     }
 }
