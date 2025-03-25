@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Models\Asset;
+use App\Models\CategoryTask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -82,6 +83,15 @@ class MaintenanceController extends Controller
             'positions.name_english',
             'branchs.branch_name_en',
         )->where('assets.id',$serial)->first();
-        return response()->json(['message' => $data]);
+        $task = CategoryTask::leftJoin('tasks','category_tasks.task_id','=','tasks.id')
+        ->leftJoin('categories','categories.id','=','category_tasks.category_id')
+        ->select(
+            'category_tasks.*',
+            'categories.name as category_name',
+            'tasks.name as task_name',
+            'tasks.type',
+            'tasks.description',
+        )->where('category_tasks.category_id',$data->category_id)->whereNull('category_tasks.deleted_at')->whereNull('tasks.deleted_at')->get();
+        return response()->json(['message' => $data,'task'=>$task]);
     }
 }

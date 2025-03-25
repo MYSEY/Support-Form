@@ -24,6 +24,6 @@ class Category extends Model
 
     public function categoryTasks()
     {
-        return $this->hasMany(CategoryTask::class, 'task_id');
+        return $this->hasMany(CategoryTask::class, 'category_id');
     }
 }

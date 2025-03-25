@@ -21,15 +21,16 @@ class CategoryController extends Controller
     public function index()
     {
         $task = Task::whereNull('deleted_at')->get();
-        $data = CategoryTask::leftJoin('tasks','category_tasks.task_id','=','tasks.id')
-        ->leftJoin('categories','categories.id','=','category_tasks.category_id')
-        ->select(
-            'category_tasks.*',
-            'categories.name as category_name',
-            'tasks.name as task_name',
-            'tasks.description',
-        )->whereNull('category_tasks.deleted_at')->whereNull('tasks.deleted_at')->orderBy('categories.id','DESC')->get();
-        // $data = Category::all();
+        // $data = CategoryTask::leftJoin('tasks','category_tasks.task_id','=','tasks.id')
+        // ->leftJoin('categories','categories.id','=','category_tasks.category_id')
+        // ->select(
+        //     'category_tasks.*',
+        //     'categories.name as category_name',
+        //     'tasks.name as task_name',
+        //     'tasks.description',
+        //     'tasks.type',
+        // )->whereNull('category_tasks.deleted_at')->whereNull('tasks.deleted_at')->orderBy('categories.id','DESC')->get();
+        $data = Category::all();
         return view('category.index',compact('task','data'));
     }
 
@@ -72,15 +73,14 @@ class CategoryController extends Controller
     public function show(string $id)
     {
         try{
-            // $data = Category::find($id);
-            $data = CategoryTask::leftJoin('tasks','category_tasks.task_id','=','tasks.id')
-            ->leftJoin('categories','categories.id','=','category_tasks.category_id')
-            ->select(
-                'category_tasks.*',
-                'categories.name as category_name',
-                'tasks.name as task_name',
-            )->where('category_tasks.task_id',$id)->first();
-            return response()->json(['success'=>$data]);
+            $data = Category::with(['categoryTasks.task' => function($query) {
+                $query->select('id', 'name', 'description', 'type');
+            }])->findOrFail($id);
+            // Group tasks by type
+            $groupedTasks = $data->categoryTasks->groupBy(function($task) {
+                return $task->task->type; // Group by task type
+            });
+            return view('category.detail',compact('data','groupedTasks'));
         }catch(\Exception $e){
             return response()->json(['error'=>$e->getMessage()]);
         }
@@ -91,7 +91,12 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try{
+            $data = Category::with('categoryTasks.task')->where('id', $id)->first();
+            return response()->json(['success'=>$data]);
+        }catch(\Exception $e){
+            return response()->json(['error'=>$e->getMessage()]);
+        }
     }
 
     /**
@@ -99,32 +104,23 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        DB::beginTransaction(); // Start the transaction
         try{
             Category::where('id', $request->category_id)->update([
                 'name' => $request->name,
                 'updated_by' => Auth::user()->id,
             ]);
             // Step 2: Delete old CategoryTask records
-            // CategoryTask::where('task_id', $request->task_id)->delete();
+            CategoryTask::where('category_id', $request->category_id)->delete();
             // Step 3: Insert new CategoryTask for each task_id
             foreach ($request->task as $task_id) {
-                CategoryTask::updateOrCreate(
-                    [
-                        'category_id' => $request->category_id, // Use $request->id directly
-                        'task_id' => $task_id, // Check by task_id
-                    ],
-                    [
-                        'created_by' => Auth::user()->id,
-                        'updated_by' => Auth::user()->id, // Insert or update created_by
-                    ]
-                );
-                // CategoryTask::create([
-                //     'category_id' => $request->category_id,
-                //     'task_id' => $task_id,
-                //     'updated_by' => Auth::user()->id,
-                // ]);
+                CategoryTask::create([
+                    'category_id' => $request->category_id,
+                    'task_id' => $task_id,
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id,
+                ]);
             }
-
             DB::commit();
             Toastr::success('Category updated successfully.','Success');
             return redirect('admin/category');

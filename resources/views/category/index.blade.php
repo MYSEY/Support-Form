@@ -35,7 +35,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th>CategoryName</th>
-                                        <th>TaskName</th>
+                                        {{-- <th>TaskName</th> --}}
+                                        {{-- <th>Type</th> --}}
                                         <th>CreatedAt</th>
                                         <th>Action</th>
                                     </tr>
@@ -45,17 +46,21 @@
                                         @foreach ($data as $key=>$item)
                                             <tr>
                                                 <td>{{$item->id}}</td>
-                                                <td>{{$item->category_name}}</td>
-                                                <td>{{$item->task_name}}</td>
+                                                <td>{{$item->name}}</td>
+                                                {{-- <td>{{$item->task_name}}</td> --}}
+                                                {{-- <td>{{$item->type}}</td> --}}
                                                 <td>{{ $item->created_at }}</td>
                                                 {{-- <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') ?? '' }}</td> --}}
                                                 <td>
                                                     <div class="d-flex demo">
                                                         @can('Category Delete')
-                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="{{$item->task_id}}"><i class="fal fa-times"></i></a>
+                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="{{$item->id}}"><i class="fal fa-times"></i></a>
                                                         @endcan
                                                         @can('Category Edit')
-                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="{{$item->task_id}}" title="Edit"><i class="fal fa-edit"></i></a>
+                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
+                                                        @endcan
+                                                        @can('Category Edit')
+                                                            <a href="{{url('admin/category',$item->id)}}" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-user"></i></a>
                                                         @endcan
                                                     </div>
                                                 </td>
@@ -157,14 +162,13 @@
                 let id = $(this).data("id");
                 $.ajax({
                     type: "GET",
-                    url: `{{ url('/admin/category/${id}') }}`,
+                    url: `{{ url('/admin/category/${id}/edit') }}`,
                     dataType: "JSON",
-                    success: function (response) {                        
+                    success: function (response) {
                         if (response.success) {
-                            $('#e_category_id').val(response.success.category_id);
-                            $('#e_task_id').val(response.success.task_id);
-                            $('#e_name').val(response.success.category_name);
-                            let taskIds = response.success.task_id;
+                            $('#e_category_id').val(response.success.id);
+                            $('#e_name').val(response.success.name);
+                            let taskIds = response.success.category_tasks.map(task => task.task_id);
                             $('.e_task').val(taskIds).trigger('change');
                             $('#CategoryEdit').modal('show');
                         }

@@ -66,7 +66,7 @@
                             <div class="row mb-3">
                                 <div class="col-xl-6">
                                     <div class="form-group">
-                                        <table class="table table-bordered table-striped w-100">
+                                        <table id="tbl_hardware" class="table table-bordered table-striped w-100">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -75,18 +75,18 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
+                                                {{-- <tr>
                                                     <td>1</td>
                                                     <td>Adobe Acrobat DC/Pro XI</td>
                                                     <td>Ok</td>
-                                                </tr>
+                                                </tr> --}}
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                                 <div class="col-xl-6">
                                     <div class="form-group">
-                                        <table class="table table-bordered table-striped w-100">
+                                        <table id="tbl_software" class="table table-bordered table-striped w-100">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -95,11 +95,11 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
+                                                {{-- <tr>
                                                     <td>1</td>
                                                     <td>Adobe Acrobat DC/Pro XI</td>
                                                     <td>Ok</td>
-                                                </tr>
+                                                </tr> --}}
                                             </tbody>
                                         </table>
                                     </div>
@@ -149,6 +149,7 @@
                     dataType: "JSON",
                     success: function(response) {
                         console.log(response);
+                        
                         $(".employee").text(response.message.employee_name_en);
                         $(".position").text(response.message.name_english);
                         $(".category").text(response.message.category_name);
@@ -168,6 +169,34 @@
                         }
                         // Apply the color class
                         $(".lifecycle_month").removeClass("text-success text-warning text-red").addClass(colorClass);
+
+                        let hardwareTr = "";
+                        let softwareTr = "";
+                        if (response.task.length > 0) {
+                            let hardwareIndex = 1;
+                            let softwareIndex = 1;
+                            response.task.forEach((row) => {
+                                if (row.type == "Hardware") {
+                                    hardwareTr += `<tr class="odd">
+                                        <td class="stuck-scroll-3"><a href="#">${hardwareIndex++}</a></td>
+                                        <td class="stuck-scroll-3"><a href="#">${row.task_name}</a></td>
+                                        <td>Ok</td>
+                                    </tr>`;
+                                } else if (row.type == "Software") {
+                                    softwareTr += `<tr class="odd">
+                                        <td class="stuck-scroll-3"><a href="#">${softwareIndex++}</a></td>
+                                        <td class="stuck-scroll-3"><a href="#">${row.task_name}</a></td>
+                                        <td>Ok</td>
+                                    </tr>`;
+                                }
+                            });
+                        } else {
+                            hardwareTr = '<tr><td colspan="3" align="center">@lang("lang.no_record_to_display")</td></tr>';
+                            softwareTr = '<tr><td colspan="3" align="center">@lang("lang.no_record_to_display")</td></tr>';
+                        }
+                        // Append the rows to the correct tables
+                        $("#tbl_hardware tbody").html(hardwareTr);
+                        $("#tbl_software tbody").html(softwareTr);
                     }
                 });
             });
