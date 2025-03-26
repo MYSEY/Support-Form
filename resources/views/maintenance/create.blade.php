@@ -22,8 +22,8 @@
                 </div>
                 
                 <div class="panel-container show">
-                    <form action="{{url('admin/asset')}}" method="POST" class="needs-validation" novalidate>
-                        @csrf
+                    {{-- <form action="{{url('admin/maintenance')}}" method="POST" class="needs-validation" novalidate>
+                        @csrf --}}
                         <div class="panel-content">
                             <div class="row mb-2">
                                 <div class="col-xl-4">
@@ -39,14 +39,14 @@
                                 </div>
                                 <div class="col-xl-4">
                                     <div class="form-group">
-                                        <label class="form-label" for="category_id">Date <span class="text-danger">*</span></label>
-                                        <input type="date" name="date" class="form-control required" id="date" value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
+                                        <label class="form-label" for="">Maintenance Date <span class="text-danger">*</span></label>
+                                        <input type="date" name="maintenance_date" class="form-control required" id="maintenance_date" value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
                                     </div>
                                 </div>
                                 <div class="col-xl-4">
                                     <div class="form-group">
-                                        <label class="form-label" for="category_id">IT Technician <span class="text-danger">*</span></label>
-                                        <input type="text" name="" class="form-control required" id="" value="{{Auth::user()->name}}" required>
+                                        <label class="form-label" for="maintenace_by">IT Technician <span class="text-danger">*</span></label>
+                                        <input type="text" name="maintenace_by" class="form-control required" disabled id="maintenace_by" value="{{Auth::user()->name}}" required>
                                     </div>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
                                     <strong>Location</strong> : <span class="location"></span>,
                                     <strong>End User</strong> : <span class="employee"></span>,
                                     <strong>Postion</strong> : <span class="position"></span>,
-                                    <strong>Date</strong> : <span class="date"></span>,
+                                    <strong>Date Purchase</strong> : <span class="date"></span>,
                                     <strong>Lifecycle(Month)</strong> : <span class="lifecycle_month"></span>
                                 </p>
                             </div>
@@ -66,40 +66,52 @@
                             <div class="row mb-3">
                                 <div class="col-xl-6">
                                     <div class="form-group">
+                                        <h3>Hardware</h3>
                                         <table id="tbl_hardware" class="table table-bordered table-striped w-100">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Maintenance Hardware</th>
+                                                    <th>Name</th>
                                                     <th>Note</th>
+                                                    <th>
+                                                        <div class="form-group">
+                                                            <div class="frame-wrap">
+                                                                <div class="custom-control custom-checkbox custom-control-inline">
+                                                                    <input type="checkbox" class="custom-control-input" name="" id="defaultInlineHardware" value="" onclick="handleCheckAllHardware(this)">
+                                                                    <label class="custom-control-label" for="defaultInlineHardware"></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- <tr>
-                                                    <td>1</td>
-                                                    <td>Adobe Acrobat DC/Pro XI</td>
-                                                    <td>Ok</td>
-                                                </tr> --}}
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                                 <div class="col-xl-6">
                                     <div class="form-group">
+                                        <h3>Software</h3>
                                         <table id="tbl_software" class="table table-bordered table-striped w-100">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Maintenance Software</th>
+                                                    <th>Name</th>
                                                     <th>Note</th>
+                                                    <th>
+                                                        <div class="form-group">
+                                                            <div class="frame-wrap">
+                                                                <div class="custom-control custom-checkbox custom-control-inline">
+                                                                    <input type="checkbox" class="custom-control-input" name="" id="defaultInlineSoftware" value="" onclick="handleCheckAllSoftware(this)">
+                                                                    <label class="custom-control-label" for="defaultInlineSoftware"></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- <tr>
-                                                    <td>1</td>
-                                                    <td>Adobe Acrobat DC/Pro XI</td>
-                                                    <td>Ok</td>
-                                                </tr> --}}
                                             </tbody>
                                         </table>
                                     </div>
@@ -115,10 +127,11 @@
                             </div>
                             <div class="text-md-right">
                                 <div class="btn-hidden-show">
-                                    <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/asset')}}"  type="button">Cancel</a>
-                                    <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" type="submit">Submit</button>
+                                    <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintenance')}}"  type="button">Cancel</a>
+                                    <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn_create" type="submit">Submit</button>
                                 </div>
                                 <input type="hidden" value="{{csrf_token()}}" id="token"/>
+                                {{-- <input type="hidden" name="end_user" id="end_user"> --}}
                                 <div class="btn-loading mt-3" style="display: none">
                                     <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -127,7 +140,7 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    {{-- </form> --}}
                 </div>
             </div>
         </div>
@@ -147,9 +160,8 @@
                         serial : serial 
                     },
                     dataType: "JSON",
-                    success: function(response) {
-                        console.log(response);
-                        
+                    success: function(response) {                        
+                        $("#end_user").val(response.message.end_user);
                         $(".employee").text(response.message.employee_name_en);
                         $(".position").text(response.message.name_english);
                         $(".category").text(response.message.category_name);
@@ -178,15 +190,38 @@
                             response.task.forEach((row) => {
                                 if (row.type == "Hardware") {
                                     hardwareTr += `<tr class="odd">
-                                        <td class="stuck-scroll-3"><a href="#">${hardwareIndex++}</a></td>
-                                        <td class="stuck-scroll-3"><a href="#">${row.task_name}</a></td>
-                                        <td>Ok</td>
+                                        <td>${hardwareIndex++}</td>
+                                        <td>${row.task_name}</td>
+                                        <td>
+                                            <textarea class="form-control" id="note_${row.task_id}" name="note[]" rows="2" maxlength="100"></textarea>
+                                        <td>
+                                            <div class="form-group">
+                                                <div class="frame-wrap">
+                                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                                        <input type="checkbox" class="custom-control-input check_all_hardware" name="tasks[]" id="task_${row.task_id}" value="${row.task_id}" onclick="handleCheckboxClick(this)">
+                                                        <label class="custom-control-label" for="task_${row.task_id}"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>`;
                                 } else if (row.type == "Software") {
                                     softwareTr += `<tr class="odd">
-                                        <td class="stuck-scroll-3"><a href="#">${softwareIndex++}</a></td>
-                                        <td class="stuck-scroll-3"><a href="#">${row.task_name}</a></td>
-                                        <td>Ok</td>
+                                        <td>${softwareIndex++}</td>
+                                        <td>${row.task_name}</td>
+                                        <td>
+                                            <textarea class="form-control" id="note_${row.task_id}" name="note[]" rows="2" maxlength="100"></textarea>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <div class="frame-wrap">
+                                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                                        <input type="checkbox" class="custom-control-input check_all_software" name="tasks[]" id="task_${row.task_id}" value="${row.task_id}" onclick="handleCheckboxClick(this)">
+                                                        <label class="custom-control-label" for="task_${row.task_id}"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>`;
                                 }
                             });
@@ -200,8 +235,70 @@
                     }
                 });
             });
-        });
 
+            $(document).on('click', '#btn_create', function(e) {
+                e.preventDefault(); // Prevent the form from submitting the traditional way
+                var end_user = $("#end_user").val();
+                var asset_id = $("#serial").val();
+                var maintenance_date = $("#maintenance_date").val();
+                var maintenace_by = $("#maintenace_by").val();
+                var description = $("#description").val();
+                var maintenaceDetail = [];
+                $('#tbl_hardware tbody tr, #tbl_software tbody tr').each(function() {  // Iterate over table rows
+                    var note = $(this).find('[name="note[]"]').val();                    
+                    var taskId = $(this).find('[name="tasks[]"]:checked').val(); // Get only checked tasks
+                    if (taskId) { // Ensure only checked tasks are added
+                        maintenaceDetail.push({
+                            note: note,
+                            task_id: taskId
+                        });
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "{{url('admin/maintenance')}}",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        _token: $('input[name="_token"]').val(),
+                        end_user : end_user,
+                        asset_id : asset_id,
+                        maintenance_date : maintenance_date,
+                        maintenace_by : maintenace_by,
+                        maintenaceDetail : maintenaceDetail,
+                    },
+                    dataType: "JSON",
+                    success: function (response) {
+                        if (response.status == "error") {
+                            toastr.error(response.message);
+                        }else{
+                            toastr.success('Maintenance record created successfully.');
+                            window.location.replace("{{ URL('admin/maintenance') }}"); 
+                        }
+                    }
+                });
+            });
+        });
+        function handleCheckAllHardware(source) {
+            checkboxes = $('.check_all_hardware');
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+        function handleCheckAllSoftware(source) {
+            checkboxes = $('.check_all_software');
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+        function handleCheckboxClick(checkbox) {
+            if (checkbox.checked) {
+                {checkbox.value}
+            } else {
+                {checkbox.value}
+            }
+        }
         function getLifecycleMonthDiff(startDate) {
             let defaultMonth = 60;
             // Parse startDate to a Date object

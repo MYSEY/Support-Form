@@ -13,7 +13,6 @@
                     {{-- @can('Asset Create') --}}
                         <div class="panel-tag">
                             <div class="text-lg-right">
-                                <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger btn-sm mr-1"><i class="fal fa-file"></i> Import</a>
                                 <a href="{{url('admin/maintenance/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
                             </div>
                         </div>
@@ -24,6 +23,9 @@
                             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                                 <thead>
                                     <tr>
+                                        <th>#</th>
+                                        <th>MaintenanceDate</th>
+                                        <th>Technician</th>
                                         <th>Serial</th>
                                         <th>Category</th>
                                         <th>DeviceName</th>
@@ -31,14 +33,41 @@
                                         <th>Location</th>
                                         <th>EndUser</th>
                                         <th>Postion</th>
-                                        <th>AssetDate</th>
-                                        <th>Lifecycle(Month)</th>
                                         <th>CreatedAt</th>
-                                        <th width="100px">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+                                    @if (count($data)>0)
+                                        @foreach ($data as $key=>$item)
+                                            <tr>
+                                                <td>{{$item->id}}</td>
+                                                <td>{{$item->maintenance_date}}</td>
+                                                <td>{{$item->maintenace_by}}</td>
+                                                <td>{{$item->serial}}</td>
+                                                <td>{{$item->category_name}}</td>
+                                                <td>{{$item->device_name}}</td>
+                                                <td>{{$item->branch_name_en}}</td>
+                                                <td>{{$item->location}}</td>
+                                                <td>{{$item->employee_name_en}}</td>
+                                                <td>{{$item->name_english}}</td>
+                                                <td>{{ $item->created_at }}</td>
+                                                <td>
+                                                    <div class="d-flex demo">
+                                                        @can('Category Delete')
+                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="{{$item->id}}"><i class="fal fa-times"></i></a>
+                                                        @endcan
+                                                        @can('Category Edit')
+                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
+                                                        @endcan
+                                                        @can('Category Edit')
+                                                            <a href="{{url('admin/category',$item->id)}}" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>
+                                                        @endcan
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                             <!-- datatable end -->

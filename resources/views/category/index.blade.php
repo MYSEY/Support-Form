@@ -60,7 +60,7 @@
                                                             <a href="javascript:void(0);" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
                                                         @endcan
                                                         @can('Category Edit')
-                                                            <a href="{{url('admin/category',$item->id)}}" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-user"></i></a>
+                                                            <a href="{{url('admin/category',$item->id)}}" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>
                                                         @endcan
                                                     </div>
                                                 </td>
