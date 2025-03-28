@@ -55,13 +55,13 @@
                                                 <td>
                                                     <div class="d-flex demo">
                                                         @can('Category Delete')
-                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="{{$item->id}}"><i class="fal fa-times"></i></a>
+                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_maintenance" title="Delete Record" data-id="{{$item->id}}"><i class="fal fa-times"></i></a>
                                                         @endcan
                                                         @can('Category Edit')
-                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
+                                                            <a href="{{url('admin/maintenance',$item->id)}}/edit" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>
                                                         @endcan
                                                         @can('Category Edit')
-                                                            <a href="{{url('admin/category',$item->id)}}" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>
+                                                            <a href="{{url('admin/maintenance',$item->id)}}" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>
                                                         @endcan
                                                     </div>
                                                 </td>
@@ -77,10 +77,40 @@
             </div>
         </div>
     </div>
+    <!-- Delete Task Modal -->
+    <div class="modal custom-modal fade" id="delete_maintenance" role="dialog">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-header">
+                        <h5 class="modal-title">Delete</h5>
+                        <p>Are you sure want to delete?</p>
+                    </div>
+                    <div class="modal-btn delete-action">
+                        <form action="{{url('admin/maintenance/delete')}}" method="POST">
+                            @csrf
+                            @method('Delete')
+                            <input type="hidden" name="id" class="e_id" value="">
+                            <div class="float-lg-right">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger waves-effect waves-themed">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
 @include('includs.datatable_basic')
     <script>
+        $(function(){
+            $(document).on('click','.btnDelete', function(){
+                let id = $(this).data("id");
+                $('.e_id').val(id);
+            });
+        });
     </script>
 @endsection

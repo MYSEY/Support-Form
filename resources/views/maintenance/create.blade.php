@@ -121,7 +121,7 @@
                                 <div class="col-xl-12">
                                     <div class="form-group">
                                         <label class="form-label" for="Noted">Note:</label>
-                                        <textarea class="form-control" id="description" name="description" rows="6" maxlength="1000"></textarea>
+                                        <textarea name="description" id="description" class="form-control"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +131,7 @@
                                     <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn_create" type="submit">Submit</button>
                                 </div>
                                 <input type="hidden" value="{{csrf_token()}}" id="token"/>
-                                {{-- <input type="hidden" name="end_user" id="end_user"> --}}
+                                <input type="hidden" name="category_id" id="category_id">
                                 <div class="btn-loading mt-3" style="display: none">
                                     <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -151,6 +151,18 @@
     @include('includs.datatable_basic')
     <script type="text/javascript">
         $(function(){
+            $('#description').summernote({
+                height: 200,  // Set height of editor
+                placeholder: 'Write your notes here...',
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture']],
+                    ['view', ['fullscreen', 'codeview']]
+                ]
+            });
+            // let message = $(this).data("message");
+            // $('#description').summernote('code', message.replace(/\n/g, '<br>'));
             $("#serial").on('change', function(){
                 var serial = $(this).val();
                 $.ajax({
@@ -160,7 +172,8 @@
                         serial : serial 
                     },
                     dataType: "JSON",
-                    success: function(response) {                        
+                    success: function(response) {                              
+                        $("#category_id").val(response.message.category_id);
                         $("#end_user").val(response.message.end_user);
                         $(".employee").text(response.message.employee_name_en);
                         $(".position").text(response.message.name_english);
@@ -238,11 +251,13 @@
 
             $(document).on('click', '#btn_create', function(e) {
                 e.preventDefault(); // Prevent the form from submitting the traditional way
-                var end_user = $("#end_user").val();
+                var category_id = $("#category_id").val();
                 var asset_id = $("#serial").val();
                 var maintenance_date = $("#maintenance_date").val();
                 var maintenace_by = $("#maintenace_by").val();
-                var description = $("#description").val();
+                // var description = $("#description").val();
+                var description = $('#description').summernote('code');
+
                 var maintenaceDetail = [];
                 $('#tbl_hardware tbody tr, #tbl_software tbody tr').each(function() {  // Iterate over table rows
                     var note = $(this).find('[name="note[]"]').val();                    
@@ -262,10 +277,11 @@
                     },
                     data: {
                         _token: $('input[name="_token"]').val(),
-                        end_user : end_user,
                         asset_id : asset_id,
+                        category_id : category_id,
                         maintenance_date : maintenance_date,
                         maintenace_by : maintenace_by,
+                        description : description,
                         maintenaceDetail : maintenaceDetail,
                     },
                     dataType: "JSON",

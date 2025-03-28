@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\MaintenanceDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 
 class MaintenanceController extends Controller
@@ -39,7 +40,6 @@ class MaintenanceController extends Controller
             'branchs.branch_name_en',
             'rooms.name as location',
         )->get();
-        // dd($data);
         return view('maintenance.index',compact('data'));
     }
 
@@ -74,13 +74,11 @@ class MaintenanceController extends Controller
             
             DB::commit();
             return response()->json([
-                'message' => 'Maintenance record created successfully!',
-                'maintenance' => $maintenance
+                'message' => 'Maintenance record created successfully!'
             ], 201);
         } catch (\Throwable $exp) {
             return response()->json(['errors' => $exp]);
         }
-
     }
 
     /**
@@ -88,7 +86,27 @@ class MaintenanceController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $data = Maintenance::with(['maintenanceDetail.task:id,name,type'])->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
+        ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
+        ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
+        ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
+        ->leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
+        ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
+        ->select(
+            'maintenances.*', 
+            'assets.serial',
+            'assets.date',
+            'assets.device_name', 
+            'categories.name as category_name', 
+            'users.number_employee', 
+            'users.employee_name_kh', 
+            'users.employee_name_en',
+            'positions.name_english',
+            'branchs.branch_name_kh',
+            'branchs.branch_name_en',
+            'rooms.name as location',
+        )->where('maintenances.id',$id)->first();
+        return view('maintenance.detail',compact('data'));
     }
 
     /**
@@ -96,7 +114,46 @@ class MaintenanceController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data = Maintenance::with('maintenanceDetail')
+        ->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
+        ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
+        ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
+        ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
+        ->leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
+        ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
+        ->select(
+            'maintenances.*', 
+            'assets.serial',
+            'assets.date',
+            'assets.device_name', 
+            'categories.name as category_name', 
+            'users.number_employee', 
+            'users.employee_name_kh', 
+            'users.employee_name_en',
+            'positions.name_english',
+            'branchs.branch_name_kh',
+            'branchs.branch_name_en',
+            'rooms.name as location',
+        )->where('maintenances.id',$id)->first();
+        $serial = Asset::all();
+
+        // Get the IDs of tasks that are already associated with this maintenance
+        $selectedTaskIds = $data->maintenanceDetail->pluck('task_id')->toArray();
+        // Retrieve both Hardware & Software tasks
+        $tasks = CategoryTask::leftJoin('tasks', 'category_tasks.task_id', '=', 'tasks.id')
+        ->leftJoin('categories', 'categories.id', '=', 'category_tasks.category_id')
+        ->select(
+            'category_tasks.*',
+            'categories.name as category_name',
+            'tasks.id as task_id',
+            'tasks.name as task_name',
+            'tasks.type',
+            'tasks.description'
+        )->where('category_tasks.category_id', $data->category_id)->whereNull('category_tasks.deleted_at')->whereNull('tasks.deleted_at')->get();
+        // Split tasks into Hardware & Software
+        $hardwareTasks = $tasks->where('type', 'Hardware');
+        $softwareTasks = $tasks->where('type', 'Software');
+        return view('maintenance.edit',compact('data','serial','hardwareTasks', 'softwareTasks', 'selectedTaskIds'));
     }
 
     /**
@@ -104,15 +161,56 @@ class MaintenanceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $maintenance = Maintenance::findOrFail($id);
+            $maintenance->update([
+                'asset_id' => $request->asset_id,
+                'asset_id' => $request->asset_id,
+                'maintenance_date' => $request->maintenance_date,
+                'maintenace_by' => $request->maintenace_by,
+                'description' => $request->description,
+                'created_by' => Auth::id(),
+                'updated_by' => Auth::id(),
+            ]);
+        
+            // Handle maintenance details
+            $maintenance->maintenanceDetail()->delete(); // Remove old records
+            foreach ($request->maintenaceDetail as $detail) {
+                $maintenance->maintenanceDetail()->create([
+                    'task_id' => $detail['task_id'],
+                    'note' => $detail['note'],
+                    'created_by' => Auth::id(),
+                    'updated_by' => Auth::id(),
+                ]);
+            }
+            
+            DB::commit();
+            return response()->json([
+                'message' => 'Maintenance updated successfully!'
+            ], 201);
+        } catch (\Throwable $exp) {
+            return response()->json(['errors' => $exp]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        try{
+            $maintenance = Maintenance::findOrFail($request->id);
+            // Delete related maintenance details
+            $maintenance->maintenanceDetail()->delete();
+            // Delete the main maintenance record
+            $maintenance->delete();
+            Toastr::success('Maintenance deleted successfully.','Success');
+            return redirect()->back();
+        }catch(\Exception $e){
+            DB::rollback();
+            Toastr::error('Maintenance delete fail.','Error');
+            return redirect()->back();
+        }
     }
 
     public function OnChangeSerial(Request $request){

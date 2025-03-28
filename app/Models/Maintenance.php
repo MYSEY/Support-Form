@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
+use App\Models\MaintenanceDetail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Maintenance extends Model
 {
@@ -14,6 +16,7 @@ class Maintenance extends Model
     
     protected $fillable = [
         'asset_id',
+        'category_id',
         'maintenance_date',
         'maintenace_by',
         'description',
@@ -21,4 +24,29 @@ class Maintenance extends Model
         'updated_by',
         'deleted_at',
     ];
+
+    public function maintenanceDetail()
+    {
+        return $this->hasMany(MaintenanceDetail::class, 'maintenance_id');
+    }
+
+
+
+    public function getLifecycleMonthDiffAttribute()
+    {
+        $data = 0;
+        $defaultMonth = 60;
+        // Define the fixed date (start date)
+        $startDate = Carbon::parse($this->date);
+        // Get the current date
+        $currentDate = Carbon::now();
+        $currentMonth = $startDate->diffInMonths($currentDate);
+        // Calculate the number of months between the start date and the current date
+        if ($currentMonth >= 60) {
+            $data = - ($currentMonth - $defaultMonth);
+        }else{
+            $data = $currentMonth;
+        }
+        return $data;
+    }
 }

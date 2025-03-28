@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('maintenances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('asset_id');
+            $table->foreignId('category_id');
             $table->date('maintenance_date');
             $table->string('maintenace_by');
             $table->longText('description')->nullable();
