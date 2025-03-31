@@ -11,6 +11,9 @@
         .text-red {
             color: rgb(238, 29, 63);
         }
+        .sub-message {
+            cursor: pointer;
+        }
     </style>
     <div class="row">
         <div class="col-xl-12">
@@ -161,8 +164,7 @@
                     ['view', ['fullscreen', 'codeview']]
                 ]
             });
-            // let message = $(this).data("message");
-            // $('#description').summernote('code', message.replace(/\n/g, '<br>'));
+            
             $("#serial").on('change', function(){
                 var serial = $(this).val();
                 $.ajax({
@@ -204,7 +206,7 @@
                                 if (row.type == "Hardware") {
                                     hardwareTr += `<tr class="odd">
                                         <td>${hardwareIndex++}</td>
-                                        <td>${row.task_name}</td>
+                                        <td class="sub-message" data-toggle="tooltip" data-html="true" title="${row.description}">${row.task_name}</td>
                                         <td>
                                             <textarea class="form-control" id="note_${row.task_id}" name="note[]" rows="2" maxlength="100"></textarea>
                                         <td>
@@ -221,7 +223,7 @@
                                 } else if (row.type == "Software") {
                                     softwareTr += `<tr class="odd">
                                         <td>${softwareIndex++}</td>
-                                        <td>${row.task_name}</td>
+                                        <td class="sub-message" data-toggle="tooltip" data-html="true" title="${row.description}">${row.task_name}</td>
                                         <td>
                                             <textarea class="form-control" id="note_${row.task_id}" name="note[]" rows="2" maxlength="100"></textarea>
                                         </td>
@@ -245,6 +247,7 @@
                         // Append the rows to the correct tables
                         $("#tbl_hardware tbody").html(hardwareTr);
                         $("#tbl_software tbody").html(softwareTr);
+                        initializeTooltips();
                     }
                 });
             });
@@ -324,6 +327,20 @@
             let diffInMonths = (current.getFullYear() - start.getFullYear()) * 12 + (current.getMonth() - start.getMonth());
             // Apply the same logic as Laravel
             return diffInMonths >= 60 ? -(diffInMonths - defaultMonth) : diffInMonths;
+        }
+        function initializeTooltips() {
+            // Destroy any existing tooltips first to prevent conflicts
+            $('[data-toggle="tooltip"]').tooltip('dispose');
+            
+            // Initialize tooltips with proper configuration
+            $('[data-toggle="tooltip"]').tooltip({
+                container: 'body',
+                trigger: 'hover',
+                html: true,
+                placement: 'top',
+                boundary: 'window',
+                selector: '[data-toggle="tooltip"]' // Explicit selector
+            });
         }
     </script>
 @endsection

@@ -79,7 +79,7 @@
                                                 <tr class="odd">
                                                     <td>{{ $hardKey + 1 }}</td>
                                                     <td>{{ optional($item->task)->name ?? 'N/A' }}</td>
-                                                    <td>{{ $item->note ?? 'No note available' }}</td>
+                                                    <td>{{ $item->note }}</td>
                                                 </tr>
                                             @empty
                                                 <tr>
@@ -112,7 +112,7 @@
                                                 <tr class="odd">
                                                     <td>{{ $softCounter ++ }}</td>
                                                     <td>{{ optional($item->task)->name ?? 'N/A' }}</td>
-                                                    <td>{{ $item->note ?? 'No note available' }}</td>
+                                                    <td>{{ $item->note}}</td>
                                                 </tr>
                                             @empty
                                                 <tr>
@@ -143,6 +143,7 @@
             </div>
         </div>
     </div>
+    @include('maintenance.print')
 @endsection
 
 @section('script')
@@ -157,16 +158,16 @@
 
         function print_pdf() {
             $("#btnPrint").show();
-            // $("#btnPrint").printThis({
-            //     importCSS: false,
-            //     importStyle: true,
-            //     loadCSS: "{{ asset('/admins/css/style_table.css') }}",
-            //     header: "",
-            //     printDelay: 1500,
-            //     formValues: false,
-            //     canvas: false,
-            //     doctypeString: "",
-            // });
+            $("#btnPrint").printThis({
+                importCSS: false,
+                importStyle: true,
+                loadCSS: "{{ asset('/admins/css/style_print_maitenance.css') }}",
+                header: "",
+                printDelay: 1500,
+                formValues: false,
+                canvas: false,
+                doctypeString: "",
+            });
         }
     </script>
 @endsection

@@ -138,7 +138,13 @@ class MaintenanceController extends Controller
         $serial = Asset::all();
 
         // Get the IDs of tasks that are already associated with this maintenance
-        $selectedTaskIds = $data->maintenanceDetail->pluck('task_id')->toArray();
+        // $selectedTaskIds = $data->maintenanceDetail->pluck('task_id')->toArray();
+        $selectedTaskIds = $data->maintenanceDetail->map(function($detail) {
+            return [
+                'task_id' => $detail->task_id,
+                'note' => $detail->note
+            ];
+        });
         // Retrieve both Hardware & Software tasks
         $tasks = CategoryTask::leftJoin('tasks', 'category_tasks.task_id', '=', 'tasks.id')
         ->leftJoin('categories', 'categories.id', '=', 'category_tasks.category_id')

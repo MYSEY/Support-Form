@@ -88,13 +88,16 @@
                                             @php $hardwareIndex = 1; @endphp
                                             @foreach ($hardwareTasks as $item)
                                                 @php
-                                                    $isChecked = in_array($item->task_id, $selectedTaskIds) ? 'checked' : '';
+                                                    $taskIds = array_column($selectedTaskIds->toArray(), 'task_id');
+                                                    $isChecked = in_array($item->task_id, $taskIds) ? 'checked' : '';
+                                                    $noteDetail = $selectedTaskIds->firstWhere('task_id', $item->task_id);
+                                                    $note = $noteDetail ? $noteDetail['note'] : '';
                                                 @endphp
                                                 <tr class="odd">
                                                     <td>{{ $hardwareIndex++ }}</td>
                                                     <td>{{ $item->task_name ?? 'N/A' }}</td>
                                                     <td>
-                                                        <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100"></textarea>
+                                                        <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100">{{$note}}</textarea>
                                                     </td>
                                                     <td>
                                                         <div class="form-group">
@@ -142,13 +145,17 @@
                                             @php $softwareIndex = 1; @endphp
                                             @foreach ($softwareTasks as $item)
                                                 @php
-                                                    $isChecked = in_array($item->task_id, $selectedTaskIds) ? 'checked' : '';
+                                                    $taskIds = array_column($selectedTaskIds->toArray(), 'task_id');
+                                                    $isChecked = in_array($item->task_id, $taskIds) ? 'checked' : '';
+                                                    $noteDetail = $selectedTaskIds->firstWhere('task_id', $item->task_id);
+                                                    $note = $noteDetail ? $noteDetail['note'] : '';
                                                 @endphp
                                                 <tr class="odd">
                                                     <td>{{ $softwareIndex++ }}</td>
                                                     <td>{{ $item->task_name ?? 'N/A' }}</td>
                                                     <td>
-                                                        <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100"></textarea>
+                                                        <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100">{{$note}}</textarea>
+                                                        {{-- <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100"></textarea> --}}
                                                     </td>
                                                     <td>
                                                         <div class="form-group">
