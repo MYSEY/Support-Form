@@ -25,7 +25,8 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
     */
     protected $export_datas;
     protected $num;
-    protected $maintenance_date;
+    protected $from_date;
+    protected $to_date;
     protected $staffName;
     protected $serial;
     protected $office;
@@ -35,30 +36,16 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
         $this->serial = $request->serial;
         $this->office = $request->office;
         $this->staffName = $request->staff_name;
-        $maintenance_date = $request->maintenance_date;
+        $this->from_date = $request->from_date;
+        $this->to_date = $request->to_date;
 
-        if ($request->maintenance_date) {
-            $maintenance_date = Carbon::createFromDate($request->maintenance_date)->format('Y-m-d');
+        $from_date = null;
+        $to_date = null;
+        if ($request->from_date || $request->to_date) {
+            $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d');
+            $to_date = Carbon::createFromDate($request->to_date)->format('Y-m-d');
         }
-        // $data = Maintenance::leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
-        // ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
-        // ->leftJoin('maintenance_details', 'maintenances.id', '=', 'maintenance_details.maintenance_id')
-        // ->select(
-        //     'maintenances.*',
-        //     'maintenance_details.note',
-        //     'assets.serial',
-        // )->where('maintenances.deleted_at',null)
-        // ->when($request->serial, function ($query, $serial) {
-        //     $query->where('assets.serial', $serial);
-        // })->when($request->office, function ($query, $office) {
-        //     $query->where('branchs.id', $office);
-        // })->when($request->staff_name, function ($query, $staff_name) {
-        //     return $query->where('users.employee_name_en', 'LIKE', "%{$staff_name}%");
-        // })->when($maintenance_date, function ($query, $maintenance_date) {
-        //     $query->where('maintenances.maintenance_date', $maintenance_date);
-        // })->get();
-        
-        $data = Maintenance::leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
+        $query = Maintenance::leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
         ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
         ->leftJoin('maintenance_details', 'maintenances.id', '=', 'maintenance_details.maintenance_id')
         ->select(
@@ -75,49 +62,78 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
         })
         ->when($request->staff_name, function ($query, $staff_name) {
             return $query->where('users.employee_name_en', 'LIKE', "%{$staff_name}%");
-        })
-        ->when($maintenance_date, function ($query, $maintenance_date) {
-            return $query->where('maintenances.maintenance_date', $maintenance_date);
-        })->groupBy('maintenances.id')->get();
-    
+        });
+        
+        if ($from_date && $to_date) {
+            $query->whereBetween('maintenances.maintenance_date',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
+        }
+
+        $data = $query->groupBy('maintenances.id')->get();
+
         $i = 0;
         $dataExport = []; 
-        foreach ($data as $key=>$value) {
-            $cleanedDescription = Str::limit(
-                preg_replace(
-                    [
-                        '/<[^>]*>/',               // Remove all HTML tags
-                        '/(\s*\n\s*)+/',           // Handle newlines
-                        '/\s*,\s*/',               // Clean up commas
-                    ],
-                    [
-                        ' ',                       // Replace tags with space
-                        "\n",                      // Preserve single newline
-                        ', ',                      // Proper comma spacing
-                    ],
-                    $value->description ?? ''
-                ),
-                255,
-                '...' // Add ellipsis if truncated
+        foreach ($data as $key => $value) {
+            // Clean notes
+            $rawNotes = $value->notes ?? '';
+            $notes = preg_replace(
+                [
+                    '/\s*,\s*,*/',          // Handles multiple commas with/without spaces
+                    '/\s+/',                // Collapses multiple spaces
+                    '/\b([a-z])\s+\1\b/i',  // Fixes repeated single letters (aa -> a)
+                    '/\b(\w+)\s+\1\b/i',    // Fixes repeated words (test test -> test)
+                    '/\s*\.\s*/',           // Handles spaces around periods
+                    '/[^\w\s,.-]/',         // Removes special characters except basic punctuation
+                ],
+                [
+                    ', ',                   // Single comma with space
+                    ' ',                    // Single space
+                    '$1',                   // Single instance of letter
+                    '$1',                   // Single instance of word
+                    '. ',                   // Clean period with space
+                    '',                     // Remove special chars
+                ],
+                $rawNotes
             );
-            $cleanedDescription = trim($cleanedDescription, " ,\n\r\t");
             
-
+            // Trim and clean edge cases
+            $notes = trim($notes, " ,\n\r\t");
+            $notes = preg_replace('/,(\S)/', ', $1', $notes); // Ensure space after commas
+            $notes = ucfirst(strtolower($notes)); // Basic capitalization
+        
+            // Clean description
+            $rawDescription = html_entity_decode($value->description ?? '');
+            $clean = preg_replace([
+                '/<\/?(div|p|br)[^>]*>/i',  // Remove HTML tags
+                '/<[^>]+>/',                // Remove any remaining HTML
+                '/\s*,\s*,*/',              // Clean commas
+                '/\s+/',                    // Clean spaces
+            ], [
+                ', ',                       // Replace HTML tags with comma
+                '',                         // Remove other HTML
+                ', ',                       // Clean commas
+                ' ',                        // Clean spaces
+            ], $rawDescription);
+        
+            $cleanedDescription = Str::limit(trim($clean, " ,\n\r\t"), 255, '...');
+        
+            // Handle maintenance by - only add if not already in notes
+            $maintenanceText = 'Maintenanced By ' . $value->maintenace_by;
+            if (!empty($value->maintenace_by) && !str_contains($notes, $maintenanceText)) {
+                $notes = $notes ? $notes . ', ' . $maintenanceText : $maintenanceText;
+            }
+        
             $i++;
             $this->num = $i;
             $dataExport[] = [
-                "id"    => $key + 1,
-                'serial' => $value->serial . "\n" . $value->notes.', '.'Maintenanced By'.' '.$value->maintenace_by,
-                "description" => $cleanedDescription
-                // "description" => Str::limit(
-                //     preg_replace('/<\/div>\s*<div>/', ', ', strip_tags(html_entity_decode($value->description ?? ''))),
-                //     255
-                // )
+                "id" => $key + 1,
+                "serial" => $value->serial . ($notes ? "\n" . $notes : ''),
+                "description" => !empty($cleanedDescription) ? $cleanedDescription : 'N/A'
             ];
         }
+        
         $this->export_datas = $dataExport;
     }
- 
+
     public function collection()
     {
         return new Collection([
@@ -206,18 +222,16 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
 
                 $sheet->mergeCells('A2:C2');
                 $sheet->setCellValue('A2', "ខេមា​ មីក្រូហិរញ្ញវត្ថុ លីមីតធីត");
-                $sheet->getDelegate()->getStyle('A2:C2')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A2:C2')->setBold(true);
+                $sheet->getDelegate()->getStyle('A2:C2')->getFont()->setName('Khmer OS Muol Light')->setSize(14)->setUnderline('A2:C2')->setBold(true);
                 $event->sheet->getDelegate()->getStyle('A2:C2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
                 $sheet->mergeCells('A3:C3');
                 $sheet->setCellValue('A3', "Maintainance Report");
-                $sheet->getDelegate()->getStyle('A3:C3')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A3:L3');
+                $sheet->getDelegate()->getStyle('A3:C3')->getFont()->setName('Khmer OS Muol Light')->setSize(14)->setUnderline('A3:L3');
                 $event->sheet->getDelegate()->getStyle('A3:C3')->getAlignment()->setWrapText(true)->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-
-                // $date = Carbon::parse($this->maintenance_date)->format('d-M-Y');
-                if (!empty($this->maintenance_date)) {
+                if (!empty($this->from_date)) {
                     // If maintenance date is set
-                    $sheet->setCellValue('B4',"By Date:" . Carbon::parse($this->maintenance_date)->format('d-M-Y'));
+                    $sheet->setCellValue('B4',"From Date:" .' '. Carbon::parse($this->from_date)->format('d-M-Y') .' '.'To Date:' .' '. Carbon::parse($this->to_date)->format('d-M-Y'));
                 } elseif (!empty($this->staffName)) {
                     // If staff name is set
                     $sheet->setCellValue('B4',"ByStaff Name:" . $this->staffName);
@@ -229,50 +243,22 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
                     $sheet->setCellValue('B4',"By Asset Number:" . $this->serial);
                 } else {
                     // If none of the conditions are met, you can add a default value or message
-                    $sheet->setCellValue('B4',"No filter applied");
+                    $sheet->setCellValue('B4',"All Data");
                 }
                 $sheet->getDelegate()->getStyle('B4:C4')->getFont()->setSize(9)->setName('Khmer OS Fasthand')->setSize(10);
                 $event->sheet->getDelegate()->getStyle('B4:C4');
                 // $sheet->mergeCells('A4:I4');
                 // $event->sheet->getDelegate()->getStyle('A4:I4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-
-                $sheet = $event->sheet;
+                //Fooder
                 $lastRow = $sheet->getHighestRow();
                 // Add signature table
                 $sheet->setCellValue('B'.($lastRow+2), 'Acknowledged by:');
                 $sheet->setCellValue('C'.($lastRow+2), 'Prepared By:');
-                
                 // Add date cells
-                $sheet->setCellValue('B'.($lastRow+6), 'Date: 01/01/2025');
-                $sheet->setCellValue('C'.($lastRow+6), 'Date: 01/01/2025');
-                
-                // Style the section
-                $sheet->getStyle('A'.($lastRow+3).':C'.($lastRow+8))->applyFromArray([
-                    'font' => [
-                        'size' => 12,
-                        'bold' => true
-                    ],
-                    'alignment' => [
-                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
-                    ]
-                ]);
+                $sheet->setCellValue('B'.($lastRow+6), 'Date:'.' '.Carbon::parse()->format('d-M-Y'));
+                $sheet->setCellValue('C'.($lastRow+6), 'Date:'.' '.Carbon::parse()->format('d-M-Y'));
             },
-        ];
-    }
-
-
-    public function styles(Worksheet $sheet)
-    {
-        return [
-            // Acknowledgment section style
-            $sheet->getHighestRow()+1 => [
-                'font' => ['bold' => true, 'size' => 12],
-                'alignment' => ['horizontal' => 'left']
-            ],
-            $sheet->getHighestRow()+4 => [
-                'font' => ['size' => 14]
-            ],
         ];
     }
 }

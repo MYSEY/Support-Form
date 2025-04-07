@@ -43,6 +43,22 @@ class MaintenanceController extends Controller
                 'rooms.name as location',
             )->where('maintenances.deleted_at',null);
             
+            // **Search Handling**
+            $searchValue = request()->input('search.value');
+            if (!empty($searchValue)) {
+                $query->where(function ($q) use ($searchValue) {
+                    $q->where('assets.serial', 'like', "%{$searchValue}%")
+                    ->orWhere('assets.device_name', 'like', "%{$searchValue}%")
+                    ->orWhere('users.number_employee', 'like', "%{$searchValue}%")
+                    ->orWhere('users.employee_name_kh', 'like', "%{$searchValue}%")
+                    ->orWhere('users.employee_name_en', 'like', "%{$searchValue}%")
+                    ->orWhere('categories.name', 'like', "%{$searchValue}%")
+                    ->orWhere('rooms.name', 'like', "%{$searchValue}%")
+                    ->orWhere('branchs.branch_name_kh', 'like', "%{$searchValue}%")
+                    ->orWhere('branchs.branch_name_en', 'like', "%{$searchValue}%");
+                });
+            }
+            
             // Fetch paginated data
             $recordsTotal = Maintenance::where('id', Auth::user()->id)->count();
             $recordsFiltered = $query->count();

@@ -7,7 +7,12 @@
                     <div class="row filter-btn">
                         <div class="col-sm-2 col-md-2">
                             <div class="form-group">
-                                <input type="text" class="form-control datepicker" name="maintenance_date" id="maintenance_date" value="" placeholder="Maintenance Date">
+                                <input type="text" class="form-control datepicker" name="from_date" id="from_date" value="" placeholder="From Date">
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-md-2">
+                            <div class="form-group">
+                                <input type="text" class="form-control datepicker" name="to_date" id="to_date" value="" placeholder="To Date">
                             </div>
                         </div>
                         <div class="col-sm-2 col-md-2">
@@ -15,7 +20,7 @@
                                 <input type="text" class="form-control" name="staff_name" id="staff_name" value="" placeholder="Staff Name">
                             </div>
                         </div>
-                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                             <div class="form-group">
                                 <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" data-select2-id="select2-data-2-c0n2" name="serial">
                                     <option value="">-- Select serial --</option>
@@ -25,7 +30,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                             <div class="form-group" data-select2-id="105">
                                 <select class="select2 form-control w-100 select2-hidden-accessible" name="office" id="office">
                                     <option value="">-- Select office --</option>
@@ -83,11 +88,13 @@
 @endsection
 @section('script')
     <script>
-        let maintenance_date = null;
+        let from_date = null;
+        let to_date = null;
         let staff_name = null;
         $(document).ready(function(){
             $('#btnSearch').on('click', function() {
-                maintenance_date = $('#maintenance_date').val();
+                from_date = $('#from_date').val();
+                to_date = $('#to_date').val();
                 staff_name = $('#staff_name').val();
                 let serial = $('select[name="serial"]').val();
                 let office = $('select[name="office"]').val();
@@ -96,7 +103,8 @@
             dataTables();
             $('#btn-export').on('click',function(){
                 let query = {
-                    maintenance_date: $("#maintenance_date").val(),
+                    from_date: $("#from_date").val(),
+                    to_date: $("#to_date").val(),
                     staff_name: $("#staff_name").val(),
                     serial: $("#serial").val(),
                     office: $("#office").val()
@@ -118,7 +126,8 @@
                     url: '{{ URL("admin/report/maintanance") }}',
                     type: 'GET',
                     data: function(d) {
-                        d.maintenance_date = maintenance_date;
+                        d.from_date = from_date;
+                        d.to_date = to_date;
                         d.staff_name = staff_name;
                         d.serial = $('select[name="serial"]').val();
                         d.office = $('select[name="office"]').val();
@@ -169,7 +178,7 @@
                         data: '',
                         name: 'action',
                         render: function(data, type, row) {
-                            return `<a href="/admin/maintenance/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
+                            return `<a href="/admin/maintanance/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
                         },
                         orderable: false,
                         searchable: false

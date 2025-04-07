@@ -16,9 +16,11 @@ use Maatwebsite\Excel\Facades\Excel;
 class MaintenanceReportController extends Controller
 {
     public function report(Request $request){
-        $maintenance_date = null;
-        if ($request->maintenance_date) {
-            $maintenance_date = Carbon::createFromDate($request->maintenance_date)->format('Y-m-d');
+        $from_date = null;
+        $to_date = null;
+        if ($request->from_date || $request->to_date) {
+            $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d');
+            $to_date = Carbon::createFromDate($request->to_date)->format('Y-m-d');
         }
         if (request()->ajax()) {
             // Define the base query
@@ -48,10 +50,27 @@ class MaintenanceReportController extends Controller
                 $query->where('branchs.id', $office);
             })->when($request->staff_name, function ($query, $staff_name) {
                 return $query->where('users.employee_name_en', 'LIKE', "%{$staff_name}%");
-            })->when($maintenance_date, function ($query, $maintenance_date) {
-                $query->where('maintenances.maintenance_date', $maintenance_date);
             });
-            
+            if ($from_date && $to_date) {
+                $query->whereBetween('maintenances.maintenance_date',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
+            }
+
+            // **Search Handling**
+            $searchValue = request()->input('search.value');
+            if (!empty($searchValue)) {
+                $query->where(function ($q) use ($searchValue) {
+                    $q->where('assets.serial', 'like', "%{$searchValue}%")
+                    ->orWhere('assets.device_name', 'like', "%{$searchValue}%")
+                    ->orWhere('users.number_employee', 'like', "%{$searchValue}%")
+                    ->orWhere('users.employee_name_kh', 'like', "%{$searchValue}%")
+                    ->orWhere('users.employee_name_en', 'like', "%{$searchValue}%")
+                    ->orWhere('categories.name', 'like', "%{$searchValue}%")
+                    ->orWhere('rooms.name', 'like', "%{$searchValue}%")
+                    ->orWhere('branchs.branch_name_kh', 'like', "%{$searchValue}%")
+                    ->orWhere('branchs.branch_name_en', 'like', "%{$searchValue}%");
+                });
+            }
+
             // Fetch paginated data
             $recordsTotal = Maintenance::where('id', Auth::user()->id)->count();
             $recordsFiltered = $query->count();
