@@ -5,7 +5,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Maintenance 
+                        Maintainance 
                     </h2>
                 </div>
                 
@@ -13,18 +13,18 @@
                     {{-- @can('Asset Create') --}}
                         <div class="panel-tag">
                             <div class="text-lg-right">
-                                <a href="{{url('admin/maintenance/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
+                                <a href="{{url('admin/maintanance/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
                             </div>
                         </div>
                     {{-- @endcan --}}
                     <div class="panel-content">
                         <div class="table-responsive">
                             <!-- datatable start -->
-                            <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                            <table id="tbl_maintenace" class="table table-bordered table-hover table-striped w-100">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>MaintenanceDate</th>
+                                        <th>MaintainanceDate</th>
                                         <th>Technician</th>
                                         <th>Serial</th>
                                         <th>Category</th>
@@ -38,7 +38,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($data)>0)
+                                    {{-- @if (count($data)>0)
                                         @foreach ($data as $key=>$item)
                                             <tr>
                                                 <td>{{$item->id}}</td>
@@ -67,7 +67,7 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    @endif
+                                    @endif --}}
                                 </tbody>
                             </table>
                             <!-- datatable end -->
@@ -87,7 +87,7 @@
                         <p>Are you sure want to delete?</p>
                     </div>
                     <div class="modal-btn delete-action">
-                        <form action="{{url('admin/maintenance/delete')}}" method="POST">
+                        <form action="{{url('admin/maintanance/delete')}}" method="POST">
                             @csrf
                             @method('Delete')
                             <input type="hidden" name="id" class="e_id" value="">
@@ -111,6 +111,95 @@
                 let id = $(this).data("id");
                 $('.e_id').val(id);
             });
+            dataTables();
         });
+
+
+        function dataTables() {
+            $('#tbl_maintenace').DataTable({
+                // dom: 'Blfrtip',
+                pageLength: 10,
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                order: [[0, 'desc']],
+                lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
+                ajax: {
+                    url: '{{ URL("admin/maintanance") }}',
+                    type: 'GET',
+                    // data: function(d) {
+                    //     d.from_date = from_date;
+                    //     d.to_date = to_date;
+                    //     d.priority = $('select[name="priority"]').val();
+                    //     d.status = $('select[name="status"]').val();
+                    //     d.user_id = $('select[name="user_id"]').val();
+                    // }
+                },
+                columns: [
+                    {
+                        data: 'id',
+                        name: 'id',
+                    },
+                    {
+                        data: 'maintenance_date',
+                        name: 'maintenance_date',
+                    },
+                    {
+                        data: 'maintenace_by',
+                        name: 'maintenace_by',
+                    },
+                    {
+                        data: 'serial',
+                        name: 'serial',
+                    },
+                    {
+                        data: 'category_name',
+                        name: 'category_name',
+                    },
+                    {
+                        data: 'device_name',
+                        name: 'device_name',
+                    },
+                    {
+                        data: 'branch_name_en',
+                        name: 'branch_name_en',
+                    },
+                    {
+                        data: 'location',
+                        name: 'location',
+                    },
+                    {
+                        data: 'employee_name_en',
+                        name: 'employee_name_en',
+                    },
+                    {
+                        data: 'name_english',
+                        name: 'name_english',
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at',
+                    },
+                    {
+                        data: '',
+                        name: 'action',
+                        render: function(data, type, row) {
+                            let actionButtons = '';
+                            // if (row.can_delete) {
+                                actionButtons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-2 btnDelete"  data-toggle="modal" data-target="#delete_maintenance"  title="Delete Record" data-id="${row.id}"><i class="fal fa-times"></i></a>`;
+                            // }
+                            // if (row.can_edit) {
+                                actionButtons += `<a href="{{url('/admin/maintanance')}}/${row.id}/edit" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>`;
+                                actionButtons += `<a href="{{url('/admin/maintanance')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
+                            // }
+                            return actionButtons;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                order: [[0, 'desc']]
+            });
+        }
     </script>
 @endsection

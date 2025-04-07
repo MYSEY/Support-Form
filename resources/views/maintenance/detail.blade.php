@@ -135,7 +135,7 @@
                         
                         <div class="text-md-right">
                             <div class="btn-hidden-show">
-                                <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintenance')}}"  type="button">Cancel</a>
+                                <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintanance')}}"  type="button">Cancel</a>
                             </div>
                         </div>
                     </div>

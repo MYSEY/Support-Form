@@ -11,13 +11,16 @@
         .text-red {
             color: rgb(238, 29, 63);
         }
+        .sub-message {
+            cursor: pointer;
+        }
     </style>
     <div class="row">
         <div class="col-xl-12">
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Maintenance
+                        Maintanance
                     </h2>
                 </div>
                 {{-- @dd($data) --}}
@@ -37,7 +40,7 @@
                             </div>
                             <div class="col-xl-4">
                                 <div class="form-group">
-                                    <label class="form-label" for="">Maintenance Date <span class="text-danger">*</span></label>
+                                    <label class="form-label" for="">Maintanance Date <span class="text-danger">*</span></label>
                                     <input type="date" name="maintenance_date" class="form-control required" id="maintenance_date" value="{{ $data->maintenance_date}}" required>
                                 </div>
                             </div>
@@ -95,7 +98,7 @@
                                                 @endphp
                                                 <tr class="odd">
                                                     <td>{{ $hardwareIndex++ }}</td>
-                                                    <td>{{ $item->task_name ?? 'N/A' }}</td>
+                                                    <td class="sub-message" data-toggle="tooltip" data-html="true" title="{{$item->description}}">{{ $item->task_name ?? 'N/A' }}</td>
                                                     <td>
                                                         <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100">{{$note}}</textarea>
                                                     </td>
@@ -103,10 +106,7 @@
                                                         <div class="form-group">
                                                             <div class="frame-wrap">
                                                                 <div class="custom-control custom-checkbox custom-control-inline">
-                                                                    <input type="checkbox" class="custom-control-input check_all_hardware"
-                                                                           name="tasks[]" id="task_{{ $item->task_id }}"
-                                                                           value="{{ $item->task_id }}" {{ $isChecked }}
-                                                                           onclick="handleCheckboxClick(this)">
+                                                                    <input type="checkbox" class="custom-control-input check_all_hardware" name="tasks[]" id="task_{{ $item->task_id }}" value="{{ $item->task_id }}" {{ $isChecked }} onclick="handleCheckboxClick(this)">
                                                                     <label class="custom-control-label" for="task_{{ $item->task_id }}"></label>
                                                                 </div>
                                                             </div>
@@ -152,7 +152,7 @@
                                                 @endphp
                                                 <tr class="odd">
                                                     <td>{{ $softwareIndex++ }}</td>
-                                                    <td>{{ $item->task_name ?? 'N/A' }}</td>
+                                                    <td class="sub-message" data-toggle="tooltip" data-html="true" title="{{$item->description}}">{{ $item->task_name ?? 'N/A' }}</td>
                                                     <td>
                                                         <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100">{{$note}}</textarea>
                                                         {{-- <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100"></textarea> --}}
@@ -161,10 +161,7 @@
                                                         <div class="form-group">
                                                             <div class="frame-wrap">
                                                                 <div class="custom-control custom-checkbox custom-control-inline">
-                                                                    <input type="checkbox" class="custom-control-input check_all_software"
-                                                                           name="tasks[]" id="task_{{ $item->task_id }}"
-                                                                           value="{{ $item->task_id }}" {{ $isChecked }}
-                                                                           onclick="handleCheckboxClick(this)">
+                                                                    <input type="checkbox" class="custom-control-input check_all_software" name="tasks[]" id="task_{{ $item->task_id }}" value="{{ $item->task_id }}" {{ $isChecked }} onclick="handleCheckboxClick(this)">
                                                                     <label class="custom-control-label" for="task_{{ $item->task_id }}"></label>
                                                                 </div>
                                                             </div>
@@ -187,7 +184,7 @@
                         </div>
                         <div class="text-md-right">
                             <div class="btn-hidden-show">
-                                <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintenance')}}"  type="button">Cancel</a>
+                                <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintanance')}}"  type="button">Cancel</a>
                                 <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn_update" type="submit">Submit</button>
                             </div>
                             <input type="hidden" value="{{csrf_token()}}" id="token"/>
@@ -329,7 +326,7 @@
                 });
                 $.ajax({
                     type: "PUT",
-                    url: "{{url('admin/maintenance')}}/" + id,
+                    url: "{{url('admin/maintanance')}}/" + id,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -349,7 +346,7 @@
                             toastr.error(response.message);
                         }else{
                             toastr.success('Maintenance updated successfully.');
-                            window.location.replace("{{ URL('admin/maintenance') }}"); 
+                            window.location.replace("{{ URL('admin/maintanance') }}"); 
                         }
                     }
                 });

@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="col-xl-4">
                                     <div class="form-group">
-                                        <label class="form-label" for="">Maintenance Date <span class="text-danger">*</span></label>
+                                        <label class="form-label" for="">Maintanance Date <span class="text-danger">*</span></label>
                                         <input type="date" name="maintenance_date" class="form-control required" id="maintenance_date" value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@
                             </div>
                             <div class="text-md-right">
                                 <div class="btn-hidden-show">
-                                    <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintenance')}}"  type="button">Cancel</a>
+                                    <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintanance')}}"  type="button">Cancel</a>
                                     <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn_create" type="submit">Submit</button>
                                 </div>
                                 <input type="hidden" value="{{csrf_token()}}" id="token"/>
@@ -247,7 +247,6 @@
                         // Append the rows to the correct tables
                         $("#tbl_hardware tbody").html(hardwareTr);
                         $("#tbl_software tbody").html(softwareTr);
-                        initializeTooltips();
                     }
                 });
             });
@@ -274,7 +273,7 @@
                 });
                 $.ajax({
                     type: "POST",
-                    url: "{{url('admin/maintenance')}}",
+                    url: "{{url('admin/maintanance')}}",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -292,8 +291,8 @@
                         if (response.status == "error") {
                             toastr.error(response.message);
                         }else{
-                            toastr.success('Maintenance record created successfully.');
-                            window.location.replace("{{ URL('admin/maintenance') }}"); 
+                            toastr.success('Maintanance record created successfully.');
+                            window.location.replace("{{ URL('admin/maintanance') }}"); 
                         }
                     }
                 });

@@ -18,29 +18,48 @@ class MaintenanceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = DB::table('maintenances')
-        ->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
-        ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
-        ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
-        ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
-        ->leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
-        ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
-        ->select(
-            'maintenances.*', 
-            'assets.serial', 
-            'assets.device_name', 
-            'categories.name as category_name', 
-            'users.number_employee', 
-            'users.employee_name_kh', 
-            'users.employee_name_en',
-            'positions.name_english',
-            'branchs.branch_name_kh',
-            'branchs.branch_name_en',
-            'rooms.name as location',
-        )->get();
-        return view('maintenance.index',compact('data'));
+        if (request()->ajax()) {
+            // Define the base query
+            $query = DB::table('maintenances')
+            ->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
+            ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
+            ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
+            ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
+            ->leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
+            ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
+            ->select(
+                'maintenances.*', 
+                'assets.serial', 
+                'assets.device_name', 
+                'categories.name as category_name', 
+                'users.number_employee', 
+                'users.employee_name_kh', 
+                'users.employee_name_en',
+                'positions.name_english',
+                'branchs.branch_name_kh',
+                'branchs.branch_name_en',
+                'rooms.name as location',
+            )->where('maintenances.deleted_at',null);
+            
+            // Fetch paginated data
+            $recordsTotal = Maintenance::where('id', Auth::user()->id)->count();
+            $recordsFiltered = $query->count();
+            // Apply pagination for the actual data retrieval
+            $start = intval($request->input('start', 0));
+            $limit = intval($request->input('length', 10));
+            $data = $query->orderBy('maintenances.id', 'DESC')->offset($start)->limit($limit)->get();
+            // Return JSON response
+            return response()->json([
+                'draw' => intval($request->input('draw')),  // Optional: for client-side tracking
+                'recordsTotal' => $recordsTotal,
+                'recordsFiltered' => $recordsFiltered,
+                'data' => $data
+            ]);
+        }
+
+        return view('maintenance.index');
     }
 
     /**

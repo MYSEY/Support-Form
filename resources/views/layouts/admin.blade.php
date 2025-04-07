@@ -100,7 +100,7 @@
             $permissionsReports = [
                 'Ticket Report View' 
             ];
-            $segmentReport = ['ticket'];
+            $segmentReport = ['ticket','maintanance'];
             $permissionsRoles = [
                 'Role View', 
                 'Permission View', 
@@ -194,10 +194,10 @@
                                     </a>
                                 </li>
                             @endif
-                            <li class="@if (Request::instance()->segment(2) == 'maintenance') active @endif">
-                                <a href="{{url('admin/maintenance')}}" title="Maintenance" data-filter-tags="Maintenance">
+                            <li class="@if (Request::instance()->segment(2) == 'maintanance') active @endif">
+                                <a href="{{url('admin/maintanance')}}" title="maintanance" data-filter-tags="maintanance">
                                     <i class="fal fa-ticket-alt"></i>
-                                    <span class="nav-link-text" data-i18n="nav.Maintenance">Maintenance</span>
+                                    <span class="nav-link-text" data-i18n="nav.maintanance">Maintanance</span>
                                 </a>
                             </li>
                             @if (Auth::user()->can('User View'))
@@ -224,6 +224,11 @@
                                                 </a>
                                             </li>
                                         @endif
+                                        <li class="@if (Request::instance()->segment(3) == 'maintanance') active @endif">
+                                            <a href="{{url('admin/report/maintanance')}}" title="maintanance" data-filter-tags="application intel maintanance">
+                                                <span class="nav-link-text" data-i18n="nav.maintanance">Maintanance</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                             @endif

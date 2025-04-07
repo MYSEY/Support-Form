@@ -26,6 +26,7 @@ use App\Http\Controllers\Admins\NotificationController;
 use App\Http\Controllers\Admins\TicketReportController;
 use App\Http\Controllers\Admins\ResponsesTicketController;
 use App\Http\Controllers\Admins\TicketGuidelinesController;
+use App\Http\Controllers\Admins\MaintenanceReportController;
 use App\Http\Controllers\Admins\PermissionCategoryController;
 
 /*
@@ -125,10 +126,14 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     // Priority
     Route::resource('priority', PriorityController::class);
 
-    //Employee
+    //maintenance
     Route::resource('employee', EmployeeController::class);
-    Route::resource('maintenance', MaintenanceController::class);
+    Route::resource('maintanance', MaintenanceController::class);
     Route::get('/serial', [MaintenanceController::class,'OnChangeSerial']);
+
+    //maintenance report
+    Route::get('report/maintanance', [MaintenanceReportController::class, 'report']);
+    Route::get('report/maintanance/export', [MaintenanceReportController::class, 'maintenanceExport']);
 
     // Issue Type
     Route::get('/issue-type/duplicate', [IssueTypeController::class,'duplicateIssueType']);
