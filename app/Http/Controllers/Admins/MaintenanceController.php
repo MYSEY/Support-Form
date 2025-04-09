@@ -18,6 +18,10 @@ class MaintenanceController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        RolePermission($this, 'Maintanance');
+    }
     public function index(Request $request)
     {
         if (request()->ajax()) {

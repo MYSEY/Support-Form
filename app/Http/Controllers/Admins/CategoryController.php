@@ -18,6 +18,10 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        RolePermission($this, 'Category');
+    }
     public function index()
     {
         $task = Task::whereNull('deleted_at')->get();

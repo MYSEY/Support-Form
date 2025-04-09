@@ -16,6 +16,10 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        RolePermission($this, 'Room');
+    }
     public function index()
     {
         $data = Room::all();

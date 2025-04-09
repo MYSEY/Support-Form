@@ -11,6 +11,10 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        RolePermission($this, 'Employee');
+    }
     public function index()
     {
         $data = Employee::whereIn('emp_status',['Probation','1','10','2'])

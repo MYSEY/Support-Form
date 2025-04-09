@@ -42,9 +42,9 @@
                         </div>
                         <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2" style="text-align: right;">
                             <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed" id="btnSearch">Search</a>
-                            @can('Ticket Report Export')
+                            @if (Auth::user()->can('Maintanance Report Export'))
                                 <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
-                            @endcan
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -91,6 +91,7 @@
         let from_date = null;
         let to_date = null;
         let staff_name = null;
+        var detail = @json(Auth::user()->can('Maintanance Report Detail'));
         $(document).ready(function(){
             $('#btnSearch').on('click', function() {
                 from_date = $('#from_date').val();
@@ -178,7 +179,13 @@
                         data: '',
                         name: 'action',
                         render: function(data, type, row) {
-                            return `<a href="/admin/maintanance/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
+                            let buttons = '';
+                            if (row.id) {
+                                if (detail) {
+                                return `<a href="/admin/maintanance/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
+                            }
+                            }
+                            return buttons || '';
                         },
                         orderable: false,
                         searchable: false

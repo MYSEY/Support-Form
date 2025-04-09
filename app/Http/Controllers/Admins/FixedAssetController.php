@@ -20,6 +20,10 @@ class FixedAssetController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        RolePermission($this, 'Asset');
+    }
     public function index(Request $request)
     {
         // Fetch assets from the default database

@@ -1,10 +1,10 @@
 @extends('layouts.admin')
+@section('content')
 <style>
     .draggable {
         cursor: move;
     }
 </style>
-@section('content')
 <div class="row">
     <div class="col-xl-12">
         <div id="panel-1" class="panel">
