@@ -29,7 +29,7 @@
                         @csrf --}}
                         <div class="panel-content">
                             <div class="row mb-2">
-                                <div class="col-xl-4">
+                                <div class="col-xl-3">
                                     <div class="form-group">
                                         <label class="form-label" for="Serial">Serial <span class="text-danger">*</span></label>
                                         <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" name="serial" required>
@@ -40,16 +40,25 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-xl-4">
+                                <div class="col-xl-3">
                                     <div class="form-group">
                                         <label class="form-label" for="">Maintanance Date <span class="text-danger">*</span></label>
                                         <input type="date" name="maintenance_date" class="form-control required" id="maintenance_date" value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
                                     </div>
                                 </div>
-                                <div class="col-xl-4">
+                                <div class="col-xl-3">
                                     <div class="form-group">
                                         <label class="form-label" for="maintenace_by">IT Technician <span class="text-danger">*</span></label>
                                         <input type="text" name="maintenace_by" class="form-control required" disabled id="maintenace_by" value="{{Auth::user()->name}}" required>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="Serial">Type <span class="text-danger">*</span></label>
+                                        <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" name="serial" required>
+                                            <option value="">case by case</option>
+                                            <option value="">schedule_maintanance</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
