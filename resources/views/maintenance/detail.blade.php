@@ -18,9 +18,9 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <h2>
-                                Maintenance Detail 
-                            </h2>
+                            <h3>
+                                Maintanance Detail 
+                            </h3>
                         </div>
                         <div class="col-md-8" style="text-align: right;">
                             <a class="btn btn-secondary waves-effect waves-themed"  href="{{url('admin/maintanance')}}" type="button">Back</a>
