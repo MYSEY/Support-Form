@@ -119,8 +119,10 @@
                 'Issue Type View',
                 'Responses Ticket View',
                 'Reset Password User',
-                'Employee View',
+                'Task View',
+                'Category View',
                 'Asset View',
+                'Employee View',
             ];
             $segmentSetting =[
                 'branch',
