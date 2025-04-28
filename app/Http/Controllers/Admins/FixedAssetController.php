@@ -26,27 +26,31 @@ class FixedAssetController extends Controller
     }
     public function index(Request $request)
     {
-        // Fetch assets from the default database
-        $data = Asset::leftJoin('categories', 'assets.category_id', '=', 'categories.id')
-        ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
-        ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
-        ->leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
-        ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
-        ->select(
-            'assets.*', 
-            'assets.serial', 
-            'assets.date', 
-            'assets.device_name', 
-            'categories.name as category_name', 
-            'users.number_employee',
-            'users.employee_name_kh',
-            'users.employee_name_en',
-            'positions.name_english',
-            'branchs.branch_name_kh',
-            'branchs.branch_name_en',
-            'rooms.name as location',
-        )->get();
-        return view('asset.index',compact('data'));
+        try {
+            // Fetch assets from the default database
+            $data = Asset::leftJoin('categories', 'assets.category_id', '=', 'categories.id')
+            ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
+            ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
+            ->leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
+            ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
+            ->select(
+                'assets.*', 
+                'assets.serial', 
+                'assets.date', 
+                'assets.device_name', 
+                'categories.name as category_name', 
+                'users.number_employee',
+                'users.employee_name_kh',
+                'users.employee_name_en',
+                'positions.name_english',
+                'branchs.branch_name_kh',
+                'branchs.branch_name_en',
+                'rooms.name as location_name',
+            )->get();
+            return view('asset.index',compact('data'));
+        } catch (\Throwable $exp) {
+            return response()->json(['errors' => $exp]);
+        }
     }
 
     /**

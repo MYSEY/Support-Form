@@ -27,7 +27,7 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <div class="row mb-2">
-                            <div class="col-xl-3">
+                            <div class="col-xl-4">
                                 <div class="form-group">
                                     <label class="form-label" for="Serial">Serial <span class="text-danger">*</span></label>
                                     <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" name="serial" required>
@@ -38,27 +38,18 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-3">
+                            <div class="col-xl-4">
                                 <div class="form-group">
                                     <label class="form-label" for="">Maintanance Date <span class="text-danger">*</span></label>
                                     <input type="date" name="maintenance_date" class="form-control required" id="maintenance_date" value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
                                 </div>
                             </div>
-                            <div class="col-xl-3">
+                            <div class="col-xl-4">
                                 <div class="form-group">
                                     <label class="form-label" for="maintenace_by">IT Technician <span class="text-danger">*</span></label>
                                     <input type="text" name="maintenace_by" class="form-control required" disabled id="maintenace_by" value="{{Auth::user()->name}}" required>
                                 </div>
                             </div>
-                            {{-- <div class="col-xl-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="Serial">Type <span class="text-danger">*</span></label>
-                                    <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" name="serial" required>
-                                        <option value="">case by case</option>
-                                        <option value="">schedule_maintanance</option>
-                                    </select>
-                                </div>
-                            </div> --}}
                         </div>
                         <div style="border: 1px solid #e9e9e9;padding: 0.75rem;">
                             <p>
@@ -142,6 +133,8 @@
                             </div>
                             <input type="hidden" value="{{csrf_token()}}" id="token"/>
                             <input type="hidden" name="category_id" id="category_id">
+                            <input type="hidden" name="office_id" id="office_id">
+                            <input type="hidden" name="location_id" id="location_id">
                             <input type="hidden" name="end_user" id="end_user">
                             <div class="btn-loading mt-3" style="display: none">
                                 <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
@@ -181,9 +174,10 @@
                         serial : serial 
                     },
                     dataType: "JSON",
-                    success: function(response) {                              
+                    success: function(response) {
                         $("#category_id").val(response.message.category_id);
-                        $("#end_user").val(response.message.end_user);
+                        $("#office_id").val(response.message.office);
+                        $("#location_id").val(response.message.location_id);
                         $("#end_user").val(response.message.end_user);
                         $(".employee").text(response.message.employee_name_en);
                         $(".position").text(response.message.name_english);
@@ -262,6 +256,8 @@
             $(document).on('click', '#btn_create', function(e) {
                 e.preventDefault(); // Prevent the form from submitting the traditional way
                 var category_id = $("#category_id").val();
+                var office_id = $("#office_id").val();
+                var location_id = $("#location_id").val();
                 var end_user = $("#end_user").val();
                 var asset_id = $("#serial").val();
                 var maintenance_date = $("#maintenance_date").val();
@@ -290,6 +286,8 @@
                         _token: $('input[name="_token"]').val(),
                         asset_id : asset_id,
                         category_id : category_id,
+                        office : office_id,
+                        location : location_id,
                         end_user : end_user,
                         maintenance_date : maintenance_date,
                         maintenace_by : maintenace_by,

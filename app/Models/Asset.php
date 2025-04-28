@@ -37,7 +37,7 @@ class Asset extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
-    public function room()
+    public function rooms()
     {
         return $this->belongsTo(Room::class, 'location');
     }
@@ -54,7 +54,7 @@ class Asset extends Model
         return $this->category ? $this->category->name : null;
     }
     public function getRoomNameAttribute(){
-        return $this->room ? $this->room->name : null;
+        return $this->rooms->name;
     }
     public function getOfficeNameAttribute(){
         return $this->branch ? $this->branch->branch_name_en : null;

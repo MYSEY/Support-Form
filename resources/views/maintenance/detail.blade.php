@@ -24,7 +24,9 @@
                         </div>
                         <div class="col-md-8" style="text-align: right;">
                             <a class="btn btn-secondary waves-effect waves-themed"  href="{{url('admin/maintanance')}}" type="button">Back</a>
-                            <button type="button" class="btn btn-outline-primary btn-print"> <span class="fal fa-print mr-1"></span>Print</button>
+                            @can('Maintanance Print')
+                                <button type="button" class="btn btn-outline-primary btn-print"> <span class="fal fa-print mr-1"></span>Print</button>
+                            @endcan
                         </div>
                     </div>
                     <hr>

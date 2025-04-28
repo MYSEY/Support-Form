@@ -29,8 +29,8 @@ class MaintenanceController extends Controller
             $query = DB::table('maintenances')
             ->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
             ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
-            ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
-            ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
+            ->leftJoin('rooms', 'maintenances.location', '=', 'rooms.id')
+            ->leftJoin('branchs', 'maintenances.office', '=', 'branchs.id')
             ->leftJoin('db_hr-production.users', 'maintenances.end_user', '=', 'users.id')
             ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
             ->select(
@@ -174,6 +174,7 @@ class MaintenanceController extends Controller
             'branchs.branch_name_kh',
             'branchs.branch_name_en',
             'rooms.name as location',
+            'rooms.id as location_id',
         )->where('maintenances.id',$id)->first();
         $serial = Asset::all();
 
@@ -212,6 +213,8 @@ class MaintenanceController extends Controller
             $maintenance->update([
                 'asset_id' => $request->asset_id,
                 'category_id' => $request->category_id,
+                'office' => $request->office,
+                'location' => $request->location,
                 'end_user' => $request->end_user,
                 'maintenance_date' => $request->maintenance_date,
                 'maintenace_by' => $request->maintenace_by,
@@ -274,6 +277,7 @@ class MaintenanceController extends Controller
             'users.employee_name_kh',
             'categories.name as category_name',
             'rooms.name as location',
+            'rooms.id as location_id',
             'positions.name_english',
             'branchs.branch_name_en',
         )->where('assets.id',$serial)->first();

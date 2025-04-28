@@ -19,6 +19,8 @@ class Maintenance extends Model
         'category_id',
         'maintenance_date',
         'maintenace_by',
+        'office',
+        'location',
         'end_user',
         'description',
         'created_by',

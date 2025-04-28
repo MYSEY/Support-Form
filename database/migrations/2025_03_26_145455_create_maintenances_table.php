@@ -8,6 +8,7 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * php artisan migrate:refresh --path=database/migrations/2025_03_26_145455_create_maintenances_table.php
      */
     public function up(): void
     {
@@ -17,6 +18,8 @@ return new class extends Migration
             $table->foreignId('category_id');
             $table->date('maintenance_date');
             $table->string('maintenace_by');
+            $table->foreignId('office');
+            $table->foreignId('location');
             $table->foreignId('end_user');
             $table->longText('description')->nullable();
             $table->foreignId('created_by');

@@ -10,37 +10,39 @@
                 </div>
                 
                 <div class="panel-container show">
-                    {{-- @can('Asset Create') --}}
+                    @can('Maintanance Create')
                         <div class="panel-tag">
                             <div class="text-lg-right">
                                 <a href="{{url('admin/maintanance/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
                             </div>
                         </div>
-                    {{-- @endcan --}}
+                    @endcan
                     <div class="panel-content">
                         <div class="table-responsive">
-                            <!-- datatable start -->
-                            <table id="tbl_maintenace" class="table table-bordered table-hover table-striped w-100">
-                                <thead>
-                                    <tr>
-                                        <th>MaintainanceDate</th>
-                                        <th>Technician</th>
-                                        <th>Serial</th>
-                                        <th>Category</th>
-                                        <th>DeviceName</th>
-                                        <th>Office</th>
-                                        <th>Location</th>
-                                        <th>EndUser</th>
-                                        <th>Postion</th>
-                                        <th>CreatedAt</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                </tbody>
-                            </table>
-                            <!-- datatable end -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="tbl_maintenace" class="table table-bordered table-hover table-striped" style="width: 100%">
+                                        <thead>
+                                            <tr>
+                                                <th>MaintainanceDate</th>
+                                                <th>Technician</th>
+                                                <th>Serial</th>
+                                                <th>Category</th>
+                                                <th>DeviceName</th>
+                                                <th>Office</th>
+                                                <th>Location</th>
+                                                <th>EndUser</th>
+                                                <th>Postion</th>
+                                                <th>CreatedAt</th>
+                                                <th style="min-width: 100%;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -76,6 +78,9 @@
 @section('script')
 @include('includs.datatable_basic')
     <script>
+        var edit = @json(Auth::user()->can('Maintanance Edit'));
+        var maintanance_delete = @json(Auth::user()->can('Maintanance Delete'));
+
         $(function(){
             $(document).on('click','.btnDelete', function(){
                 let id = $(this).data("id");
@@ -149,13 +154,13 @@
                         name: 'action',
                         render: function(data, type, row) {
                             let actionButtons = '';
-                            // if (row.can_delete) {
+                            if (maintanance_delete) {
                                 actionButtons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-2 btnDelete"  data-toggle="modal" data-target="#delete_maintenance"  title="Delete Record" data-id="${row.id}"><i class="fal fa-times"></i></a>`;
-                            // }
-                            // if (row.can_edit) {
+                            }
+                            if (edit) {
                                 actionButtons += `<a href="{{url('/admin/maintanance')}}/${row.id}/edit" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>`;
                                 actionButtons += `<a href="{{url('/admin/maintanance')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
-                            // }
+                            }
                             return actionButtons;
                         },
                         orderable: false,

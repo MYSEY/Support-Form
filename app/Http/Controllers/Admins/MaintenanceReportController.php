@@ -50,8 +50,8 @@ class MaintenanceReportController extends Controller
                 $query->where('branchs.id', $office);
             })->when($request->staff_name, function ($query, $staff_name) {
                 return $query->where('users.employee_name_en', 'LIKE', "%{$staff_name}%");
-            })->groupBy('assets.serial');
-            
+            });
+            // ->groupBy('assets.serial')
             if ($from_date && $to_date) {
                 $query->whereBetween('maintenances.maintenance_date',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
             }
@@ -101,8 +101,8 @@ class MaintenanceReportController extends Controller
         $data = Maintenance::with(['maintenanceDetail.task:id,name,type'])
         ->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
         ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
-        ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
-        ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
+        ->leftJoin('rooms', 'maintenances.location', '=', 'rooms.id')
+        ->leftJoin('branchs', 'maintenances.office', '=', 'branchs.id')
         ->leftJoin('db_hr-production.users', 'maintenances.end_user', '=', 'db_hr-production.users.id')
         ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
         ->select(
@@ -110,7 +110,7 @@ class MaintenanceReportController extends Controller
             'assets.serial', 
             'assets.date', 
             'assets.device_name', 
-            'categories.name as category_name', 
+            'categories.name as category_name',
             'users.number_employee',
             'users.employee_name_kh',
             'users.employee_name_en',
