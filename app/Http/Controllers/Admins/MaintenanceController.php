@@ -31,7 +31,7 @@ class MaintenanceController extends Controller
             ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
             ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
             ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
-            ->leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
+            ->leftJoin('db_hr-production.users', 'maintenances.end_user', '=', 'users.id')
             ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
             ->select(
                 'maintenances.*', 
@@ -125,7 +125,8 @@ class MaintenanceController extends Controller
      */
     public function show(string $id)
     {
-        $data = Maintenance::with(['maintenanceDetail.task:id,name,type'])->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
+        $data = Maintenance::with(['maintenanceDetail.task:id,name,type'])
+        ->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
         ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
         ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
         ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
@@ -210,7 +211,8 @@ class MaintenanceController extends Controller
             $maintenance = Maintenance::findOrFail($id);
             $maintenance->update([
                 'asset_id' => $request->asset_id,
-                'asset_id' => $request->asset_id,
+                'category_id' => $request->category_id,
+                'end_user' => $request->end_user,
                 'maintenance_date' => $request->maintenance_date,
                 'maintenace_by' => $request->maintenace_by,
                 'description' => $request->description,

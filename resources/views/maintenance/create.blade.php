@@ -25,134 +25,132 @@
                 </div>
                 
                 <div class="panel-container show">
-                    {{-- <form action="{{url('admin/maintenance')}}" method="POST" class="needs-validation" novalidate>
-                        @csrf --}}
-                        <div class="panel-content">
-                            <div class="row mb-2">
-                                <div class="col-xl-3">
-                                    <div class="form-group">
-                                        <label class="form-label" for="Serial">Serial <span class="text-danger">*</span></label>
-                                        <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" name="serial" required>
-                                            <option value="">-- Select --</option>
-                                            @foreach ($serial as $item)
-                                                <option value="{{$item->id}}">{{ $item->serial}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3">
-                                    <div class="form-group">
-                                        <label class="form-label" for="">Maintanance Date <span class="text-danger">*</span></label>
-                                        <input type="date" name="maintenance_date" class="form-control required" id="maintenance_date" value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3">
-                                    <div class="form-group">
-                                        <label class="form-label" for="maintenace_by">IT Technician <span class="text-danger">*</span></label>
-                                        <input type="text" name="maintenace_by" class="form-control required" disabled id="maintenace_by" value="{{Auth::user()->name}}" required>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3">
-                                    <div class="form-group">
-                                        <label class="form-label" for="Serial">Type <span class="text-danger">*</span></label>
-                                        <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" name="serial" required>
-                                            <option value="">case by case</option>
-                                            <option value="">schedule_maintanance</option>
-                                        </select>
-                                    </div>
+                    <div class="panel-content">
+                        <div class="row mb-2">
+                            <div class="col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="Serial">Serial <span class="text-danger">*</span></label>
+                                    <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" name="serial" required>
+                                        <option value="">-- Select --</option>
+                                        @foreach ($serial as $item)
+                                            <option value="{{$item->id}}">{{ $item->serial}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            <div style="border: 1px solid #e9e9e9;padding: 0.75rem;">
-                                <p>
-                                    <strong>Category :</strong> <span class="category"></span>, 
-                                    <strong>Device Name</strong> : <span class="device_name"></span>, 
-                                    <strong>Office</strong> : <span class="office"></span>, 
-                                    <strong>Location</strong> : <span class="location"></span>,
-                                    <strong>End User</strong> : <span class="employee"></span>,
-                                    <strong>Postion</strong> : <span class="position"></span>,
-                                    <strong>Date Purchase</strong> : <span class="date"></span>,
-                                    <strong>Lifecycle(Month)</strong> : <span class="lifecycle_month"></span>
-                                </p>
+                            <div class="col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="">Maintanance Date <span class="text-danger">*</span></label>
+                                    <input type="date" name="maintenance_date" class="form-control required" id="maintenance_date" value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
+                                </div>
                             </div>
-                            <br>
-                            <div class="row mb-3">
-                                <div class="col-xl-6">
-                                    <div class="form-group">
-                                        <h3>Hardware</h3>
-                                        <table id="tbl_hardware" class="table table-bordered table-striped w-100">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Name</th>
-                                                    <th>Note</th>
-                                                    <th>
-                                                        <div class="form-group">
-                                                            <div class="frame-wrap">
-                                                                <div class="custom-control custom-checkbox custom-control-inline">
-                                                                    <input type="checkbox" class="custom-control-input" name="" id="defaultInlineHardware" value="" onclick="handleCheckAllHardware(this)">
-                                                                    <label class="custom-control-label" for="defaultInlineHardware"></label>
-                                                                </div>
+                            <div class="col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="maintenace_by">IT Technician <span class="text-danger">*</span></label>
+                                    <input type="text" name="maintenace_by" class="form-control required" disabled id="maintenace_by" value="{{Auth::user()->name}}" required>
+                                </div>
+                            </div>
+                            {{-- <div class="col-xl-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="Serial">Type <span class="text-danger">*</span></label>
+                                    <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" name="serial" required>
+                                        <option value="">case by case</option>
+                                        <option value="">schedule_maintanance</option>
+                                    </select>
+                                </div>
+                            </div> --}}
+                        </div>
+                        <div style="border: 1px solid #e9e9e9;padding: 0.75rem;">
+                            <p>
+                                <strong>Category :</strong> <span class="category"></span>, 
+                                <strong>Device Name</strong> : <span class="device_name"></span>, 
+                                <strong>Office</strong> : <span class="office"></span>, 
+                                <strong>Location</strong> : <span class="location"></span>,
+                                <strong>End User</strong> : <span class="employee"></span>,
+                                <strong>Postion</strong> : <span class="position"></span>,
+                                <strong>Date Purchase</strong> : <span class="date"></span>,
+                                <strong>Lifecycle(Month)</strong> : <span class="lifecycle_month"></span>
+                            </p>
+                        </div>
+                        <br>
+                        <div class="row mb-3">
+                            <div class="col-xl-6">
+                                <div class="form-group">
+                                    <h3>Hardware</h3>
+                                    <table id="tbl_hardware" class="table table-bordered table-striped w-100">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Name</th>
+                                                <th>Note</th>
+                                                <th>
+                                                    <div class="form-group">
+                                                        <div class="frame-wrap">
+                                                            <div class="custom-control custom-checkbox custom-control-inline">
+                                                                <input type="checkbox" class="custom-control-input" name="" id="defaultInlineHardware" value="" onclick="handleCheckAllHardware(this)">
+                                                                <label class="custom-control-label" for="defaultInlineHardware"></label>
                                                             </div>
                                                         </div>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="col-xl-6">
-                                    <div class="form-group">
-                                        <h3>Software</h3>
-                                        <table id="tbl_software" class="table table-bordered table-striped w-100">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Name</th>
-                                                    <th>Note</th>
-                                                    <th>
-                                                        <div class="form-group">
-                                                            <div class="frame-wrap">
-                                                                <div class="custom-control custom-checkbox custom-control-inline">
-                                                                    <input type="checkbox" class="custom-control-input" name="" id="defaultInlineSoftware" value="" onclick="handleCheckAllSoftware(this)">
-                                                                    <label class="custom-control-label" for="defaultInlineSoftware"></label>
-                                                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="form-group">
+                                    <h3>Software</h3>
+                                    <table id="tbl_software" class="table table-bordered table-striped w-100">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Name</th>
+                                                <th>Note</th>
+                                                <th>
+                                                    <div class="form-group">
+                                                        <div class="frame-wrap">
+                                                            <div class="custom-control custom-checkbox custom-control-inline">
+                                                                <input type="checkbox" class="custom-control-input" name="" id="defaultInlineSoftware" value="" onclick="handleCheckAllSoftware(this)">
+                                                                <label class="custom-control-label" for="defaultInlineSoftware"></label>
                                                             </div>
                                                         </div>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col-xl-12">
-                                    <div class="form-group">
-                                        <label class="form-label" for="Noted">Note:</label>
-                                        <textarea name="description" id="description" class="form-control"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-md-right">
-                                <div class="btn-hidden-show">
-                                    <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintanance')}}"  type="button">Cancel</a>
-                                    <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn_create" type="submit">Submit</button>
-                                </div>
-                                <input type="hidden" value="{{csrf_token()}}" id="token"/>
-                                <input type="hidden" name="category_id" id="category_id">
-                                <div class="btn-loading mt-3" style="display: none">
-                                    <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                        Loading...
-                                    </button>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-                    {{-- </form> --}}
+                        <div class="row mb-2">
+                            <div class="col-xl-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="Noted">Note:</label>
+                                    <textarea name="description" id="description" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-md-right">
+                            <div class="btn-hidden-show">
+                                <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintanance')}}"  type="button">Cancel</a>
+                                <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn_create" type="submit">Submit</button>
+                            </div>
+                            <input type="hidden" value="{{csrf_token()}}" id="token"/>
+                            <input type="hidden" name="category_id" id="category_id">
+                            <input type="hidden" name="end_user" id="end_user">
+                            <div class="btn-loading mt-3" style="display: none">
+                                <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Loading...
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -185,6 +183,7 @@
                     dataType: "JSON",
                     success: function(response) {                              
                         $("#category_id").val(response.message.category_id);
+                        $("#end_user").val(response.message.end_user);
                         $("#end_user").val(response.message.end_user);
                         $(".employee").text(response.message.employee_name_en);
                         $(".position").text(response.message.name_english);
@@ -263,6 +262,7 @@
             $(document).on('click', '#btn_create', function(e) {
                 e.preventDefault(); // Prevent the form from submitting the traditional way
                 var category_id = $("#category_id").val();
+                var end_user = $("#end_user").val();
                 var asset_id = $("#serial").val();
                 var maintenance_date = $("#maintenance_date").val();
                 var maintenace_by = $("#maintenace_by").val();
@@ -290,6 +290,7 @@
                         _token: $('input[name="_token"]').val(),
                         asset_id : asset_id,
                         category_id : category_id,
+                        end_user : end_user,
                         maintenance_date : maintenance_date,
                         maintenace_by : maintenace_by,
                         description : description,

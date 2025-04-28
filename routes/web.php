@@ -134,6 +134,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     //maintenance report
     Route::get('report/maintanance', [MaintenanceReportController::class, 'report']);
     Route::get('report/maintanance/export', [MaintenanceReportController::class, 'maintenanceExport']);
+    Route::get('maintanance/history/{id}', [MaintenanceReportController::class, 'maintenanceHistory']);
 
     // Issue Type
     Route::get('/issue-type/duplicate', [IssueTypeController::class,'duplicateIssueType']);

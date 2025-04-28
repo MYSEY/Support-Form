@@ -68,7 +68,7 @@ class TicketReportController extends Controller
             });
 
             if ($from_date && $to_date) {
-                $query->whereBetween('tickets.dt',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
+                $query->whereBetween('tickets.updated_at',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
             }
             // Apply additional filtering for 'Staff' role
             if (Auth::user()->RolePermission == 'Staff') {

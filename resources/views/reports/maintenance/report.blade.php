@@ -182,8 +182,8 @@
                             let buttons = '';
                             if (row.id) {
                                 if (detail) {
-                                return `<a href="/admin/maintanance/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
-                            }
+                                    return `<a href="/admin/maintanance/history/${row.asset_id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
+                                }
                             }
                             return buttons || '';
                         },

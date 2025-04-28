@@ -19,6 +19,7 @@ class Maintenance extends Model
         'category_id',
         'maintenance_date',
         'maintenace_by',
+        'end_user',
         'description',
         'created_by',
         'updated_by',
@@ -30,7 +31,9 @@ class Maintenance extends Model
         return $this->hasMany(MaintenanceDetail::class, 'maintenance_id');
     }
 
-
+    public function asset() {
+        return $this->belongsTo(Asset::class);
+    }
 
     public function getLifecycleMonthDiffAttribute()
     {

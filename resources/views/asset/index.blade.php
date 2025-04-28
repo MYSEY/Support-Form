@@ -48,8 +48,8 @@
                                                 <td>{{$item->device_name}}</td>
                                                 <td>{{$item->OfficeName}}</td>
                                                 <td>{{$item->RoomName}}</td>
-                                                <td>{{ $item->employee['employee_name_en']}}</td>
-                                                <td>{{$item->employee['name_english']}}</td>
+                                                <td>{{ $item->employee_name_en}}</td>
+                                                <td>{{$item->name_english}}</td>
                                                 <td>{{ $item->date }}</td>
                                                 <td>{{$item->LifecycleMonthDiff}}</td>
                                                 <td>{{$item->created_at}}</td>

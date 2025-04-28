@@ -29,15 +29,15 @@ class MaintenanceReportController extends Controller
             ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
             ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
             ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
-            ->leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
+            ->leftJoin('db_hr-production.users', 'maintenances.end_user', '=', 'users.id')
             ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
             ->select(
                 'maintenances.*', 
                 'assets.serial', 
                 'assets.device_name', 
                 'categories.name as category_name', 
-                'users.number_employee', 
-                'users.employee_name_kh', 
+                'users.number_employee',
+                'users.employee_name_kh',
                 'users.employee_name_en',
                 'positions.name_english',
                 'branchs.branch_name_kh',
@@ -50,7 +50,8 @@ class MaintenanceReportController extends Controller
                 $query->where('branchs.id', $office);
             })->when($request->staff_name, function ($query, $staff_name) {
                 return $query->where('users.employee_name_en', 'LIKE', "%{$staff_name}%");
-            });
+            })->groupBy('assets.serial');
+            
             if ($from_date && $to_date) {
                 $query->whereBetween('maintenances.maintenance_date',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
             }
@@ -61,6 +62,7 @@ class MaintenanceReportController extends Controller
                 $query->where(function ($q) use ($searchValue) {
                     $q->where('assets.serial', 'like', "%{$searchValue}%")
                     ->orWhere('assets.device_name', 'like', "%{$searchValue}%")
+                    ->orWhere('maintenances.maintenance_date', 'like', "%{$searchValue}%")
                     ->orWhere('users.number_employee', 'like', "%{$searchValue}%")
                     ->orWhere('users.employee_name_kh', 'like', "%{$searchValue}%")
                     ->orWhere('users.employee_name_en', 'like', "%{$searchValue}%")
@@ -94,5 +96,29 @@ class MaintenanceReportController extends Controller
 
     public function maintenanceExport(Request $request){
         return Excel::download(new MaintenanceExport($request), 'Maintanance Report.xlsx');
+    }
+    public function maintenanceHistory($id){
+        $data = Maintenance::with(['maintenanceDetail.task:id,name,type'])
+        ->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
+        ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
+        ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
+        ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
+        ->leftJoin('db_hr-production.users', 'maintenances.end_user', '=', 'db_hr-production.users.id')
+        ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
+        ->select(
+            'maintenances.*', 
+            'assets.serial', 
+            'assets.date', 
+            'assets.device_name', 
+            'categories.name as category_name', 
+            'users.number_employee',
+            'users.employee_name_kh',
+            'users.employee_name_en',
+            'positions.name_english',
+            'branchs.branch_name_kh',
+            'branchs.branch_name_en',
+            'rooms.name as location',
+        )->where('asset_id', $id)->orderBy('id','DESC')->get();
+        return view('maintenance.history',compact('data'));
     }
 }

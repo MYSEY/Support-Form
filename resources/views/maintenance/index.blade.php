@@ -23,7 +23,6 @@
                             <table id="tbl_maintenace" class="table table-bordered table-hover table-striped w-100">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>MaintainanceDate</th>
                                         <th>Technician</th>
                                         <th>Serial</th>
@@ -38,36 +37,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @if (count($data)>0)
-                                        @foreach ($data as $key=>$item)
-                                            <tr>
-                                                <td>{{$item->id}}</td>
-                                                <td>{{$item->maintenance_date}}</td>
-                                                <td>{{$item->maintenace_by}}</td>
-                                                <td>{{$item->serial}}</td>
-                                                <td>{{$item->category_name}}</td>
-                                                <td>{{$item->device_name}}</td>
-                                                <td>{{$item->branch_name_en}}</td>
-                                                <td>{{$item->location}}</td>
-                                                <td>{{$item->employee_name_en}}</td>
-                                                <td>{{$item->name_english}}</td>
-                                                <td>{{ $item->created_at }}</td>
-                                                <td>
-                                                    <div class="d-flex demo">
-                                                        @can('Category Delete')
-                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_maintenance" title="Delete Record" data-id="{{$item->id}}"><i class="fal fa-times"></i></a>
-                                                        @endcan
-                                                        @can('Category Edit')
-                                                            <a href="{{url('admin/maintenance',$item->id)}}/edit" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>
-                                                        @endcan
-                                                        @can('Category Edit')
-                                                            <a href="{{url('admin/maintenance',$item->id)}}" class="btn btn-sm btn-outline-success  btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>
-                                                        @endcan
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endif --}}
+                                    
                                 </tbody>
                             </table>
                             <!-- datatable end -->
@@ -113,8 +83,6 @@
             });
             dataTables();
         });
-
-
         function dataTables() {
             $('#tbl_maintenace').DataTable({
                 // dom: 'Blfrtip',
@@ -136,10 +104,6 @@
                     // }
                 },
                 columns: [
-                    {
-                        data: 'id',
-                        name: 'id',
-                    },
                     {
                         data: 'maintenance_date',
                         name: 'maintenance_date',

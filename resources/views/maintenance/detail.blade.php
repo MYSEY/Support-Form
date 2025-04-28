@@ -80,7 +80,6 @@
                                                 @php
                                                     $hardwareItems = collect($data->maintenanceDetail)->filter(fn($item) => optional($item->task)->type === 'Hardware');
                                                 @endphp
-                                                
                                                 @forelse ($hardwareItems as $hardKey => $item)
                                                     <tr class="odd">
                                                         <td>{{ $hardKey + 1 }}</td>

@@ -190,6 +190,7 @@
                             <input type="hidden" value="{{csrf_token()}}" id="token"/>
                             <input type="hidden" name="id" id="id" value="{{$data->id}}">
                             <input type="hidden" name="category_id" id="category_id" value="{{$data->category_id}}">
+                            <input type="hidden" name="end_user" id="end_user" value="{{$data->end_user}}">
                             <div class="btn-loading mt-3" style="display: none">
                                 <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -228,6 +229,7 @@
                     },
                     dataType: "JSON",
                     success: function(response) {                        
+                        $("#category_id").val(response.message.category_id);
                         $("#end_user").val(response.message.end_user);
                         $(".employee").text(response.message.employee_name_en);
                         $(".position").text(response.message.name_english);
@@ -307,6 +309,7 @@
                 e.preventDefault(); // Prevent the form from submitting the traditional way
                 var id = $("#id").val();
                 var category_id = $("#category_id").val();
+                var end_user = $("#end_user").val();
                 var asset_id = $("#serial").val();
                 var maintenance_date = $("#maintenance_date").val();
                 var maintenace_by = $("#maintenace_by").val();
@@ -334,6 +337,7 @@
                         _token: $('input[name="_token"]').val(),
                         id : id,
                         category_id : category_id,
+                        end_user : end_user,
                         asset_id : asset_id,
                         maintenance_date : maintenance_date,
                         maintenace_by : maintenace_by,

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('category_id');
             $table->date('maintenance_date');
             $table->string('maintenace_by');
+            $table->foreignId('end_user');
             $table->longText('description')->nullable();
             $table->foreignId('created_by');
             $table->foreignId('updated_by')->nullable();
