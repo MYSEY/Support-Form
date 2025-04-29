@@ -100,7 +100,7 @@ class TicketReportController extends Controller
             // Apply pagination for the actual data retrieval
             $start = intval($request->input('start', 0));
             $limit = intval($request->input('length', 10));
-            $data = $query->orderBy('tickets.id', 'DESC')->offset($start)->limit($limit)->get();
+            $data = $query->orderBy('tickets.updated_at', 'DESC')->offset($start)->limit($limit)->get();
             
             // Return JSON response
             return response()->json([

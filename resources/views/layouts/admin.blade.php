@@ -122,6 +122,7 @@
                 'Task View',
                 'Category View',
                 'Asset View',
+                'Room View',
                 'Employee View',
             ];
             $segmentSetting =[
