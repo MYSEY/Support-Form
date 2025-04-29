@@ -28,9 +28,9 @@
                     <div class="panel-content">
                         <div class="row mb-2">
                             <div class="col-xl-4">
-                                <div class="form-group">
+                                <div class="form-group form-group-select2">
                                     <label class="form-label" for="Serial">Serial <span class="text-danger">*</span></label>
-                                    <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" name="serial" required>
+                                    <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="serial" name="serial" required>
                                         <option value="">-- Select --</option>
                                         @foreach ($serial as $item)
                                             <option value="{{$item->id}}">{{ $item->serial}}</option>
@@ -276,34 +276,66 @@
                         });
                     }
                 });
-                $.ajax({
-                    type: "POST",
-                    url: "{{url('admin/maintenance')}}",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        _token: $('input[name="_token"]').val(),
-                        asset_id : asset_id,
-                        category_id : category_id,
-                        office : office_id,
-                        location : location_id,
-                        end_user : end_user,
-                        maintenance_date : maintenance_date,
-                        maintenace_by : maintenace_by,
-                        description : description,
-                        maintenaceDetail : maintenaceDetail,
-                    },
-                    dataType: "JSON",
-                    success: function (response) {
-                        if (response.status == "error") {
-                            toastr.error(response.message);
-                        }else{
-                            toastr.success('Maintenance record created successfully.');
-                            window.location.replace("{{ URL('admin/maintenance') }}"); 
-                        }
+                var num_miss = 0;
+                $(".form-group-select2").each(function(){
+                    let formGroup = $(this);
+                    let value = formGroup.attr("data-select2-id");
+                    let requeredField = formGroup.find(".select2-option").val();
+                    let requered = formGroup.find(".required").val();
+                    if(!value && requered == ""){ 
+                        formGroup.find(".select2-selection--single").css("border-color","#dc3545");
+                    }else if(!requeredField && requered == "") {
+                        formGroup.find(".select2-selection--single").css("border-color","#dc3545");
+                    }else{
+                        formGroup.find(".select2-selection--single").css("border-color","#1dc9b7");
                     }
                 });
+                
+                $(".required").each(function(){
+                    if($(this).val()==""){ 
+                        num_miss++;
+                        $(this).addClass("is-invalid");
+                        $(this).removeClass("is-valid");
+                    }else{
+                        $(this).addClass("is-valid");
+                        $(this).removeClass("is-invalid");
+                    }
+                });
+                if (num_miss>0) {
+                    toastr.error("Please check field all required!");
+                    $(".btn-hidden-show").show();
+                    $(".btn-loading").css('display', 'none');
+                    return false;
+                }else{
+                    $.ajax({
+                        type: "POST",
+                        url: "{{url('admin/maintenance')}}",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            _token: $('input[name="_token"]').val(),
+                            asset_id : asset_id,
+                            category_id : category_id,
+                            office : office_id,
+                            location : location_id,
+                            end_user : end_user,
+                            maintenance_date : maintenance_date,
+                            maintenace_by : maintenace_by,
+                            description : description,
+                            maintenaceDetail : maintenaceDetail,
+                        },
+                        dataType: "JSON",
+                        success: function (response) {
+                            if (response.status == "error") {
+                                toastr.error(response.message);
+                            }else{
+                                toastr.success('Maintenance record created successfully.');
+                                window.location.replace("{{ URL('admin/maintenance') }}"); 
+                            }
+                        }
+                    });
+                }
             });
         });
         function handleCheckAllHardware(source) {

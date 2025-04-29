@@ -35,7 +35,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d H:i:s'); //2023-05-09 00:00:00
             $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s'); //2023-05-09 23:59:59
         }
-        $data = Ticket::with([
+        $query = Ticket::with([
             'fromDepartment',
             'department',
             'branch',
@@ -52,20 +52,21 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             $query->where('name', $name);
         })->when($request->priority, function ($query, $priority) {
             $query->where('priority', $priority);
-        })->when($from_date, function ($query, $from_date) {
-            $query->where('dt', '>=', $from_date);
-        })->when($to_date, function ($query, $to_date) {
-            $query->where('dt','<=', $to_date);
         })->when($request->status, function ($query, $status) {
             $query->whereIn('status', $status);
         });
+        if ($from_date && $to_date) {
+            $query->whereBetween('tickets.updated_at',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
+        }
+        
         if (Auth::user()->RolePermission == 'Staff') {
-            $data->where('tickets.created_by',Auth::user()->id);
+            $query->where('tickets.created_by',Auth::user()->id);
         }
         if (Auth::user()->RolePermission == 'admin_branch') {
-            $data->where('tickets.branch_id', Auth::user()->branch_id);
+            $query->where('tickets.branch_id', Auth::user()->branch_id);
         }
-        $data = $data->orderBy('id', 'DESC')->get();
+        $data = $query->orderBy('id', 'DESC')->get();
+        
         $i = 0;
         foreach ($data as $key=>$value) {
             $i++;
