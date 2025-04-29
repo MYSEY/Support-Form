@@ -7,7 +7,7 @@
             </h3>
         </div>
         <div class="col-md-8" style="text-align: right;">
-            <a class="btn btn-secondary waves-effect waves-themed"  href="{{url('admin/report/maintanance')}}" type="button">Back</a>
+            <a class="btn btn-secondary waves-effect waves-themed"  href="{{url('admin/report/maintenance')}}" type="button">Back</a>
         </div>
     </div>
     @foreach ($data as $item)

@@ -91,7 +91,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 'assigned'                  => ($value->assignedTo ? $value->assignedTo->name : $value->owner),
                 'aast_replier'              => ($value->lastReplier ? $value->lastReplier->name : $value->name),
                 'due_date'                  => $value->due_date,
-                "close_date"                => $value->closedat,
+                "close_date"                => $value->updated_at,
             ];
         }
         $this->export_datas = $dataExport;
@@ -120,7 +120,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             'Priority',
             'Assigned',
             'Last Replier',
-            'Due Date',
+            'Ticket Due Date',
             'Close Date'
         ];
     }

@@ -79,7 +79,7 @@
                                         <th style="min-width: 100px;">Assigned</th>
                                         <th style="min-width: 100px;">Last Replier</th>
                                         <th style="min-width: 100px;">Ticket Due Date</th>
-                                        <th style="min-width: 100px;">Updated</th>
+                                        <th style="min-width: 100px;">Close Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>

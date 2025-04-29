@@ -99,9 +99,9 @@
         @php
             $permissionsReports = [
                 'Ticket Report View',
-                'Maintanance Report View'
+                'Maintenance Report View'
             ];
-            $segmentReport = ['ticket','maintanance'];
+            $segmentReport = ['ticket','maintenance'];
             $permissionsRoles = [
                 'Role View', 
                 'Permission View', 
@@ -200,11 +200,11 @@
                                     </a>
                                 </li>
                             @endif
-                            @if (Auth::user()->can('Maintanance View'))
-                                <li class="@if (Request::instance()->segment(2) == 'maintanance') active @endif">
-                                    <a href="{{url('admin/maintanance')}}" title="maintanance" data-filter-tags="maintanance">
+                            @if (Auth::user()->can('Maintenance View'))
+                                <li class="@if (Request::instance()->segment(2) == 'maintenance') active @endif">
+                                    <a href="{{url('admin/maintenance')}}" title="maintenance" data-filter-tags="maintenance">
                                         <i class="fal fa-ticket-alt"></i>
-                                        <span class="nav-link-text" data-i18n="nav.maintanance">Maintanance</span>
+                                        <span class="nav-link-text" data-i18n="nav.maintenance">Maintenance</span>
                                     </a>
                                 </li>
                             @endif
@@ -232,10 +232,10 @@
                                                 </a>
                                             </li>
                                         @endif
-                                        @if (Auth::user()->can('Maintanance Report View'))
-                                            <li class="@if (Request::instance()->segment(3) == 'maintanance') active @endif">
-                                                <a href="{{url('admin/report/maintanance')}}" title="maintanance" data-filter-tags="application intel maintanance">
-                                                    <span class="nav-link-text" data-i18n="nav.maintanance">Maintanance</span>
+                                        @if (Auth::user()->can('Maintenance Report View'))
+                                            <li class="@if (Request::instance()->segment(3) == 'maintenance') active @endif">
+                                                <a href="{{url('admin/report/maintenance')}}" title="maintenance" data-filter-tags="application intel maintenance">
+                                                    <span class="nav-link-text" data-i18n="nav.maintenance">Maintenance</span>
                                                 </a>
                                             </li>
                                         @endif

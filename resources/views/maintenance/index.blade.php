@@ -10,10 +10,10 @@
                 </div>
                 
                 <div class="panel-container show">
-                    @can('Maintanance Create')
+                    @can('Maintenance Create')
                         <div class="panel-tag">
                             <div class="text-lg-right">
-                                <a href="{{url('admin/maintanance/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
+                                <a href="{{url('admin/maintenance/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
                             </div>
                         </div>
                     @endcan
@@ -59,7 +59,7 @@
                         <p>Are you sure want to delete?</p>
                     </div>
                     <div class="modal-btn delete-action">
-                        <form action="{{url('admin/maintanance/delete')}}" method="POST">
+                        <form action="{{url('admin/maintenance/delete')}}" method="POST">
                             @csrf
                             @method('Delete')
                             <input type="hidden" name="id" class="e_id" value="">
@@ -78,8 +78,8 @@
 @section('script')
 @include('includs.datatable_basic')
     <script>
-        var edit = @json(Auth::user()->can('Maintanance Edit'));
-        var maintanance_delete = @json(Auth::user()->can('Maintanance Delete'));
+        var edit = @json(Auth::user()->can('Maintenance Edit'));
+        var maintanance_delete = @json(Auth::user()->can('Maintenance Delete'));
 
         $(function(){
             $(document).on('click','.btnDelete', function(){
@@ -98,7 +98,7 @@
                 order: [[0, 'desc']],
                 lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
                 ajax: {
-                    url: '{{ URL("admin/maintanance") }}',
+                    url: '{{ URL("admin/maintenance") }}',
                     type: 'GET',
                     // data: function(d) {
                     //     d.from_date = from_date;
@@ -158,8 +158,8 @@
                                 actionButtons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-2 btnDelete"  data-toggle="modal" data-target="#delete_maintenance"  title="Delete Record" data-id="${row.id}"><i class="fal fa-times"></i></a>`;
                             }
                             if (edit) {
-                                actionButtons += `<a href="{{url('/admin/maintanance')}}/${row.id}/edit" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>`;
-                                actionButtons += `<a href="{{url('/admin/maintanance')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
+                                actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}/edit" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>`;
+                                actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
                             }
                             return actionButtons;
                         },

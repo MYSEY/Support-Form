@@ -128,13 +128,13 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     //maintenance
     Route::resource('employee', EmployeeController::class);
-    Route::resource('maintanance', MaintenanceController::class);
+    Route::resource('maintenance', MaintenanceController::class);
     Route::get('/serial', [MaintenanceController::class,'OnChangeSerial']);
 
     //maintenance report
-    Route::get('report/maintanance', [MaintenanceReportController::class, 'report']);
-    Route::get('report/maintanance/export', [MaintenanceReportController::class, 'maintenanceExport']);
-    Route::get('maintanance/history/{id}', [MaintenanceReportController::class, 'maintenanceHistory']);
+    Route::get('report/maintenance', [MaintenanceReportController::class, 'report']);
+    Route::get('report/maintenance/export', [MaintenanceReportController::class, 'maintenanceExport']);
+    Route::get('maintenance/history/{id}', [MaintenanceReportController::class, 'maintenanceHistory']);
 
     // Issue Type
     Route::get('/issue-type/duplicate', [IssueTypeController::class,'duplicateIssueType']);
@@ -143,7 +143,6 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/issue-type/ids', [IssueTypeController::class,'dataSelect']);
     Route::post('/issue-type/import', [IssueTypeController::class,'dataImport']);
     
-
     // Reports
     Route::resource('report/ticket', TicketReportController::class);
     Route::get('ticket/report/show', [TicketReportController::class,'show']);

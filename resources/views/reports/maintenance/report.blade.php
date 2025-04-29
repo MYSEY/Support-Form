@@ -42,7 +42,7 @@
                         </div>
                         <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2" style="text-align: right;">
                             <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed" id="btnSearch">Search</a>
-                            @if (Auth::user()->can('Maintanance Report Export'))
+                            @if (Auth::user()->can('Maintenance Report Export'))
                                 <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
                             @endif
                         </div>
@@ -91,7 +91,7 @@
         let from_date = null;
         let to_date = null;
         let staff_name = null;
-        var detail = @json(Auth::user()->can('Maintanance Report Detail'));
+        var detail = @json(Auth::user()->can('Maintenance Report Detail'));
         $(document).ready(function(){
             $('#btnSearch').on('click', function() {
                 from_date = $('#from_date').val();
@@ -110,7 +110,7 @@
                     serial: $("#serial").val(),
                     office: $("#office").val()
                 };
-                var url = "{{URL::to('admin/report/maintanance/export')}}?" + $.param(query)
+                var url = "{{URL::to('admin/report/maintenance/export')}}?" + $.param(query)
                 window.location = url;
             });
         });
@@ -124,7 +124,7 @@
                 order: [[0, 'desc']],
                 lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
                 ajax: {
-                    url: '{{ URL("admin/report/maintanance") }}',
+                    url: '{{ URL("admin/report/maintenance") }}',
                     type: 'GET',
                     data: function(d) {
                         d.from_date = from_date;
@@ -182,7 +182,7 @@
                             let buttons = '';
                             if (row.id) {
                                 if (detail) {
-                                    return `<a href="/admin/maintanance/history/${row.asset_id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
+                                    return `<a href="/admin/maintenance/history/${row.asset_id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
                                 }
                             }
                             return buttons || '';

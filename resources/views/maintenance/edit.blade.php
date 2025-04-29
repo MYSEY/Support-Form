@@ -184,7 +184,7 @@
                         </div>
                         <div class="text-md-right">
                             <div class="btn-hidden-show">
-                                <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintanance')}}"  type="button">Cancel</a>
+                                <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/maintenance')}}"  type="button">Cancel</a>
                                 <button class="btn btn-danger waves-effect waves-themed mt-3 mb-3" id="btn_update" type="submit">Submit</button>
                             </div>
                             <input type="hidden" value="{{csrf_token()}}" id="token"/>
@@ -335,7 +335,7 @@
                 });
                 $.ajax({
                     type: "PUT",
-                    url: "{{url('admin/maintanance')}}/" + id,
+                    url: "{{url('admin/maintenance')}}/" + id,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -358,7 +358,7 @@
                             toastr.error(response.message);
                         }else{
                             toastr.success('Maintenance updated successfully.');
-                            window.location.replace("{{ URL('admin/maintanance') }}"); 
+                            window.location.replace("{{ URL('admin/maintenance') }}"); 
                         }
                     }
                 });

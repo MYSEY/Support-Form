@@ -20,7 +20,7 @@ class MaintenanceController extends Controller
      */
     public function __construct()
     {
-        RolePermission($this, 'Maintanance');
+        RolePermission($this, 'Maintenance');
     }
     public function index(Request $request)
     {
