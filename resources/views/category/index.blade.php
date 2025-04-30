@@ -35,8 +35,6 @@
                                     <tr>
                                         <th>#</th>
                                         <th>CategoryName</th>
-                                        {{-- <th>TaskName</th> --}}
-                                        {{-- <th>Type</th> --}}
                                         <th>CreatedAt</th>
                                         <th>Action</th>
                                     </tr>
@@ -47,10 +45,7 @@
                                             <tr>
                                                 <td>{{$item->id}}</td>
                                                 <td>{{$item->name}}</td>
-                                                {{-- <td>{{$item->task_name}}</td> --}}
-                                                {{-- <td>{{$item->type}}</td> --}}
                                                 <td>{{ $item->created_at }}</td>
-                                                {{-- <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') ?? '' }}</td> --}}
                                                 <td>
                                                     <div class="d-flex demo">
                                                         @can('Category Delete')
@@ -129,7 +124,6 @@
                 form_data.append('file', file_data);
                 form_data.append('_token', "{{ csrf_token() }}");
                 if (fileExtension == "xls" || fileExtension == "xlsx" || fileExtension == "csv" && fileSize < 1048576) {
-
                     $(".upload_file_data").prop('disabled', true);
                     $(".btn-hidden-show").hide();
                     $(".btn-impot-loading").css('display', 'block');

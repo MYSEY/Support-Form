@@ -25,15 +25,6 @@ class CategoryController extends Controller
     public function index()
     {
         $task = Task::whereNull('deleted_at')->get();
-        // $data = CategoryTask::leftJoin('tasks','category_tasks.task_id','=','tasks.id')
-        // ->leftJoin('categories','categories.id','=','category_tasks.category_id')
-        // ->select(
-        //     'category_tasks.*',
-        //     'categories.name as category_name',
-        //     'tasks.name as task_name',
-        //     'tasks.description',
-        //     'tasks.type',
-        // )->whereNull('category_tasks.deleted_at')->whereNull('tasks.deleted_at')->orderBy('categories.id','DESC')->get();
         $data = Category::all();
         return view('category.index',compact('task','data'));
     }

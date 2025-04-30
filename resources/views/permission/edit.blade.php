@@ -60,6 +60,24 @@
                                     <label class="custom-control-label" for="delete">Delete</label>
                                 </div>
                             </div>
+                            <div class="mb-1">
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input type="checkbox" class="custom-control-input check_all" name="permission" id="import" value="Import" {{$st_name[1] == "Import" ? 'checked' : ''}}>
+                                    <label class="custom-control-label" for="import">Import</label>
+                                </div>
+                            </div>
+                            <div class="mb-1">
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input type="checkbox" class="custom-control-input check_all" name="permission" id="export" value="Export" {{$st_name[1] == "Export" ? 'checked' : ''}}>
+                                    <label class="custom-control-label" for="export">Export</label>
+                                </div>
+                            </div>
+                            <div class="mb-1">
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input type="checkbox" class="custom-control-input check_all" name="permission" id="print" value="Print" {{$st_name[1] == "Print" ? 'checked' : ''}}>
+                                    <label class="custom-control-label" for="print">Print</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {{-- <div class="col-sm-12 col-md-12">

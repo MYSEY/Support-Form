@@ -160,7 +160,7 @@
                 destroy: true,
                 processing: true,
                 serverSide: true,
-                order: [[0, 'desc']],
+                // order: [[0, 'desc']],
                 lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
                 ajax: {
                     url: '{{ URL("admin/task") }}',
@@ -210,8 +210,7 @@
                         orderable: false,
                         searchable: false
                     }
-                ],
-                order: [[0, 'desc']]
+                ]
             });
         }
     </script>

@@ -24,7 +24,7 @@
                             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        {{-- <th>#</th> --}}
                                         <th width="100%">Serial</th>
                                         <th>Category</th>
                                         <th>DeviceName</th>
@@ -42,7 +42,7 @@
                                     @if (count($data)>0)
                                         @foreach ($data as $key=>$item)
                                             <tr>
-                                                <td>{{$item->id}}</td>
+                                                {{-- <td>{{$item->id}}</td> --}}
                                                 <td>{{$item->serial}}</td>
                                                 <td>{{$item->CategoryName}}</td>
                                                 <td>{{$item->device_name}}</td>

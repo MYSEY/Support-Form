@@ -48,13 +48,11 @@
                                         <th>Role</th>
                                         <th>Department</th>
                                         <th>Branch</th>
-                                        <th>Created By</th>
-                                        <th>Created At</th>
-                                        <th>Updated By</th>
-                                        <th>Updated At</th>
+                                        <th>Email</th>
+                                        <th>CreatedBy</th>
+                                        {{-- <th>Created At</th> --}}
                                         <th>Status</th>
                                         <th>Action</th>
-                                        <th>Email</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -73,10 +71,9 @@
                                                 <td>{{$item->role_name}}</td>
                                                 <td>{{$item->department ? $item->department->name_english : ""}}</td>
                                                 <td>{{$item->branch ? $item->branch->branch_name_en : ""}}</td>
+                                                <td>{{$item->email}}</td>
                                                 <td>{{$item->createdBy ? $item->createdBy->name: ""}}</td>
-                                                <td>{{\Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? ''}}</td>
-                                                <td>{{$item->updatedBy ? $item->updatedBy->name: ""}}</td>
-                                                <td>{{\Carbon\Carbon::parse($item->updated_at)->format('d-M-Y h:i A') ?? ''}}</td>
+                                                {{-- <td>{{\Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? ''}}</td> --}}
                                                 <td style="text-align: center;">
                                                     <div class="demo">
                                                         @can('User Edit')
@@ -102,7 +99,6 @@
                                                         @endcan                                                            
                                                     </div>
                                                 </td>
-                                                <td>{{$item->email}}</td>
                                             </tr>
                                         @endforeach
                                     @endif
