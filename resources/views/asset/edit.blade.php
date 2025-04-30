@@ -42,11 +42,11 @@
                                 </div>
                                 <div class="col-xl-6">
                                     <div class="form-group">
-                                        <label class="form-label" for="office">Office <span class="text-danger">*</span></label>
-                                        <select class="select2 form-control w-100 select2-hidden-accessible" id="office" name="office" required>
+                                        <label class="form-label" for="end_user">End User</label>
+                                        <select class="select2 form-control w-100 select2-hidden-accessible" id="end_user" name="end_user" required>
                                             <option value="">-- Select --</option>
-                                            @foreach ($office as $item)
-                                                <option value="{{$item->id}}" {{$data->office == $item->id ? 'selected' : ''}}>{{ $item->branch_name_en}}</option>
+                                            @foreach ($users as $item)
+                                                <option value="{{$item->id}}" {{$data->end_user == $item->id ? 'selected' : ''}}>{{ $item->employee_name_en}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -64,13 +64,14 @@
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="col-xl-6">
                                     <div class="form-group">
-                                        <label class="form-label" for="end_user">End User</label>
-                                        <select class="select2 form-control w-100 select2-hidden-accessible" id="end_user" name="end_user" required>
+                                        <label class="form-label" for="office">Office <span class="text-danger">*</span></label>
+                                        <select class="select2 form-control w-100 select2-hidden-accessible" id="office" name="office" required>
                                             <option value="">-- Select --</option>
-                                            @foreach ($users as $item)
-                                                <option value="{{$item->id}}" {{$data->end_user == $item->id ? 'selected' : ''}}>{{ $item->employee_name_en}}</option>
+                                            @foreach ($office as $item)
+                                                <option value="{{$item->id}}" {{$data->office == $item->id ? 'selected' : ''}}>{{ $item->branch_name_en}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -83,12 +84,6 @@
                                         <input type="date" name="date" class="form-control required" id="date" value="{{$data->date}}" required>
                                     </div>
                                 </div>
-                                {{-- <div class="col-xl-6">
-                                    <div class="form-group">
-                                        <label class="form-label" for="lifecycle_month">Lifecycle (Month)</label>
-                                        <input type="date" name="lifecycle_month" class="form-control required" id="lifecycle_month" required>
-                                    </div>
-                                </div> --}}
                             </div>
             
                             <div class="text-md-right">

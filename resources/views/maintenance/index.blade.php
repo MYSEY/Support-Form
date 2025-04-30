@@ -34,7 +34,7 @@
                                                 <th>EndUser</th>
                                                 <th>Postion</th>
                                                 <th>CreatedAt</th>
-                                                <th style="min-width: 100%;">Action</th>
+                                                <th style="min-width: 15%;">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
