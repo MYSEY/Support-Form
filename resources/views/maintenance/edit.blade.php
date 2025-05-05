@@ -23,10 +23,20 @@
                         Maintanance
                     </h2>
                 </div>
-                {{-- @dd($data) --}}
                 <div class="panel-container show">
                     <div class="panel-content">
                         <div class="row mb-2">
+                            <div class="col-xl-4">
+                                <div class="form-group form-group-select2">
+                                    <label class="form-label" for="branch_id">Branch <span class="text-danger">*</span></label>
+                                    <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="branch_id" name="branch_id">
+                                        <option value="">-- Select --</option>
+                                        @foreach ($branch as $item)
+                                        <option value="{{$item->id}}" {{$data->office == $item->id ? 'selected' : ''}}>{{ $item->branch_name_en}}</option>
+                                    @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-xl-4">
                                 <div class="form-group form-group-select2">
                                     <label class="form-label" for="Serial">Serial <span class="text-danger">*</span></label>
@@ -44,10 +54,23 @@
                                     <input type="date" name="maintenance_date" class="form-control required" id="maintenance_date" value="{{ $data->maintenance_date}}" required>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mb-2">
                             <div class="col-xl-4">
                                 <div class="form-group">
                                     <label class="form-label" for="maintenace_by">IT Technician <span class="text-danger">*</span></label>
                                     <input type="text" name="maintenace_by" class="form-control required" disabled id="maintenace_by" value="{{ $data->maintenace_by}}" required>
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="form-group form-group-select2">
+                                    <label class="form-label" for="maintenance_mission_id">Maintenance Mission</label>
+                                    <select class="select2 form-control w-100 select2-hidden-accessible select2-option" id="maintenance_mission_id" name="maintenance_mission_id">
+                                        <option value="">-- Select --</option>
+                                        @foreach ($maintenanceMission as $item)
+                                        <option value="{{$item->id}}" {{$data->maintenance_mission_id == $item->id ? 'selected' : ''}}>{{ $item->name}}</option>
+                                    @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -190,7 +213,6 @@
                             <input type="hidden" value="{{csrf_token()}}" id="token"/>
                             <input type="hidden" name="id" id="id" value="{{$data->id}}">
                             <input type="hidden" name="category_id" id="category_id" value="{{$data->category_id}}">
-                            <input type="hidden" name="office_id" id="office_id" value="{{$data->office}}">
                             <input type="hidden" name="location_id" id="location_id" value="{{$data->location_id}}">
                             <input type="hidden" name="end_user" id="end_user" value="{{$data->end_user}}">
                             <div class="btn-loading mt-3" style="display: none">
@@ -221,6 +243,26 @@
                     ['view', ['fullscreen', 'codeview']]
                 ]
             });
+            $("#branch_id").on('change', function(){
+                var branch_id = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('admin/onchange/branch') }}",
+                    data: { 
+                        branch_id : branch_id 
+                    },
+                    dataType: "JSON",
+                    success: function(response) {
+                        $('#serial').html('<option selected > -- Select --</option>');
+                        $.each(response.message, function(i, item) {
+                            $('#serial').append($('<option>', {
+                                value: item.id,
+                                text: item.serial
+                            }));
+                        });
+                    }
+                });
+            });
             $("#serial").on('change', function(){
                 var serial = $(this).val();
                 $.ajax({
@@ -232,7 +274,6 @@
                     dataType: "JSON",
                     success: function(response) {                        
                         $("#category_id").val(response.message.category_id);
-                        $("#office_id").val(response.message.office);
                         $("#location_id").val(response.message.location_id);
                         $("#end_user").val(response.message.end_user);
                         $(".employee").text(response.message.employee_name_en);
@@ -313,13 +354,13 @@
                 e.preventDefault(); // Prevent the form from submitting the traditional way
                 var id = $("#id").val();
                 var category_id = $("#category_id").val();
-                var office_id = $("#office_id").val();
+                var branch_id = $("#branch_id").val();
                 var location_id = $("#location_id").val();
                 var end_user = $("#end_user").val();
                 var asset_id = $("#serial").val();
                 var maintenance_date = $("#maintenance_date").val();
                 var maintenace_by = $("#maintenace_by").val();
-                // var description = $("#description").val();
+                var maintenance_mission_id = $("#maintenance_mission_id").val();
                 var description = $('#description').summernote('code');
 
                 var maintenaceDetail = [];
@@ -373,13 +414,14 @@
                             _token: $('input[name="_token"]').val(),
                             id : id,
                             category_id : category_id,
-                            office : office_id,
+                            office : branch_id,
                             location : location_id,
                             end_user : end_user,
                             asset_id : asset_id,
                             maintenance_date : maintenance_date,
                             maintenace_by : maintenace_by,
                             description : description,
+                            maintenance_mission_id : maintenance_mission_id,
                             maintenaceDetail : maintenaceDetail,
                         },
                         dataType: "JSON",

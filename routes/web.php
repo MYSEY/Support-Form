@@ -27,6 +27,7 @@ use App\Http\Controllers\Admins\TicketReportController;
 use App\Http\Controllers\Admins\ResponsesTicketController;
 use App\Http\Controllers\Admins\TicketGuidelinesController;
 use App\Http\Controllers\Admins\MaintenanceReportController;
+use App\Http\Controllers\Admins\MaintenanceMissionController;
 use App\Http\Controllers\Admins\PermissionCategoryController;
 
 /*
@@ -130,6 +131,10 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::resource('employee', EmployeeController::class);
     Route::resource('maintenance', MaintenanceController::class);
     Route::get('/serial', [MaintenanceController::class,'OnChangeSerial']);
+    Route::get('/onchange/branch', [MaintenanceController::class,'OnChangeBranch']);
+
+    //maintenance mission
+    Route::resource('mission', MaintenanceMissionController::class);
 
     //maintenance report
     Route::get('report/maintenance', [MaintenanceReportController::class, 'report']);

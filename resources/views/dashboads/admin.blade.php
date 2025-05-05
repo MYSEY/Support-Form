@@ -1,5 +1,12 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .scrollable-branches {
+        max-height: 300px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+    }
+</style>
     <div class="subheader">
         <h1 class="subheader-title">
             <i class='subheader-icon fal fa-chart-area'></i> Support Form <span class='fw-300'>Dashboard</span>
@@ -113,6 +120,80 @@
             </div>
         </div>
     </div>
+
+    <div class="row"> 
+        <div class="col-xl-6">
+            <div id="panel-9" class="panel">
+                <div class="panel-hdr">    
+                    <h2>Maintenance Mission By Branch</h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+               
+                <div class="panel-container show">
+                    <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-xl-12">
+                                <!-- Scrollable container start -->
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    @foreach ($branch as $item)
+                                        @php
+                                            $recordsTotal = App\Models\Maintenance::whereNotNull('maintenance_mission_id')->where('office',$item->id)->count(); 
+                                        @endphp
+                                        <div class="d-flex mt-2">
+                                            Branch {{$item->abbreviations}}
+                                            <span class="ml-auto"><strong>({{$recordsTotal}}/{{$recordsTotal}})</strong></span>
+                                        </div>
+                                        <hr>
+                                    @endforeach
+                                </div>
+                                <!-- Scrollable container end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div id="panel-9" class="panel">
+                <div class="panel-hdr">    
+                    <h2>Asset</h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+               
+                <div class="panel-container show">
+                    <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-xl-12">
+                                <!-- Scrollable container start -->
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    @foreach ($branch as $item)
+                                        @php
+                                            $recordsTotal = App\Models\Asset::where('office',$item->id)->count(); 
+                                        @endphp
+                                        <div class="d-flex mt-2">
+                                            Branch {{$item->abbreviations}}
+                                            <span class="ml-auto"><strong>{{$recordsTotal}}</strong></span>
+                                        </div>
+                                        <hr>
+                                    @endforeach
+                                </div>
+                                <!-- Scrollable container end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+    
     <div class="row">
         @can('Dashboad User Online')
             <div class="col-lg-12 sortable-grid ui-sortable">
@@ -286,7 +367,6 @@
                                 tickeActive++;
                             }
                         });
-                        console.log(assign);
                         $('#total-new-ticket').text(newTicket);
                         $('#total-priority').text(priority);
                         $('#total-assign').text(assign);

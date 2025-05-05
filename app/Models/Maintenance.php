@@ -22,6 +22,7 @@ class Maintenance extends Model
         'office',
         'location',
         'end_user',
+        'maintenance_mission_id',
         'description',
         'created_by',
         'updated_by',

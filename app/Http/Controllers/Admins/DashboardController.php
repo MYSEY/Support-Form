@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Models\User;
+use App\Models\Branch;
+use App\Models\Online;
+use App\Models\Maintenance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Online;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -32,17 +34,12 @@ class DashboardController extends Controller
             'branchs.branch_name_en',
             'roles.name as role_name',
         );
-        // Apply additional filtering for role
-        // if (Auth::user()->RolePermission=='staff') {
-        //     $query->where("onlines.user_id", Auth::user()->id);
-        // }else if(Auth::user()->RolePermission=='admin_support' || Auth::user()->RolePermission=='admin'){
-        //     $query->where('department_id', Auth::user()->department_id);
-        // }else if(Auth::user()->RolePermission=="admin_branch"){
-        //     $query->where('branch_id', Auth::user()->branch_id);
-        // }
+        
         $today = Carbon::today()->toDateString();
+
         $data = $query->whereDate('onlines.updated_at', $today)->orderBy('onlines.id','DESC')->get();
-        return view('dashboads.admin',compact('data'));
+        $branch = Branch::all();
+        return view('dashboads.admin',compact('data','branch'));
     }
     public function show(Request $request){
         $dataCustomStatuses = DB::table('custom_statuses')->get();

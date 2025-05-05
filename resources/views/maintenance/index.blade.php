@@ -33,6 +33,7 @@
                                                 <th>Location</th>
                                                 <th>EndUser</th>
                                                 <th>Postion</th>
+                                                <th>MaintenanceMission</th>
                                                 <th>CreatedAt</th>
                                                 <th style="min-width: 15%;">Action</th>
                                             </tr>
@@ -144,6 +145,10 @@
                     {
                         data: 'name_english',
                         name: 'name_english',
+                    },
+                    {
+                        data: 'maintenance_mission',
+                        name: 'maintenance_mission',
                     },
                     {
                         data: 'created_at',

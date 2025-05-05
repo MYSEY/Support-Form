@@ -8,20 +8,13 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     * php artisan migrate:refresh --path=database/migrations/2025_03_26_145455_create_maintenances_table.php
      */
     public function up(): void
     {
-        Schema::create('maintenances', function (Blueprint $table) {
+        Schema::create('maintenance_missions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('asset_id');
-            $table->foreignId('category_id');
-            $table->date('maintenance_date');
-            $table->string('maintenace_by');
-            $table->foreignId('office');
-            $table->foreignId('location');
-            $table->foreignId('end_user');
-            $table->foreignId('maintenance_mission_id')->nullable();
+            $table->string('name');
+            $table->date('date');
             $table->longText('description')->nullable();
             $table->foreignId('created_by');
             $table->foreignId('updated_by')->nullable();
@@ -35,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('maintenances');
+        Schema::dropIfExists('maintenance_missions');
     }
 };
