@@ -5,13 +5,21 @@
             <div class="card mb-2">
                 <div class="card-body">
                     <div class="row filter-btn">
-                        <div class="col-sm-2 col-md-2">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <input type="text" class="form-control datepicker" name="from_date" id="from_date" value="" placeholder="From Date">
+                                {{-- <label class="">Closed Date</label> --}}
+                                <input type="text" class="form-control datepicker-ranges" name="closed_date" id="closed_date" value="" placeholder="Closed Date">
                             </div>
                         </div>
+                        {{-- <div class="col-sm-2 col-md-2">
+                            <div class="form-group">
+                                <label for="">Date From</label>
+                                <input type="text" class="form-control datepicker" name="from_date" id="from_date" value="" placeholder="Date From">
+                            </div>
+                        </div> --}}
                         <div class="col-sm-2 col-md-2">
                             <div class="form-group">
+                                {{-- <label for="">Submited Date</label> --}}
                                 <input type="text" class="form-control datepicker" name="to_date" id="to_date" value="" placeholder="To Date">
                             </div>
                         </div>
@@ -44,11 +52,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2" style="text-align: right;">
-                            <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed" id="btnSearch">Search</a>
+                        <div class="" style="text-align: right;">
+                            <a href="javascript:void(0)" class="btn btn-outline-success waves-effect btn-sm waves-themed" id="btnSearch">Search</a>
                             @can('Ticket Report Export')
-                                <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
+                                <a href="javascript:void(0)" class="btn btn-outline-success btn-sm waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
                             @endcan
+                            <a href="javascript:void(0)" class=""><span class="btn btn-outline-danger btn-sm btn-reset">Reset</span></a>
                         </div>
                     </div>
                 </div>
@@ -97,15 +106,23 @@
     <script>
         let from_date = null;
         let to_date = null;
+        let closed_date = null;
         $(document).ready(function(){
             $('#btnSearch').on('click', function() {
                 from_date = $('#from_date').val();
                 to_date = $('#to_date').val();
+                closed_date = $('#closed_date').val();
                 let priority = $('select[name="priority"]').val();
                 let status = $('select[name="status"]').val();
                 let user_id = $('select[name="user_id"]').val();
                 $('#tbl_ticket_report').DataTable().ajax.reload();
             });
+
+            $('.btn-reset').on('click', function() {
+                $('#closed_date').val('');
+                $('#to_date').val('');
+            });
+
             dataTables();
 
             $('#btn-export').on('click',function(){
@@ -114,7 +131,8 @@
                     status: $("#status").val(),
                     priority: $("#priority").val(),
                     from_date: $("#from_date").val(),
-                    to_date: $("#to_date").val()
+                    to_date: $("#to_date").val(),
+                    closed_date: $("#closed_date").val()
                 };
                 var url = "{{URL::to('admin/ticket/report/export')}}?" + $.param(query)
                 window.location = url;
@@ -156,6 +174,7 @@
                     data: function(d) {
                         d.from_date = from_date;
                         d.to_date = to_date;
+                        d.closed_date = closed_date;
                         d.priority = $('select[name="priority"]').val();
                         d.status = $('select[name="status"]').val();
                         d.user_id = $('select[name="user_id"]').val();

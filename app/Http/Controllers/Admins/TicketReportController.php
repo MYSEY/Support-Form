@@ -31,10 +31,12 @@ class TicketReportController extends Controller
         $user = User::select('id','name')->get();
         $from_date = null;
         $to_date = null;
+        $closed_date = null;
         if ($request->from_date || $request->to_date) {
             $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d H:i:s');
             $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s');
         }
+        
         if (request()->ajax()) {
             // Define the base query
             $query = DB::table('tickets')
@@ -65,11 +67,26 @@ class TicketReportController extends Controller
                 $query->whereIn('tickets.status', $status);
             })->when($request->user_id, function ($query, $user_id) {
                 $query->where('tickets.created_by', $user_id);
+            })->when($to_date, function ($query, $to_date) {
+                $query->whereDate('tickets.dt', '<=', $to_date);
             });
 
-            if ($from_date && $to_date) {
-                $query->whereBetween('tickets.updated_at',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
+            if ($request->closed_date) {
+                [$start, $end] = explode(' - ', $request->closed_date);
+                $start = Carbon::createFromDate($start)->format('Y-m-d H:i:s');
+                $end = Carbon::createFromDate($end)->format('Y-m-d H:i:s');
+                $query->whereBetween('tickets.updated_at', [$start, $end]);
             }
+            // if ($from_date || $to_date) {
+            //     $query->whereBetween('tickets.dt',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
+            // }
+
+            // if ($from_date) {
+            //     $query->whereDate('tickets.dt', '>=', $from_date);
+            // } elseif ($to_date) {
+            //     $query->whereDate('tickets.dt', '<=', $to_date);
+            // }
+            
             // Apply additional filtering for 'Staff' role
             if (Auth::user()->RolePermission == 'Staff') {
                 $query->where('tickets.created_by',Auth::user()->id);
