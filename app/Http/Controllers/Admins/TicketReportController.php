@@ -30,11 +30,11 @@ class TicketReportController extends Controller
         $priority = Priority::get();
         $user = User::select('id','name')->get();
         $from_date = null;
-        $to_date = null;
+        $submited_date = null;
         $closed_date = null;
-        if ($request->from_date || $request->to_date) {
+        if ($request->from_date || $request->submited_date) {
             $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d H:i:s');
-            $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s');
+            $submited_date = Carbon::createFromDate($request->submited_date.' '.'23:59:59')->format('Y-m-d H:i:s');
         }
         
         if (request()->ajax()) {
@@ -67,8 +67,8 @@ class TicketReportController extends Controller
                 $query->whereIn('tickets.status', $status);
             })->when($request->user_id, function ($query, $user_id) {
                 $query->where('tickets.created_by', $user_id);
-            })->when($to_date, function ($query, $to_date) {
-                $query->whereDate('tickets.dt', '<=', $to_date);
+            })->when($submited_date, function ($query, $submited_date) {
+                $query->whereDate('tickets.dt', '<=', $submited_date);
             });
 
             if ($request->closed_date) {

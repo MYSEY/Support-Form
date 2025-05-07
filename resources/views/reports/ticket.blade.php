@@ -20,7 +20,7 @@
                         <div class="col-sm-2 col-md-2">
                             <div class="form-group">
                                 {{-- <label for="">Submited Date</label> --}}
-                                <input type="text" class="form-control datepicker" name="to_date" id="to_date" value="" placeholder="To Date">
+                                <input type="text" class="form-control datepicker" name="submited_date" id="submited_date" value="" placeholder="Submited Date">
                             </div>
                         </div>
                         <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
@@ -105,12 +105,12 @@
 @section('script')
     <script>
         let from_date = null;
-        let to_date = null;
+        let submited_date = null;
         let closed_date = null;
         $(document).ready(function(){
             $('#btnSearch').on('click', function() {
                 from_date = $('#from_date').val();
-                to_date = $('#to_date').val();
+                submited_date = $('#submited_date').val();
                 closed_date = $('#closed_date').val();
                 let priority = $('select[name="priority"]').val();
                 let status = $('select[name="status"]').val();
@@ -120,7 +120,7 @@
 
             $('.btn-reset').on('click', function() {
                 $('#closed_date').val('');
-                $('#to_date').val('');
+                $('#submited_date').val('');
             });
 
             dataTables();
@@ -131,7 +131,7 @@
                     status: $("#status").val(),
                     priority: $("#priority").val(),
                     from_date: $("#from_date").val(),
-                    to_date: $("#to_date").val(),
+                    submited_date: $("#submited_date").val(),
                     closed_date: $("#closed_date").val()
                 };
                 var url = "{{URL::to('admin/ticket/report/export')}}?" + $.param(query)
@@ -173,7 +173,7 @@
                     type: 'GET',
                     data: function(d) {
                         d.from_date = from_date;
-                        d.to_date = to_date;
+                        d.submited_date = submited_date;
                         d.closed_date = closed_date;
                         d.priority = $('select[name="priority"]').val();
                         d.status = $('select[name="status"]').val();
