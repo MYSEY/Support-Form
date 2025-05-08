@@ -19,7 +19,6 @@
                         </div> --}}
                         <div class="col-sm-2 col-md-2">
                             <div class="form-group">
-                                {{-- <label for="">Submited Date</label> --}}
                                 <input type="text" class="form-control datepicker" name="submited_date" id="submited_date" value="" placeholder="Submited Date">
                             </div>
                         </div>

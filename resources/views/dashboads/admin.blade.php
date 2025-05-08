@@ -367,10 +367,10 @@
                                 tickeActive++;
                             }
                         });
-                        $('#total-new-ticket').text(newTicket);
-                        $('#total-priority').text(priority);
-                        $('#total-assign').text(assign);
-                        $('#total-ticke-active').text(tickeActive);
+                        $('#total-new-ticket').text(Number(newTicket).toLocaleString());
+                        $('#total-priority').text(Number(priority).toLocaleString());
+                        $('#total-assign').text(Number(assign).toLocaleString());
+                        $('#total-ticke-active').text(Number(tickeActive).toLocaleString());
                     }
                     let dataTicketStatus = {
                         dataTickets: response.dataTickets,
