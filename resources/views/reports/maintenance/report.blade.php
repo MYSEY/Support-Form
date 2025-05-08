@@ -33,7 +33,7 @@
                         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                             <div class="form-group">
                                 <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" data-select2-id="select2-data-2-c0n2" name="serial">
-                                    <option value="">-- Select --</option>
+                                    <option value="">-- Select serial --</option>
                                     @foreach ($serial as $key => $item)
                                         <option value="{{$item->serial}}">{{$item->serial}}</option>
                                     @endforeach
@@ -43,7 +43,7 @@
                         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                             <div class="form-group" data-select2-id="105">
                                 <select class="select2 form-control w-100 select2-hidden-accessible" name="office" id="office">
-                                    <option value="">-- Select --</option>
+                                    <option value="">-- Select Office --</option>
                                     @foreach ($office as $key => $item)
                                         <option value="{{$item->id}}">{{$item->branch_name_en}}</option>
                                     @endforeach
@@ -53,7 +53,7 @@
                         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                             <div class="form-group" data-select2-id="105">
                                 <select class="select2 form-control w-100 select2-hidden-accessible" name="maintenance_mission" id="maintenance_mission">
-                                    <option value="">-- Select --</option>
+                                    <option value="">-- Select Maintenance Type --</option>
                                     @foreach ($maintenanceMission as $key => $item)
                                         <option value="{{$item->id}}">{{$item->name}}</option>
                                     @endforeach
