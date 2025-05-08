@@ -71,7 +71,7 @@
                                         <th>Location</th>
                                         <th>End_User</th>
                                         <th>Postion</th>
-                                        <th>MaintenanceMission</th>
+                                        <th>MaintenanceType</th>
                                         <th>Created_At</th>
                                         <th>Action</th>
                                     </tr>

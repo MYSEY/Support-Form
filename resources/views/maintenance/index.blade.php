@@ -33,9 +33,9 @@
                                                 <th>Location</th>
                                                 <th>EndUser</th>
                                                 <th>Postion</th>
-                                                <th>MaintenanceMission</th>
+                                                <th>MaintenanceType</th>
                                                 <th>CreatedAt</th>
-                                                <th style="min-width: 15%;">Action</th>
+                                                <th style="width: 40%">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
