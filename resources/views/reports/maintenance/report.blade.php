@@ -5,46 +5,60 @@
             <div class="card mb-2">
                 <div class="card-body">
                     <div class="row filter-btn">
-                        <div class="col-sm-2 col-md-2">
+                        <div class="col-sm-3 col-md-3">
                             <div class="form-group">
                                 <input type="text" class="form-control datepicker" name="from_date" id="from_date" value="" placeholder="From Date">
                             </div>
                         </div>
-                        <div class="col-sm-2 col-md-2">
+                        <div class="col-sm-3 col-md-3">
                             <div class="form-group">
                                 <input type="text" class="form-control datepicker" name="to_date" id="to_date" value="" placeholder="To Date">
                             </div>
                         </div>
-                        <div class="col-sm-2 col-md-2">
+                        <div class="col-sm-3 col-md-3">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="staff_name" id="staff_name" value="" placeholder="Staff Name">
                             </div>
                         </div>
-                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                       
+                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2" style="text-align: right;">
+                            <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed" id="btnSearch">Search</a>
+                            @if (Auth::user()->can('Maintenance Report Export'))
+                                <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
+                            @endif
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row filter-btn mb-4">
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                             <div class="form-group">
                                 <select class="select2 form-control w-100 select2-hidden-accessible" id="serial" data-select2-id="select2-data-2-c0n2" name="serial">
-                                    <option value="">-- Select serial --</option>
+                                    <option value="">-- Select --</option>
                                     @foreach ($serial as $key => $item)
                                         <option value="{{$item->serial}}">{{$item->serial}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                             <div class="form-group" data-select2-id="105">
                                 <select class="select2 form-control w-100 select2-hidden-accessible" name="office" id="office">
-                                    <option value="">-- Select office --</option>
+                                    <option value="">-- Select --</option>
                                     @foreach ($office as $key => $item)
                                         <option value="{{$item->id}}">{{$item->branch_name_en}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2" style="text-align: right;">
-                            <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed" id="btnSearch">Search</a>
-                            @if (Auth::user()->can('Maintenance Report Export'))
-                                <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
-                            @endif
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group" data-select2-id="105">
+                                <select class="select2 form-control w-100 select2-hidden-accessible" name="maintenance_mission" id="maintenance_mission">
+                                    <option value="">-- Select --</option>
+                                    @foreach ($maintenanceMission as $key => $item)
+                                        <option value="{{$item->id}}">{{$item->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -100,6 +114,7 @@
                 staff_name = $('#staff_name').val();
                 let serial = $('select[name="serial"]').val();
                 let office = $('select[name="office"]').val();
+                let maintenance_mission = $('select[name="maintenance_mission"]').val();
                 $('#tbl_maintenace_report').DataTable().ajax.reload();
             });
             dataTables();
@@ -109,7 +124,8 @@
                     to_date: $("#to_date").val(),
                     staff_name: $("#staff_name").val(),
                     serial: $("#serial").val(),
-                    office: $("#office").val()
+                    office: $("#office").val(),
+                    maintenance_mission: $("#maintenance_mission").val(),
                 };
                 var url = "{{URL::to('admin/report/maintenance/export')}}?" + $.param(query)
                 window.location = url;
@@ -133,6 +149,7 @@
                         d.staff_name = staff_name;
                         d.serial = $('select[name="serial"]').val();
                         d.office = $('select[name="office"]').val();
+                        d.maintenance_mission = $('select[name="maintenance_mission"]').val();
                     }
                 },
                 columns: [

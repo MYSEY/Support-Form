@@ -8,6 +8,7 @@ use App\Models\Maintenance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Exports\MaintenanceExport;
+use App\Models\MaintenanceMission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +53,8 @@ class MaintenanceReportController extends Controller
                 $query->where('branchs.id', $office);
             })->when($request->staff_name, function ($query, $staff_name) {
                 return $query->where('users.employee_name_en', 'LIKE', "%{$staff_name}%");
+            })->when($request->maintenance_mission, function ($query, $maintenance_mission) {
+                return $query->where('maintenances.maintenance_mission_id',$maintenance_mission);
             });
             // ->groupBy('assets.serial')
             if ($from_date && $to_date) {
@@ -93,7 +96,8 @@ class MaintenanceReportController extends Controller
         }
         $serial = Asset::whereNotNull('serial')->get();
         $office = Branch::all();
-        return view('reports.maintenance.report',compact('serial','office'));
+        $maintenanceMission = MaintenanceMission::all();
+        return view('reports.maintenance.report',compact('serial','office','maintenanceMission'));
     }
 
     public function maintenanceExport(Request $request){
