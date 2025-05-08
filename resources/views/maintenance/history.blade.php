@@ -56,6 +56,9 @@
                                 <div class="col-md-4">
                                     <strong>Lifecycle(Month)</strong> : <span style="font-weight: bold;">{{ $item->LifecycleMonthDiff }}</span>
                                 </div>
+                                <div class="col-md-4">
+                                    <strong>Maintenance Type</strong> : <span style="font-weight: bold;">{{ $item->maintenance_mission }}</span>
+                                </div>
                             </div>
                         </div>
                         <br>

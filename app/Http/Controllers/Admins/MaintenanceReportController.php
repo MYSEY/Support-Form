@@ -25,6 +25,7 @@ class MaintenanceReportController extends Controller
         if (request()->ajax()) {
             // Define the base query
             $query = DB::table('maintenances')
+            ->leftJoin('maintenance_missions', 'maintenances.maintenance_mission_id', '=', 'maintenance_missions.id')
             ->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
             ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
             ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
@@ -43,6 +44,7 @@ class MaintenanceReportController extends Controller
                 'branchs.branch_name_kh',
                 'branchs.branch_name_en',
                 'rooms.name as location',
+                'maintenance_missions.name as maintenance_mission',
             )->where('maintenances.deleted_at',null)
             ->when($request->serial, function ($query, $serial) {
                 $query->where('assets.serial', $serial);
@@ -99,6 +101,7 @@ class MaintenanceReportController extends Controller
     }
     public function maintenanceHistory($id){
         $data = Maintenance::with(['maintenanceDetail.task:id,name,type'])
+        ->leftJoin('maintenance_missions', 'maintenances.maintenance_mission_id', '=', 'maintenance_missions.id')
         ->leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
         ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
         ->leftJoin('rooms', 'maintenances.location', '=', 'rooms.id')
@@ -118,6 +121,7 @@ class MaintenanceReportController extends Controller
             'branchs.branch_name_kh',
             'branchs.branch_name_en',
             'rooms.name as location',
+            'maintenance_missions.name as maintenance_mission',
         )->where('asset_id', $id)->orderBy('id','DESC')->get();
         return view('maintenance.history',compact('data'));
     }
