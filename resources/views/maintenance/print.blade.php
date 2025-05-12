@@ -20,7 +20,7 @@
             <div style="flex: 1; text-align: center;">
                 <label style="font-size: 11px;">Serial: {{$data->serial}}</label>
             </div>
-            <div style="flex: 1; text-align: right;">
+            <div style="flex: 1; text-align: center;">
                 <label style="font-size: 11px;">IT Technician: {{$data->maintenace_by}}</label>
             </div>
         </div>
