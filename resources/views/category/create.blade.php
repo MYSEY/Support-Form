@@ -20,7 +20,7 @@
                         <select class="select2 form-control w-100 select2-hidden-accessible" name="task[]" id="createTask" multiple>
                             <option value="">-- Select --</option>
                             @foreach ($task as $item)
-                                <option value="{{$item->id}}">{{$item->name}}</option>
+                                <option value="{{$item->id}}">{{$item->name}} ({{$item->type}})</option>
                             @endforeach
                         </select>
                     </div>

@@ -104,7 +104,7 @@ class MaintenanceController extends Controller
         try {
             $data = $request->all();
             $data['created_by'] = Auth::user()->id;
-            $data['status'] = 'Pendding';
+            $data['status'] = 'Inprogrss';
             $maintenance = Maintenance::create($data);
             if (!empty($request->maintenaceDetail)) { // Ensure maintenaceDetail exists
                 foreach ($request->maintenaceDetail as $value) {
@@ -226,7 +226,7 @@ class MaintenanceController extends Controller
                 'end_user' => $request->end_user,
                 'maintenance_date' => $request->maintenance_date,
                 'maintenace_by' => $request->maintenace_by,
-                'type' => $request->type,
+                'maintenance_mission_id' => $request->maintenance_mission_id,
                 'description' => $request->description,
                 'created_by' => Auth::id(),
                 'updated_by' => Auth::id(),

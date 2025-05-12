@@ -13,7 +13,7 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <label class="form-label">Category Name</label>
+                        <label class="form-label">Category Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name" id="e_name" required>
                     </div>
                     <div class="form-group">
@@ -21,7 +21,7 @@
                         <select class="select2 form-control w-100 select2-hidden-accessible e_task" name="task[]" id="e_task" multiple>
                             <option value="">-- Select --</option>
                             @foreach ($task as $item)
-                                <option value="{{$item->id}}">{{$item->name}}</option>
+                                <option value="{{$item->id}}">{{$item->name}} ({{$item->type}})</option>
                             @endforeach
                         </select>
                     </div>
