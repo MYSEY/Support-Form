@@ -58,7 +58,7 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
             return $query->where('assets.serial', $serial);
         })
         ->when($request->office, function ($query, $office) {
-            return $query->where('branchs.id', $office);
+            return $query->where('maintenances.office', $office);
         })
         ->when($request->staff_name, function ($query, $staff_name) {
             return $query->where('users.employee_name_en', 'LIKE', "%{$staff_name}%");
