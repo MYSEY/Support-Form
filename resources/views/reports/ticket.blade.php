@@ -5,24 +5,33 @@
             <div class="card mb-2">
                 <div class="card-body">
                     <div class="row filter-btn">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 {{-- <label class="">Closed Date</label> --}}
                                 <input type="text" class="form-control datepicker-ranges" name="closed_date" id="closed_date" value="" placeholder="Closed Date">
                             </div>
                         </div>
-                        {{-- <div class="col-sm-2 col-md-2">
+                        <div class="col-sm-3 col-md-3">
                             <div class="form-group">
-                                <label for="">Date From</label>
-                                <input type="text" class="form-control datepicker" name="from_date" id="from_date" value="" placeholder="Date From">
-                            </div>
-                        </div> --}}
-                        <div class="col-sm-2 col-md-2">
-                            <div class="form-group">
-                                <input type="text" class="form-control datepicker" name="submited_date" id="submited_date" value="" placeholder="Submited Date">
+                                <input type="text" class="form-control datepicker" name="from_date" id="from_date" value="" placeholder="Submited Date From">
                             </div>
                         </div>
-                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <div class="col-sm-3 col-md-3">
+                            <div class="form-group">
+                                <input type="text" class="form-control datepicker" name="to_date" id="to_date" value="" placeholder="Submited Date To">
+                            </div>
+                        </div>
+                        <div class="" style="text-align: right;">
+                            <a href="javascript:void(0)" class="btn btn-outline-success waves-effect btn-sm waves-themed" id="btnSearch">Search</a>
+                            @can('Ticket Report Export')
+                                <a href="javascript:void(0)" class="btn btn-outline-success btn-sm waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
+                            @endcan
+                            <a href="javascript:void(0)" class=""><span class="btn btn-outline-danger btn-sm btn-reset">Reset</span></a>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                             <div class="form-group">
                                 <select class="form-control" id="priority" data-select2-id="select2-data-2-c0n2" name="priority">
                                     <option value="">-- Select Priority --</option>
@@ -32,7 +41,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                             <div class="form-group" data-select2-id="105">
                                 <select class="select2-placeholder-multiple form-control" multiple="" name="status" id="status" data-select2-id="multiple-placeholder" tabindex="-1" aria-hidden="true">
                                     @foreach ($status as $key => $item)
@@ -41,7 +50,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                             <div class="form-group" data-select2-id="105">
                                 <select class="select2 form-control w-100 select2-hidden-accessible" name="user_id" id="user_id">
                                     <option value="">-- Select Users --</option>
@@ -50,13 +59,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <div class="" style="text-align: right;">
-                            <a href="javascript:void(0)" class="btn btn-outline-success waves-effect btn-sm waves-themed" id="btnSearch">Search</a>
-                            @can('Ticket Report Export')
-                                <a href="javascript:void(0)" class="btn btn-outline-success btn-sm waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
-                            @endcan
-                            <a href="javascript:void(0)" class=""><span class="btn btn-outline-danger btn-sm btn-reset">Reset</span></a>
                         </div>
                     </div>
                 </div>
@@ -104,12 +106,12 @@
 @section('script')
     <script>
         let from_date = null;
-        let submited_date = null;
+        let to_date = null;
         let closed_date = null;
         $(document).ready(function(){
             $('#btnSearch').on('click', function() {
                 from_date = $('#from_date').val();
-                submited_date = $('#submited_date').val();
+                to_date = $('#to_date').val();
                 closed_date = $('#closed_date').val();
                 let priority = $('select[name="priority"]').val();
                 let status = $('select[name="status"]').val();
@@ -119,7 +121,7 @@
 
             $('.btn-reset').on('click', function() {
                 $('#closed_date').val('');
-                $('#submited_date').val('');
+                $('#to_date').val('');
             });
 
             dataTables();
@@ -130,7 +132,7 @@
                     status: $("#status").val(),
                     priority: $("#priority").val(),
                     from_date: $("#from_date").val(),
-                    submited_date: $("#submited_date").val(),
+                    to_date: $("#to_date").val(),
                     closed_date: $("#closed_date").val()
                 };
                 var url = "{{URL::to('admin/ticket/report/export')}}?" + $.param(query)
@@ -172,7 +174,7 @@
                     type: 'GET',
                     data: function(d) {
                         d.from_date = from_date;
-                        d.submited_date = submited_date;
+                        d.to_date = to_date;
                         d.closed_date = closed_date;
                         d.priority = $('select[name="priority"]').val();
                         d.status = $('select[name="status"]').val();
