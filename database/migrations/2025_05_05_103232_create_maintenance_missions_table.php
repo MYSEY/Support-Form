@@ -8,6 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * php artisan migrate:refresh --path=database/migrations/2025_05_05_103232_create_maintenance_missions_table.php
+     * 
      */
     public function up(): void
     {
