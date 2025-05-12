@@ -13,11 +13,11 @@
         </h1>
         <div class="mr-1">
             <label class="fs-sm mb-0 mt-2 mt-md-0">From</label>
-            <input type="date" class="form-control" id="" placeholder="from date">
+            <input type="date" class="form-control" id="from_date" placeholder="from date">
         </div>
         <div>
             <label class="fs-sm mb-0 mt-2 mt-md-0">To</label>
-            <input type="date" class="form-control" id="" placeholder="To date">
+            <input type="date" class="form-control" id="to_date" placeholder="To date">
         </div>
     </div>
     <div class="row">
@@ -141,7 +141,7 @@
                                 <div style="max-height: 300px; overflow-y: auto;">
                                     @foreach ($branch as $item)
                                         @php
-                                            $recordsTotal = App\Models\Maintenance::whereNotNull('maintenance_mission_id')->where('office',$item->id)->count(); 
+                                            $recordsTotal = App\Models\Maintenance::whereNotNull('maintenance_mission_id')->where('office',$item->id)->whereYear('created_at', now()->year)->count(); 
                                         @endphp
                                         <div class="d-flex mt-2">
                                             Branch {{$item->abbreviations}}
@@ -318,6 +318,8 @@
             document.getElementById('modalProfileImage').src = imageUrl;
         }
         $(function() {
+            $("#from_date").on('change',function(){
+            });
             $('.btn_delete_user_onlin').on('click',function(){
                 let user_id = $(this).data("id");
                 $.ajax({

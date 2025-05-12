@@ -19,12 +19,12 @@
                     <div class="row">
                         <div class="col-md-4">
                             <h3>
-                                Maintanance Detail 
+                                Maintenance Detail 
                             </h3>
                         </div>
                         <div class="col-md-8" style="text-align: right;">
                             <a class="btn btn-secondary waves-effect waves-themed"  href="{{url('admin/maintenance')}}" type="button">Back</a>
-                            @can('Maintanance Print')
+                            @can('Maintenance Print')
                                 <button type="button" class="btn btn-outline-primary btn-print"> <span class="fal fa-print mr-1"></span>Print</button>
                             @endcan
                         </div>
