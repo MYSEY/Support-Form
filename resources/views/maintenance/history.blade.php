@@ -81,11 +81,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse ($hardwareItems as $hardKey => $item)
+                                            @forelse ($hardwareItems as $hardKey => $itemhardware)
                                                 <tr class="odd">
                                                     <td>{{ $hardKey + 1 }}</td>
-                                                    <td>{{ optional($item->task)->name ?? 'N/A' }}</td>
-                                                    <td>{{ $item->note }}</td>
+                                                    <td>{{ optional($itemhardware->task)->name ?? 'N/A' }}</td>
+                                                    <td>{{ $itemhardware->note }}</td>
                                                 </tr>
                                             @empty
                                                 <tr>

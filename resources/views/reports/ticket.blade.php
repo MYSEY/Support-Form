@@ -122,6 +122,7 @@
             $('.btn-reset').on('click', function() {
                 $('#closed_date').val('');
                 $('#to_date').val('');
+                $('#from_date').val('');
             });
 
             dataTables();
