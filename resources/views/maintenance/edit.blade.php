@@ -73,6 +73,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-xl-4">
+                                <div class="form-group">
+                                    <label class="form-label" for="reference">Reference</label>
+                                    <input type="text" name="reference" class="form-control" id="reference" value="{{ $data->reference}}">
+                                </div>
+                            </div>
                         </div>
                         <div style="border: 1px solid #e9e9e9;padding: 0.75rem;">
                             <p>
@@ -361,6 +367,7 @@
                 var maintenance_date = $("#maintenance_date").val();
                 var maintenace_by = $("#maintenace_by").val();
                 var maintenance_mission_id = $("#maintenance_mission_id").val();
+                var reference = $("#reference").val();
                 var description = $('#description').summernote('code');
 
                 var maintenaceDetail = [];
@@ -422,6 +429,7 @@
                             maintenace_by : maintenace_by,
                             description : description,
                             maintenance_mission_id : maintenance_mission_id,
+                            reference : reference,
                             maintenaceDetail : maintenaceDetail,
                         },
                         dataType: "JSON",

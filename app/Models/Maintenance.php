@@ -24,6 +24,7 @@ class Maintenance extends Model
         'end_user',
         'status',
         'maintenance_mission_id',
+        'reference',
         'description',
         'created_by',
         'updated_by',

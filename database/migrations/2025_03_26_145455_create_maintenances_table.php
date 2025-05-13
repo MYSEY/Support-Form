@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('office');
             $table->foreignId('location');
             $table->foreignId('end_user');
+            $table->string('reference')->nullable();
             $table->string('status')->nullable();
             $table->longText('description')->nullable();
             $table->foreignId('created_by');
