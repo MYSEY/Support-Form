@@ -504,7 +504,7 @@ class TicketController extends Controller
         ->with("priorities")->with("createdBy")
         ->with("issueType")
         ->with("histories")
-        ->where("id", $request->id)
+        ->where("trackid", $request->trackid)
         ->first();
         $user_support = User::where("users.department_id",$data_ticket->department_id)
         ->leftJoin('roles', 'users.role_id', '=', 'roles.id')

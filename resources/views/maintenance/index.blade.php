@@ -24,7 +24,7 @@
                                     <table id="tbl_maintenace" class="table table-bordered table-hover table-striped" style="width: 100%">
                                         <thead>
                                             <tr>
-                                                <th>reference</th>
+                                                <th>Reference</th>
                                                 <th>MaintainanceDate</th>
                                                 <th>Technician</th>
                                                 <th>Serial</th>
@@ -115,8 +115,8 @@
                         data: 'reference',
                         name: 'reference',
                         render: function(data, type, row) {
-                            return `<a href="#" class="your-class">${row.reference}</a>`;
-                            // return `<a href="{{url('/admin/ticket/detail')}}/${row.reference}" class="your-class">${row.reference}</a>`;
+                            // return `<a href="#" class="your-class">${row.reference}</a>`;
+                            return `<a href="{{url('/admin/ticket/detail')}}/${row.reference}" class="your-class">${row.reference == null ? "" : row.reference}</a>`;
                         },
                         orderable: false,
                         searchable: false

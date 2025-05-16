@@ -6,7 +6,7 @@
                 <label style="font-family: Calibri Light; font-size: 14px; font-weight: bold;">Camma Microfinance Limited</label>
             </div>
             <div>
-                <label style="font-size: 11px;">Date: {{$data->date}}</label>
+                <label style="font-size: 11px;">Date: {{$data->maintenance_date}}</label>
             </div>
         </div>
         
