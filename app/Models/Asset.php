@@ -26,6 +26,7 @@ class Asset extends Model
         'serial',
         'device_name',
         'date',
+        'department_id',
         'created_by',
         'updated_by',
         'deleted_at',

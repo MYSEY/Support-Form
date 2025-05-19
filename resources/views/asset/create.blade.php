@@ -83,6 +83,17 @@
                                         <input type="date" name="date" class="form-control required" id="date" required>
                                     </div>
                                 </div>
+                                <div class="col-xl-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="office">Department</label>
+                                        <select class="select2 form-control w-100 select2-hidden-accessible" id="department_id" name="department_id">
+                                            <option value="">-- Select --</option>
+                                            @foreach ($department as $item)
+                                                <option value="{{$item->id}}">{{ $item->name_english}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
             
                             <div class="text-md-right">

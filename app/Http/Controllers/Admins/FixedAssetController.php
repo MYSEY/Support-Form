@@ -7,6 +7,7 @@ use App\Models\Asset;
 use App\Models\Branch;
 use App\Models\Category;
 use App\Models\Employee;
+use App\Models\Department;
 use App\Imports\AssetImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +32,7 @@ class FixedAssetController extends Controller
             $data = Asset::leftJoin('categories', 'assets.category_id', '=', 'categories.id')
             ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
             ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
+            ->leftJoin('departments', 'assets.department_id', '=', 'departments.id')
             ->leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
             ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
             ->select(
@@ -46,6 +48,7 @@ class FixedAssetController extends Controller
                 'branchs.branch_name_kh',
                 'branchs.branch_name_en',
                 'rooms.name as location_name',
+                'departments.name_english as depart_name',
             )->get();
             return view('asset.index',compact('data'));
         } catch (\Throwable $exp) {
@@ -61,6 +64,7 @@ class FixedAssetController extends Controller
         $cateagory = Category::all();
         $location = Room::all();
         $office = Branch::all();
+        $department = Department::all();
         $users = Employee::whereIn('emp_status',['Probation','1','10','2'])
         ->select(
             'users.id',
@@ -68,7 +72,7 @@ class FixedAssetController extends Controller
             'users.employee_name_kh',
             'users.employee_name_en',
         )->get();
-        return view('asset.create',compact('cateagory','location','office','users'));
+        return view('asset.create',compact('cateagory','location','office','users','department'));
     }
 
     /**
@@ -104,6 +108,7 @@ class FixedAssetController extends Controller
         $cateagory = Category::all();
         $location = Room::all();
         $office = Branch::all();
+        $department = Department::all();
         $users = Employee::whereIn('emp_status',['Probation','1','10','2'])
         ->select(
             'users.id',
@@ -112,7 +117,7 @@ class FixedAssetController extends Controller
             'users.employee_name_en',
         )->get();
         $data = Asset::where('id',$id)->first();
-        return view('asset.edit',compact('data','cateagory','location','office','users'));
+        return view('asset.edit',compact('data','cateagory','location','office','users','department'));
     }
 
     /**
@@ -129,6 +134,7 @@ class FixedAssetController extends Controller
                 'serial'   => $request->serial,
                 'device_name'   => $request->device_name,
                 'date'   => $request->date,
+                'department_id'   => $request->department_id,
                 'updated_by'   => Auth::user()->id,
             ]);
             Toastr::success('Asset updated successfully.','Success');

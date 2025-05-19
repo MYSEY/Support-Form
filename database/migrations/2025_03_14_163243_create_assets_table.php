@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('office');
             $table->foreignId('location');
             $table->foreignId('end_user')->nullable();
+            $table->foreignId('department_id')->nullable();
             $table->string('serial')->nullable();
             $table->string('device_name');
             $table->date('date')->nullable();

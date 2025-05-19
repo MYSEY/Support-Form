@@ -145,7 +145,7 @@
                                         @endphp
                                         <div class="d-flex mt-2">
                                             Branch {{$item->abbreviations}}
-                                            <span class="ml-auto"><strong>({{$recordsTotal}}/{{$recordsTotal}})</strong></span>
+                                            <span class="ml-auto"><strong>({{$recordsTotal}}/ 4)</strong></span>
                                         </div>
                                         <hr>
                                     @endforeach

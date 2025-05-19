@@ -29,6 +29,7 @@
                                         <th>Category</th>
                                         <th>DeviceName</th>
                                         <th>Office</th>
+                                        <th>Department</th>
                                         <th>Location</th>
                                         <th>EndUser</th>
                                         <th>Postion</th>
@@ -47,6 +48,7 @@
                                                 <td>{{$item->CategoryName}}</td>
                                                 <td>{{$item->device_name}}</td>
                                                 <td>{{$item->OfficeName}}</td>
+                                                <td>{{$item->depart_name}}</td>
                                                 <td>{{$item->location_name}}</td>
                                                 <td>{{ $item->employee_name_en}}</td>
                                                 <td>{{$item->name_english}}</td>
