@@ -17,13 +17,13 @@ return new class extends Migration
             $table->foreignId('asset_id');
             $table->foreignId('category_id');
             $table->foreignId('maintenance_mission_id')->nullable();
-            $table->date('maintenance_date');
-            $table->string('maintenace_by');
             $table->foreignId('office');
             $table->foreignId('location');
             $table->foreignId('end_user');
+            $table->date('maintenance_date');
+            $table->string('maintenace_by');
+            $table->string('device_name')->nullable();
             $table->string('reference')->nullable();
-            $table->string('status')->nullable();
             $table->longText('description')->nullable();
             $table->foreignId('created_by');
             $table->foreignId('updated_by')->nullable();

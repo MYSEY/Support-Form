@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Support\Carbon;
 use App\Models\MaintenanceDetail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Maintenance extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'maintenances';
     protected $guarded = ['id'];
@@ -22,6 +24,7 @@ class Maintenance extends Model
         'office',
         'location',
         'end_user',
+        'device_name',
         'status',
         'maintenance_mission_id',
         'reference',

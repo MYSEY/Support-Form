@@ -221,6 +221,7 @@
                             <input type="hidden" name="category_id" id="category_id" value="{{$data->category_id}}">
                             <input type="hidden" name="location_id" id="location_id" value="{{$data->location_id}}">
                             <input type="hidden" name="end_user" id="end_user" value="{{$data->end_user}}">
+                            <input type="hidden" name="device_id" id="device_id">
                             <div class="btn-loading mt-3" style="display: none">
                                 <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -286,6 +287,7 @@
                         $(".position").text(response.message.name_english);
                         $(".category").text(response.message.category_name);
                         $(".device_name").text(response.message.device_name);
+                        $("#device_id").val(response.message.device_name);
                         $(".office").text(response.message.branch_name_en);
                         $(".location").text(response.message.location);
                         $(".date").text(response.message.date);
@@ -364,6 +366,7 @@
                 var location_id = $("#location_id").val();
                 var end_user = $("#end_user").val();
                 var asset_id = $("#serial").val();
+                var device_name = $("#device_id").val();
                 var maintenance_date = $("#maintenance_date").val();
                 var maintenace_by = $("#maintenace_by").val();
                 var maintenance_mission_id = $("#maintenance_mission_id").val();
@@ -430,6 +433,7 @@
                             description : description,
                             maintenance_mission_id : maintenance_mission_id,
                             reference : reference,
+                            device_name : device_name,
                             maintenaceDetail : maintenaceDetail,
                         },
                         dataType: "JSON",

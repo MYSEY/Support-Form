@@ -48,10 +48,15 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
         $query = Maintenance::leftJoin('assets', 'maintenances.asset_id', '=', 'assets.id')
         ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
         ->leftJoin('maintenance_details', 'maintenances.id', '=', 'maintenance_details.maintenance_id')
+        ->leftJoin('branchs', 'maintenances.office', '=', 'branchs.id')
+        ->leftJoin('db_hr-production.users', 'maintenances.end_user', '=', 'db_hr-production.users.id')
         ->select(
             'maintenances.*',
             'assets.serial',
-            DB::raw('GROUP_CONCAT(DISTINCT maintenance_details.note SEPARATOR ", ") as notes') // Merge notes
+            'branchs.branch_name_en',
+            'users.employee_name_kh',
+            'users.employee_name_en',
+            // DB::raw('GROUP_CONCAT(DISTINCT maintenance_details.note SEPARATOR ", ") as notes') // Merge notes
         )
         ->whereNull('maintenances.deleted_at')
         ->when($request->serial, function ($query, $serial) {
@@ -74,59 +79,15 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
         $dataExport = []; 
         foreach ($data as $key => $value) {
             // Clean notes
-            $rawNotes = $value->notes ?? '';
-            $notes = preg_replace(
-                [
-                    '/\s*,\s*,*/',          // Handles multiple commas with/without spaces
-                    '/\s+/',                // Collapses multiple spaces
-                    '/\b([a-z])\s+\1\b/i',  // Fixes repeated single letters (aa -> a)
-                    '/\b(\w+)\s+\1\b/i',    // Fixes repeated words (test test -> test)
-                    '/\s*\.\s*/',           // Handles spaces around periods
-                    '/[^\w\s,.-]/',         // Removes special characters except basic punctuation
-                ],
-                [
-                    ', ',                   // Single comma with space
-                    ' ',                    // Single space
-                    '$1',                   // Single instance of letter
-                    '$1',                   // Single instance of word
-                    '. ',                   // Clean period with space
-                    '',                     // Remove special chars
-                ],
-                $rawNotes
-            );
-            
-            // Trim and clean edge cases
-            $notes = trim($notes, " ,\n\r\t");
-            $notes = preg_replace('/,(\S)/', ', $1', $notes); // Ensure space after commas
-            $notes = ucfirst(strtolower($notes)); // Basic capitalization
-        
-            // Clean description
-            $rawDescription = html_entity_decode($value->description ?? '');
-            $clean = preg_replace([
-                '/<\/?(div|p|br)[^>]*>/i',  // Remove HTML tags
-                '/<[^>]+>/',                // Remove any remaining HTML
-                '/\s*,\s*,*/',              // Clean commas
-                '/\s+/',                    // Clean spaces
-            ], [
-                ', ',                       // Replace HTML tags with comma
-                '',                         // Remove other HTML
-                ', ',                       // Clean commas
-                ' ',                        // Clean spaces
-            ], $rawDescription);
-        
-            $cleanedDescription = Str::limit(trim($clean, " ,\n\r\t"), 255, '...');
-        
-            // Handle maintenance by - only add if not already in notes
-            $maintenanceText = 'Maintenanced By ' . $value->maintenace_by;
-            if (!empty($value->maintenace_by) && !str_contains($notes, $maintenanceText)) {
-                $notes = $notes ? $notes . ', ' . $maintenanceText : $maintenanceText;
-            }
-        
+            $maintenance_date = $value->maintenance_date;
+            $office = $value->branch_name_en;
+            $end_user = $value->employee_name_en;
+            $maintenanceText = "Name".':'.$end_user.', '.'Office'.':'.$office.', '.'Maintenance Date'.':'.$maintenance_date.', '.'Maintenanced By'.':'. $value->maintenace_by;
             $i++;
             $this->num = $i;
             $dataExport[] = [
                 "id" => $key + 1,
-                "serial" => $value->serial . ($notes ? "\n" . $notes : ''),
+                "serial" => $value->serial . ($maintenanceText ? "\n" . $maintenanceText : ''),
                 "description" => !empty($cleanedDescription) ? $cleanedDescription : 'N/A'
             ];
         }
@@ -153,7 +114,7 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
     {
         return [
             'A' => 5,
-            'B' => 40,
+            'B' => 50,
             'C' => 60,
         ];
     }
@@ -247,9 +208,6 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
                 }
                 $sheet->getDelegate()->getStyle('B4:C4')->getFont()->setSize(9)->setName('Khmer OS Fasthand')->setSize(10);
                 $event->sheet->getDelegate()->getStyle('B4:C4');
-                // $sheet->mergeCells('A4:I4');
-                // $event->sheet->getDelegate()->getStyle('A4:I4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-
                 //Fooder
                 $lastRow = $sheet->getHighestRow();
                 // Add signature table
