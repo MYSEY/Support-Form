@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Models\User;
+use App\Models\Asset;
 use App\Models\Branch;
 use App\Models\Online;
 use App\Models\Maintenance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\MaintenanceMission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -36,10 +38,39 @@ class DashboardController extends Controller
         );
         
         $today = Carbon::today()->toDateString();
-
         $data = $query->whereDate('onlines.updated_at', $today)->orderBy('onlines.id','DESC')->get();
-        $branch = Branch::all();
-        return view('dashboads.admin',compact('data','branch'));
+
+        $mission = MaintenanceMission::all();
+        $asset = Asset::all();
+
+        $branch = Branch::select(
+            "id",
+            "branch_name_kh",
+            "branch_name_en",
+            "abbreviations"
+        )->get();
+
+        $totalBranch = DB::table('branchs')
+        ->leftJoin('maintenances', function ($join) {
+            $join->on('maintenances.office', '=', 'branchs.id')
+                ->whereNotNull('maintenances.maintenance_mission_id')
+                ->whereYear('maintenances.created_at', now()->year);
+        })
+        ->select(
+            'branchs.id as branch_id',
+            'branchs.branch_name_kh',
+            'branchs.branch_name_en',
+            'branchs.abbreviations',
+        )
+        ->groupBy(
+            'branchs.id',
+            'branchs.branch_name_kh',
+            'branchs.branch_name_en',
+            'branchs.abbreviations'
+        )
+        ->get();
+
+        return view('dashboads.admin',compact('data','branch','mission','asset','totalBranch'));
     }
     public function show(Request $request){
         $dataCustomStatuses = DB::table('custom_statuses')->get();

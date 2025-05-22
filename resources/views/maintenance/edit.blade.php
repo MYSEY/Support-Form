@@ -222,6 +222,7 @@
                             <input type="hidden" name="location_id" id="location_id" value="{{$data->location_id}}">
                             <input type="hidden" name="end_user" id="end_user" value="{{$data->end_user}}">
                             <input type="hidden" name="device_id" id="device_id">
+                            <input type="hidden" name="department_id" id="department_id" value="{{$data->department_id}}">
                             <div class="btn-loading mt-3" style="display: none">
                                 <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -288,6 +289,7 @@
                         $(".category").text(response.message.category_name);
                         $(".device_name").text(response.message.device_name);
                         $("#device_id").val(response.message.device_name);
+                        $("#department_id").val(response.message.department_id);
                         $(".office").text(response.message.branch_name_en);
                         $(".location").text(response.message.location);
                         $(".date").text(response.message.date);
@@ -367,6 +369,7 @@
                 var end_user = $("#end_user").val();
                 var asset_id = $("#serial").val();
                 var device_name = $("#device_id").val();
+                var department_id = $("#department_id").val();
                 var maintenance_date = $("#maintenance_date").val();
                 var maintenace_by = $("#maintenace_by").val();
                 var maintenance_mission_id = $("#maintenance_mission_id").val();
@@ -434,6 +437,7 @@
                             maintenance_mission_id : maintenance_mission_id,
                             reference : reference,
                             device_name : device_name,
+                            department_id : department_id,
                             maintenaceDetail : maintenaceDetail,
                         },
                         dataType: "JSON",

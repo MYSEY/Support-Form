@@ -22,6 +22,7 @@ class Maintenance extends Model
         'maintenance_date',
         'maintenace_by',
         'office',
+        'department_id',
         'location',
         'end_user',
         'device_name',

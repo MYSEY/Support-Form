@@ -228,6 +228,7 @@ class MaintenanceController extends Controller
                 'maintenance_mission_id' => $request->maintenance_mission_id,
                 'reference' => $request->reference,
                 'device_name' => $request->device_name,
+                'department_id' => $request->department_id,
                 'description' => $request->description,
                 'created_by' => Auth::id(),
                 'updated_by' => Auth::id(),

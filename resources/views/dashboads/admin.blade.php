@@ -132,7 +132,7 @@
                         <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
                     </div>
                 </div>
-               
+                
                 <div class="panel-container show">
                     <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
                         <div class="row">
@@ -141,8 +141,24 @@
                                 <div style="max-height: 300px; overflow-y: auto;">
                                     @foreach ($branch as $item)
                                         @php
+                                            // $recordsTotal = App\Models\Maintenance::where('office',$item->id)->whereYear('created_at', now()->year)->count(); 
                                             $recordsTotal = App\Models\Maintenance::whereNotNull('maintenance_mission_id')->where('office',$item->id)->whereYear('created_at', now()->year)->count(); 
+                                            $maintenance = App\Models\Maintenance::whereNotNull('maintenance_mission_id')->where('office',$item->id)->whereYear('created_at', now()->year)->get(); 
+                                            $asset = App\Models\Asset::where('office',$item->id)->count(); 
                                         @endphp
+                                        {{-- @foreach ($maintenance as $maint)
+                                            @if ($maint->maintenance_mission_id == 1)
+                                                @php $recordsTotal = 1; @endphp
+                                            @elseif ($maint->maintenance_mission_id == 2)
+                                                @php $recordsTotal = 2; @endphp
+                                            @elseif ($maint->maintenance_mission_id == 3)
+                                                @php $recordsTotal = 3; @endphp
+                                            @elseif ($maint->maintenance_mission_id == 4)
+                                                @php 
+                                                    $recordsTotal = 4; 
+                                                @endphp
+                                            @endif
+                                        @endforeach --}}
                                         <div class="d-flex mt-2">
                                             Branch {{$item->abbreviations}}
                                             <span class="ml-auto"><strong>({{$recordsTotal}}/ 4)</strong></span>
