@@ -125,7 +125,7 @@ class FixedAssetController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        try {
+        // try {
             Asset::where('id',$request->id)->update([
                 'category_id'   => $request->category_id,
                 'office'   => $request->office,
@@ -140,9 +140,9 @@ class FixedAssetController extends Controller
             Toastr::success('Asset updated successfully.','Success');
             DB::commit();
             return redirect('admin/asset');
-        } catch (\Throwable $exp) {
-            return response()->json(['errors' => $exp]);
-        }
+        // } catch (\Throwable $exp) {
+        //     return response()->json(['errors' => $exp]);
+        // }
     }
 
     /**

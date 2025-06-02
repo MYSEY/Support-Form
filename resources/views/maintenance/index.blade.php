@@ -115,7 +115,6 @@
                         data: 'reference',
                         name: 'reference',
                         render: function(data, type, row) {
-                            // return `<a href="#" class="your-class">${row.reference}</a>`;
                             return `<a href="{{url('/admin/ticket/detail')}}/${row.reference}" class="your-class">${row.reference == null ? "" : row.reference}</a>`;
                         },
                         orderable: false,
@@ -164,6 +163,9 @@
                     {
                         data: 'created_at',
                         name: 'created_at',
+                        render: function(data, type, row) {
+                            return data ? moment(data).format('DD-MM-YYYY') : '';
+                        }
                     },
                     {
                         data: '',

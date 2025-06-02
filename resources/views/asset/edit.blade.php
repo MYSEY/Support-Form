@@ -43,7 +43,7 @@
                                 <div class="col-xl-6">
                                     <div class="form-group">
                                         <label class="form-label" for="end_user">End User</label>
-                                        <select class="select2 form-control w-100 select2-hidden-accessible" id="end_user" name="end_user" required>
+                                        <select class="select2 form-control w-100 select2-hidden-accessible" id="end_user" name="end_user">
                                             <option value="">-- Select --</option>
                                             @foreach ($users as $item)
                                                 <option value="{{$item->id}}" {{$data->end_user == $item->id ? 'selected' : ''}}>{{ $item->employee_name_en}}</option>

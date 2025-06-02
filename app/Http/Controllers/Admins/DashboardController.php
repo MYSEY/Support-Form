@@ -13,6 +13,7 @@ use App\Models\MaintenanceMission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Foreach_;
 
 class DashboardController extends Controller
 {
@@ -41,15 +42,14 @@ class DashboardController extends Controller
         $data = $query->whereDate('onlines.updated_at', $today)->orderBy('onlines.id','DESC')->get();
 
         $mission = MaintenanceMission::all();
-        $asset = Asset::all();
-
         $branch = Branch::select(
             "id",
             "branch_name_kh",
             "branch_name_en",
             "abbreviations"
         )->get();
-
+        $asset = Asset::all();
+        
         $totalBranch = DB::table('branchs')
         ->leftJoin('maintenances', function ($join) {
             $join->on('maintenances.office', '=', 'branchs.id')
@@ -67,9 +67,8 @@ class DashboardController extends Controller
             'branchs.branch_name_kh',
             'branchs.branch_name_en',
             'branchs.abbreviations'
-        )
-        ->get();
-
+        )->get();
+        // dd($totalBranch);
         return view('dashboads.admin',compact('data','branch','mission','asset','totalBranch'));
     }
     public function show(Request $request){
