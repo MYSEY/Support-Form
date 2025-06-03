@@ -82,7 +82,7 @@ class MaintenanceExport implements FromCollection,WithColumnWidths, WithHeadings
             $maintenance_date = $value->maintenance_date;
             $office = $value->branch_name_en;
             $end_user = $value->employee_name_en;
-            $cleanedDescription = $value->description;
+            $cleanedDescription = trim(strip_tags($value->description));
             $maintenanceText = "Name".':'.$end_user.', '.'Office'.':'.$office.', '.'Maintenance Date'.':'.$maintenance_date.', '.'Maintenanced By'.':'. $value->maintenace_by;
             $i++;
             $this->num = $i;

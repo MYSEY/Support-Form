@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admins;
 
 use App\Models\Asset;
 use App\Models\Branch;
+use App\Models\Department;
 use App\Models\Maintenance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -31,6 +32,7 @@ class MaintenanceReportController extends Controller
             ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
             ->leftJoin('rooms', 'assets.location', '=', 'rooms.id')
             ->leftJoin('branchs', 'assets.office', '=', 'branchs.id')
+            ->leftJoin('departments', 'maintenances.department_id', '=', 'departments.id')
             ->leftJoin('db_hr-production.users', 'maintenances.end_user', '=', 'users.id')
             ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
             ->select(
@@ -44,13 +46,16 @@ class MaintenanceReportController extends Controller
                 'positions.name_english',
                 'branchs.branch_name_kh',
                 'branchs.branch_name_en',
+                'departments.name_english as department_name',
                 'rooms.name as location',
                 'maintenance_missions.name as maintenance_mission',
             )->where('maintenances.deleted_at',null)
             ->when($request->serial, function ($query, $serial) {
                 $query->where('assets.serial', $serial);
             })->when($request->office, function ($query, $office) {
-                $query->where('branchs.id', $office);
+                $query->where('maintenances.office', $office);
+            })->when($request->department_id, function ($query, $department_id) {
+                $query->where('maintenances.department_id', $department_id);
             })->when($request->staff_name, function ($query, $staff_name) {
                 return $query->where('users.employee_name_en', 'LIKE', "%{$staff_name}%");
             })->when($request->maintenance_mission, function ($query, $maintenance_mission) {
@@ -96,8 +101,9 @@ class MaintenanceReportController extends Controller
         }
         $serial = Asset::whereNotNull('serial')->get();
         $office = Branch::all();
+        $department = Department::all();
         $maintenanceMission = MaintenanceMission::all();
-        return view('reports.maintenance.report',compact('serial','office','maintenanceMission'));
+        return view('reports.maintenance.report',compact('serial','office','maintenanceMission','department'));
     }
 
     public function maintenanceExport(Request $request){

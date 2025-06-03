@@ -52,6 +52,16 @@
                         </div>
                         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                             <div class="form-group" data-select2-id="105">
+                                <select class="select2 form-control w-100 select2-hidden-accessible" name="department_id" id="department_id">
+                                    <option value="">-- Select Department --</option>
+                                    @foreach ($department as $key => $item)
+                                        <option value="{{$item->id}}">{{$item->name_english}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group" data-select2-id="105">
                                 <select class="select2 form-control w-100 select2-hidden-accessible" name="maintenance_mission" id="maintenance_mission">
                                     <option value="">-- Select Maintenance Type --</option>
                                     @foreach ($maintenanceMission as $key => $item)
@@ -82,6 +92,7 @@
                                         <th>Category</th>
                                         <th>Device_Name</th>
                                         <th>Office</th>
+                                        <th>Department</th>
                                         <th>Location</th>
                                         <th>End_User</th>
                                         <th>Postion</th>
@@ -114,6 +125,7 @@
                 staff_name = $('#staff_name').val();
                 let serial = $('select[name="serial"]').val();
                 let office = $('select[name="office"]').val();
+                let department_id = $('select[name="department_id"]').val();
                 let maintenance_mission = $('select[name="maintenance_mission"]').val();
                 $('#tbl_maintenace_report').DataTable().ajax.reload();
             });
@@ -125,6 +137,7 @@
                     staff_name: $("#staff_name").val(),
                     serial: $("#serial").val(),
                     office: $("#office").val(),
+                    department_id: $("#department_id").val(),
                     maintenance_mission: $("#maintenance_mission").val(),
                 };
                 var url = "{{URL::to('admin/report/maintenance/export')}}?" + $.param(query)
@@ -149,6 +162,7 @@
                         d.staff_name = staff_name;
                         d.serial = $('select[name="serial"]').val();
                         d.office = $('select[name="office"]').val();
+                        d.department_id = $('select[name="department_id"]').val();
                         d.maintenance_mission = $('select[name="maintenance_mission"]').val();
                     }
                 },
@@ -176,6 +190,10 @@
                     {
                         data: 'branch_name_en',
                         name: 'branch_name_en',
+                    },
+                    {
+                        data: 'department_name',
+                        name: 'department_name',
                     },
                     {
                         data: 'location',
