@@ -40,20 +40,31 @@
                             </div>
                             <div class="col-xl-4">
                                 <div class="form-group form-group-select2">
+                                    <label class="form-label" for="department_id">Department</label>
+                                    <select class="select2 form-control w-100 select2-hidden-accessible select2-option" id="department_id" name="department_id">
+                                        <option value="">-- Select --</option>
+                                        @foreach ($department as $item)
+                                            <option value="{{$item->id}}">{{ $item->name_english}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="form-group form-group-select2">
                                     <label class="form-label" for="Serial">Serial <span class="text-danger">*</span></label>
                                     <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="serial" name="serial" required>
                                         <option value="">-- Select --</option>
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mb-2">
                             <div class="col-xl-4">
                                 <div class="form-group">
                                     <label class="form-label" for="">Maintenance Date <span class="text-danger">*</span></label>
                                     <input type="date" name="maintenance_date" class="form-control required" id="maintenance_date" value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mb-2">
                             <div class="col-xl-4">
                                 <div class="form-group">
                                     <label class="form-label" for="maintenace_by">IT Technician <span class="text-danger">*</span></label>
@@ -71,6 +82,8 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mb-2">
                             <div class="col-xl-4">
                                 <div class="form-group">
                                     <label class="form-label" for="reference">Reference</label>
@@ -164,7 +177,6 @@
                             <input type="hidden" name="location_id" id="location_id">
                             <input type="hidden" name="end_user" id="end_user">
                             <input type="hidden" name="device_id" id="device_id">
-                            <input type="hidden" name="department_id" id="department_id">
                             <div class="btn-loading mt-3" style="display: none">
                                 <button  class="btn btn-danger waves-effect waves-themed" type="button" disabled="">
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -214,6 +226,26 @@
                     }
                 });
             });
+            $("#department_id").on('change', function(){
+                var department_id = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('admin/onchange/department') }}",
+                    data: { 
+                        department_id : department_id 
+                    },
+                    dataType: "JSON",
+                    success: function(response) {
+                        $('#serial').html('<option selected > -- Select --</option>');
+                        $.each(response.message, function(i, item) {
+                            $('#serial').append($('<option>', {
+                                value: item.id,
+                                text: item.serial
+                            }));
+                        });
+                    }
+                });
+            });
             $("#serial").on('change', function(){
                 var serial = $(this).val();
                 $.ajax({
@@ -232,7 +264,6 @@
                         $(".category").text(response.message.category_name);
                         $(".device_name").text(response.message.device_name);
                         $("#device_id").val(response.message.device_name);
-                        $("#department_id").val(response.message.department_id);
                         $(".office").text(response.message.branch_name_en);
                         $(".location").text(response.message.location);
                         $(".date").text(response.message.date);

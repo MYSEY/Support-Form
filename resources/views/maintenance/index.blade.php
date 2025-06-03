@@ -31,6 +31,7 @@
                                                 <th>Category</th>
                                                 <th>DeviceName</th>
                                                 <th>Office</th>
+                                                <th>Department</th>
                                                 <th>Location</th>
                                                 <th>EndUser</th>
                                                 <th>Postion</th>
@@ -143,6 +144,10 @@
                     {
                         data: 'branch_name_en',
                         name: 'branch_name_en',
+                    },
+                    {
+                        data: 'department_name',
+                        name: 'department_name',
                     },
                     {
                         data: 'location',

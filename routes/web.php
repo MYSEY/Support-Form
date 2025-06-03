@@ -132,6 +132,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::resource('maintenance', MaintenanceController::class);
     Route::get('/serial', [MaintenanceController::class,'OnChangeSerial']);
     Route::get('/onchange/branch', [MaintenanceController::class,'OnChangeBranch']);
+    Route::get('/onchange/department', [MaintenanceController::class,'OnChangeDepartment']);
 
     //maintenance mission
     Route::resource('mission', MaintenanceMissionController::class);

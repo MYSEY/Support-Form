@@ -12,6 +12,7 @@ use App\Models\MaintenanceDetail;
 use App\Models\MaintenanceMission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,6 +35,7 @@ class MaintenanceController extends Controller
             ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
             ->leftJoin('rooms', 'maintenances.location', '=', 'rooms.id')
             ->leftJoin('branchs', 'maintenances.office', '=', 'branchs.id')
+            ->leftJoin('departments', 'maintenances.department_id', '=', 'departments.id')
             ->leftJoin('db_hr-production.users', 'maintenances.end_user', '=', 'users.id')
             ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
             ->select(
@@ -47,6 +49,7 @@ class MaintenanceController extends Controller
                 'positions.name_english',
                 'branchs.branch_name_kh',
                 'branchs.branch_name_en',
+                'departments.name_english as department_name',
                 'rooms.name as location',
                 'maintenance_missions.name as maintenance_mission',
             )->where('maintenances.deleted_at',null);
@@ -91,9 +94,10 @@ class MaintenanceController extends Controller
     public function create()
     {
         $serial = Asset::all();
+        $department = Department::all();
         $maintenanceMission = MaintenanceMission::all();
         $branch = Branch::all();
-        return view('maintenance.create',compact('serial','maintenanceMission','branch'));
+        return view('maintenance.create',compact('serial','maintenanceMission','branch','department'));
     }
 
     /**
@@ -207,7 +211,8 @@ class MaintenanceController extends Controller
         $softwareTasks = $tasks->where('type', 'Software');
         $maintenanceMission = MaintenanceMission::all();
         $branch = Branch::all();
-        return view('maintenance.edit',compact('data','serial','hardwareTasks', 'softwareTasks', 'selectedTaskIds','maintenanceMission','branch'));
+        $department = Department::all();
+        return view('maintenance.edit',compact('data','serial','hardwareTasks', 'softwareTasks', 'selectedTaskIds','maintenanceMission','branch','department'));
     }
 
     /**
@@ -305,6 +310,10 @@ class MaintenanceController extends Controller
     }
     public function OnChangeBranch(Request $request){
         $data = Asset::where('office',$request->branch_id)->get();
+        return response()->json(['message' => $data]);
+    }
+    public function OnChangeDepartment(Request $request){
+        $data = Asset::where('department_id',$request->department_id)->get();
         return response()->json(['message' => $data]);
     }
 }
