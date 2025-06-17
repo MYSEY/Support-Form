@@ -139,7 +139,7 @@
                             <div class="col-lg-12 col-xl-12">
                                 <!-- Scrollable container start -->
                                 <div style="max-height: 300px; overflow-y: auto;">
-                                    @foreach ($branch as $item)
+                                    {{-- @foreach ($branch as $item)
                                         @foreach ($mission as $Mitem)
                                             @php
                                                 $recordsTotal = App\Models\Maintenance::whereNotNull('maintenance_mission_id')->where('office',$item->id)->whereYear('created_at', now()->year)->count(); 
@@ -150,7 +150,23 @@
                                             <span class="ml-auto"><strong>({{$recordsTotal}}/ 4)</strong></span>
                                         </div>
                                         <hr>
+                                    @endforeach --}}
+                                    
+                                    @foreach ($results as $item)
+                                        @php
+                                            $completed = collect($item['missions'])->where('status', 1)->count(); // status 1 = fully completed
+                                            $totalMissions = count($item['missions']);
+                                        @endphp
+
+                                        <div class="d-flex mt-2">
+                                            Branch {{ $item['abbreviations'] }}
+                                            <span class="ml-auto">
+                                                <strong>({{ $completed }} / {{ $totalMissions }})</strong>
+                                            </span>
+                                        </div>
+                                        <hr>
                                     @endforeach
+
                                 </div>
                                 <!-- Scrollable container end -->
                             </div>
@@ -162,14 +178,13 @@
         <div class="col-xl-6">
             <div id="panel-9" class="panel">
                 <div class="panel-hdr">    
-                    <h2>Asset</h2>
+                    <h2>Asset By Branch</h2>
                     <div class="panel-toolbar">
                         <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
                         <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
                         <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
                     </div>
                 </div>
-               
                 <div class="panel-container show">
                     <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
                         <div class="row">
@@ -194,7 +209,83 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>  
+    <div class="row"> 
+        <div class="col-xl-6">
+            <div id="panel-9" class="panel">
+                <div class="panel-hdr">    
+                    <h2>Maintenance Mission By Department</h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                
+                <div class="panel-container show">
+                    <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-xl-12">
+                                <!-- Scrollable container start -->
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    @foreach ($resultsDepartment as $item)
+                                        @php
+                                            $completed = collect($item['missions'])->where('status', 1)->count(); // status 1 = fully completed
+                                            $totalMissions = count($item['missions']);
+                                        @endphp
+
+                                        <div class="d-flex mt-2">
+                                            Branch {{ $item['name_english'] }}
+                                            <span class="ml-auto">
+                                                <strong>({{ $completed }} / {{ $totalMissions }})</strong>
+                                            </span>
+                                        </div>
+                                        <hr>
+                                    @endforeach
+                                </div>                                
+                                <!-- Scrollable container end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div id="panel-9" class="panel">
+                <div class="panel-hdr">    
+                    <h2>Asset By Department</h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+               
+                <div class="panel-container show">
+                    <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-xl-12">
+                                <!-- Scrollable container start -->
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    @foreach ($departments as $item)
+                                        @php
+                                            $recordsTotal = App\Models\Asset::where('department_id',$item->id)->count(); 
+                                        @endphp
+                                        <div class="d-flex mt-2">
+                                            {{$item->name_english}}
+                                            <span class="ml-auto"><strong>{{$recordsTotal}}</strong></span>
+                                        </div>
+                                        <hr>
+                                    @endforeach
+                                </div>
+                                <!-- Scrollable container end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
     
     <div class="row">
         @can('Dashboad User Online')

@@ -12,8 +12,10 @@ use Illuminate\Support\Carbon;
 use App\Models\MaintenanceMission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Stmt\Foreach_;
+use SebastianBergmann\CodeCoverage\Report\Xml\Totals;
 
 class DashboardController extends Controller
 {
@@ -22,6 +24,58 @@ class DashboardController extends Controller
         RolePermission($this, 'Dashboad');
     }
     public function index(){
+        $results = [];
+        $branches = Branch::select("id", "branch_name_kh", "branch_name_en", "abbreviations")->where('abbreviations','!=','HQ')->get();
+        $missions = MaintenanceMission::all();
+
+        foreach ($branches as $branch) {
+            $totalAsset = Asset::where('office', $branch->id)->count();
+            $branchMissions = [];
+            $allMissionMatch = true;
+
+            foreach ($missions as $mission) {
+                // Count unique asset_id under maintenance
+                $maintenanceCount = Maintenance::where('office', $branch->id)->where('maintenance_mission_id', $mission->id)->distinct('asset_id')->count('asset_id');
+                // Count all maintenance records (not just distinct)
+                $totalMaintenances = Maintenance::where('office', $branch->id)->where('maintenance_mission_id', $mission->id)->count();
+                // Determine status
+                $status = 0;
+                if ($totalAsset == 0 || $maintenanceCount == 0) {
+                    $status = 0; // No data
+                } elseif ($maintenanceCount == $totalAsset) {
+                    $status = 1; // Fully completed
+                } elseif ($maintenanceCount == $totalAsset) {
+                    $status = 2; // Partial
+                } elseif ($maintenanceCount == $totalAsset) {
+                    $status = 3; // Redundant maintenance
+                } elseif ($maintenanceCount == $totalAsset) {
+                    $status = 4; // Over-maintained
+                }
+
+                // Append mission details
+                $branchMissions[] = [
+                    'mission_id' => $mission->id,
+                    'mission_name' => $mission->name ?? 'Unnamed',
+                    'total_asset' => $totalAsset,
+                    'total_maintenance' => $maintenanceCount,
+                    'status' => $status,
+                ];
+
+                if (!($maintenanceCount == $totalAsset && $totalAsset == $mission->id)) {
+                    $allMissionMatch = false;
+                }
+            }
+
+            $results[] = [
+                'branch_id' => $branch->id,
+                'branch_name_kh' => $branch->branch_name_kh,
+                'branch_name_en' => $branch->branch_name_en,
+                'abbreviations' => $branch->abbreviations,
+                'missions' => $branchMissions,
+                'branch_status' => $allMissionMatch ? 'complete' : 'incomplete', // ✅ Add final status here
+            ];
+        }
+        
         $query = Online::with("userOnline")
         ->leftJoin('users','onlines.user_id','=','users.id')
         ->leftJoin('branchs','branchs.id','=','users.branch_id')
@@ -47,29 +101,62 @@ class DashboardController extends Controller
             "branch_name_kh",
             "branch_name_en",
             "abbreviations"
-        )->get();
-        $asset = Asset::all();
-        
-        $totalBranch = DB::table('branchs')
-        ->leftJoin('maintenances', function ($join) {
-            $join->on('maintenances.office', '=', 'branchs.id')
-                ->whereNotNull('maintenances.maintenance_mission_id')
-                ->whereYear('maintenances.created_at', now()->year);
-        })
-        ->select(
-            'branchs.id as branch_id',
-            'branchs.branch_name_kh',
-            'branchs.branch_name_en',
-            'branchs.abbreviations',
-        )
-        ->groupBy(
-            'branchs.id',
-            'branchs.branch_name_kh',
-            'branchs.branch_name_en',
-            'branchs.abbreviations'
-        )->get();
-        // dd($totalBranch);
-        return view('dashboads.admin',compact('data','branch','mission','asset','totalBranch'));
+        )->where('abbreviations','!=','HQ')->get();
+
+        $department = Department::select(
+            "id",
+            "name_khmer",
+            "name_english",
+        )->where('type','infra')->get();
+
+        $resultsDepartment = [];
+        $departments = Department::select("id", "name_khmer", "name_english")->where('type', 'infra')->get();
+        foreach ($departments as $department) {
+            $totalAsset = Asset::where('department_id', $department->id)->count();
+            $departmentMissions = [];
+            $allMissionMatch = true;
+
+            foreach ($missions as $mission) {
+                // Count unique asset_id under maintenance
+                $maintenanceCount = Maintenance::where('department_id', $department->id)->where('maintenance_mission_id', $mission->id)->distinct('asset_id')->count('asset_id');
+                // Count all maintenance records (not just distinct)
+                $totalMaintenances = Maintenance::where('department_id', $department->id)->where('maintenance_mission_id', $mission->id)->count();
+                // Determine status
+                $status = 0;
+                if ($totalAsset == 0 || $maintenanceCount == 0) {
+                    $status = 0; // No data
+                } elseif ($maintenanceCount == $totalAsset && $totalMaintenances == $totalAsset) {
+                    $status = 1; // Fully completed
+                } elseif ($maintenanceCount < $totalAsset) {
+                    $status = 2; // Partial
+                } elseif ($maintenanceCount == $totalAsset && $totalMaintenances > $totalAsset) {
+                    $status = 3; // Redundant maintenance
+                } elseif ($maintenanceCount > $totalAsset) {
+                    $status = 4; // Over-maintained
+                }
+
+                $departmentMissions[] = [
+                    'mission_id' => $mission->id,
+                    'mission_name' => $mission->name ?? 'Unnamed',
+                    'total_asset' => $totalAsset,
+                    'total_maintenance' => $maintenanceCount,
+                    'status' => $status,
+                ];
+
+                if (!($maintenanceCount == $totalAsset && $totalMaintenances == $totalAsset)) {
+                    $allMissionMatch = false;
+                }
+            }
+
+            $resultsDepartment[] = [
+                'department_id' => $department->id,
+                'name_khmer' => $department->name_khmer,
+                'name_english' => $department->name_english,
+                'missions' => $departmentMissions,
+                'department_status' => $allMissionMatch ? 'complete' : 'incomplete',
+            ];
+        }
+        return view('dashboads.admin',compact('data','branch','resultsDepartment','departments','results'));
     }
     public function show(Request $request){
         $dataCustomStatuses = DB::table('custom_statuses')->get();
