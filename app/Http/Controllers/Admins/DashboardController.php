@@ -27,7 +27,6 @@ class DashboardController extends Controller
         $results = [];
         $branches = Branch::select("id", "branch_name_kh", "branch_name_en", "abbreviations")->where('abbreviations','!=','HQ')->get();
         $missions = MaintenanceMission::all();
-
         foreach ($branches as $branch) {
             $totalAsset = Asset::where('office', $branch->id)->count();
             $branchMissions = [];
@@ -36,22 +35,18 @@ class DashboardController extends Controller
             foreach ($missions as $mission) {
                 // Count unique asset_id under maintenance
                 $maintenanceCount = Maintenance::where('office', $branch->id)->where('maintenance_mission_id', $mission->id)->distinct('asset_id')->count('asset_id');
-                // Count all maintenance records (not just distinct)
-                $totalMaintenances = Maintenance::where('office', $branch->id)->where('maintenance_mission_id', $mission->id)->count();
-                // Determine status
                 $status = 0;
                 if ($totalAsset == 0 || $maintenanceCount == 0) {
                     $status = 0; // No data
                 } elseif ($maintenanceCount == $totalAsset) {
-                    $status = 1; // Fully completed
-                } elseif ($maintenanceCount == $totalAsset) {
-                    $status = 2; // Partial
-                } elseif ($maintenanceCount == $totalAsset) {
-                    $status = 3; // Redundant maintenance
-                } elseif ($maintenanceCount == $totalAsset) {
-                    $status = 4; // Over-maintained
+                    // Exact match, so status = mission ID (1-4)
+                    $status = $mission->id;
+                } elseif ($maintenanceCount < $totalAsset) {
+                    $status = 0; // Partial
+                } elseif ($maintenanceCount > $totalAsset) {
+                    $status = 5; // Over-maintained
                 }
-
+                
                 // Append mission details
                 $branchMissions[] = [
                     'mission_id' => $mission->id,
@@ -60,10 +55,6 @@ class DashboardController extends Controller
                     'total_maintenance' => $maintenanceCount,
                     'status' => $status,
                 ];
-
-                if (!($maintenanceCount == $totalAsset && $totalAsset == $mission->id)) {
-                    $allMissionMatch = false;
-                }
             }
 
             $results[] = [
@@ -71,11 +62,9 @@ class DashboardController extends Controller
                 'branch_name_kh' => $branch->branch_name_kh,
                 'branch_name_en' => $branch->branch_name_en,
                 'abbreviations' => $branch->abbreviations,
-                'missions' => $branchMissions,
-                'branch_status' => $allMissionMatch ? 'complete' : 'incomplete', // ✅ Add final status here
+                'missions' => $branchMissions
             ];
         }
-        
         $query = Online::with("userOnline")
         ->leftJoin('users','onlines.user_id','=','users.id')
         ->leftJoin('branchs','branchs.id','=','users.branch_id')

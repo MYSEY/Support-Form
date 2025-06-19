@@ -139,34 +139,21 @@
                             <div class="col-lg-12 col-xl-12">
                                 <!-- Scrollable container start -->
                                 <div style="max-height: 300px; overflow-y: auto;">
-                                    {{-- @foreach ($branch as $item)
-                                        @foreach ($mission as $Mitem)
-                                            @php
-                                                $recordsTotal = App\Models\Maintenance::whereNotNull('maintenance_mission_id')->where('office',$item->id)->whereYear('created_at', now()->year)->count(); 
-                                            @endphp
-                                        @endforeach
-                                        <div class="d-flex mt-2">
-                                            Branch {{$item->abbreviations}}
-                                            <span class="ml-auto"><strong>({{$recordsTotal}}/ 4)</strong></span>
-                                        </div>
-                                        <hr>
-                                    @endforeach --}}
-                                    
                                     @foreach ($results as $item)
                                         @php
-                                            $completed = collect($item['missions'])->where('status', 1)->count(); // status 1 = fully completed
-                                            $totalMissions = count($item['missions']);
+                                            $completed = 0 ;
+                                            foreach ($item['missions'] as $value) {
+                                                $completed += $value['status']; 
+                                            }
                                         @endphp
-
                                         <div class="d-flex mt-2">
                                             Branch {{ $item['abbreviations'] }}
                                             <span class="ml-auto">
-                                                <strong>({{ $completed }} / {{ $totalMissions }})</strong>
+                                                <strong>({{ $completed }} / 4)</strong>
                                             </span>
                                         </div>
                                         <hr>
                                     @endforeach
-
                                 </div>
                                 <!-- Scrollable container end -->
                             </div>
@@ -230,14 +217,16 @@
                                 <div style="max-height: 300px; overflow-y: auto;">
                                     @foreach ($resultsDepartment as $item)
                                         @php
-                                            $completed = collect($item['missions'])->where('status', 1)->count(); // status 1 = fully completed
-                                            $totalMissions = count($item['missions']);
+                                            $completed = 0 ;
+                                            foreach ($item['missions'] as $value) {
+                                                $completed += $value['status']; 
+                                            }
                                         @endphp
 
                                         <div class="d-flex mt-2">
                                             Branch {{ $item['name_english'] }}
                                             <span class="ml-auto">
-                                                <strong>({{ $completed }} / {{ $totalMissions }})</strong>
+                                                <strong>({{ $completed }} / 4)</strong>
                                             </span>
                                         </div>
                                         <hr>
@@ -285,7 +274,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
     
     <div class="row">
         @can('Dashboad User Online')
