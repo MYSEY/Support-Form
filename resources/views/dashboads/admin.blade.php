@@ -224,7 +224,7 @@
                                         @endphp
 
                                         <div class="d-flex mt-2">
-                                            Branch {{ $item['name_english'] }}
+                                            {{ $item['name_english'] }}
                                             <span class="ml-auto">
                                                 <strong>({{ $completed }} / 4)</strong>
                                             </span>
