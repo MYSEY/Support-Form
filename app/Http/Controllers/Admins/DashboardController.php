@@ -103,23 +103,18 @@ class DashboardController extends Controller
         foreach ($departments as $department) {
             $totalAsset = Asset::where('department_id', $department->id)->count();
             $departmentMissions = [];
-            $allMissionMatch = true;
-
             foreach ($missions as $mission) {
-                // Count unique asset_id under maintenance
                 $maintenanceCount = Maintenance::where('department_id', $department->id)->where('maintenance_mission_id', $mission->id)->distinct('asset_id')->count('asset_id');
-                // Count all maintenance records (not just distinct)
                 $totalMaintenances = Maintenance::where('department_id', $department->id)->where('maintenance_mission_id', $mission->id)->count();
-                // Determine status
                 $status = 0;
-                if ($totalAsset == 0 || $maintenanceCount == 0) {
-                    $status = 0; // No data
+                if ($totalAsset == 0 || $maintenanceCount <= 1) {
+                    $status = 0; // No data or too little
                 } elseif ($maintenanceCount == $totalAsset && $totalMaintenances == $totalAsset) {
                     $status = 1; // Fully completed
                 } elseif ($maintenanceCount < $totalAsset) {
                     $status = 2; // Partial
                 } elseif ($maintenanceCount == $totalAsset && $totalMaintenances > $totalAsset) {
-                    $status = 3; // Redundant maintenance
+                    $status = 3; // Redundant
                 } elseif ($maintenanceCount > $totalAsset) {
                     $status = 4; // Over-maintained
                 }
@@ -131,10 +126,6 @@ class DashboardController extends Controller
                     'total_maintenance' => $maintenanceCount,
                     'status' => $status,
                 ];
-
-                if (!($maintenanceCount == $totalAsset && $totalMaintenances == $totalAsset)) {
-                    $allMissionMatch = false;
-                }
             }
 
             $resultsDepartment[] = [
@@ -142,7 +133,6 @@ class DashboardController extends Controller
                 'name_khmer' => $department->name_khmer,
                 'name_english' => $department->name_english,
                 'missions' => $departmentMissions,
-                'department_status' => $allMissionMatch ? 'complete' : 'incomplete',
             ];
         }
         return view('dashboads.admin',compact('data','branch','resultsDepartment','departments','results'));
