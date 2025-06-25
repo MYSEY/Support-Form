@@ -14,6 +14,10 @@ class MaintenanceMissionController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        RolePermission($this, 'Maintenance Mission');
+    }
     public function index()
     {
         $data = MaintenanceMission::all();

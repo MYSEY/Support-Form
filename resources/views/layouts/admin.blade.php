@@ -322,13 +322,13 @@
                                                 </a>
                                             </li>
                                         @endif
-                                        {{-- @if (Auth::user()->can('Employee View')) --}}
+                                        @if (Auth::user()->can('Maintenance Mission View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['mission'])) active @endif">
                                                 <a href="{{url('admin/mission')}}" title="Maintenance Mission" data-filter-tags="theme Maintenance Mission">
                                                     <span class="nav-link-text">Maintenance Mission</span>
                                                 </a>
                                             </li>
-                                        {{-- @endif --}}
+                                        @endif
                                         @if (Auth::user()->can('Asset View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['asset'])) active @endif">
                                                 <a href="{{url('admin/asset')}}" title="Asset" data-filter-tags="theme Asset">

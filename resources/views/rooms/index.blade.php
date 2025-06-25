@@ -9,16 +9,16 @@
                     </h2>
                 </div>
                 <div class="panel-container show">
-                    {{-- @can('Task Create') --}}
+                    @can('Room Create')
                         <div class="panel-tag">
                             <div class="text-lg-right">
-                                @can('Task Import')
+                                @can('Room Import')
                                     <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger btn-sm mr-1">Import</a>
                                 @endcan 
                                 <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#roomCreate" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
                             </div>
                         </div>
-                    {{-- @endcan --}}
+                    @endcan
                     <div class="panel-content">
                         <div class="table-responsive">
                             <!-- datatable start -->

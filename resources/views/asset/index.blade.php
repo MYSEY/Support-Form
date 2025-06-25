@@ -13,7 +13,9 @@
                     @can('Asset Create')
                         <div class="panel-tag">
                             <div class="text-lg-right">
-                                <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger btn-sm mr-1"><i class="fal fa-file"></i> Import</a>
+                                @can('Asset Import')
+                                    <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger btn-sm mr-1"><i class="fal fa-file"></i> Import</a>
+                                @endcan
                                 <a href="{{url('admin/asset/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
                             </div>
                         </div>
@@ -24,7 +26,6 @@
                             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                                 <thead>
                                     <tr>
-                                        {{-- <th>#</th> --}}
                                         <th width="100%">Serial</th>
                                         <th>Category</th>
                                         <th>DeviceName</th>
@@ -35,7 +36,6 @@
                                         <th>Postion</th>
                                         <th>AssetDate</th>
                                         <th>Lifecycle(Month)</th>
-                                        <th>CreatedAt</th>
                                         <th width="100px">Action</th>
                                     </tr>
                                 </thead>
@@ -43,7 +43,6 @@
                                     @if (count($data)>0)
                                         @foreach ($data as $key=>$item)
                                             <tr>
-                                                {{-- <td>{{$item->id}}</td> --}}
                                                 <td>{{$item->serial}}</td>
                                                 <td>{{$item->CategoryName}}</td>
                                                 <td>{{$item->device_name}}</td>
@@ -54,7 +53,6 @@
                                                 <td>{{$item->name_english}}</td>
                                                 <td>{{ $item->date }}</td>
                                                 <td>{{$item->LifecycleMonthDiff}}</td>
-                                                <td>{{$item->created_at}}</td>
                                                 <td>
                                                     <div class="d-flex demo">
                                                         @can('Asset Delete')
