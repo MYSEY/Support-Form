@@ -122,158 +122,166 @@
     </div>
 
     <div class="row"> 
-        <div class="col-xl-6">
-            <div id="panel-9" class="panel">
-                <div class="panel-hdr">    
-                    <h2>Maintenance Mission By Branch</h2>
-                    <div class="panel-toolbar">
-                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
-                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
-                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+        @can('Dashboad Maintenance Mission By Branch')
+            <div class="col-xl-6">
+                <div id="panel-9" class="panel">
+                    <div class="panel-hdr">    
+                        <h2>Maintenance Mission By Branch</h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                            <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="panel-container show">
-                    <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
-                        <div class="row">
-                            <div class="col-lg-12 col-xl-12">
-                                <!-- Scrollable container start -->
-                                <div style="max-height: 300px; overflow-y: auto;">
-                                    @foreach ($results as $item)
-                                        @php
-                                            $completed = 0 ;
-                                            foreach ($item['missions'] as $value) {
-                                                $completed += $value['status']; 
-                                            }
-                                        @endphp
-                                        <div class="d-flex mt-2">
-                                            Branch {{ $item['abbreviations'] }}
-                                            <span class="ml-auto">
-                                                <strong>({{ $completed }} / 4)</strong>
-                                            </span>
-                                        </div>
-                                        <hr>
-                                    @endforeach
+                    
+                    <div class="panel-container show">
+                        <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
+                            <div class="row">
+                                <div class="col-lg-12 col-xl-12">
+                                    <!-- Scrollable container start -->
+                                    <div style="max-height: 300px; overflow-y: auto;">
+                                        @foreach ($results as $item)
+                                            @php
+                                                $completed = 0 ;
+                                                foreach ($item['missions'] as $value) {
+                                                    $completed += $value['status']; 
+                                                }
+                                            @endphp
+                                            <div class="d-flex mt-2">
+                                                Branch {{ $item['abbreviations'] }}
+                                                <span class="ml-auto">
+                                                    <strong>({{ $completed }} / 4)</strong>
+                                                </span>
+                                            </div>
+                                            <hr>
+                                        @endforeach
+                                    </div>
+                                    <!-- Scrollable container end -->
                                 </div>
-                                <!-- Scrollable container end -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-xl-6">
-            <div id="panel-9" class="panel">
-                <div class="panel-hdr">    
-                    <h2>Asset By Branch</h2>
-                    <div class="panel-toolbar">
-                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
-                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
-                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+        @endcan
+        @can('Dashboad Asset By Branch')
+            <div class="col-xl-6">
+                <div id="panel-9" class="panel">
+                    <div class="panel-hdr">    
+                        <h2>Asset By Branch</h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                            <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                        </div>
                     </div>
-                </div>
-                <div class="panel-container show">
-                    <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
-                        <div class="row">
-                            <div class="col-lg-12 col-xl-12">
-                                <!-- Scrollable container start -->
-                                <div style="max-height: 300px; overflow-y: auto;">
-                                    @foreach ($branch as $item)
-                                        @php
-                                            $recordsTotal = App\Models\Asset::where('office',$item->id)->count(); 
-                                        @endphp
-                                        <div class="d-flex mt-2">
-                                            Branch {{$item->abbreviations}}
-                                            <span class="ml-auto"><strong>{{$recordsTotal}}</strong></span>
-                                        </div>
-                                        <hr>
-                                    @endforeach
+                    <div class="panel-container show">
+                        <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
+                            <div class="row">
+                                <div class="col-lg-12 col-xl-12">
+                                    <!-- Scrollable container start -->
+                                    <div style="max-height: 300px; overflow-y: auto;">
+                                        @foreach ($branch as $item)
+                                            @php
+                                                $recordsTotal = App\Models\Asset::where('office',$item->id)->count(); 
+                                            @endphp
+                                            <div class="d-flex mt-2">
+                                                Branch {{$item->abbreviations}}
+                                                <span class="ml-auto"><strong>{{$recordsTotal}}</strong></span>
+                                            </div>
+                                            <hr>
+                                        @endforeach
+                                    </div>
+                                    <!-- Scrollable container end -->
                                 </div>
-                                <!-- Scrollable container end -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endcan
     </div>  
     <div class="row"> 
-        <div class="col-xl-6">
-            <div id="panel-9" class="panel">
-                <div class="panel-hdr">    
-                    <h2>Maintenance Mission By Department</h2>
-                    <div class="panel-toolbar">
-                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
-                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
-                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+        @can('Dashboad Maintenance Mission By Department')
+            <div class="col-xl-6">
+                <div id="panel-9" class="panel">
+                    <div class="panel-hdr">    
+                        <h2>Maintenance Mission By Department</h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                            <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="panel-container show">
-                    <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
-                        <div class="row">
-                            <div class="col-lg-12 col-xl-12">
-                                <!-- Scrollable container start -->
-                                <div style="max-height: 300px; overflow-y: auto;">
-                                    @foreach ($resultsDepartment as $item)
-                                        @php
-                                            $completed = 0 ;
-                                            foreach ($item['missions'] as $value) {
-                                                $completed += $value['status']; 
-                                            }
-                                        @endphp
+                    
+                    <div class="panel-container show">
+                        <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
+                            <div class="row">
+                                <div class="col-lg-12 col-xl-12">
+                                    <!-- Scrollable container start -->
+                                    <div style="max-height: 300px; overflow-y: auto;">
+                                        @foreach ($resultsDepartment as $item)
+                                            @php
+                                                $completed = 0 ;
+                                                foreach ($item['missions'] as $value) {
+                                                    $completed += $value['status']; 
+                                                }
+                                            @endphp
 
-                                        <div class="d-flex mt-2">
-                                            {{ $item['name_english'] }}
-                                            <span class="ml-auto">
-                                                <strong>({{ $completed }} / 4)</strong>
-                                            </span>
-                                        </div>
-                                        <hr>
-                                    @endforeach
-                                </div>                                
-                                <!-- Scrollable container end -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6">
-            <div id="panel-9" class="panel">
-                <div class="panel-hdr">    
-                    <h2>Asset By Department</h2>
-                    <div class="panel-toolbar">
-                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
-                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
-                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
-                    </div>
-                </div>
-               
-                <div class="panel-container show">
-                    <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
-                        <div class="row">
-                            <div class="col-lg-12 col-xl-12">
-                                <!-- Scrollable container start -->
-                                <div style="max-height: 300px; overflow-y: auto;">
-                                    @foreach ($departments as $item)
-                                        @php
-                                            $recordsTotal = App\Models\Asset::where('department_id',$item->id)->count(); 
-                                        @endphp
-                                        <div class="d-flex mt-2">
-                                            {{$item->name_english}}
-                                            <span class="ml-auto"><strong>{{$recordsTotal}}</strong></span>
-                                        </div>
-                                        <hr>
-                                    @endforeach
+                                            <div class="d-flex mt-2">
+                                                {{ $item['name_english'] }}
+                                                <span class="ml-auto">
+                                                    <strong>({{ $completed }} / 4)</strong>
+                                                </span>
+                                            </div>
+                                            <hr>
+                                        @endforeach
+                                    </div>                                
+                                    <!-- Scrollable container end -->
                                 </div>
-                                <!-- Scrollable container end -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endcan
+        @can('Dashboad Asset By Department')
+            <div class="col-xl-6">
+                <div id="panel-9" class="panel">
+                    <div class="panel-hdr">    
+                        <h2>Asset By Department</h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                            <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                        </div>
+                    </div>
+                
+                    <div class="panel-container show">
+                        <div class="panel-content border-faded border-left-0 border-right-0 border-top-0">
+                            <div class="row">
+                                <div class="col-lg-12 col-xl-12">
+                                    <!-- Scrollable container start -->
+                                    <div style="max-height: 300px; overflow-y: auto;">
+                                        @foreach ($departments as $item)
+                                            @php
+                                                $recordsTotal = App\Models\Asset::where('department_id',$item->id)->count(); 
+                                            @endphp
+                                            <div class="d-flex mt-2">
+                                                {{$item->name_english}}
+                                                <span class="ml-auto"><strong>{{$recordsTotal}}</strong></span>
+                                            </div>
+                                            <hr>
+                                        @endforeach
+                                    </div>
+                                    <!-- Scrollable container end -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endcan
     </div>
     
     <div class="row">
