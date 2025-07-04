@@ -27,6 +27,7 @@ use App\Http\Controllers\Admins\TicketReportController;
 use App\Http\Controllers\Admins\ResponsesTicketController;
 use App\Http\Controllers\Admins\TicketGuidelinesController;
 use App\Http\Controllers\Admins\MaintenanceReportController;
+use App\Http\Controllers\Admins\MaintenanceStatusController;
 use App\Http\Controllers\Admins\MaintenanceMissionController;
 use App\Http\Controllers\Admins\PermissionCategoryController;
 
@@ -136,6 +137,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     //maintenance mission
     Route::resource('mission', MaintenanceMissionController::class);
+    Route::resource('maintenance-status', MaintenanceStatusController::class);
 
     //maintenance report
     Route::get('report/maintenance', [MaintenanceReportController::class, 'report']);

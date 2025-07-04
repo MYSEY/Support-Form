@@ -2,31 +2,23 @@
 
 namespace App\Models;
 
-use App\Models\Task;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class MaintenanceDetail extends Model
+class MaintenanceStatus extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'maintenance_details';
+    protected $table = 'maintenance_statuses';
     protected $guarded = ['id'];
     
     protected $fillable = [
-        'maintenance_id',
-        'task_id',
-        'note',
-        'status',
+        'name',
+        'color',
         'created_by',
         'updated_by',
         'deleted_at',
     ];
-
-    public function task()
-    {
-        return $this->belongsTo(Task::class, 'task_id');
-    }
 }

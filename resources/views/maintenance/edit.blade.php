@@ -106,6 +106,7 @@
                             </p>
                         </div>
                         <br>
+                        
                         <div class="row mb-3">
                             <!-- Hardware Table -->
                             <div class="col-xl-6">
@@ -117,6 +118,7 @@
                                                 <th>No</th>
                                                 <th>Name</th>
                                                 <th>Note</th>
+                                                <th>Status</th>
                                                 <th>
                                                     <div class="form-group">
                                                         <div class="frame-wrap">
@@ -137,12 +139,21 @@
                                                     $isChecked = in_array($item->task_id, $taskIds) ? 'checked' : '';
                                                     $noteDetail = $selectedTaskIds->firstWhere('task_id', $item->task_id);
                                                     $note = $noteDetail ? $noteDetail['note'] : '';
+                                                    $status = $noteDetail ? $noteDetail['status'] : '';
                                                 @endphp
                                                 <tr class="odd">
                                                     <td>{{ $hardwareIndex++ }}</td>
                                                     <td class="sub-message" data-toggle="tooltip" data-html="true" title="{{$item->description}}">{{ $item->task_name ?? 'N/A' }}</td>
                                                     <td>
                                                         <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100">{{$note}}</textarea>
+                                                    </td>
+                                                    <td>
+                                                        <select class="select2 form-control w-100 select2-option" id="status" name="status[]">
+                                                            <option value="">-- Select --</option>
+                                                            @foreach ($maintenanceStatus as $Mitem)
+                                                                <option value="{{$Mitem->id}}" {{$status == $Mitem->id ? 'selected' : ''}}>{{ $Mitem->name}}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </td>
                                                     <td>
                                                         <div class="form-group">
@@ -171,6 +182,7 @@
                                                 <th>No</th>
                                                 <th>Name</th>
                                                 <th>Note</th>
+                                                <th>Status</th>
                                                 <th>
                                                     <div class="form-group">
                                                         <div class="frame-wrap">
@@ -191,13 +203,21 @@
                                                     $isChecked = in_array($item->task_id, $taskIds) ? 'checked' : '';
                                                     $noteDetail = $selectedTaskIds->firstWhere('task_id', $item->task_id);
                                                     $note = $noteDetail ? $noteDetail['note'] : '';
+                                                    $status = $noteDetail ? $noteDetail['status'] : '';
                                                 @endphp
                                                 <tr class="odd">
                                                     <td>{{ $softwareIndex++ }}</td>
                                                     <td class="sub-message" data-toggle="tooltip" data-html="true" title="{{$item->description}}">{{ $item->task_name ?? 'N/A' }}</td>
                                                     <td>
                                                         <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100">{{$note}}</textarea>
-                                                        {{-- <textarea class="form-control" id="note_{{ $item->task_id }}" name="note[]" rows="2" maxlength="100"></textarea> --}}
+                                                    </td>
+                                                    <td>
+                                                        <select class="select2 form-control w-100 select2-option" id="status" name="status[]">
+                                                            <option value="">-- Select --</option>
+                                                            @foreach ($maintenanceStatus as $Mitem)
+                                                                <option value="{{$Mitem->id}}" {{$status == $Mitem->id ? 'selected' : ''}}>{{ $Mitem->name}}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </td>
                                                     <td>
                                                         <div class="form-group">
@@ -342,13 +362,21 @@
                         if (response.task.length > 0) {
                             let hardwareIndex = 1;
                             let softwareIndex = 1;
+                            let options = '<option value="">-- Select --</option>';
+                            response.maintenanceStatus.forEach((row) => {
+                                options += `<option value="${row.id}">${row.name}</option>`;
+                            });
                             response.task.forEach((row) => {
                                 if (row.type == "Hardware") {
                                     hardwareTr += `<tr class="odd">
                                         <td>${hardwareIndex++}</td>
                                         <td>${row.task_name}</td>
+                                        <td><textarea class="form-control" id="note_${row.task_id}" name="note[]" rows="2" maxlength="100"></textarea></td>
                                         <td>
-                                            <textarea class="form-control" id="note_${row.task_id}" name="note[]" rows="2" maxlength="100"></textarea>
+                                            <select class="select2 form-control w-100 select2-option" id="status" name="status[]" required>
+                                                ${options}
+                                            </select>
+                                        </td>
                                         <td>
                                             <div class="form-group">
                                                 <div class="frame-wrap">
@@ -409,11 +437,13 @@
 
                 var maintenaceDetail = [];
                 $('#tbl_hardware tbody tr, #tbl_software tbody tr').each(function() {  // Iterate over table rows
-                    var note = $(this).find('[name="note[]"]').val();                    
+                    var note = $(this).find('[name="note[]"]').val();
+                    var status = $(this).find('[name="status[]"]').val();                 
                     var taskId = $(this).find('[name="tasks[]"]:checked').val(); // Get only checked tasks
                     if (taskId) { // Ensure only checked tasks are added
                         maintenaceDetail.push({
                             note: note,
+                            status: status,
                             task_id: taskId
                         });
                     }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('maintenance_id');
             $table->foreignId('task_id');
             $table->longText('note')->nullable();
+            $table->integer('status');
             $table->foreignId('created_by');
             $table->foreignId('updated_by')->nullable();
             $table->dateTime('deleted_at')->nullable();

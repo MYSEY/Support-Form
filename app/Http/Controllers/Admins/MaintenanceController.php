@@ -5,14 +5,15 @@ namespace App\Http\Controllers\Admins;
 use App\Models\Asset;
 use App\Models\Branch;
 use App\Models\Employee;
+use App\Models\Department;
 use App\Models\Maintenance;
 use App\Models\CategoryTask;
 use Illuminate\Http\Request;
 use App\Models\MaintenanceDetail;
+use App\Models\MaintenanceStatus;
 use App\Models\MaintenanceMission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Department;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 
@@ -115,6 +116,7 @@ class MaintenanceController extends Controller
                         'maintenance_id' => $maintenance->id,
                         'task_id' => $value['task_id'], // Use array notation for JSON request
                         'note' => $value['note'],
+                        'status' => $value['status'],
                         'created_by' => Auth::id(),
                     ]);
                 }
@@ -192,7 +194,8 @@ class MaintenanceController extends Controller
         $selectedTaskIds = $data->maintenanceDetail->map(function($detail) {
             return [
                 'task_id' => $detail->task_id,
-                'note' => $detail->note
+                'note' => $detail->note,
+                'status' => $detail->status
             ];
         });
         // Retrieve both Hardware & Software tasks
@@ -212,7 +215,8 @@ class MaintenanceController extends Controller
         $maintenanceMission = MaintenanceMission::all();
         $branch = Branch::all();
         $department = Department::all();
-        return view('maintenance.edit',compact('data','serial','hardwareTasks', 'softwareTasks', 'selectedTaskIds','maintenanceMission','branch','department'));
+        $maintenanceStatus = MaintenanceStatus::all();
+        return view('maintenance.edit',compact('data','serial','hardwareTasks', 'softwareTasks', 'selectedTaskIds','maintenanceMission','branch','department','maintenanceStatus'));
     }
 
     /**
@@ -245,6 +249,7 @@ class MaintenanceController extends Controller
                 $maintenance->maintenanceDetail()->create([
                     'task_id' => $detail['task_id'],
                     'note' => $detail['note'],
+                    'status' => $detail['status'],
                     'created_by' => Auth::id(),
                     'updated_by' => Auth::id(),
                 ]);
@@ -305,8 +310,11 @@ class MaintenanceController extends Controller
             'tasks.name as task_name',
             'tasks.type',
             'tasks.description',
-        )->where('category_tasks.category_id',$data->category_id)->whereNull('category_tasks.deleted_at')->whereNull('tasks.deleted_at')->get();
-        return response()->json(['message' => $data,'task'=>$task]);
+        )->where('category_tasks.category_id',$data->category_id)
+        ->whereNull('category_tasks.deleted_at')
+        ->whereNull('tasks.deleted_at')->get();
+        $maintenanceStatus = MaintenanceStatus::all();
+        return response()->json(['message' => $data,'task'=>$task,'maintenanceStatus'=>$maintenanceStatus]);
     }
     public function OnChangeBranch(Request $request){
         $data = Asset::where('office',$request->branch_id)->get();

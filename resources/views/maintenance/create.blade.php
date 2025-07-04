@@ -115,6 +115,7 @@
                                                 <th>No</th>
                                                 <th>Name</th>
                                                 <th>Note</th>
+                                                <th>Status</th>
                                                 <th>
                                                     <div class="form-group">
                                                         <div class="frame-wrap">
@@ -141,6 +142,7 @@
                                                 <th>No</th>
                                                 <th>Name</th>
                                                 <th>Note</th>
+                                                <th>Status</th>
                                                 <th>
                                                     <div class="form-group">
                                                         <div class="frame-wrap">
@@ -285,6 +287,17 @@
                         if (response.task.length > 0) {
                             let hardwareIndex = 1;
                             let softwareIndex = 1;
+                            let options = '<option value="">-- Select --</option>';
+                            response.maintenanceStatus.forEach((row) => {
+                                options += `<option value="${row.id}">${row.name}</option>`;
+                            });
+                            let tr = `
+                                <td>
+                                    <select class="select2 form-control w-100 select2-option" name="serial[]" required>
+                                        ${options}
+                                    </select>
+                                </td>
+                            `;
                             response.task.forEach((row) => {
                                 if (row.type == "Hardware") {
                                     hardwareTr += `<tr class="odd">
@@ -292,6 +305,12 @@
                                         <td class="sub-message" data-toggle="tooltip" data-html="true" title="${row.description}">${row.task_name}</td>
                                         <td>
                                             <textarea class="form-control" id="note_${row.task_id}" name="note[]" rows="2" maxlength="100"></textarea>
+                                        </td>
+                                        <td>
+                                            <select class="select2 form-control w-100 select2-option" id="status" name="status[]" required>
+                                                ${options}
+                                            </select>
+                                        </td>
                                         <td>
                                             <div class="form-group">
                                                 <div class="frame-wrap">
@@ -307,8 +326,11 @@
                                     softwareTr += `<tr class="odd">
                                         <td>${softwareIndex++}</td>
                                         <td class="sub-message" data-toggle="tooltip" data-html="true" title="${row.description}">${row.task_name}</td>
+                                        <td><textarea class="form-control" id="note_${row.task_id}" name="note[]" rows="2" maxlength="100"></textarea></td>
                                         <td>
-                                            <textarea class="form-control" id="note_${row.task_id}" name="note[]" rows="2" maxlength="100"></textarea>
+                                            <select class="select2 form-control w-100 select2-option" id="status" name="status[]" required>
+                                                ${options}
+                                            </select>
                                         </td>
                                         <td>
                                             <div class="form-group">
@@ -324,8 +346,8 @@
                                 }
                             });
                         } else {
-                            hardwareTr = '<tr><td colspan="3" align="center">@lang("lang.no_record_to_display")</td></tr>';
-                            softwareTr = '<tr><td colspan="3" align="center">@lang("lang.no_record_to_display")</td></tr>';
+                            hardwareTr = '<tr><td colspan="5" align="center">@lang("lang.no_record_to_display")</td></tr>';
+                            softwareTr = '<tr><td colspan="5" align="center">@lang("lang.no_record_to_display")</td></tr>';
                         }
                         // Append the rows to the correct tables
                         $("#tbl_hardware tbody").html(hardwareTr);
@@ -352,10 +374,12 @@
                 var maintenaceDetail = [];
                 $('#tbl_hardware tbody tr, #tbl_software tbody tr').each(function() {  // Iterate over table rows
                     var note = $(this).find('[name="note[]"]').val();                    
+                    var status = $(this).find('[name="status[]"]').val();          
                     var taskId = $(this).find('[name="tasks[]"]:checked').val(); // Get only checked tasks
                     if (taskId) { // Ensure only checked tasks are added
                         maintenaceDetail.push({
                             note: note,
+                            status: status,
                             task_id: taskId
                         });
                     }

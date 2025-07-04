@@ -6,16 +6,15 @@ use App\Models\User;
 use App\Models\Asset;
 use App\Models\Branch;
 use App\Models\Online;
+use App\Models\Department;
 use App\Models\Maintenance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\MaintenanceStatus;
 use App\Models\MaintenanceMission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
-use PhpParser\Node\Stmt\Foreach_;
-use SebastianBergmann\CodeCoverage\Report\Xml\Totals;
 
 class DashboardController extends Controller
 {
@@ -168,10 +167,21 @@ class DashboardController extends Controller
             $query->where('tickets.branch_id', Auth::user()->branch_id);
         }
         $dataTickets = $query->orderBy('id','DESC')->get();
+        $maintenance = Maintenance::with('maintenanceDetail')->select('id','asset_id','category_id','office','department_id')->get();
+        $branch = Branch::select(
+            "id",
+            "branch_name_kh",
+            "branch_name_en",
+            "abbreviations"
+        )->get();
+        $maintenanceStatus = MaintenanceStatus::get();
         return response()->json([
             'dataTickets'=>$dataTickets,
             'customStatuses'=>$dataCustomStatuses,
             'priorities'=>$dataPriorities,
+            'maintenance'=>$maintenance,
+            'branch'=>$branch,
+            'maintenanceStatus'=>$maintenanceStatus,
             'users'=>$users,
         ]);
     }

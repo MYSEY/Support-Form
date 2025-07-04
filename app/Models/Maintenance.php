@@ -26,7 +26,6 @@ class Maintenance extends Model
         'location',
         'end_user',
         'device_name',
-        'status',
         'maintenance_mission_id',
         'reference',
         'description',

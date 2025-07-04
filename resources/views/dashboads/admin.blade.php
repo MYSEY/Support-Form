@@ -283,7 +283,27 @@
             </div>
         @endcan
     </div>
-    
+    <div class="row">
+        <div class="col-xl-6">
+            <div id="panel-11" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Combination <span class="fw-300"><i>Chart</i></span>
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <div id="combinationChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         @can('Dashboad User Online')
             <div class="col-lg-12 sortable-grid ui-sortable">
@@ -464,13 +484,17 @@
                         $('#total-assign').text(Number(assign).toLocaleString());
                         $('#total-ticke-active').text(Number(tickeActive).toLocaleString());
                     }
-                    let dataTicketStatus = {
+                    let data = {
                         dataTickets: response.dataTickets,
                         customStatuses: response.customStatuses,
                         priorities: response.priorities,
+                        maintenance: response.maintenance,
+                        branch: response.branch,
+                        maintenanceStatus: response.maintenanceStatus,
                     }
-                    TicketStatus(dataTicketStatus);
-                    TicketPriority(dataTicketStatus);
+                    TicketStatus(data);
+                    TicketPriority(data);
+                    maintenance(data);
                 }
             });
         });
@@ -509,7 +533,6 @@
                 }
             });
         }
-        
         // ticket status
         function TicketStatus(datas){
             let statusCounters = {};
@@ -542,6 +565,67 @@
                 },
                 color: {
                     pattern: statusColor
+                }
+            });
+        }
+
+        function maintenance(datas) {
+            let dataMaintenance = {};
+            datas.maintenance.forEach(itemMaintenance => {                
+                const branchIndex = Array.isArray(datas.branch) ? datas.branch.findIndex(itemPranch => itemPranch.id == itemMaintenance.office) : -1;                
+                if (branchIndex !== -1) {
+                    itemMaintenance.maintenance_detail.forEach(detail => {
+                        const matchedStatus = datas.maintenanceStatus.find(s => s.id == detail.status);
+                        if (matchedStatus) {
+                            const value = Number(detail.total) || 1;
+                            if (!dataMaintenance[matchedStatus.name]) {
+                                dataMaintenance[matchedStatus.name] = Array(datas.branch.length).fill(0);
+                            }
+                            dataMaintenance[matchedStatus.name][branchIndex] += value;
+                        }
+                    });
+                }
+            });
+            
+            let columns = datas.maintenanceStatus.map(status => {
+                return [status.name, ...(dataMaintenance[status.name] || Array(datas.branch.length).fill(0))];
+            });
+            
+            let branchLabels = datas.branch.map(branch => branch.abbreviations);
+            let maintenanceColors = datas.maintenanceStatus.map(status => status.color);
+            
+            // Draw chart
+            var combinationChart = c3.generate({
+                bindto: "#combinationChart",
+                data: {
+                    columns: columns,
+                    type: 'bar',
+                    groups: [datas.maintenanceStatus.map(status => status.name)]
+                },
+                axis: {
+                    x: {
+                        type: 'category',
+                        categories: branchLabels
+                    }
+                },
+                tooltip: {
+                    format: {
+                        title: function (index) {
+                            const branch = datas.branch[index];
+                            if (!branch) return '';
+                            // ✅ Count how many maintenance records belong to this branch
+                            const branchTotal = datas.maintenance.filter(item => item.office === branch.id).length;
+                            // ✅ Count total number of maintenance records overall
+                            const overallTotal = datas.maintenance.length;
+                            return `${branch.abbreviations} Total: ${branchTotal}`;
+                        }
+                    }
+                },
+                color: {
+                    pattern: maintenanceColors
+                },
+                legend: {
+                    show: true
                 }
             });
         }
