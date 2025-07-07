@@ -10,7 +10,7 @@
             </div>
             
             <div class="panel-container show">
-                @can('Priority Create')
+                @can('Maintenance Status Create')
                     <div class="panel-tag">
                         <div class="text-lg-right">
                             <button class="btn btn-success btn-sm mr-1" data-toggle="modal" data-target="#createMaintenanceStatus" type="button"><span><i class="fal fa-plus mr-1"></i> Add New</span></button>
@@ -38,10 +38,10 @@
                                         <td class="color" style="color: {{$item->color}}">{{$item->name}}</td>
                                         <td>
                                             <div class="d-flex demo">
-                                                @can('Priority Delete')
+                                                @can('Maintenance Status Delete')
                                                     <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 maintenaceDelete" data-toggle="modal" data-target="#maintenance_status" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
                                                 @endcan
-                                                @can('Priority Edit')
+                                                @can('Maintenance Status Edit')
                                                     <a class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1 btnEdit" data-id="{{$item->id}}" title="Edit"><i class="fal fa-edit"></i></a>
                                                 @endcan
                                             </div>
