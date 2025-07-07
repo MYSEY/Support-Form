@@ -14,6 +14,10 @@ class MaintenanceStatusController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        RolePermission($this, 'Maintenance Status');
+    }
     public function index()
     {
         $data = MaintenanceStatus::all();

@@ -140,6 +140,7 @@
                 'room',
                 'employee',
                 'mission',
+                'maintenance-status',
             ];
         @endphp
 
@@ -326,6 +327,13 @@
                                             <li class="@if (in_array(Request::instance()->segment(2), ['mission'])) active @endif">
                                                 <a href="{{url('admin/mission')}}" title="Maintenance Mission" data-filter-tags="theme Maintenance Mission">
                                                     <span class="nav-link-text">Maintenance Mission</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Maintenance Status View'))
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['maintenance-status'])) active @endif">
+                                                <a href="{{url('admin/maintenance-status')}}" title="Maintenance Status" data-filter-tags="theme Maintenance Status">
+                                                    <span class="nav-link-text">Maintenance Status</span>
                                                 </a>
                                             </li>
                                         @endif
