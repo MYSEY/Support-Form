@@ -288,7 +288,7 @@
             <div id="panel-11" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Combination <span class="fw-300"><i>Chart</i></span>
+                        Maintenance Mission <span class="fw-300"><i>Chart</i></span>
                     </h2>
                     <div class="panel-toolbar">
                         <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
@@ -298,7 +298,26 @@
                 </div>
                 <div class="panel-container show">
                     <div class="panel-content">
-                        <div id="combinationChart"></div>
+                        <div id="maintenaceMissionChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div id="panel-11" class="panel">
+                <div class="panel-hdr">
+                    <h2>
+                        Maintenance Mission Cash By Cash <span class="fw-300"><i>Chart</i></span>
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <div id="maintenaceCashByCashChart"></div>
                     </div>
                 </div>
             </div>
@@ -488,13 +507,15 @@
                         dataTickets: response.dataTickets,
                         customStatuses: response.customStatuses,
                         priorities: response.priorities,
-                        maintenance: response.maintenance,
+                        maintenanceMission: response.maintenanceMission,
+                        maintenanceMissionCashByCash: response.maintenanceMissionCashByCash,
                         branch: response.branch,
                         maintenanceStatus: response.maintenanceStatus,
                     }
                     TicketStatus(data);
                     TicketPriority(data);
-                    maintenance(data);
+                    getMaintenanceMission(data);
+                    getMaintenanceMissionCashByCash(data);
                 }
             });
         });
@@ -569,9 +590,9 @@
             });
         }
 
-        function maintenance(datas) {
+        function getMaintenanceMission(datas) {
             let dataMaintenance = {};
-            datas.maintenance.forEach(itemMaintenance => {                
+            datas.maintenanceMission.forEach(itemMaintenance => {                
                 const branchIndex = Array.isArray(datas.branch) ? datas.branch.findIndex(itemPranch => itemPranch.id == itemMaintenance.office) : -1;                
                 if (branchIndex !== -1) {
                     itemMaintenance.maintenance_detail.forEach(detail => {
@@ -595,8 +616,8 @@
             let maintenanceColors = datas.maintenanceStatus.map(status => status.color);
             
             // Draw chart
-            var combinationChart = c3.generate({
-                bindto: "#combinationChart",
+            var maintenaceMissionChart = c3.generate({
+                bindto: "#maintenaceMissionChart",
                 data: {
                     columns: columns,
                     type: 'bar',
@@ -614,9 +635,69 @@
                             const branch = datas.branch[index];
                             if (!branch) return '';
                             // ✅ Count how many maintenance records belong to this branch
-                            const branchTotal = datas.maintenance.filter(item => item.office === branch.id).length;
+                            const branchTotal = datas.maintenanceMission.filter(item => item.office === branch.id).length;
                             // ✅ Count total number of maintenance records overall
-                            const overallTotal = datas.maintenance.length;
+                            const overallTotal = datas.maintenanceMission.length;
+                            return `${branch.abbreviations} Total: ${branchTotal}`;
+                        }
+                    }
+                },
+                color: {
+                    pattern: maintenanceColors
+                },
+                legend: {
+                    show: true
+                }
+            });
+        }
+        function getMaintenanceMissionCashByCash(datas) {
+            let dataMaintenance = {};
+            datas.maintenanceMissionCashByCash.forEach(itemMaintenance => {                
+                const branchIndex = Array.isArray(datas.branch) ? datas.branch.findIndex(itemPranch => itemPranch.id == itemMaintenance.office) : -1;                
+                if (branchIndex !== -1) {
+                    itemMaintenance.maintenance_detail.forEach(detail => {
+                        const matchedStatus = datas.maintenanceStatus.find(s => s.id == detail.status);
+                        if (matchedStatus) {
+                            const value = Number(detail.total) || 1;
+                            if (!dataMaintenance[matchedStatus.name]) {
+                                dataMaintenance[matchedStatus.name] = Array(datas.branch.length).fill(0);
+                            }
+                            dataMaintenance[matchedStatus.name][branchIndex] += value;
+                        }
+                    });
+                }
+            });
+            
+            let columns = datas.maintenanceStatus.map(status => {
+                return [status.name, ...(dataMaintenance[status.name] || Array(datas.branch.length).fill(0))];
+            });
+            
+            let branchLabels = datas.branch.map(branch => branch.abbreviations);
+            let maintenanceColors = datas.maintenanceStatus.map(status => status.color);
+            
+            // Draw chart
+            var maintenaceCashByCashChart = c3.generate({
+                bindto: "#maintenaceCashByCashChart",
+                data: {
+                    columns: columns,
+                    type: 'bar',
+                    groups: [datas.maintenanceStatus.map(status => status.name)]
+                },
+                axis: {
+                    x: {
+                        type: 'category',
+                        categories: branchLabels
+                    }
+                },
+                tooltip: {
+                    format: {
+                        title: function (index) {
+                            const branch = datas.branch[index];
+                            if (!branch) return '';
+                            // ✅ Count how many maintenance records belong to this branch
+                            const branchTotal = datas.maintenanceMissionCashByCash.filter(item => item.office === branch.id).length;
+                            // ✅ Count total number of maintenance records overall
+                            const overallTotal = datas.maintenanceMissionCashByCash.length;
                             return `${branch.abbreviations} Total: ${branchTotal}`;
                         }
                     }

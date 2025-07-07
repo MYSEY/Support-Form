@@ -167,7 +167,8 @@ class DashboardController extends Controller
             $query->where('tickets.branch_id', Auth::user()->branch_id);
         }
         $dataTickets = $query->orderBy('id','DESC')->get();
-        $maintenance = Maintenance::with('maintenanceDetail')->select('id','asset_id','category_id','office','department_id')->get();
+        $maintenanceMission = Maintenance::with('maintenanceDetail')->whereNotNull('maintenance_mission_id')->select('id','asset_id','category_id','office','department_id')->get();
+        $maintenanceMissionCashByCash = Maintenance::with('maintenanceDetail')->where('maintenance_mission_id',null)->select('id','asset_id','category_id','office','department_id')->get();
         $branch = Branch::select(
             "id",
             "branch_name_kh",
@@ -179,7 +180,8 @@ class DashboardController extends Controller
             'dataTickets'=>$dataTickets,
             'customStatuses'=>$dataCustomStatuses,
             'priorities'=>$dataPriorities,
-            'maintenance'=>$maintenance,
+            'maintenanceMission'=>$maintenanceMission,
+            'maintenanceMissionCashByCash'=>$maintenanceMissionCashByCash,
             'branch'=>$branch,
             'maintenanceStatus'=>$maintenanceStatus,
             'users'=>$users,
