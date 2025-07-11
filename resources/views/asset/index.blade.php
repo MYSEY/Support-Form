@@ -72,7 +72,7 @@
                                         <th>Postion</th>
                                         <th>AssetDate</th>
                                         <th>Lifecycle(Month)</th>
-                                        <th width="100px">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -119,6 +119,8 @@
         var edit = @json(Auth::user()->can('Asset Edit'));
         var assetDelete = @json(Auth::user()->can('Asset Delete'));
         let serial = '';
+        let branch_id = '';
+        let department_id = '';
         $(document).ready(function(){
             $('#btnSearch').on('click', function() {
                 serial = $('#serial').val();
@@ -127,7 +129,11 @@
                 $('#dt-basic-example').DataTable().ajax.reload();
             });
             $('.btn-reset').on('click', function() {
-               // Reset select inputs
+                serial = '';
+                branch_id = '';
+                department_id = '';
+                // Reset input fields
+                $('#serial').val('');
                 $('select[name="department_id"]').val('').trigger('change');
                 $('select[name="branch_id"]').val('').trigger('change');
                 $('#serial').val('');

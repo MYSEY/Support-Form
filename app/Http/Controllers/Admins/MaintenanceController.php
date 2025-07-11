@@ -9,6 +9,7 @@ use App\Models\Department;
 use App\Models\Maintenance;
 use App\Models\CategoryTask;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Models\MaintenanceDetail;
 use App\Models\MaintenanceStatus;
 use App\Models\MaintenanceMission;
@@ -28,6 +29,12 @@ class MaintenanceController extends Controller
     }
     public function index(Request $request)
     {
+        $from_date = null;
+        $to_date = null;
+        if ($request->from_date || $request->to_date) {
+            $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d');
+            $to_date = Carbon::createFromDate($request->to_date)->format('Y-m-d');
+        }
         if (request()->ajax()) {
             // Define the base query
             $query = DB::table('maintenances')
@@ -53,8 +60,19 @@ class MaintenanceController extends Controller
                 'departments.name_english as department_name',
                 'rooms.name as location',
                 'maintenance_missions.name as maintenance_mission',
-            )->where('maintenances.deleted_at',null);
-            
+            )->where('maintenances.deleted_at',null)
+            ->when($request->serial, function ($query, $serial) {
+                $query->where('assets.serial', $serial);
+            })
+            ->when($request->department_id, function ($query, $department_id) {
+                $query->where('maintenances.department_id', $department_id);
+            })
+            ->when($request->branch_id, function ($query, $branch_id) {
+                $query->where('maintenances.office', $branch_id);
+            });
+            if ($from_date && $to_date) {
+                $query->whereBetween('maintenances.maintenance_date',  [$from_date, $to_date]);
+            }
             // **Search Handling**
             $searchValue = request()->input('search.value');
             if (!empty($searchValue)) {
@@ -86,7 +104,13 @@ class MaintenanceController extends Controller
                 'data' => $data
             ]);
         }
-        return view('maintenance.index');
+        $branch = Branch::all();
+        $department = Department::select(
+            "id",
+            "name_khmer",
+            "name_english",
+        )->where('type','infra')->get();
+        return view('maintenance.index',compact('branch','department'));
     }
 
     /**

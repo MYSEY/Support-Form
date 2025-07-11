@@ -2,6 +2,54 @@
 @section('content')
     <div class="row">
         <div class="col-xl-12">
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="row filter-btn">
+                        <div class="col-sm-3 col-md-3">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="serial" id="serial" value="" placeholder="Serial">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group" data-select2-id="105">
+                                <select class="select2 form-control w-100 select2-hidden-accessible" name="branch_id" id="branch_id">
+                                    <option value="">-- Select Branch --</option>
+                                    @foreach ($branch as $key => $item)
+                                        <option value="{{$item->id}}">{{$item->branch_name_en}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group" data-select2-id="105">
+                                <select class="select2 form-control w-100 select2-hidden-accessible" name="department_id" id="department_id">
+                                    <option value="">-- Select Department --</option>
+                                    @foreach ($department as $key => $item)
+                                        <option value="{{$item->id}}">{{$item->name_english}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="" style="text-align: right;">
+                            <a href="javascript:void(0)" class="btn btn-outline-success waves-effect btn-sm waves-themed" id="btnSearch">Search</a>
+                            <a href="javascript:void(0)" class=""><span class="btn btn-outline-danger btn-sm btn-reset">Reset</span></a>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <input type="text" class="form-control datepicker" name="from_date" id="from_date" value="" placeholder="From Date">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group">
+                                <input type="text" class="form-control datepicker" name="to_date" id="to_date" value="" placeholder="To Date">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
@@ -83,11 +131,38 @@
     <script>
         var edit = @json(Auth::user()->can('Maintenance Edit'));
         var maintanance_delete = @json(Auth::user()->can('Maintenance Delete'));
+        let from_date = '';
+        let to_date = '';
+        let serial = '';
+        let branch_id = '';
+        let department_id = '';
 
-        $(function(){
+        $(document).ready(function(){
             $(document).on('click','.btnDelete', function(){
                 let id = $(this).data("id");
                 $('.e_id').val(id);
+            });
+            $('#btnSearch').on('click', function() {
+                from_date = $('#from_date').val();
+                to_date = $('#to_date').val();
+                serial = $('#serial').val();
+                let branch_id = $('select[name="branch_id"]').val();
+                let department_id = $('select[name="department_id"]').val();
+                $('#tbl_maintenace').DataTable().ajax.reload();
+            });
+            $('.btn-reset').on('click', function() {
+                from_date = '';
+                to_date = '';
+                serial = '';
+                branch_id = '';
+                department_id = '';
+               // Reset select inputs
+                $('select[name="department_id"]').val('').trigger('change');
+                $('select[name="branch_id"]').val('').trigger('change');
+                $('#serial').val('');
+                $('#from_date').val('');
+                $('#to_date').val('');
+                $('#tbl_maintenace').DataTable().ajax.reload();
             });
             dataTables();
         });
@@ -103,13 +178,13 @@
                 ajax: {
                     url: '{{ URL("admin/maintenance") }}',
                     type: 'GET',
-                    // data: function(d) {
-                    //     d.from_date = from_date;
-                    //     d.to_date = to_date;
-                    //     d.priority = $('select[name="priority"]').val();
-                    //     d.status = $('select[name="status"]').val();
-                    //     d.user_id = $('select[name="user_id"]').val();
-                    // }
+                    data: function(d) {
+                        d.from_date = from_date;
+                        d.to_date = to_date;
+                        d.serial = serial;
+                        d.branch_id = $('select[name="branch_id"]').val();
+                        d.department_id = $('select[name="department_id"]').val();
+                    }
                 },
                 columns: [
                     {
