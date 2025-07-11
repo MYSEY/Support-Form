@@ -2,6 +2,42 @@
 @section('content')
     <div class="row">
         <div class="col-xl-12">
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="row filter-btn">
+                        <div class="col-sm-3 col-md-3">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="serial" id="serial" value="" placeholder="Serial">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group" data-select2-id="105">
+                                <select class="select2 form-control w-100 select2-hidden-accessible" name="branch_id" id="branch_id">
+                                    <option value="">-- Select Branch --</option>
+                                    @foreach ($branch as $key => $item)
+                                        <option value="{{$item->id}}">{{$item->branch_name_en}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <div class="form-group" data-select2-id="105">
+                                <select class="select2 form-control w-100 select2-hidden-accessible" name="department_id" id="department_id">
+                                    <option value="">-- Select Department --</option>
+                                    @foreach ($department as $key => $item)
+                                        <option value="{{$item->id}}">{{$item->name_english}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="" style="text-align: right;">
+                            <a href="javascript:void(0)" class="btn btn-outline-success waves-effect btn-sm waves-themed" id="btnSearch">Search</a>
+                            <a href="javascript:void(0)" class=""><span class="btn btn-outline-danger btn-sm btn-reset">Reset</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
@@ -40,32 +76,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($data)>0)
-                                        @foreach ($data as $key=>$item)
-                                            <tr>
-                                                <td>{{$item->serial}}</td>
-                                                <td>{{$item->CategoryName}}</td>
-                                                <td>{{$item->device_name}}</td>
-                                                <td>{{$item->OfficeName}}</td>
-                                                <td>{{$item->depart_name}}</td>
-                                                <td>{{$item->location_name}}</td>
-                                                <td>{{ $item->employee_name_en}}</td>
-                                                <td>{{$item->name_english}}</td>
-                                                <td>{{ $item->date }}</td>
-                                                <td>{{$item->LifecycleMonthDiff}}</td>
-                                                <td>
-                                                    <div class="d-flex demo">
-                                                        @can('Asset Delete')
-                                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#btnDeleteAsset" data-id="{{$item->id}}" title="Delete Record"><i class="fal fa-times"></i></a>
-                                                        @endcan
-                                                        @can('Asset Edit')
-                                                            <a href="{{url('admin/asset/'.$item->id)}}/edit" class="btn btn-sm btn-outline-primary btn-icon btn-inline-block mr-1" title="Edit" data-id="{{$item->id}}"><i class="fal fa-edit"></i></a>
-                                                        @endcan
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
+                                    
                                 </tbody>
                             </table>
                             <!-- datatable end -->
@@ -105,10 +116,24 @@
 @section('script')
 @include('includs.datatable_basic')
     <script>
-        var edit = @json(Auth::user()->can('Task Edit'));
-        var Taskdelete = @json(Auth::user()->can('Task Delete'));
-        $(function(){
-            // dataTables();
+        var edit = @json(Auth::user()->can('Asset Edit'));
+        var assetDelete = @json(Auth::user()->can('Asset Delete'));
+        let serial = '';
+        $(document).ready(function(){
+            $('#btnSearch').on('click', function() {
+                serial = $('#serial').val();
+                let branch_id = $('select[name="branch_id"]').val();
+                let department_id = $('select[name="department_id"]').val();
+                $('#dt-basic-example').DataTable().ajax.reload();
+            });
+            $('.btn-reset').on('click', function() {
+               // Reset select inputs
+                $('select[name="department_id"]').val('').trigger('change');
+                $('select[name="branch_id"]').val('').trigger('change');
+                $('#serial').val('');
+                $('#dt-basic-example').DataTable().ajax.reload();
+            });
+            dataTables();
             $(".upload_file_data").on("click", function() {
                 if ($('#result_file').val() == "") {
                     $("#thanLess").text("Please select a xls,xlsx and csv file and size less then 1MB").css("color", "red");
@@ -157,91 +182,112 @@
                 $('.e_id').val(id);
             });
         });
-        // function dataTables() {
-        //     $('#dt-basic-example').DataTable({
-        //         // dom: 'Blfrtip',
-        //         pageLength: 10,
-        //         destroy: true,
-        //         processing: true,
-        //         serverSide: true,
-        //         order: [[0, 'desc']],
-        //         lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
-        //         ajax: {
-        //             url: '{{ URL("admin/asset") }}',
-        //             type: 'GET'
-        //         },
-        //         columns: [
-        //             {
-        //                 data: 'serial',
-        //                 name: 'serial',
-        //                 orderable: true
-        //             },
-        //             {
-        //                 data: 'cate_name',
-        //                 name: 'cate_name',
-        //                 orderable: true
-        //             },
-        //             {
-        //                 data: 'device_name',
-        //                 name: 'device_name',
-        //                 orderable: true
-        //             },
-        //             {
-        //                 data: 'office',
-        //                 name: 'office',
-        //                 orderable: true
-        //             },
-        //             {
-        //                 data: 'location',
-        //                 name: 'location',
-        //                 orderable: true
-        //             },
-        //             {
-        //                 data: 'end_user',
-        //                 name: 'end_user',
-        //                 orderable: true
-        //             },
-        //             {
-        //                 data: 'end_user',
-        //                 name: 'end_user',
-        //                 orderable: true
-        //             },
-        //             {
-        //                 data: 'date',
-        //                 name: 'date',
-        //                 orderable: true
-        //             },
-        //             {
-        //                 data: 'lifecycle_month',
-        //                 name: 'lifecycle_month',
-        //                 orderable: true
-        //             },
-        //             {
-        //                 data: 'created_at',
-        //                 name: 'created_at',
-        //                 orderable: true
-        //             },
-        //             {
-        //                 data: '',
-        //                 name: 'action',
-        //                 render: function(data, type, row) {
-        //                     let buttons = '';
-        //                     if (row.id) {
-        //                         if (edit) {
-        //                             buttons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="${row.id}" title="Edit"><i class="fal fa-edit"></i></a>`;
-        //                         }
-        //                         if (Taskdelete) {
-        //                             buttons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="${row.id}"><i class="fal fa-times"></i></a>`;
-        //                         }
-        //                     }
-        //                     return buttons || '';
-        //                 },
-        //                 orderable: false,
-        //                 searchable: false
-        //             }
-        //         ],
-        //         order: [[0, 'desc']]
-        //     });
-        // }
+        function dataTables() {
+            $('#dt-basic-example').DataTable({
+                // dom: 'Blfrtip',
+                pageLength: 10,
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                order: [[0, 'desc']],
+                lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
+                ajax: {
+                    url: '{{ URL("admin/asset") }}',
+                    type: 'GET',
+                    data: function(d) {
+                        d.serial = serial;
+                        d.branch_id = $('select[name="branch_id"]').val();
+                        d.department_id = $('select[name="department_id"]').val();
+                    }
+                },
+                columns: [
+                    {
+                        data: 'serial',
+                        name: 'serial',
+                        orderable: true
+                    },
+                    {
+                        data: 'category_name',
+                        name: 'category_name',
+                        orderable: true
+                    },
+                    {
+                        data: 'device_name',
+                        name: 'device_name',
+                        orderable: true
+                    },
+                    {
+                        data: 'branch_name_kh',
+                        name: 'branch_name_kh',
+                        orderable: true
+                    },
+                    {
+                        data: 'depart_name',
+                        name: 'depart_name',
+                        orderable: true
+                    },
+                    {
+                        data: 'location_name',
+                        name: 'location_name',
+                        orderable: true
+                    },
+                    {
+                        data: 'employee_name_en',
+                        name: 'employee_name_en',
+                        orderable: true
+                    },
+                    {
+                        data: 'name_english',
+                        name: 'name_english',
+                        orderable: true
+                    },
+                    {
+                        data: 'date',
+                        name: 'date',
+                        orderable: true
+                    },
+                    {
+                        data: 'date',
+                        name: 'date',
+                        render: function (data, type, row) {
+                            if (!data) return '';
+
+                            const defaultMonth = 60;
+                            const startDate = new Date(data);
+                            const currentDate = new Date();
+
+                            // Calculate month difference
+                            let months =
+                                (currentDate.getFullYear() - startDate.getFullYear()) * 12 +
+                                (currentDate.getMonth() - startDate.getMonth());
+
+                            return months >= defaultMonth
+                                ? -(months - defaultMonth)
+                                : months;
+                        },
+                        orderable: false
+                    },
+                    {
+                        data: '',
+                        name: 'action',
+                        render: function(data, type, row) {
+                            let buttons = '';
+                            if (row.id) {
+                                if (edit) {
+                                    buttons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="${row.id}" title="Edit"><i class="fal fa-edit"></i></a>`;
+                                }
+                                if (assetDelete) {
+                                    buttons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="${row.id}"><i class="fal fa-times"></i></a>`;
+                                }
+                            }
+                            return buttons || '';
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                order: [[0, 'desc']]
+            });
+        }
     </script>
 @endsection

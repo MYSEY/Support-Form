@@ -95,7 +95,11 @@ class MaintenanceController extends Controller
     public function create()
     {
         $serial = Asset::all();
-        $department = Department::all();
+        $department = Department::select(
+            "id",
+            "name_khmer",
+            "name_english",
+        )->where('type','infra')->get();
         $maintenanceMission = MaintenanceMission::all();
         $branch = Branch::all();
         return view('maintenance.create',compact('serial','maintenanceMission','branch','department'));
@@ -214,7 +218,11 @@ class MaintenanceController extends Controller
         $softwareTasks = $tasks->where('type', 'Software');
         $maintenanceMission = MaintenanceMission::all();
         $branch = Branch::all();
-        $department = Department::all();
+        $department = Department::select(
+            "id",
+            "name_khmer",
+            "name_english",
+        )->where('type','infra')->get();
         $maintenanceStatus = MaintenanceStatus::all();
         return view('maintenance.edit',compact('data','serial','hardwareTasks', 'softwareTasks', 'selectedTaskIds','maintenanceMission','branch','department','maintenanceStatus'));
     }
