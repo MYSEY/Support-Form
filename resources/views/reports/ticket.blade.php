@@ -187,7 +187,7 @@
                         data: 'trackid',
                         name: 'trackid',
                         render: function(data, type, row) {
-                            return `<a href="{{url("admin/ticket/detail")}}/${row.id}">${row.trackid}</a></td>`;
+                            return `<a href="{{url("admin/ticket/detail")}}/${row.trackid}">${row.trackid}</a></td>`;
                         },
                         orderable: false,
                         searchable: false
