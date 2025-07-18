@@ -284,44 +284,49 @@
         @endcan
     </div>
     <div class="row">
-        <div class="col-xl-6">
-            <div id="panel-11" class="panel">
-                <div class="panel-hdr">
-                    <h2>
-                        Maintenance Mission <span class="fw-300"><i>Chart</i></span>
-                    </h2>
-                    <div class="panel-toolbar">
-                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
-                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
-                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+        @can('Dashboad Maintenance Mission Scheduled Chart')
+            <div class="col-xl-6">
+                <div id="panel-11" class="panel">
+                    <div class="panel-hdr">
+                        <h2>
+                            Maintenance Mission Scheduled <span class="fw-300"><i>Chart</i></span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                            <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                        </div>
                     </div>
-                </div>
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        <div id="maintenaceMissionChart"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6">
-            <div id="panel-11" class="panel">
-                <div class="panel-hdr">
-                    <h2>
-                        Maintenance Mission Cash By Cash <span class="fw-300"><i>Chart</i></span>
-                    </h2>
-                    <div class="panel-toolbar">
-                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
-                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
-                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
-                    </div>
-                </div>
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        <div id="maintenaceCashByCashChart"></div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <div id="maintenaceMissionChart"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endcan
+
+        @can('Dashboad Maintenance Mission Cash By Cash Chart')
+            <div class="col-xl-6">
+                <div id="panel-11" class="panel">
+                    <div class="panel-hdr">
+                        <h2>
+                            Maintenance Mission Cash By Cash <span class="fw-300"><i>Chart</i></span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                            <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                            <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                        </div>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <div id="maintenaceCashByCashChart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endcan
     </div>
     <div class="row">
         @can('Dashboad User Online')
