@@ -65,7 +65,7 @@ class FixedAssetController extends Controller
                 // Apply additional filtering for role
                 if (Auth::user()->RolePermission=='staff') {
                     $query->where('assets.department_id', Auth::user()->department_id)->where('assets.office', Auth::user()->branch_id);
-                }else if(Auth::user()->RolePermission=='admin_support' || Auth::user()->RolePermission=='admin'){
+                }else if(Auth::user()->RolePermission=='admin'){
                     $query->where('assets.department_id', Auth::user()->department_id);
                 }else if(Auth::user()->RolePermission=="admin_branch"){
                     $query->where('assets.office', Auth::user()->branch_id);
