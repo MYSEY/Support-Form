@@ -87,7 +87,7 @@
         </div>
     </div>
     <!-- Delete Task Modal -->
-    <div class="modal custom-modal fade" id="btnDeleteAsset" role="dialog">
+    <div class="modal custom-modal fade" id="delete_asset" role="dialog">
         <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
@@ -280,10 +280,10 @@
                             let buttons = '';
                             if (row.id) {
                                 if (edit) {
-                                    buttons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" id="btn_updated" data-toggle="modal" data-target="#user-edit" data-id="${row.id}" title="Edit"><i class="fal fa-edit"></i></a>`;
+                                    buttons += `<a href="{{url('/admin/asset')}}/${row.id}/edit" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>`;
                                 }
                                 if (assetDelete) {
-                                    buttons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-1 btnDelete" data-toggle="modal" data-target="#delete_task" title="Delete Record" data-id="${row.id}"><i class="fal fa-times"></i></a>`;
+                                    buttons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-2 btnDelete" data-toggle="modal" data-target="#delete_asset"  title="Delete Record" data-id="${row.id}"><i class="fal fa-times"></i></a>`;
                                 }
                             }
                             return buttons || '';
