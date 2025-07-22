@@ -244,8 +244,8 @@
                             // message = removeBrTags(value.message);
                             
                             bodyTr +='<tr>'+
-                                    '<td><a href="{{url("admin/ticket/detail")}}/'+(value.trackid)+'">'+(value.trackid)+'</a></td>'+
-                                    '<td><a href="{{url("admin/ticket/detail")}}/'+(value.trackid)+'">'+(created_at)+'</a></td>'+
+                                    '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(value.trackid)+'</a></td>'+
+                                    '<td><a href="{{url("admin/ticket/detail")}}/'+(value.id)+'">'+(created_at)+'</a></td>'+
                                     '<td>'+(value.from_department ? value.from_department.name_english : "")+ (value.from_department && value.branch ? " / ": "" ) +(value.branch ? value.branch.branch_name_en : "")+'</td>'+
                                     '<td>'+value.name+'</td>'+
                                     '<td>'+(value.department ? value.department.name_english: "")+'</td>'+

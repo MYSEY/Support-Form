@@ -81,7 +81,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/ticket/edit/{id}', [TicketController::class, 'edit']);
     Route::post('/ticket/save', [TicketController::class, 'store']);
     Route::post('/ticket/import', [TicketController::class, 'import']);
-    Route::get('/ticket/detail/{trackid}', [TicketController::class, 'detail']);
+    Route::get('/ticket/detail/{id}', [TicketController::class, 'detail']);
     Route::post('/ticket/update', [TicketController::class, 'update']);
     Route::post('/ticket/update/status', [TicketController::class, 'status']);
     Route::post('/ticket/update/priority', [TicketController::class, 'priorities']);

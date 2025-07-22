@@ -191,7 +191,8 @@
                         data: 'reference',
                         name: 'reference',
                         render: function(data, type, row) {
-                            return `<a href="{{url('/admin/ticket/detail')}}/${row.reference}" class="your-class">${row.reference == null ? "" : row.reference}</a>`;
+                            return `<a href="#" class="your-class">${row.reference == null ? "" : row.reference}</a>`;
+                            // return `<a href="{{url('/admin/ticket/detail')}}/${row.reference}" class="your-class">${row.reference == null ? "" : row.reference}</a>`;
                         },
                         orderable: false,
                         searchable: false
