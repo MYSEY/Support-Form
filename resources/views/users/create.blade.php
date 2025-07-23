@@ -29,9 +29,9 @@
                 <div class="row mb-2">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="user">Name <span class="text-danger">*</span></label>
-                            <input type="text" id="user" class="form-control @error('user') is-invalid @enderror" name="user" value="{{old('user')}}">
-                            @error('user')
+                            <label class="form-label" for="name">Name <span class="text-danger">*</span></label>
+                            <input type="text" id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}">
+                            @error('name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -40,9 +40,9 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="name">Username <span class="text-danger">*</span></label>
-                            <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{old('name')}}">
-                            @error('name')
+                            <label class="form-label" for="user">Username <span class="text-danger">*</span></label>
+                            <input type="text" id="user" name="user" class="form-control @error('user') is-invalid @enderror" value="{{old('user')}}">
+                            @error('user')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
