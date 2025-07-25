@@ -51,6 +51,7 @@
                             <div class="text-lg-right">
                                 @can('Asset Import')
                                     <a type="button" id="btn-import" href="#" data-toggle="modal" data-target="#modal-import" class="btn btn-danger btn-sm mr-1"><i class="fal fa-file"></i> Import</a>
+                                    <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
                                 @endcan
                                 <a href="{{url('admin/asset/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
                             </div>
@@ -118,9 +119,9 @@
     <script>
         var edit = @json(Auth::user()->can('Asset Edit'));
         var assetDelete = @json(Auth::user()->can('Asset Delete'));
-        let serial = '';
-        let branch_id = '';
-        let department_id = '';
+        let serial = null;
+        let branch_id = null;
+        let department_id = null;
         $(document).ready(function(){
             $('#btnSearch').on('click', function() {
                 serial = $('#serial').val();
@@ -139,7 +140,17 @@
                 $('#serial').val('');
                 $('#dt-basic-example').DataTable().ajax.reload();
             });
+            
             dataTables();
+            $('#btn-export').on('click',function(){
+                let query = {
+                    serial: $("#serial").val(),
+                    branch_id: $("#branch_id").val(),
+                    department_id: $("#department_id").val(),
+                };
+                var url = "{{URL::to('admin/asset-export')}}?" + $.param(query)
+                window.location = url;
+            });
             $(".upload_file_data").on("click", function() {
                 if ($('#result_file').val() == "") {
                     $("#thanLess").text("Please select a xls,xlsx and csv file and size less then 1MB").css("color", "red");
@@ -253,23 +264,10 @@
                         orderable: true
                     },
                     {
-                        data: 'date',
-                        name: 'date',
+                        data: 'lifecycle_month_diff',
+                        name: 'lifecycle_month_diff',
                         render: function (data, type, row) {
-                            if (!data) return '';
-
-                            const defaultMonth = 60;
-                            const startDate = new Date(data);
-                            const currentDate = new Date();
-
-                            // Calculate month difference
-                            let months =
-                                (currentDate.getFullYear() - startDate.getFullYear()) * 12 +
-                                (currentDate.getMonth() - startDate.getMonth());
-
-                            return months >= defaultMonth
-                                ? -(months - defaultMonth)
-                                : months;
+                            return data !== null ? data : '';
                         },
                         orderable: false
                     },

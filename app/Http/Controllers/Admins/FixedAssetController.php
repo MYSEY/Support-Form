@@ -8,6 +8,7 @@ use App\Models\Branch;
 use App\Models\Category;
 use App\Models\Employee;
 use App\Models\Department;
+use App\Exports\AssetExport;
 use App\Imports\AssetImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -97,7 +98,9 @@ class FixedAssetController extends Controller
             return response()->json(['errors' => $exp]);
         }
     }
-
+    public function assetExport(Request $request){
+        return Excel::download(new AssetExport($request), 'asset-report.xlsx');
+    }
     /**
      * Show the form for creating a new resource.
      */

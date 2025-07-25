@@ -176,6 +176,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     Route::resource('asset', FixedAssetController::class);
     Route::post('/asset/import', [FixedAssetController::class, 'import']);
+    Route::get('/asset-export', [FixedAssetController::class, 'assetExport']);
 
     Route::resource('room', RoomController::class);
     Route::post('/room/import', [RoomController::class, 'roomImport']);

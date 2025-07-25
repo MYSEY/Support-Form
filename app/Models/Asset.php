@@ -17,7 +17,7 @@ class Asset extends Model
 
     protected $table = 'assets';
     protected $guarded = ['id'];
-    
+    protected $appends = ['lifecycle_month_diff'];
     protected $fillable = [
         'category_id',
         'office',
@@ -32,7 +32,6 @@ class Asset extends Model
         'deleted_at',
     ];
 
-    
     // relationship
     public function category()
     {
@@ -62,19 +61,12 @@ class Asset extends Model
     }
     public function getLifecycleMonthDiffAttribute()
     {
-        $data = 0;
         $defaultMonth = 60;
-        // Define the fixed date (start date)
-        $startDate = Carbon::parse($this->date);
-        // Get the current date
-        $currentDate = Carbon::now();
-        $currentMonth = $startDate->diffInMonths($currentDate);
-        // Calculate the number of months between the start date and the current date
-        if ($currentMonth >= 60) {
-            $data = - ($currentMonth - $defaultMonth);
-        }else{
-            $data = $currentMonth;
+        if (!$this->date) {
+            return null;
         }
-        return $data;
+        $startDate = Carbon::parse($this->date);
+        $currentMonth = $startDate->diffInMonths();
+        return $currentMonth >= $defaultMonth ? -($currentMonth - $defaultMonth) : $currentMonth;
     }
 }
