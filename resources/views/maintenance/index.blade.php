@@ -66,10 +66,10 @@
                         </div>
                     @endcan
                     <div class="panel-content">
-                        <div class="table-responsive">
+                        <div class="">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="tbl_maintenace" class="table table-bordered table-hover table-striped" style="width: 100%">
+                                    <table id="tbl_maintenace" class="table table-bordered table-hover display table-striped" style="width: 100%">
                                         <thead>
                                             <tr>
                                                 <th>Reference</th>
@@ -173,6 +173,9 @@
                 destroy: true,
                 processing: true,
                 serverSide: true,
+                scrollX: true,
+                scrollY: '500px',
+                scroller: false,
                 order: [[0, 'desc']],
                 lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
                 ajax: {
@@ -190,6 +193,7 @@
                     {
                         data: 'reference',
                         name: 'reference',
+                        className: 'stuck-scroll-4',
                         render: function(data, type, row) {
                             return `<a href="#" class="your-class">${row.reference == null ? "" : row.reference}</a>`;
                             // return `<a href="{{url('/admin/ticket/detail')}}/${row.reference}" class="your-class">${row.reference == null ? "" : row.reference}</a>`;
@@ -200,10 +204,12 @@
                     {
                         data: 'maintenance_date',
                         name: 'maintenance_date',
+                        className: 'stuck-scroll-4',
                     },
                     {
                         data: 'maintenace_by',
                         name: 'maintenace_by',
+                        className: 'stuck-scroll-4',
                     },
                     {
                         data: 'serial',
@@ -254,11 +260,11 @@
                         render: function(data, type, row) {
                             let actionButtons = '';
                             if (maintanance_delete) {
-                                actionButtons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-2 btnDelete"  data-toggle="modal" data-target="#delete_maintenance"  title="Delete Record" data-id="${row.id}"><i class="fal fa-times"></i></a>`;
+                                actionButtons += `<a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-icon btn-inline-block mr-2 btnDelete" data-toggle="modal" data-target="#delete_maintenance"  title="Delete Record" data-id="${row.id}"><i class="fal fa-times"></i></a>`;
                             }
                             if (edit) {
-                                actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}/edit" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Edit"><i class="fal fa-edit"></i></a>`;
-                                actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
+                                actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}/edit" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-2" title="Edit"><i class="fal fa-edit"></i></a>`;
+                                actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-2" title="Detail"><i class="fal fa-eye"></i></a>`;
                             }
                             return actionButtons;
                         },

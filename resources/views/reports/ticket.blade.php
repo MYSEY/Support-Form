@@ -168,6 +168,9 @@
                 destroy: true,
                 processing: true,
                 serverSide: true,
+                scrollX: true,
+                scrollY: '500px',
+                scroller: false,
                 order: [[0, 'desc']],
                 lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
                 ajax: {
