@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admins\BackupController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admins\SSEController;
@@ -186,6 +187,12 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/notification/totals', [NotificationController::class, 'totalNotification']);
     Route::post('/create-notification', [NotificationController::class, 'create']);
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead']);
+
+    // Block backup database and file upload
+    Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
+    Route::get('/backup/database', [BackupController::class, 'databaseBackup'])->name('backup.database');
+    Route::get('/backup/files', [BackupController::class, 'filesBackup'])->name('backup.files');
+    Route::get('/backup/full', [BackupController::class, 'fullBackup'])->name('backup.full');
     
 });
 
