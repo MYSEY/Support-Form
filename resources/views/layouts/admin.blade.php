@@ -141,6 +141,7 @@
                 'employee',
                 'mission',
                 'maintenance-status',
+                'backup',
             ];
         @endphp
 
@@ -369,6 +370,13 @@
                                             <li class="@if (in_array(Request::instance()->segment(2), ['employee'])) active @endif">
                                                 <a href="{{url('admin/employee')}}" title="employee" data-filter-tags="theme employee">
                                                     <span class="nav-link-text">Employee</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Backup Manager View'))
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['backup'])) active @endif">
+                                                <a href="{{url('admin/backup')}}" title="Backup Manager" data-filter-tags="theme Backup Manager">
+                                                    <span class="nav-link-text">Backup Manager</span>
                                                 </a>
                                             </li>
                                         @endif
