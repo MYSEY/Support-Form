@@ -188,11 +188,13 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/create-notification', [NotificationController::class, 'create']);
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead']);
 
-    // Block backup database and file upload
+     // Block backup database and file upload
     Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
     Route::get('/backup/database', [BackupController::class, 'databaseBackup'])->name('backup.database');
     Route::get('/backup/files', [BackupController::class, 'filesBackup'])->name('backup.files');
     Route::get('/backup/full', [BackupController::class, 'fullBackup'])->name('backup.full');
+    Route::post('/restore/database', [BackupController::class, 'restoreDatabase'])->name('restore.database');
+    Route::post('/restore/files', [BackupController::class, 'restoreFiles'])->name('restore.files');
     
 });
 
