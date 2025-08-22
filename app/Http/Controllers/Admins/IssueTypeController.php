@@ -28,7 +28,7 @@ class IssueTypeController extends Controller
     {
         $department = Department::orderBy('id', 'DESC')->get();
         $dataClassification = ClassificationIssue::get();
-        $data = IssueType::with("department")->get();
+        $data = IssueType::with("department")->with("Classification")->get();
         return view('issue_type.index', compact('department', 'dataClassification', 'data'));
     }
 
