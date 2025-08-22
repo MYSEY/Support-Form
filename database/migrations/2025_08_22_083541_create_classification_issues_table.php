@@ -8,20 +8,13 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     * php artisan migrate:refresh --path=database/migrations/2024_04_18_061611_create_issue_types_table.php
+     * php artisan migrate:refresh --path=database/migrations/2025_08_22_083541_create_classification_issues_table.php
      */
     public function up(): void
     {
-        Schema::create('issue_types', function (Blueprint $table) {
+        Schema::create('classification_issues', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('type')->nullable();
-            $table->enum('req', ['0', '1', '2'])->default('0');
-            $table->enum('category_type', ['0', '1', '2'])->default('0');
-            $table->string('department_id')->nullable();
-            $table->integer('branch_id')->nullable();
-            $table->integer('classification')->nullable();
-            $table->text('value')->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
             $table->dateTime('deleted_at')->nullable();
@@ -34,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('issue_types');
+        Schema::dropIfExists('classification_issues');
     }
 };

@@ -21,6 +21,7 @@ class IssueType extends Model
         'category_type',
         'department_id',
         'branch_id',
+        'classification',
         'value',
         'created_by',
         'updated_by',
@@ -28,5 +29,8 @@ class IssueType extends Model
     ];
     public function department(){
         return $this->belongsTo(Department::class,'department_id');
+    }
+    public function Classification(){
+        return $this->belongsTo(ClassificationIssue::class,'classification');
     }
 }

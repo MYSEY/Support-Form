@@ -87,7 +87,10 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 "subject"                   => $value->subject,
                 "status"                    => $value->CustomStatus->name,
                 'ticket_type'               => $ticket_type,
+
                 "issue_type"                => ($value->issueType ? $value->issueType->name : ""),
+                "Classification"            => ($value->issueType?->Classification?->name ?? ""),
+
                 "Priority"                  => ($value->priorities ? $value->priorities->name : ""),
                 'assigned'                  => ($value->assignedTo ? $value->assignedTo->name : $value->owner),
                 'aast_replier'              => ($value->lastReplier ? $value->lastReplier->name : $value->name),
@@ -118,6 +121,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             'Status',
             'Ticket Type',
             'Sub Issue Type',
+            'Classification',
             'Priority',
             'Assigned',
             'Last Replier',
@@ -139,11 +143,12 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             'H' => 10,
             'I' => 17,
             'J' => 30,
-            'K' => 10,
-            'L' => 15,
+            'K' => 30,
+            'L' => 10,
             'M' => 15,
-            'N' => 18,
+            'N' => 15,
             'O' => 18,
+            'P' => 18,
         ];
     }
     public function startCell(): string
@@ -179,7 +184,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 $event->sheet->getDelegate()->getStyle('A2')->getFont()->getColor()->setARGB('DD4B39');
                 $event->sheet->getDelegate()->getStyle('A3')->getFont()->getColor()->setARGB('0000CC');
                 $event->sheet->getDelegate()->getStyle('A4')->getFont()->getColor()->setARGB('3923A9');
-                $event->sheet->getStyle('A5:O5')->applyFromArray([
+                $event->sheet->getStyle('A5:P5')->applyFromArray([
                     'borders' => [
                         'allBorders' => [
                             'borderStyle' => Border::BORDER_THIN,
@@ -192,7 +197,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 if ($this->num > 0) {
                     foreach ($this->export_datas as $key=>$value) {
                         $n++;
-                        $event->sheet->getStyle('A'.$n.':O'.$n)->applyFromArray([
+                        $event->sheet->getStyle('A'.$n.':P'.$n)->applyFromArray([
                             'borders' => [
                                 'allBorders' => [
                                     'borderStyle' => Border::BORDER_THIN,
@@ -202,7 +207,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                         ]);
                     }
                 }
-                $event->sheet->getStyle('A'.$rows.':O'.$rows)->applyFromArray([
+                $event->sheet->getStyle('A'.$rows.':P'.$rows)->applyFromArray([
                     'borders' => [
                         'allBorders' => [
                             'borderStyle' => Border::BORDER_THIN,
@@ -211,25 +216,25 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                     ],
                 ]);
 
-                $sheet->getDelegate()->getStyle('A5:O5')->getFont()->getColor()->setARGB('3923A9');
-                $sheet->getDelegate()->getStyle('A5:O5')->getFont()->setSize(9)->setName('Khmer OS Battambang')->setSize(9);
+                $sheet->getDelegate()->getStyle('A5:P5')->getFont()->getColor()->setARGB('3923A9');
+                $sheet->getDelegate()->getStyle('A5:P5')->getFont()->setSize(9)->setName('Khmer OS Battambang')->setSize(9);
                 $event->sheet->getDelegate()->getStyle('A5:O5')->getAlignment()->setWrapText(true)->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-                $sheet->mergeCells('A2:O2');
+                $sheet->mergeCells('A2:P2');
                 $sheet->setCellValue('A2', "ខេមា​ មីក្រូហិរញ្ញវត្ថុ លីមីតធីត");
-                $sheet->getDelegate()->getStyle('A2:O2')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A2:O2')->setBold(true);
-                $event->sheet->getDelegate()->getStyle('A2:O2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $sheet->getDelegate()->getStyle('A2:P2')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A2:P2')->setBold(true);
+                $event->sheet->getDelegate()->getStyle('A2:P2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-                $sheet->mergeCells('A3:O3');
+                $sheet->mergeCells('A3:P3');
                 $sheet->setCellValue('A3', "Ticket Summay IT Helpdesk");
-                $sheet->getDelegate()->getStyle('A3:O3')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A3:L3');
-                $event->sheet->getDelegate()->getStyle('A3:O3')->getAlignment()->setWrapText(true)->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $sheet->getDelegate()->getStyle('A3:P3')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A3:M3');
+                $event->sheet->getDelegate()->getStyle('A3:P3')->getAlignment()->setWrapText(true)->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
                 $month = Carbon::parse($this->submittedDate)->format('d-M-Y');
-                $sheet->mergeCells('A4:O4');
+                $sheet->mergeCells('A4:P4');
                 $sheet->setCellValue('A4',"As of :" .$month);
-                $sheet->getDelegate()->getStyle('A4:O4')->getFont()->setSize(9)->setName('Khmer OS Fasthand')->setSize(10);
-                $event->sheet->getDelegate()->getStyle('A4:O4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $sheet->getDelegate()->getStyle('A4:P4')->getFont()->setSize(9)->setName('Khmer OS Fasthand')->setSize(10);
+                $event->sheet->getDelegate()->getStyle('A4:P4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             },
         ];
     }

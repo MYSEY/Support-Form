@@ -10,6 +10,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\IssueTypeRequest;
 use App\Models\Branch;
+use App\Models\ClassificationIssue;
 use App\Models\Department;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -26,8 +27,9 @@ class IssueTypeController extends Controller
     public function index()
     {
         $department = Department::orderBy('id', 'DESC')->get();
+        $dataClassification = ClassificationIssue::get();
         $data = IssueType::with("department")->get();
-        return view('issue_type.index', compact('department', 'data'));
+        return view('issue_type.index', compact('department', 'dataClassification', 'data'));
     }
 
     /**
@@ -105,9 +107,11 @@ class IssueTypeController extends Controller
     {
         $data = IssueType::where('id', $request->id)->first();
         $department = Department::orderBy('id', 'DESC')->get();
+        $dataClassification = ClassificationIssue::get();
         return response()->json([
             'success' => $data,
             'department' => $department,
+            'dataClassification' => $dataClassification,
         ]);
     }
 
@@ -174,6 +178,7 @@ class IssueTypeController extends Controller
                 'req'           => $request->req,
                 'category_type' => $request->category_type,
                 'department_id' => $request->department_id,
+                'classification' => $request->classification,
                 'updated_by'    => Auth::user()->id,
             ]);
             DB::commit();
