@@ -28,6 +28,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Issue Type Name</th>
+                                    <th>Classification</th>
                                     <th>Department</th>
                                     <th>Required</th>
                                     <th>Category Type</th>
@@ -40,6 +41,7 @@
                                         <tr>
                                             <td class="ids">{{ $item->id }}</td>
                                             <td class="name">{{ $item->name }}</td>
+                                            <td>{{ $item->Classification ? $item->Classification->name : '' }}</td>
                                             <td>{{ $item->department ? $item->department->name_english : '' }}</td>
                                             <td>{{ $item->req == 0 ? 'No' : 'Yes' }}</td>
                                             <td>{{ $item->category_type == 0 ? 'All' : 'Select' }}</td>
