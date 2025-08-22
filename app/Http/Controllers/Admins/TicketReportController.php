@@ -45,6 +45,7 @@ class TicketReportController extends Controller
             ->leftJoin('custom_statuses','tickets.status','=','custom_statuses.id')
             ->leftJoin('users','tickets.owner','=','users.id')
             ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
+            ->leftJoin('classification_issues','issue_types.classification','=','classification_issues.id')
             ->leftJoin('priorities','tickets.priority','=','priorities.id')
             ->select(
                 'tickets.*',
@@ -58,6 +59,7 @@ class TicketReportController extends Controller
                 'users.name as lastreplier',
                 'users.name as assign_by',
                 'issue_types.name as issue_type_name',
+                'classification_issues.name as classification_name',
                 'priorities.name as prioritie_name',
                 'priorities.color as priority_color',
             )->where('tickets.deleted_at',null)

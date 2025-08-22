@@ -94,6 +94,15 @@
                                         class="form-control issue_required @error('name') is-invalid @enderror"
                                         id="name" name="name" value="{{ old('name') }}" required>
                                 </div>
+                                <div class="form-group" >
+                                    <label class="form-label">Classifications Issue </label>
+                                    <select class="form-control" id="classification" name="classification">
+                                        <option value=""> -- Select --</option>
+                                        @foreach ($dataClassification as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="form-group">
                                     <label class="form-label">Category</label>
                                     <div class="demo">
@@ -171,9 +180,15 @@
                             <div class="col-xl-12">
                                 <div class="form-group">
                                     <label class="form-label">Name <span class="text-danger">*</span></label>
+                                    <input type="hidden" name="dub_name" class="dub_name" id="dub_name" value="">
                                     <input type="text"
                                         class="form-control e_issue_required @error('name') is-invalid @enderror"
                                         id="e_name" name="name" value="{{ old('name') }}" required>
+                                </div>
+                                <div class="form-group" >
+                                    <label class="form-label">Classifications Issue</label>
+                                    <select class="form-control" id="e_classification" name="classification">
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Category</label>
@@ -193,6 +208,7 @@
                                 </div>
 
                                 <div class="form-group e_department" style="display: none">
+                                    <input type="hidden" name="dub_department" class="dub_department" id="dub_department" value="">
                                     <label class="form-label" for="e_department">Department: <span
                                             class="text-danger">*</span></label>
                                     <select class="form-control" id="e_department">
@@ -291,6 +307,7 @@
                         if (response.success) {
                             $('#e_id').val(response.success.id);
                             $('#e_name').val(response.success.name);
+                            $("#dub_name").val(response.success.name);
                             if (response.success.req == 0) {
                                 $("#e_no").prop("checked", true);
                             } else {
@@ -303,6 +320,7 @@
                                 $("#e_all").prop("checked", true);
                             };
                             if (response.department != '') {
+                                $("#dub_department").val(response.success.department_id);
                                 $('#e_department').html(
                                     '<option value=""> -- Select  --</option>');
                                 $.each(response.department, function(i, item) {
@@ -311,6 +329,18 @@
                                         text: item.name_english,
                                         selected: item.id == response
                                             .success.department_id
+                                    }));
+                                });
+                            };
+                            if (response.classification != '') {
+                                $('#e_classification').html(
+                                    '<option value=""> -- Select  --</option>');
+                                $.each(response.dataClassification, function(i, item) {
+                                    $('#e_classification').append($('<option>', {
+                                        value: item.id,
+                                        text: item.name,
+                                        selected: item.id == response
+                                            .success.classification
                                     }));
                                 });
                             };
@@ -376,6 +406,7 @@
                             req: req_field,
                             category_type: category_type,
                             department_id: $("#department").val(),
+                            classification: $("#classification").val(),
                         },
                         dataType: "JSON",
                         success: function(response) {
@@ -432,11 +463,23 @@
                 } else {
                     req_field = 0;
                 };
-                const dataDupl = await duplicate({ name: $("#e_name").val(), department_id: $("#e_department").val()});
-                if (dataDupl.data == 1) {
-                    toastr.error(dataDupl.message);
-                    return false;
-                }else{
+                let is_save = true;
+                if (($("#dub_name").val() != $("#e_name").val()) && ($("#dub_department").val() == $("#e_department").val())) {
+                    const dataDupl = await duplicate({ name: $("#e_name").val(), department_id: $("#e_department").val()});
+                    if (dataDupl.data == 1) {
+                        toastr.error(dataDupl.message);
+                        is_save = false;
+                        return false;
+                    }
+                }else if (($("#dub_name").val() == $("#e_name").val()) && ($("#dub_department").val() != $("#e_department").val())) {
+                    const dataDupl = await duplicate({ name: $("#e_name").val(), department_id: $("#e_department").val()});
+                    if (dataDupl.data == 1) {
+                        toastr.error(dataDupl.message);
+                        is_save = false;
+                        return false;
+                    }
+                }
+                if (is_save) {
                     $.ajax({
                         type: "PUT",
                         url: "{{ url('admin/issue-type/update') }}",
@@ -448,6 +491,7 @@
                             req: req_field,
                             category_type: category_type,
                             department_id: $("#e_department").val(),
+                            classification: $("#e_classification").val(),
                         },
                         dataType: "JSON",
                         success: function(response) {

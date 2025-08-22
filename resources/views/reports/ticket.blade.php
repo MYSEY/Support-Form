@@ -85,6 +85,7 @@
                                         <th style="min-width: 100px;">Ticket Status</th>
                                         <th style="min-width: 100px;">Ticket Type</th>
                                         <th style="min-width: 100px;">Sub Issue Type</th>
+                                        <th style="min-width: 100px;">Classifications</th>
                                         <th style="min-width: 100px;">Ticket Priority</th>
                                         <th style="min-width: 100px;">Assigned</th>
                                         <th style="min-width: 100px;">Last Replier</th>
@@ -261,6 +262,17 @@
                             const issueTypeName = row.issue_type_name || '';
                             const issue_type = issueTypeName.length > 20  ? issueTypeName.substring(0, 20) + '...' : issueTypeName;
                             return `<span title="${issueTypeName}">${issue_type}</span>`;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'classification_name',
+                        name: 'classification_name',
+                        render: function(data, type, row) {
+                            const classificationName = row.classification_name || '';
+                            const classification = classificationName.length > 20  ? classificationName.substring(0, 20) + '...' : classificationName;
+                            return `<span title="${classificationName}">${classification}</span>`;
                         },
                         orderable: false,
                         searchable: false

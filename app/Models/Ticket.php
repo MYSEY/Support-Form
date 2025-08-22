@@ -84,7 +84,7 @@ class Ticket extends Model
         return $this->belongsTo(User::class,'lastreplier');
     }
     public function issueType(){
-        return $this->belongsTo(issueType::class,'issue_type');
+        return $this->belongsTo(issueType::class,'issue_type')->with("Classification");
     }
 
     public function histories(){

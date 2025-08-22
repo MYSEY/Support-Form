@@ -144,7 +144,7 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
-        // try {
+        try {
             $data = $request->all();
 
             if($request->hasFile('attachments')) {
@@ -227,9 +227,9 @@ class TicketController extends Controller
                 'message' => "Ticket created successfully.",
                 'status'=>"success"
             ]);
-        // } catch (\Throwable $exp) {
-        //     return response()->json(['errors' => $exp]);
-        // }
+        } catch (\Throwable $exp) {
+            return response()->json(['errors' => $exp]);
+        }
     }
 
     public function import(Request $request){
