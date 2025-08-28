@@ -41,6 +41,7 @@ class TicketReportController extends Controller
             // Define the base query
             $query = DB::table('tickets')
             ->leftJoin('departments','tickets.department_id','=','departments.id')
+            ->leftJoin('departments as department_from','tickets.department_id_from','=','department_from.id')
             ->leftJoin('branchs','tickets.branch_id','=','branchs.id')
             ->leftJoin('custom_statuses','tickets.status','=','custom_statuses.id')
             ->leftJoin('users','tickets.owner','=','users.id')
@@ -51,6 +52,8 @@ class TicketReportController extends Controller
                 'tickets.*',
                 'departments.name_khmer',
                 'departments.name_english',
+                'department_from.name_khmer as department_from_name_khmer',
+                'department_from.name_english as department_from_name_english',
                 'branchs.branch_name_en',
                 'branchs.branch_name_kh',
                 'custom_statuses.name as status_name',
@@ -81,14 +84,25 @@ class TicketReportController extends Controller
             if ($from_date && $to_date) {
                 $query->whereBetween('tickets.dt',  [$from_date, $to_date]);
             }
-            
-            // Apply additional filtering for 'Staff' role
-            if (Auth::user()->RolePermission == 'Staff') {
+
+            if (Auth::user()->RolePermission=='staff') {
                 $query->where('tickets.created_by',Auth::user()->id);
             }
-            if (Auth::user()->RolePermission == 'admin_branch') {
+            if (Auth::user()->RolePermission=='admin_support' || Auth::user()->RolePermission=='admin') {
+                $query->where('tickets.department_id_from', Auth::user()->department_id);
+                $query->orWhere('tickets.department_id', Auth::user()->department_id);
+            }
+            if(Auth::user()->RolePermission=="admin_branch"){
                 $query->where('tickets.branch_id', Auth::user()->branch_id);
             }
+            
+            // Apply additional filtering for 'Staff' role
+            // if (Auth::user()->RolePermission == 'staff') {
+            //     $query->where('tickets.created_by',Auth::user()->id);
+            // }
+            // if (Auth::user()->RolePermission == 'admin_branch') {
+            //     $query->where('tickets.branch_id', Auth::user()->branch_id);
+            // }
 
             // **Search Handling**
             $searchValue = request()->input('search.value');

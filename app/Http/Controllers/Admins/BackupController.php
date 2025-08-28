@@ -178,7 +178,7 @@ class BackupController extends Controller
         $startTime = microtime(true);
 
         // Use mysql.exe for restoring
-        $mysqlPath = env('MYSQLDUMP_PATH');
+        $mysqlPath = env('MYSQLDUMP_PATH_RESTORE');
         $username  = env('DB_USERNAME', 'root');
         $password  = env('DB_PASSWORD', '');
         $host      = env('DB_HOST', '127.0.0.1');

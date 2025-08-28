@@ -209,7 +209,9 @@
                         data: 'name_english',
                         name: 'name_english',
                         render: function(data, type, row) {
-                            return row.name_english  ? row.name_english : row.branch_name_en
+                            let branch_name = row.branch_name_en ? row.branch_name_en : "";
+                            let department_from_name = row.department_from_name_english ? row.department_from_name_english : "";
+                            return department_from_name + branch_name
                         },
                         orderable: false,
                         searchable: false
