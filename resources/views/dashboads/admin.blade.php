@@ -75,7 +75,7 @@
         @endcan
     </div>
     <div class="row">
-        <div class="col-xl-6">
+        <div class="col-xl-4">
             <div id="panel-9" class="panel">
                 <div class="panel-hdr">	
                     <h2>
@@ -97,7 +97,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-6">
+        <div class="col-xl-4">
             <div id="panel-10" class="panel">
                 <div class="panel-hdr">	
                     <h2>
@@ -115,6 +115,28 @@
                             Display as Ticket status Chart
                         </div>
                         <div id="ticketStatus" style="width:100%; height:300px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div id="panel-9" class="panel">
+                <div class="panel-hdr">	
+                    <h2>
+                        Classification <span class="fw-300"><i>Chart</i></span> 
+                    </h2>
+                    <div class="panel-toolbar">
+                        <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                        <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                        <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">									
+                        <div class="panel-tag">
+                            Classification Chart
+                        </div>
+                        <div id="classificationCharts" style="width:100%; height:300px;"></div>
                     </div>
                 </div>
             </div>
@@ -512,6 +534,7 @@
                         dataTickets: response.dataTickets,
                         customStatuses: response.customStatuses,
                         priorities: response.priorities,
+                        dataClassifications: response.dataClassifications,
                         maintenanceMission: response.maintenanceMission,
                         maintenanceMissionCashByCash: response.maintenanceMissionCashByCash,
                         branch: response.branch,
@@ -519,6 +542,7 @@
                     }
                     TicketStatus(data);
                     TicketPriority(data);
+                    classificationChart(data);
                     getMaintenanceMission(data);
                     getMaintenanceMissionCashByCash(data);
                 }
@@ -712,6 +736,40 @@
                 },
                 legend: {
                     show: true
+                }
+            });
+        }
+        // Classification Chart
+        function classificationChart(datas){
+            let TotalC = {};
+
+            datas.dataClassifications.forEach(status => {
+                TotalC[status.id] = 0;
+            });
+
+            if (datas.dataTickets.length>0) {
+                datas.dataTickets.map((item)=>{
+                    if (TotalC[item.ci_id] !== undefined) {
+                        TotalC[item.ci_id]++;
+                    }
+                });
+            } 
+            // function each name
+            let prioritName = datas.dataClassifications.map((item) => {
+                return [item.name, TotalC[item.id]];
+            });
+            // Colors
+            let priorityColors = datas.dataClassifications.map((item) => {
+                return [item.color];
+            });
+            var classificationChart = c3.generate({
+                bindto: "#classificationCharts",
+                data: {
+                    columns: prioritName,
+                    type : 'pie'//,
+                },
+                color: {
+                    pattern: priorityColors
                 }
             });
         }

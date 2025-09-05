@@ -141,6 +141,8 @@ class DashboardController extends Controller
         $dataPriorities = DB::table('priorities')->get();
         $users = User::select('id')->get();
         $query = DB::table('tickets')
+        ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
+        ->leftJoin('classification_issues','issue_types.classification','=','classification_issues.id')
         ->select(
             'tickets.id',
             'tickets.trackid',
@@ -150,7 +152,9 @@ class DashboardController extends Controller
             'tickets.dt',
             'tickets.status',
             'tickets.owner',
-            'tickets.deleted_at'
+            'tickets.issue_type',
+            'tickets.deleted_at',
+            'classification_issues.id as ci_id'
         )->whereNull('tickets.deleted_at');
 
         // Apply additional filtering for role
