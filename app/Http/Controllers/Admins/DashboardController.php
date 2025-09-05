@@ -139,6 +139,7 @@ class DashboardController extends Controller
     public function show(Request $request){
         $dataCustomStatuses = DB::table('custom_statuses')->get();
         $dataPriorities = DB::table('priorities')->get();
+        $dataClassifications = DB::table('classification_issues')->get();
         $users = User::select('id')->get();
         $query = DB::table('tickets')
         ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
@@ -184,6 +185,7 @@ class DashboardController extends Controller
             'dataTickets'=>$dataTickets,
             'customStatuses'=>$dataCustomStatuses,
             'priorities'=>$dataPriorities,
+            'dataClassifications'=>$dataClassifications,
             'maintenanceMission'=>$maintenanceMission,
             'maintenanceMissionCashByCash'=>$maintenanceMissionCashByCash,
             'branch'=>$branch,
