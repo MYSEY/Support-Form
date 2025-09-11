@@ -86,11 +86,14 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
             // Clean notes
             $i++;
             $this->num = $i;
+           // Get all statuses from the DB as [id => name]
             $statusMap = MaintenanceStatus::pluck('name', 'id')->toArray();
 
-            $minStatus = $value->maintenanceDetail->max('status'); // should return 2, 3, etc.
-            $statusText = $minStatus ? ($statusMap[$minStatus] ?? null) : null;
+            // Get the minimum status
+            $minStatus = $value->maintenanceDetail->min('status');
 
+            // Assign the text based on the minimum status
+            $statusText = $minStatus !== null && isset($statusMap[$minStatus]) ? $statusMap[$minStatus] : null;
             $dataExport[] = [
                 "reference" => (string)($value->reference),
                 "office" => $value->abbreviations,
