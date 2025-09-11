@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\MaintenanceDownloadExport;
 
 class MaintenanceReportController extends Controller
 {
@@ -108,6 +109,9 @@ class MaintenanceReportController extends Controller
 
     public function maintenanceExport(Request $request){
         return Excel::download(new MaintenanceExport($request), 'Maintanance Report.xlsx');
+    }
+    public function maintenanceDownloadExcel(Request $request){
+        return Excel::download(new MaintenanceDownloadExport($request), 'Maintanance Report.xlsx');
     }
     public function maintenanceHistory($id){
         $data = Maintenance::with(['maintenanceDetail.task:id,name,type'])

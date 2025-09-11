@@ -21,10 +21,13 @@
                             </div>
                         </div>
                        
-                        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2" style="text-align: right;">
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3" style="text-align: right;">
                             <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed" id="btnSearch">Search</a>
                             @if (Auth::user()->can('Maintenance Report Export'))
                                 <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btn-export" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Excel</span></a>
+                            @endif
+                            @if (Auth::user()->can('Maintenance Report Export'))
+                                <a href="javascript:void(0)" class="btn btn-outline-success waves-effect waves-themed mr-1" id="btnDownloadExcel" tabindex="0" aria-controls="dt-basic-example" type="button" title="Generate Excel"><span>Download</span></a>
                             @endif
                         </div>
                     </div>
@@ -141,6 +144,19 @@
                     maintenance_mission: $("#maintenance_mission").val(),
                 };
                 var url = "{{URL::to('admin/report/maintenance/export')}}?" + $.param(query)
+                window.location = url;
+            });
+            $('#btnDownloadExcel').on('click',function(){
+                let query = {
+                    from_date: $("#from_date").val(),
+                    to_date: $("#to_date").val(),
+                    staff_name: $("#staff_name").val(),
+                    serial: $("#serial").val(),
+                    office: $("#office").val(),
+                    department_id: $("#department_id").val(),
+                    maintenance_mission: $("#maintenance_mission").val(),
+                };
+                var url = "{{URL::to('admin/report/maintenance/download/excel')}}?" + $.param(query)
                 window.location = url;
             });
         });

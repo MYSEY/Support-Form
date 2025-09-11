@@ -143,6 +143,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     //maintenance report
     Route::get('report/maintenance', [MaintenanceReportController::class, 'report']);
     Route::get('report/maintenance/export', [MaintenanceReportController::class, 'maintenanceExport']);
+    Route::get('report/maintenance/download/excel', [MaintenanceReportController::class, 'maintenanceDownloadExcel']);
     Route::get('maintenance/history/{id}', [MaintenanceReportController::class, 'maintenanceHistory']);
 
     // Issue Type
