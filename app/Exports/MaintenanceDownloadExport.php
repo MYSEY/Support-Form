@@ -50,6 +50,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
             ->leftJoin('categories', 'assets.category_id', '=', 'categories.id')
             ->leftJoin('rooms', 'maintenances.location', '=', 'rooms.id')
             ->leftJoin('maintenance_details', 'maintenances.id', '=', 'maintenance_details.maintenance_id')
+            ->leftJoin('maintenance_missions', 'maintenances.maintenance_mission_id', '=', 'maintenance_missions.id')
             ->leftJoin('branchs', 'maintenances.office', '=', 'branchs.id')
             ->leftJoin('db_hr-production.users as users', 'maintenances.end_user', '=', 'users.id')
             ->leftJoin('db_hr-production.positions as positions', 'users.position_id', '=', 'positions.id') // ✅ use full db name
@@ -64,6 +65,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
                 'rooms.name as location_name',
                 'users.employee_name_en as end_user',
                 'positions.name_english as postion_name',
+                'maintenance_missions.name as maintenance_mission',
             )
             ->whereNull('maintenances.deleted_at')
             ->when($request->serial, function ($query, $serial) {
@@ -107,7 +109,8 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
                 "end_user" => $value->end_user,
                 "postion_name" => $value->postion_name,
                 "comment" => trim(strip_tags($value->description)),
-                "status"    => $statusText
+                "status"    => $statusText,
+                "maintenance_mission"    => $value->maintenance_mission,
             ];
         }
         
@@ -136,6 +139,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
             'Postion',
             'Comments',
             'Status',
+            'Maintenance Mission',
         ];
     }
     public function columnWidths(): array
@@ -153,6 +157,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
             'J' => 20,
             'K' => 20,
             'M' => 20,
+            'N' => 20,
         ];
     }
     public function startCell(): string
