@@ -56,6 +56,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
             ->select(
                 'maintenances.*',
                 'assets.serial',
+                'assets.device_name',
                 'branchs.abbreviations',
                 'users.employee_name_en',
                 'users.number_employee',
