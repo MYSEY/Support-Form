@@ -51,6 +51,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
             ->leftJoin('rooms', 'maintenances.location', '=', 'rooms.id')
             ->leftJoin('maintenance_details', 'maintenances.id', '=', 'maintenance_details.maintenance_id')
             ->leftJoin('maintenance_missions', 'maintenances.maintenance_mission_id', '=', 'maintenance_missions.id')
+            ->leftJoin('departments', 'maintenances.department_id', '=', 'departments.id')
             ->leftJoin('branchs', 'maintenances.office', '=', 'branchs.id')
             ->leftJoin('db_hr-production.users as users', 'maintenances.end_user', '=', 'users.id')
             ->leftJoin('db_hr-production.positions as positions', 'users.position_id', '=', 'positions.id') // ✅ use full db name
@@ -59,6 +60,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
                 'assets.serial',
                 'assets.device_name',
                 'branchs.abbreviations',
+                'departments.name_english as depart_name',
                 'users.employee_name_en',
                 'users.number_employee',
                 'categories.name as category_name',
@@ -100,6 +102,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
             $dataExport[] = [
                 "reference" => (string)($value->reference),
                 "office" => $value->abbreviations,
+                "department"    => $value->depart_name,
                 "maintenance_date" => $value->maintenance_date,
                 "MTechnicain" => $value->number_employee,
                 "serial" => $value->serial,
@@ -129,6 +132,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
         return [
             'Mreference',
             'Office',
+            'department',
             'Mdate',
             'MTechnicain',
             'Serial',
@@ -158,6 +162,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
             'K' => 20,
             'M' => 20,
             'N' => 20,
+            'O' => 20,
         ];
     }
     public function startCell(): string
