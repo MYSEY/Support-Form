@@ -24,85 +24,6 @@
 
      {{-- <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css"> --}}
      <link rel="stylesheet" href="{{asset('admins/css/notifications/toastr/toastr.css')}}">
-     <style>
-        /* -------------------------------------- */
-        /* Custom Styling for Login Card (image_646d9d.png) */
-        /* -------------------------------------- */
-
-        /* The main container for the form */
-        #form-login-card {
-            max-width: 380px; /* Set a fixed width like in the image */
-            border-radius: 10px; /* Rounded corners for the whole form */
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7); /* Subtle dark shadow */
-            overflow: hidden; /* Important to keep children within rounded corners */
-            /* You might need to center this container if it's not already centered */
-            margin: 20px auto; 
-        }
-
-        /* Green Header Bar */
-        .login-header {
-            background-color: #4aaa48; /* Bright Green */
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-            font-size: 1.2rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        /* Form Body (The dark area) */
-        .card-body {
-            padding-top: 40px !important;
-            padding-bottom: 20px !important;
-        }
-
-        /* Input Fields */
-        .form-label {
-            /* Make labels white/light gray to stand out on dark background */
-            color: #ddd; 
-            font-weight: normal;
-            margin-bottom: 5px;
-        }
-
-        .login-input {
-            /* background-color: #1a1a1a; */
-            border: 1px solid #7c7c7c; /* Light gray border */
-            color: white; /* White text inside the input */
-            padding: 10px 15px;
-            border-radius: 4px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
-        }
-        .login-input::placeholder {
-            color: #888;
-        }
-
-        /* Red Login Button */
-        .login-btn-red {
-            background-color: #db3a34 !important; /* The Red color from your logo/image */
-            border-color: #db3a34 !important;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: bold;
-            padding: 8px 30px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .login-btn-red:hover {
-            background-color: #c72c27 !important;
-            border-color: #c72c27 !important;
-        }
-        
-        /* Hide the help-block if it's still present in the HTML but you don't want it */
-        .help-block {
-            display: none;
-        }
-
-        /* Ensure form-group padding is clean */
-        .form-group {
-            margin-bottom: 15px;
-        }
-    </style>
 </head>
 <body class="desktop chrome webkit pace-done blur"><div class="pace  pace-inactive"><div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
 <div class="pace-progress-inner"></div>
@@ -110,40 +31,35 @@
 <div class="pace-activity">
     </div></div>
     <div class="blankpage-form-field"  id="form-login">
-        <div class="m-0 w-100 align-items-center justify-content-center rounded border-bottom-left-radius-0 border-bottom-right-radius-0 px-4" style="text-align: center">
-            {{-- <a href="javascript:void(0)" class="page-logo-link press-scale-down d-flex align-items-center"> --}}
-                <img src="{{asset('admins/img/favicon/commalogo1.png')}}" alt="Support Form" aria-roledescription="logo" style="width: 85% !important">
-                {{-- <span class="page-logo-text mr-1">Welcome! Please login.</span>
-            </a> --}}
+        <div class="page-logo m-0 w-100 align-items-center justify-content-center rounded border-bottom-left-radius-0 border-bottom-right-radius-0 px-4">
+            <a href="javascript:void(0)" class="page-logo-link press-scale-down d-flex align-items-center">
+                <img src="{{asset('admins/img/favicon/commalogo1.png')}}" alt="Support Form" aria-roledescription="logo" style="width: 85px !important">
+                <span class="page-logo-text mr-1">Welcome! Please login.</span>
+            </a>
         </div>
-        <div class="card-container" id="form-login-card">
-            <div class="login-header">
-               SYSTEM SUPPORT FORM
-            </div>
-
-            <div class="card-body p-4">
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf
-                    <div class="form-group mb-4">
-                        <label class="form-label" for="username"></label>
-                        <input type="text" name="username" class="form-control login-input" id="username" placeholder="Username">
-                        </div>
-                    
-                    <div class="form-group mb-4">
-                        <label class="form-label" for="password"></label>
-                        <input type="password" name="password" class="form-control login-input" id="password" placeholder="Password">
-                    </div>
-                    
-                    <div class="d-flex justify-content-center pt-2">
-                        <button type="button" onclick="submitForm()" class="btn login-btn-red waves-effect waves-themed submit">
-                            LOGIN
-                        </button>
-                    </div>
-                </form>
-            </div>
+        <div class="card p-4 border-top-left-radius-0 border-top-right-radius-0">
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" name="username" class="form-control" id="username" placeholder="username">
+                    <span class="help-block">
+                        Your unique username to app
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" name="password" class="form-control" id="password" placeholder="password">
+                    <span class="help-block">
+                        Your password
+                    </span>
+                </div>
+                <button type="button" onclick="submitForm()" class="btn btn-danger float-right waves-effect waves-themed submit">Secure login</button>
+            </form>
         </div>
     </div>
-    <div class="modal custom-modal fade" role="dialog" data-backdrop="static">
+
+    <div class="modal custom-modal fade" id="modal-change-password" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -173,7 +89,9 @@
             </div>
         </div>
     </div>
-    <video poster="{{asset('admins/img/backgrounds/final_background_sf1.jpg')}}" id="bgvid" playsinline="" autoplay="" muted="" loop="">
+    <video poster="{{asset('admins/img/backgrounds/clouds.png')}}" id="bgvid" playsinline="" autoplay="" muted="" loop="">
+        <source src="{{asset('admins/media/video/cc.webm')}}" type="video/webm">
+        <source src="{{asset('admins/media/video/cc.mp4')}}" type="video/mp4">
     </video>
     <script src="{{asset('admins/js/vendors.bundle.js')}}"></script>
     <script src="{{asset('admins/js/app.bundle.js')}}"></script>

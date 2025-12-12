@@ -76,7 +76,7 @@ class UserController extends Controller
             }else{
                 $user = User::where("user",$request->username)->first();
                 $user->password = Hash::make($request->new_password);
-                $user->status = "Active";
+                $user->status = "";
                 $user->save();
                 return response()->json([
                     'message' => "Reset password successfully",
