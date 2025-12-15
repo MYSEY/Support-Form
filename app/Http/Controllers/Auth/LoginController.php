@@ -127,6 +127,12 @@ class LoginController extends Controller
                 ]);
             }else{
                 $user = User::where("user",$request->username)->first();
+                if (Hash::check($request->new_password, $user->password)) {
+                    return response()->json([
+                        'message' => 'New password must be different from current password!',
+                        'status'  => 'error'
+                    ]);
+                }
                 $user->password = Hash::make($request->new_password);
                 $user->status = "Active";
                 $user->save();
