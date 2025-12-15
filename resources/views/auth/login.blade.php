@@ -67,7 +67,6 @@
         .login-input {
             /* background-color: #1a1a1a; */
             border: 1px solid #7c7c7c; /* Light gray border */
-            color: white; /* White text inside the input */
             padding: 10px 15px;
             border-radius: 4px;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
@@ -143,7 +142,7 @@
             </div>
         </div>
     </div>
-    <div class="modal custom-modal fade" role="dialog" data-backdrop="static">
+    <div class="modal custom-modal fade" role="dialog" data-backdrop="static" id="modal-change-password">
         <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">

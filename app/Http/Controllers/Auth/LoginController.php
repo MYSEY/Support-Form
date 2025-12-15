@@ -82,6 +82,12 @@ class LoginController extends Controller
                     }
                 }
             }else if ($user->status == null || $user->status == "") {
+                if (!Hash::check($password, $user->password)) {
+                    return response()->json([
+                        'message' => "Wrong username or password",
+                        'status'=>"error"
+                    ]);
+                }
                 return response()->json([
                     'message' => "Login successfully",
                     'status'=>"change_password",
