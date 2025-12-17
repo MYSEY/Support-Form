@@ -56,10 +56,10 @@
                                 <input type="file" class="custom-file-input" id="e_ticket-file">
                                 <label class="custom-file-label">Choose file</label>
                             </div>
+                            <span id="thanLess"></span>
                         </div>
                     </div>
                 </div>
-
                 <div class="text-md-right">
                     <div class="btn-hidden-show">
                         <a class="btn btn-secondary waves-effect waves-themed mt-3 mb-3"  href="{{url('admin/ticket')}}"  type="button">Cancel</a>
@@ -107,6 +107,7 @@
                 var description = $("#e_description").val();
                 var old_attachment = $("#old_attachments").val();
                 // var fileSize = attachments['size'];
+                var fileSize = attachments ? (attachments['size'] / 1024) : "";
 
                 formData.append('_token', token);
                 formData.append('id', id);
@@ -119,58 +120,67 @@
                 formData.append('ticket_type', ticket_type);
                 formData.append('message', description);
                 formData.append('old_attachment', old_attachment);
+                if (fileSize <= 5120) {   // ** 5 MB in KB **/
+                    $(".btn-hidden-show").hide();
+                    $(".btn-loading").css('display', 'block');
+                    var num_miss = 0;
+                    $(".form-group-select2").each(function(){
+                        let formGroup = $(this);
+                        let value = formGroup.attr("data-select2-id");
+                        let requeredField = formGroup.find(".select2-option").val();
+                        let requered = formGroup.find(".required").val();
+                        if(!value && requered == ""){ 
+                            formGroup.find(".select2-selection--single").css("border-color","#dc3545");
+                        }else if(!requeredField && requered == "") {
+                            formGroup.find(".select2-selection--single").css("border-color","#dc3545");
+                        }else{
+                            formGroup.find(".select2-selection--single").css("border-color","#1dc9b7");
+                        }
+                    });
 
-                var num_miss = 0;
-                $(".form-group-select2").each(function(){
-                    let formGroup = $(this);
-                    let value = formGroup.attr("data-select2-id");
-                    let requeredField = formGroup.find(".select2-option").val();
-                    let requered = formGroup.find(".required").val();
-                    if(!value && requered == ""){ 
-                        formGroup.find(".select2-selection--single").css("border-color","#dc3545");
-                    }else if(!requeredField && requered == "") {
-                        formGroup.find(".select2-selection--single").css("border-color","#dc3545");
+                    $(".required").each(function(){
+                        if($(this).val()==""){ 
+                            num_miss++;
+                            $(this).addClass("is-invalid");
+                            $(this).removeClass("is-valid");
+                        }else{
+                            $(this).addClass("is-valid");
+                            $(this).removeClass("is-invalid");
+                        }
+                    });
+                    if (num_miss>0) {
+                        toastr.error("Please check field all required!");
+                        $(".btn-hidden-show").show();
+                        $(".btn-loading").css('display', 'none');
+                        return false;
                     }else{
-                        formGroup.find(".select2-selection--single").css("border-color","#1dc9b7");
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ url('admin/ticket/update') }}",
+                            contentType: 'multipart/form-data',
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            data: formData,
+                            dataType: "JSON",
+                            success: function(response) {
+                                if (response.status == "error") {
+                                    toastr.error(response.message);
+                                }else{
+                                    toastr.success(response.message);
+                                    var url = "{{ URL('admin/ticket/detail/') }}/" + $("#e_ticket_id").val();
+                                    window.location.replace(url); 
+                                }
+                            }
+                        })
                     }
-                });
-
-                $(".required").each(function(){
-                    if($(this).val()==""){ 
-                        num_miss++;
-                        $(this).addClass("is-invalid");
-                        $(this).removeClass("is-valid");
-                    }else{
-                        $(this).addClass("is-valid");
-                        $(this).removeClass("is-invalid");
-                    }
-                });
-                if (num_miss>0) {
-                    toastr.error("Please check field all required!");
+                }else{
                     $(".btn-hidden-show").show();
                     $(".btn-loading").css('display', 'none');
+                    $("#thanLess").text("Please check file size less than or equal to 5MB").css("color", "red");
                     return false;
-                }else{
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ url('admin/ticket/update') }}",
-                        contentType: 'multipart/form-data',
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        data: formData,
-                        dataType: "JSON",
-                        success: function(response) {
-                            if (response.status == "error") {
-                                toastr.error(response.message);
-                            }else{
-                                toastr.success(response.message);
-                                var url = "{{ URL('admin/ticket/detail/') }}/" + $("#e_ticket_id").val();
-                                window.location.replace(url); 
-                            }
-                        }
-                    })
                 }
+
             });
         });
 

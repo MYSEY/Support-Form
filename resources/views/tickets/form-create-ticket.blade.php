@@ -168,7 +168,7 @@
                 formData.append('overdue_email_sent', overdue_email_sent);
                 formData.append('satisfaction_email_sent', satisfaction_email_sent);
                 formData.append('message', description);
-                if (fileSize <= 10240) {  // ** 10 MB in KB **/
+                if (fileSize <= 5120) {   // ** 5 MB in KB **/
                     $(".btn-hidden-show").hide();
                     $(".btn-loading").css('display', 'block');
                     var num_miss = 0;
@@ -224,7 +224,7 @@
                 }else{
                     $(".btn-hidden-show").show();
                     $(".btn-loading").css('display', 'none');
-                    $("#thanLess").text("Please check file size less than or equal to 10MB").css("color", "red");
+                    $("#thanLess").text("Please check file size less than or equal to 5MB").css("color", "red");
                     return false;
                 }
             });
