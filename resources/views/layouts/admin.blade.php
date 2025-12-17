@@ -189,7 +189,7 @@
                         <ul id="js-nav-menu" class="nav-menu">
                             @if (Auth::user()->can('Dashboad View'))
                                 <li class="@if (Request::instance()->segment(2) == 'dashboad') active @endif">
-                                    <a href="{{url('admin/dashboad')}}" title="Support Form Dashboard" data-filter-tags="application intel support form dashboard">
+                                    <a href="{{url('admin/dashboad')}}" title="Support Form Dashboard" data-filter-tags="application intel dashboard">
                                         <i class="fal fa-tachometer-alt"></i>
                                         <span class="nav-link-text">Dashboard</span>
                                     </a>
@@ -197,7 +197,7 @@
                             @endif
                             @if (Auth::user()->can('Ticket View'))
                                 <li class="@if (Request::instance()->segment(2) == 'ticket') active @endif">
-                                    <a href="{{url('admin/ticket')}}" title="Support Form Tickets" data-filter-tags="application intel support form Tickets">
+                                    <a href="{{url('admin/ticket')}}" title="Support Form Tickets" data-filter-tags="application intel tickets">
                                         <i class="fal fa-ticket-alt"></i>
                                         <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
                                     </a>
@@ -205,7 +205,7 @@
                             @endif
                             @if (Auth::user()->can('Maintenance View'))
                                 <li class="@if (Request::instance()->segment(2) == 'maintenance') active @endif">
-                                    <a href="{{url('admin/maintenance')}}" title="maintenance" data-filter-tags="maintenance">
+                                    <a href="{{url('admin/maintenance')}}" title="maintenance" data-filter-tags="application intel maintenance">
                                         <i class="fal fa-ticket-alt"></i>
                                         <span class="nav-link-text" data-i18n="nav.maintenance">Maintenance</span>
                                     </a>
@@ -213,7 +213,7 @@
                             @endif
                             @if (Auth::user()->can('User View'))
                                 <li class="@if (Request::instance()->segment(2) == 'user') active @endif">
-                                    <a href="{{url('admin/user')}}" title="Users" data-filter-tags="users">
+                                    <a href="{{url('admin/user')}}" title="Users" data-filter-tags="application intel users">
                                         <i class="fal fa-users"></i>
                                         <span class="nav-link-text" data-i18n="nav.user">Users</span>
                                     </a>
@@ -223,21 +223,21 @@
                             {{-- Reports --}}
                             @if (userHasAnyPermission($permissionsReports))
                                 <li class="@if (in_array(Request::instance()->segment(3), $segmentReport)) active @endif">
-                                    <a href="javascript:void(0);" title="Reports" data-filter-tags="application intel Reports">
+                                    <a href="javascript:void(0);" title="Reports" data-filter-tags="theme reports">
                                         <i class="fal fa-chart-pie"></i>
                                         <span class="nav-link-text" data-i18n="nav.Reports">Reports</span>
                                     </a>
                                     <ul>
                                         @if (Auth::user()->can('Ticket Report View'))
                                             <li class="@if (Request::instance()->segment(3) == 'ticket') active @endif">
-                                                <a href="{{url('admin/report/ticket')}}" title="Tickets" data-filter-tags="application intel Tickets">
+                                                <a href="{{url('admin/report/ticket')}}" title="Tickets" data-filter-tags="theme reports tickets">
                                                     <span class="nav-link-text" data-i18n="nav.Tickets">Tickets</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Maintenance Report View'))
                                             <li class="@if (Request::instance()->segment(3) == 'maintenance') active @endif">
-                                                <a href="{{url('admin/report/maintenance')}}" title="maintenance" data-filter-tags="application intel maintenance">
+                                                <a href="{{url('admin/report/maintenance')}}" title="maintenance" data-filter-tags="theme reports maintenance">
                                                     <span class="nav-link-text" data-i18n="nav.maintenance">Maintenance</span>
                                                 </a>
                                             </li>
@@ -256,14 +256,14 @@
                                     <ul>
                                         @if (Auth::user()->can('General View'))
                                             <li>
-                                                <a href="" title="General" data-filter-tags="theme settings General">
-                                                    <span class="nav-link-text" data-i18n="nav.general">General</span>
+                                                <a href="" title="General" data-filter-tags="theme settings general">
+                                                    <span class="nav-link-text" data-i18n="nav.theme_settings_general">General</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Help Desk View'))
                                             <li>
-                                                <a href="" title="Help Desk" data-filter-tags="theme settings Help Desk">
+                                                <a href="" title="Help Desk" data-filter-tags="theme settings help desk">
                                                     <span class="nav-link-text" data-i18n="nav.help_desk">Help Desk</span>
                                                 </a>
                                             </li>
@@ -277,14 +277,14 @@
                                         @endif
                                         @if (Auth::user()->can('Status View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['statuses'])) active @endif">
-                                                <a href="{{url('admin/statuses')}}" title="Status" data-filter-tags="theme settings Status">
+                                                <a href="{{url('admin/statuses')}}" title="Status" data-filter-tags="theme settings status">
                                                     <span class="nav-link-text" data-i18n="nav.help_desk">Statuses</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Department View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['department'])) active @endif">
-                                                <a href="{{url('admin/department')}}" title="Departments" data-filter-tags="theme settings Departments">
+                                                <a href="{{url('admin/department')}}" title="Departments" data-filter-tags="theme settings department">
                                                     <span class="nav-link-text" data-i18n="nav.department">Department</span>
                                                 </a>
                                             </li>
@@ -298,84 +298,84 @@
                                         @endif
                                         @if (Auth::user()->can('Priority View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['priority'])) active @endif">
-                                                <a href="{{url('admin/priority')}}" title="Priority" data-filter-tags="theme settings Priority">
+                                                <a href="{{url('admin/priority')}}" title="Priority" data-filter-tags="theme settings priority">
                                                     <span class="nav-link-text">Priority</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Issue Type View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['issue-type'])) active @endif">
-                                                <a href="{{url('admin/issue-type')}}" title="issue-type" data-filter-tags="theme settings issue-type">
+                                                <a href="{{url('admin/issue-type')}}" title="issue-type" data-filter-tags="theme settings issue type">
                                                     <span class="nav-link-text">Issue Type</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Responses Ticket View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['ticket-responses'])) active @endif">
-                                                <a href="{{url('admin/ticket-responses')}}" title="ticket-responses" data-filter-tags="theme settings ticket-responses">
+                                                <a href="{{url('admin/ticket-responses')}}" title="ticket-responses" data-filter-tags="theme settings responses ticket">
                                                     <span class="nav-link-text">Responses Ticket</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Reset Password User'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['reset'])) active @endif">
-                                                <a href="{{url('admin/reset/password')}}" title="password" data-filter-tags="theme settings password">
+                                                <a href="{{url('admin/reset/password')}}" title="password" data-filter-tags="theme settings reset password">
                                                     <span class="nav-link-text">Reset Password</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Maintenance Mission View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['mission'])) active @endif">
-                                                <a href="{{url('admin/mission')}}" title="Maintenance Mission" data-filter-tags="theme Maintenance Mission">
+                                                <a href="{{url('admin/mission')}}" title="Maintenance Mission" data-filter-tags="theme settings maintenance mission">
                                                     <span class="nav-link-text">Maintenance Mission</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Maintenance Status View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['maintenance-status'])) active @endif">
-                                                <a href="{{url('admin/maintenance-status')}}" title="Maintenance Status" data-filter-tags="theme Maintenance Status">
+                                                <a href="{{url('admin/maintenance-status')}}" title="Maintenance Status" data-filter-tags="theme settings maintenance status">
                                                     <span class="nav-link-text">Maintenance Status</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Asset View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['asset'])) active @endif">
-                                                <a href="{{url('admin/asset')}}" title="Asset" data-filter-tags="theme Asset">
+                                                <a href="{{url('admin/asset')}}" title="Asset" data-filter-tags="theme settings maintenance asset">
                                                     <span class="nav-link-text">Asset</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Category View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['category'])) active @endif">
-                                                <a href="{{url('admin/category')}}" title="category" data-filter-tags="theme category">
+                                                <a href="{{url('admin/category')}}" title="category" data-filter-tags="theme settings category">
                                                     <span class="nav-link-text">Category</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Task View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['task'])) active @endif">
-                                                <a href="{{url('admin/task')}}" title="task" data-filter-tags="theme task">
+                                                <a href="{{url('admin/task')}}" title="task" data-filter-tags="theme settings task">
                                                     <span class="nav-link-text">Task</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Room View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['room'])) active @endif">
-                                                <a href="{{url('admin/room')}}" title="task" data-filter-tags="theme task">
+                                                <a href="{{url('admin/room')}}" title="task" data-filter-tags="theme settings rooms">
                                                     <span class="nav-link-text">Rooms</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Employee View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['employee'])) active @endif">
-                                                <a href="{{url('admin/employee')}}" title="employee" data-filter-tags="theme employee">
+                                                <a href="{{url('admin/employee')}}" title="employee" data-filter-tags="theme settings employee">
                                                     <span class="nav-link-text">Employee</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Backup Manager View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['backup'])) active @endif">
-                                                <a href="{{url('admin/backup')}}" title="Backup Manager" data-filter-tags="theme Backup Manager">
+                                                <a href="{{url('admin/backup')}}" title="Backup Manager" data-filter-tags="theme settings backup manager">
                                                     <span class="nav-link-text">Backup Manager</span>
                                                 </a>
                                             </li>
@@ -387,28 +387,28 @@
                             {{-- Access Permission --}}
                             @if (userHasAnyPermission($permissionsRoles))
                                 <li class="@if (in_array(Request::instance()->segment(2), $segmentRole)) active @endif">
-                                    <a href="javascript:void(0);" title="Access Permission" data-filter-tags="application intel Access Permission">
+                                    <a href="javascript:void(0);" title="Access Permission" data-filter-tags="theme role access">
                                         <i class="ni ni-user-follow"></i>
                                         <span class="nav-link-text" data-i18n="nav.Access Permission">Role Access</span>
                                     </a>
                                     <ul>
                                         @if (Auth::user()->can('Role View'))
                                             <li class="@if (Request::instance()->segment(2) == 'role') active @endif">
-                                                <a href="{{url('admin/role')}}" title="Role" data-filter-tags="Role">
+                                                <a href="{{url('admin/role')}}" title="Role" data-filter-tags="theme role access role">
                                                     <span class="nav-link-text" data-i18n="nav.role">Role</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Permission View'))
                                             <li class="@if (Request::instance()->segment(2) == 'permission') active @endif">
-                                                <a href="{{url('admin/permission')}}" title="permission" data-filter-tags="permission">
+                                                <a href="{{url('admin/permission')}}" title="permission" data-filter-tags="theme role access permission">
                                                     <span class="nav-link-text" data-i18n="nav.permission">Permission</span>
                                                 </a>
                                             </li>
                                         @endif
                                         @if (Auth::user()->can('Permission Category View'))
                                             <li class="@if (Request::instance()->segment(2) == 'permissions' && Request::instance()->segment(3) == 'category') active @endif">
-                                                <a href="{{url('admin/permissions/category')}}" title="permission category" data-filter-tags="permission category">
+                                                <a href="{{url('admin/permissions/category')}}" title="permission category" data-filter-tags="theme role access category permission">
                                                     <span class="nav-link-text" data-i18n="nav.permission category">Category Permission</span>
                                                 </a>
                                             </li>
