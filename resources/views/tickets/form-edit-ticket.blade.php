@@ -88,6 +88,24 @@
             var ticket_id = url.substring(url.lastIndexOf('/') + 1);
             $("#e_ticket_id").val(ticket_id);
             dataShow(ticket_id);
+            $("#e_ticket-file").on("change", function () {
+                let file = this.files[0];
+                if (!file) return;
+
+                let fileSize = file.size / 1024; // KB
+                if (fileSize > 5120) {
+                    $("#thanLess")
+                        .text("File size must be less than or equal to 5MB")
+                        .css("color", "red");
+
+                    // 🔥 Clear file input (works in all browsers)
+                    $(this).replaceWith($(this).val('').clone(true));
+                    $(".custom-file-label").text("Choose file");
+                    return false;
+                }
+
+                $("#thanLess").text("");
+            });
 
             $("#btn-update").on("click", function(e) {
                 $(".btn-hidden-show").hide();
