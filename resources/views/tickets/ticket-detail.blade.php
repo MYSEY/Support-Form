@@ -144,6 +144,7 @@
                                             <input type="file" id="rp_attachments" class="custom-file-input">
                                             <label class="custom-file-label">Choose file</label>
                                         </div>
+                                        <span id="thanLess"></span>
                                     </div>
                                     <div class="form-group frame-wrap">
                                         <div class="demo" style="display: flex">
@@ -579,6 +580,25 @@
                     });
                 }
             });
+           
+            $("#rp_attachments").on("change", function () {
+                let file = this.files[0];
+                if (!file) return;
+
+                let fileSize = file.size / 1024; // KB
+                if (fileSize > 5120) {
+                    $("#thanLess")
+                        .text("File size must be less than or equal to 5MB")
+                        .css("color", "red");
+
+                    // 🔥 Clear file input (works in all browsers)
+                    $(this).replaceWith($(this).val('').clone(true));
+                    $(".custom-file-label").text("Choose file");
+                    return false;
+                }
+
+                $("#thanLess").text("");
+            });
 
             //** block reply ticket
             showReplies(id)
@@ -611,7 +631,7 @@
                 var rp_attachments = $("#rp_attachments").prop('files')[0];
                 var fileSize = rp_attachments ? (rp_attachments['size'] / 1024) : "";
 
-                if (fileSize > 10240) {  // ** 10 MB in KB **/
+                if (fileSize <= 5120) {  // ** 5 MB in KB **/
                     $(".btn-hidden-show").show();
                     $(".btn-loading").css('display', 'none');
                     toastr.error("Please check file size less than or equal to 10MB");
