@@ -88,21 +88,9 @@ class TicketReportController extends Controller
             if (Auth::user()->RolePermission=='staff') {
                 $query->where('tickets.created_by',Auth::user()->id);
             }
-            if (Auth::user()->RolePermission=='admin_support' || Auth::user()->RolePermission=='admin') {
-                $query->where('tickets.department_id_from', Auth::user()->department_id);
-                $query->orWhere('tickets.department_id', Auth::user()->department_id);
-            }
             if(Auth::user()->RolePermission=="admin_branch"){
                 $query->where('tickets.branch_id', Auth::user()->branch_id);
             }
-            
-            // Apply additional filtering for 'Staff' role
-            // if (Auth::user()->RolePermission == 'staff') {
-            //     $query->where('tickets.created_by',Auth::user()->id);
-            // }
-            // if (Auth::user()->RolePermission == 'admin_branch') {
-            //     $query->where('tickets.branch_id', Auth::user()->branch_id);
-            // }
 
             // **Search Handling**
             $searchValue = request()->input('search.value');
