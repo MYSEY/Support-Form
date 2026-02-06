@@ -7,8 +7,7 @@
                     <div class="row filter-btn">
                         <div class="col-md-3">
                             <div class="form-group">
-                                {{-- <label class="">Closed Date</label> --}}
-                                <input type="text" class="form-control datepicker-ranges" name="closed_date" id="closed_date" value="" placeholder="Closed Date">
+                                <input type="text" class="form-control datepicker-ranges" name="closed_date" id="closed_date" value="" placeholder="Lasted Date">
                             </div>
                         </div>
                         <div class="col-sm-3 col-md-3">
