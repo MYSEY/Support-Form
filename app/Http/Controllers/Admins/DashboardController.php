@@ -17,6 +17,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Repositories\Admin\EmployeeRepository;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
 
 class DashboardController extends Controller
 {
@@ -142,8 +143,14 @@ class DashboardController extends Controller
         $today = Carbon::today()->format('Y-m-d');
         $sevenDaysAgo = Carbon::today()->subDays(7)->format('Y-m-d');
 
-        $staffResign = $this->employeeRepo->staff_resign(null);
-        $totalStaffResign = $staffResign->count();
+        $permission = Permission::where('permission_category_id',Auth::user()->role_id)->where("name", "Dashboad Staff Resign")->first();
+        $totalStaffResign = 0;
+        if($permission){
+            $staffResign = $this->employeeRepo->staff_resign(null);
+            $totalStaffResign = $staffResign->count();
+        }
+        
+        
         return view('dashboads.admin',compact('data','branch','resultsDepartment','departments','results','totalStaffResign'));
     }
     public function show(Request $request){
