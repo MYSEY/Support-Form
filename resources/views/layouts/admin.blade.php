@@ -99,9 +99,10 @@
         @php
             $permissionsReports = [
                 'Ticket Report View',
-                'Maintenance Report View'
+                'Maintenance Report View',
+                'Staff Resign Report View'
             ];
-            $segmentReport = ['ticket','maintenance'];
+            $segmentReport = ['ticket','maintenance', 'staff'];
             $permissionsRoles = [
                 'Role View', 
                 'Permission View', 
@@ -239,6 +240,13 @@
                                             <li class="@if (Request::instance()->segment(3) == 'maintenance') active @endif">
                                                 <a href="{{url('admin/report/maintenance')}}" title="maintenance" data-filter-tags="theme reports maintenance">
                                                     <span class="nav-link-text" data-i18n="nav.maintenance">Maintenance</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (Auth::user()->can('Staff Resign Report View'))
+                                            <li class="@if (Request::instance()->segment(3) == 'staff') active @endif">
+                                                <a href="{{url('admin/report/staff/resign')}}" title="staff resign" data-filter-tags="theme reports staff resign">
+                                                    <span class="nav-link-text" data-i18n="nav.maintenance">Staff Resign</span>
                                                 </a>
                                             </li>
                                         @endif

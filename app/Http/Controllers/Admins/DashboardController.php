@@ -143,13 +143,11 @@ class DashboardController extends Controller
         $today = Carbon::today()->format('Y-m-d');
         $sevenDaysAgo = Carbon::today()->subDays(7)->format('Y-m-d');
 
-        $permission = Permission::where('permission_category_id',Auth::user()->role_id)->where("name", "Dashboad Staff Resign")->first();
         $totalStaffResign = 0;
-        if($permission){
+        if (!auth()->user()?->can('Dashboad Staff Resign')) {
             $staffResign = $this->employeeRepo->staff_resign(null);
             $totalStaffResign = $staffResign->count();
         }
-        
         
         return view('dashboads.admin',compact('data','branch','resultsDepartment','departments','results','totalStaffResign'));
     }
