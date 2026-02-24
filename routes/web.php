@@ -161,6 +161,10 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('ticket/report/search', [TicketReportController::class,'search']);
     Route::get('ticket/report/export', [TicketReportController::class,'export']);
 
+    // Report staff reisgns
+    Route::get('/report/staff/resign', [EmployeeController::class,'reportStaffResign']);
+    Route::get('/report/staff/resign/export', [EmployeeController::class,'exportReportStaffResign']);
+
     Route::resource('role', RoleController::class);
     Route::get('role/user/{id}', [RoleController::class, "userList"]);
     Route::resource('permission', PermissionController::class);

@@ -56,7 +56,8 @@ class EmployeeRepository extends BaseRepository
                 'departments.name_english as depart_name',
                 'branchs.abbreviations',
                 'options.name_khmer as gender',
-                'staff_resign.is_check'
+                'staff_resign.is_check',
+                'staff_resign.export_date'
             )
             ->whereNotNull('users.resign_date')
             ->whereBetween('users.resign_date', [$sevenDaysAgo, $today])
