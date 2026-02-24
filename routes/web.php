@@ -131,6 +131,8 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     //maintenance
     Route::resource('employee', EmployeeController::class);
+    Route::get('/staff/resign', [EmployeeController::class,'staffResigns']);
+    Route::get('/staff/resign/export', [EmployeeController::class,'exportStaffResign']);
     Route::resource('maintenance', MaintenanceController::class);
     Route::get('/serial', [MaintenanceController::class,'OnChangeSerial']);
     Route::get('/onchange/branch', [MaintenanceController::class,'OnChangeBranch']);

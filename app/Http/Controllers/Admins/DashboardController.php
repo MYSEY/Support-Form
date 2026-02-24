@@ -14,13 +14,17 @@ use App\Models\MaintenanceStatus;
 use App\Models\MaintenanceMission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
+use App\Repositories\Admin\EmployeeRepository;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function __construct()
+    private $employeeRepo;
+    public function __construct(EmployeeRepository $employeeRepo)
     {
         RolePermission($this, 'Dashboad');
+        $this->employeeRepo = $employeeRepo;
     }
     public function index(){
         $results = [];
@@ -134,7 +138,13 @@ class DashboardController extends Controller
                 'missions' => $departmentMissions,
             ];
         }
-        return view('dashboads.admin',compact('data','branch','resultsDepartment','departments','results'));
+
+        $today = Carbon::today()->format('Y-m-d');
+        $sevenDaysAgo = Carbon::today()->subDays(7)->format('Y-m-d');
+
+        $staffResign = $this->employeeRepo->staff_resign(null);
+        $totalStaffResign = $staffResign->count();
+        return view('dashboads.admin',compact('data','branch','resultsDepartment','departments','results','totalStaffResign'));
     }
     public function show(Request $request){
         $dataCustomStatuses = DB::table('custom_statuses')->get();

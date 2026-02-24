@@ -47,7 +47,7 @@
                 </div>
             </div>
         @endcan
-        @can('Dashboad Ticket Assign')
+        {{-- @can('Dashboad Ticket Assign')
             <div class="col-sm-6 col-xl-3">
                 <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
                     <div class="">
@@ -59,7 +59,7 @@
                     <i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
                 </div>
             </div>
-        @endcan
+        @endcan --}}
         @can('Dashboad Ticke Active')
             <div class="col-sm-6 col-xl-3">
                 <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
@@ -73,6 +73,17 @@
                 </div>
             </div>
         @endcan
+        <div class="col-sm-6 col-xl-3">
+            <div class="p-3 bg-danger-300 rounded overflow-hidden position-relative text-white mb-g">
+                <div class="">
+                    <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                        <span id="total-new-ticket" class="float-end">{{$totalStaffResign}}</span>
+                        <small class="m-0 l-h-n">Staff Resigned <a href="{{url('admin/staff/resign')}}" style="overflow: clip;" class=" font-weight-bold color-white waves-effect waves-themed">Click View</a></small>
+                    </h3>
+                </div>
+                <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-xl-4">
