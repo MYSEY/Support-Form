@@ -51,6 +51,7 @@ class EmployeeRepository extends BaseRepository
                 'users.department_id',
                 'users.date_of_commencement',
                 'users.resign_date',
+                'users.updated_at',
                 'positions.name_khmer',
                 'positions.name_english',
                 'departments.name_english as depart_name',
