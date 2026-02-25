@@ -66,7 +66,11 @@
         let to_date = null;
         $(document).ready(function(){
             dataTables();
-             $('#btnSearch').on('click', function() {
+            $('.btn-reset').on('click', function() {
+                $('#to_date').val('');
+                $('#from_date').val('');
+            });
+            $('#btnSearch').on('click', function() {
                 from_date = $('#from_date').val();
                 to_date = $('#to_date').val();
                 $('#tbl_staff_resign_report').DataTable().ajax.reload();

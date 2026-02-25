@@ -34,6 +34,7 @@ class StaffResign implements FromCollection, WithColumnWidths, WithHeadings,With
                 'location'                => ($value->abbreviations),
                 'department'              => ($value->depart_name),
                 'resign_date'             => ($value->resign_date),
+                'updated_at'              => ($value->updated_at),
                 'export_date'             => ($value->export_date)
             ];
         }
@@ -59,6 +60,7 @@ class StaffResign implements FromCollection, WithColumnWidths, WithHeadings,With
             'Location',
             'Department',
             'Resign_Date',
+            'Last_Updated',
             'Export_Date',
         ];
     }
@@ -76,6 +78,7 @@ class StaffResign implements FromCollection, WithColumnWidths, WithHeadings,With
             'H' => 30,
             'I' => 20,
             'J' => 20,
+            'K' => 20,
         ];
     }
     public function startCell(): string
@@ -91,7 +94,7 @@ class StaffResign implements FromCollection, WithColumnWidths, WithHeadings,With
                 $event->sheet->getDelegate()->getStyle('A2')->getFont()->getColor()->setARGB('DD4B39');
                 $event->sheet->getDelegate()->getStyle('A3')->getFont()->getColor()->setARGB('0000CC');
                 $event->sheet->getDelegate()->getStyle('A4')->getFont()->getColor()->setARGB('3923A9');
-                $event->sheet->getStyle('A5:J5')->applyFromArray([
+                $event->sheet->getStyle('A5:K5')->applyFromArray([
                     'borders' => [
                         'allBorders' => [
                             'borderStyle' => Border::BORDER_THIN,
@@ -104,7 +107,7 @@ class StaffResign implements FromCollection, WithColumnWidths, WithHeadings,With
                 if (count($this->export_datas) > 0) {
                     foreach ($this->export_datas as $key=>$value) {
                         $n++;
-                        $event->sheet->getStyle('A'.$n.':J'.$n)->applyFromArray([
+                        $event->sheet->getStyle('A'.$n.':K'.$n)->applyFromArray([
                             'borders' => [
                                 'allBorders' => [
                                     'borderStyle' => Border::BORDER_THIN,
@@ -115,33 +118,33 @@ class StaffResign implements FromCollection, WithColumnWidths, WithHeadings,With
                     }
                 }
 
-                $sheet->getDelegate()->getStyle('A6:J5')->getFont()->getColor()->setARGB('3923A9');
-                $sheet->getDelegate()->getStyle('A6:J5')->getFont()->setSize(9)->setName('Khmer OS Battambang')->setSize(9);
-                $event->sheet->getDelegate()->getStyle('A6:J5')->getAlignment()
+                $sheet->getDelegate()->getStyle('A6:K5')->getFont()->getColor()->setARGB('3923A9');
+                $sheet->getDelegate()->getStyle('A6:K5')->getFont()->setSize(9)->setName('Khmer OS Battambang')->setSize(9);
+                $event->sheet->getDelegate()->getStyle('A6:K5')->getAlignment()
                 ->setWrapText(true)
                 ->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
 
-                $sheet->mergeCells('A2:J2');
+                $sheet->mergeCells('A2:K2');
                 $sheet->setCellValue('A2', "ខេមា​ មីក្រូហិរញ្ញវត្ថុ លីមីតធីត");
-                $sheet->getDelegate()->getStyle('A2:J2')->getFont()->setName('Khmer OS Muol Light')
-                ->setSize(12)->setUnderline('A2:J2');
-                $event->sheet->getDelegate()->getStyle('A2:J2')
+                $sheet->getDelegate()->getStyle('A2:K2')->getFont()->setName('Khmer OS Muol Light')
+                ->setSize(12)->setUnderline('A2:K2');
+                $event->sheet->getDelegate()->getStyle('A2:K2')
                 ->getAlignment()
                 ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-                $sheet->mergeCells('A3:J3');
+                $sheet->mergeCells('A3:K3');
                 $sheet->setCellValue('A3', "Staff Resigned");
-                $sheet->getDelegate()->getStyle('A3:J3')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A3:J3');
-                $event->sheet->getDelegate()->getStyle('A3:J3')->getAlignment()
+                $sheet->getDelegate()->getStyle('A3:K3')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A3:K3');
+                $event->sheet->getDelegate()->getStyle('A3:K3')->getAlignment()
                 ->setWrapText(true)
                 ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
                 $month = Carbon::now()->format('d-M-Y');
-                $sheet->mergeCells('A4:J4');
+                $sheet->mergeCells('A4:K4');
                 $sheet->setCellValue('A4',"As of :" .$month);
-                $sheet->getDelegate()->getStyle('A4:J4')->getFont()->setSize(9)->setName('Khmer OS Fasthand')->setSize(10);
-                $event->sheet->getDelegate()->getStyle('A4:J4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $sheet->getDelegate()->getStyle('A4:K4')->getFont()->setSize(9)->setName('Khmer OS Fasthand')->setSize(10);
+                $event->sheet->getDelegate()->getStyle('A4:K4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             },
         ];
     }
