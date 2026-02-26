@@ -629,14 +629,16 @@
                 }
                 
                 var rp_attachments = $("#rp_attachments").prop('files')[0];
-                var fileSize = rp_attachments ? (rp_attachments['size'] / 1024) : "";
-
-                if (fileSize <= 5120) {  // ** 5 MB in KB **/
-                    $(".btn-hidden-show").show();
-                    $(".btn-loading").css('display', 'none');
-                    toastr.error("Please check file size less than or equal to 10MB");
-                    return false;
-                }
+                // var fileSize = rp_attachments ? (rp_attachments['size'] / 1024) : "";
+                // if (fileSize) {
+                //     if (fileSize <= 5120) {  // ** 5 MB in KB **/
+                //         $(".btn-hidden-show").show();
+                //         $(".btn-loading").css('display', 'none');
+                //         toastr.error("Please check file size less than or equal to 5MB");
+                //         return false;
+                //     }
+                // }
+                
                 
                 formData.append('_token', token);
                 formData.append('reply_to', reply_to);

@@ -191,7 +191,7 @@ class EmployeeController extends Controller
             // Apply pagination for the actual data retrieval
             $start = intval($request->input('start', 0));
             $limit = intval($request->input('length', 10));
-            $data = $query->orderBy('users.id', 'DESC')->offset($start)->limit($limit)->get();
+            $data = $query->orderBy('users.resign_date', 'DESC')->offset($start)->limit($limit)->get();
             
             // Return JSON response
             return response()->json([
@@ -234,7 +234,7 @@ class EmployeeController extends Controller
             if ($from_date && $to_date) {
                 $query->whereBetween('users.resign_date',  [$from_date, $to_date]);
             }
-            $data = $query->get();
+            $data = $query->orderBy('users.resign_date', 'DESC')->get();
         $filename = 'report_staff_resign_' . Carbon::now()->format('Ymd') . '.xlsx';
 
         return Excel::download(new StaffResign($data), $filename);
