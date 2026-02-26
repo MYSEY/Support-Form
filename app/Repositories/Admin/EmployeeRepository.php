@@ -34,7 +34,7 @@ class EmployeeRepository extends BaseRepository
 
     public function staff_resign($request){
         $today = Carbon::today()->format('Y-m-d');
-        $sevenDaysAgo = Carbon::today()->subDays(14)->format('Y-m-d');
+        $sevenDaysAgo = Carbon::today()->subDays(7)->format('Y-m-d');
         $data = Employee::whereIn('emp_status', ['3','4','5','6','7','8','9'])
             ->leftJoin('positions', 'users.position_id', '=', 'positions.id')
             ->leftJoin('departments', 'users.department_id', '=', 'departments.id')
@@ -62,7 +62,8 @@ class EmployeeRepository extends BaseRepository
             )
             ->whereNotNull('users.resign_date')
             ->whereBetween('users.resign_date', [$sevenDaysAgo, $today])
-            ->whereNull('staff_resign.id');
+            ->whereNull('staff_resign.id')
+            ->orderBy('users.resign_date', 'DESC');
         return $data;
     }
 }
