@@ -144,7 +144,7 @@ class DashboardController extends Controller
         $sevenDaysAgo = Carbon::today()->subDays(7)->format('Y-m-d');
 
         $totalStaffResign = 0;
-        if (!auth()->user()?->can('Dashboad Staff Resign')) {
+        if (auth()->user()?->can('Dashboad Staff Resign')) {
             $staffResign = $this->employeeRepo->staff_resign(null);
             $totalStaffResign = $staffResign->count();
         }
