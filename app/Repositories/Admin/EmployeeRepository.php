@@ -56,6 +56,8 @@ class EmployeeRepository extends BaseRepository
                 'positions.name_english',
                 'departments.name_english as depart_name',
                 'branchs.abbreviations',
+                'branchs.branch_name_kh',
+                'branchs.branch_name_en',
                 'options.name_khmer as gender',
                 'staff_resign.is_check',
                 'staff_resign.export_date'

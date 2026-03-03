@@ -46,7 +46,7 @@
                                         {{-- <td>{{$item->gender}}</td> --}}
                                         <td>{{$item->name_khmer}}</td>
                                         <td>{{$item->name_english}}</td>
-                                        <td>{{$item->abbreviations}}</td>
+                                        <td>{{$item->branch_name_en}}</td>
                                         <td>{{$item->depart_name}}</td>
                                         <td>{{\Carbon\Carbon::parse($item->resign_date)->format('d-M-Y') ?? ''}}</td>
                                     </tr>
