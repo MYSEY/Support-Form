@@ -109,7 +109,7 @@
                     { data: 'employee_name_en', name: 'employee_name_en' },
                     { data: 'name_khmer', name: 'name_khmer' },
                     { data: 'name_english', name: 'name_english' },
-                    { data: 'abbreviations', name: 'abbreviations' },
+                    { data: 'branch_name_en', name: 'branch_name_en' },
                     { data: 'depart_name', name: 'depart_name' },
                     {
                         data: 'resign_date',
