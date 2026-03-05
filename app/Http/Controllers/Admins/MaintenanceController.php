@@ -73,6 +73,7 @@ class MaintenanceController extends Controller
             if ($from_date && $to_date) {
                 $query->whereBetween('maintenances.maintenance_date',  [$from_date, $to_date]);
             }
+            
             // **Search Handling**
             $searchValue = request()->input('search.value');
             if (!empty($searchValue)) {
@@ -87,6 +88,10 @@ class MaintenanceController extends Controller
                     ->orWhere('branchs.branch_name_kh', 'like', "%{$searchValue}%")
                     ->orWhere('branchs.branch_name_en', 'like', "%{$searchValue}%");
                 });
+            }
+        
+            if (in_array(Auth::user()->RolePermission, ['admin_branch'])){
+                $query->where("maintenances.office", Auth::user()->branch_id);
             }
             
             // Fetch paginated data
@@ -137,6 +142,7 @@ class MaintenanceController extends Controller
         try {
             $data = $request->all();
             $data['created_by'] = Auth::user()->id;
+            $data['status'] = 'pending';
             $maintenance = Maintenance::create($data);
             if (!empty($request->maintenaceDetail)) { // Ensure maintenaceDetail exists
                 foreach ($request->maintenaceDetail as $value) {
@@ -271,6 +277,7 @@ class MaintenanceController extends Controller
                 'device_name' => $request->device_name,
                 'department_id' => $request->department_id,
                 'description' => $request->description,
+                'status' => $request->status,
                 'created_by' => Auth::id(),
                 'updated_by' => Auth::id(),
             ]);
@@ -314,6 +321,33 @@ class MaintenanceController extends Controller
             Toastr::error('Maintenance delete fail.','Error');
             return redirect()->back();
         }
+    }
+
+    public function onChangeStatus(Request $request){
+        try {
+            $id = $request->id;
+            $status = $request->status;
+            $maintenance = Maintenance::find($id);
+            if($maintenance){
+                $maintenance->status = $status;
+                $maintenance->acept_by = Auth::id();
+                $maintenance->acept_date = Carbon::now();
+                $maintenance->save();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Updated maintenance status successfully!',
+                    'status'  => 200
+                ]);
+            }
+        } catch (\Throwable $exp) {
+            DB::rollBack(); // ✅ Roll back only if transaction started
+            return response()->json([
+                'error'     => 'Maintenance not found.',
+                'exception' => $exp->getMessage()
+            ], 500);
+        }
+        
+        // return response()->json(['message' => 'Maintenance not found.'], 404);
     }
 
     public function OnChangeSerial(Request $request){

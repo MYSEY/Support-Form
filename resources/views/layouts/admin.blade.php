@@ -12,6 +12,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <!-- Remove Tap Highlight on Windows Phone IE -->
         <meta name="msapplication-tap-highlight" content="no">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- base css -->
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/vendors.bundle.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/app.bundle.css')}}">
@@ -27,7 +28,9 @@
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/summernote/summernote.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/statistics/c3/c3.css')}}">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css')}}">
-
+        <link rel="stylesheet" href="{{ asset('admins/css/noty.css') }}">
+        <link rel="stylesheet" href="{{ asset('admins/css/mint.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
         <style>
             .tooltip-inner {
                 text-align: left;
@@ -966,6 +969,7 @@
             $('#js-page-content').smartPanel();
         </script>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 
         <!-- The order of scripts is irrelevant. Please check out the plugin pages for more details about these plugins below: -->
         <script src="{{asset('admins/js/statistics/peity/peity.bundle.js')}}"></script>
@@ -986,6 +990,10 @@
 
         <script src="{{asset('admins/js/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.js')}}"></script>
         <script src="{{asset('admins/js/pusher/service-pusher.js')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+        <script type="text/javascript" src="{{ asset('/admins/js/noty.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('/admins/js/noty.min.js') }}"></script>
+
         
         {!! Toastr::message() !!}
 

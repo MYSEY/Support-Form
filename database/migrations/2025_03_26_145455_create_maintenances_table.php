@@ -25,6 +25,9 @@ return new class extends Migration
             $table->string('maintenace_by');
             $table->string('device_name')->nullable();
             $table->string('reference')->nullable();
+            $table->string('status')->default('pending');
+            $table->foreignId('acept_by')->nullable();
+            $table->date('acept_date')->nullable();
             $table->longText('description')->nullable();
             $table->foreignId('created_by');
             $table->foreignId('updated_by')->nullable();

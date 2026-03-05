@@ -134,6 +134,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/staff/resign', [EmployeeController::class,'staffResigns']);
     Route::get('/staff/resign/export', [EmployeeController::class,'exportStaffResign']);
     Route::resource('maintenance', MaintenanceController::class);
+    Route::post('maintenance/change-status', [MaintenanceController::class,'onChangeStatus']);
     Route::get('/serial', [MaintenanceController::class,'OnChangeSerial']);
     Route::get('/onchange/branch', [MaintenanceController::class,'OnChangeBranch']);
     Route::get('/onchange/department', [MaintenanceController::class,'OnChangeDepartment']);
@@ -195,7 +196,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::post('/create-notification', [NotificationController::class, 'create']);
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead']);
 
-     // Block backup database and file upload
+    // Block backup database and file upload
     Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
     Route::get('/backup/database', [BackupController::class, 'databaseBackup'])->name('backup.database');
     Route::get('/backup/files', [BackupController::class, 'filesBackup'])->name('backup.files');

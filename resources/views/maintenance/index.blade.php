@@ -85,6 +85,7 @@
                                                 <th>Postion</th>
                                                 <th>MaintenanceType</th>
                                                 <th>CreatedAt</th>
+                                                <th style="width: 40%">Status</th>
                                                 <th style="width: 40%">Action</th>
                                             </tr>
                                         </thead>
@@ -130,6 +131,7 @@
 @include('includs.datatable_basic')
     <script>
         var edit = @json(Auth::user()->can('Maintenance Edit'));
+        var maintanance_detail = @json(Auth::user()->can('Maintenance Detail'));
         var maintanance_delete = @json(Auth::user()->can('Maintenance Delete'));
         let from_date = '';
         let to_date = '';
@@ -163,6 +165,57 @@
                 $('#from_date').val('');
                 $('#to_date').val('');
                 $('#tbl_maintenace').DataTable().ajax.reload();
+            });
+            $(document).on('change', '.changeStatus', function () {
+                let status = $(this).val();
+                let id = $(this).data('id');
+                $.confirm({
+                    title: 'Accepted',
+                    content: 'Are you sure want to accepted this maintenance?',
+                    type: "blue",
+                    buttons: {
+                        submit: {
+                            text: 'Submit',
+                            btnClass: 'btn-green',
+                            action: function () {
+                                // $('#modal-loading').modal('show');
+                                axios.post('{{ URL("admin/maintenance/change-status") }}', {
+                                    id: id,
+                                    status: status
+                                })
+                                .then(function (response) {
+                                    $('#modal-loading').modal('hide');
+                                    if (response.data.success) {
+                                        new Noty({
+                                            text: 'The process has been successfully',
+                                            type: "success",
+                                            timeout: 2500
+                                        }).show();
+                                        window.location.replace("{{ URL('admin/maintenance') }}");
+                                        return;
+                                    } else {
+                                        new Noty({
+                                            text: 'Something went wrong please try again later',
+                                            type: "error",
+                                            timeout: 3000
+                                        }).show();
+                                    }
+                                }).catch(function (error) {
+                                    $('#modal-loading').modal('hide');
+                                    new Noty({
+                                        text: 'Something went wrong please try again later',
+                                        type: "error",
+                                        timeout: 3000
+                                    }).show();
+                                });
+                            }
+                        },
+                        cancel: {
+                            text: 'Cancel',
+                            btnClass: 'btn-secondary btn-sm'
+                        }
+                    }
+                });
             });
             dataTables();
         });
@@ -255,6 +308,24 @@
                         }
                     },
                     {
+                        data: 'status',
+                        name: 'status',
+                        render: function(data, type, row) {
+                            if(row.status == 'accepted') {
+                                return `<span class="badge badge-success">Accepted</span>`;
+                            } else if(row.status == 'pending') {
+                                return `
+                                    <select class="form-control changeStatus" data-id="${row.id}">
+                                        <option value="pending" ${row.status == 'pending' ? 'selected' : ''}>Pending</option>
+                                        <option value="accepted" ${row.status == 'accepted' ? 'selected' : ''}>Accepted</option>
+                                    </select>
+                                `;
+                            } else {
+                                return `<span class="badge badge-secondary">${row.status}</span>`;
+                            }
+                        }
+                    },
+                    {
                         data: '',
                         name: 'action',
                         render: function(data, type, row) {
@@ -264,6 +335,8 @@
                             }
                             if (edit) {
                                 actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}/edit" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-2" title="Edit"><i class="fal fa-edit"></i></a>`;
+                            }
+                            if (maintanance_detail) {
                                 actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-2" title="Detail"><i class="fal fa-eye"></i></a>`;
                             }
                             return actionButtons;
