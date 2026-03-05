@@ -15,7 +15,7 @@
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
                             <label for="">Permission Category</label>
-                            <select id="permission_category_id" name="permission_category_id" class="form-control @error('permission_category_id') is-invalid @enderror">
+                            <select id="permission_category_id" name="permission_category_id" class="form-control select2 @error('permission_category_id') is-invalid @enderror">
                                 <option value="">-- Select --</option>
                                 @foreach($permissionCategory as $value)
                                     <option value="{{$value->id}}" {{$data->permission_category_id == $value->id ? "selected" : ""}}>{{$value->name}}</option>

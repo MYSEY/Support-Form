@@ -55,9 +55,11 @@
                     <h2>
                         Maintainance 
                     </h2>
-                    <div class="text-lg-right">
-                        <a href="javascript:void(0)" class="btn btn-success btn-sm mr-1" id="btnAcept"> Accept</span></a>
-                    </div>
+                    @can('Maintenance Accept')
+                        <div class="text-lg-right">
+                            <a href="javascript:void(0)" class="btn btn-success btn-sm mr-1" id="btnAcept"> Accept</span></a>
+                        </div>
+                    @endcan
                 </div>
                 
                 <div class="panel-container show">
@@ -142,6 +144,7 @@
         var edit = @json(Auth::user()->can('Maintenance Edit'));
         var maintanance_detail = @json(Auth::user()->can('Maintenance Detail'));
         var maintanance_delete = @json(Auth::user()->can('Maintenance Delete'));
+        var maintanance_accept = @json(Auth::user()->can('Maintenance Accept'));
         let from_date = '';
         let to_date = '';
         let serial = '';
@@ -412,16 +415,20 @@
                         data: 'status',
                         name: 'status',
                         render: function(data, type, row) {
-                            if(row.status == 'accepted') {
-                                return `<span class="badge badge-success">Accepted</span>`;
-                            } else if(row.status == 'pending') {
-                                return `
-                                    <select class="form-control changeStatus" data-id="${row.id}">
-                                        <option value="pending" ${row.status == 'pending' ? 'selected' : ''}>Pending</option>
-                                        <option value="accepted" ${row.status == 'accepted' ? 'selected' : ''}>Accepted</option>
-                                    </select>
-                                `;
-                            } else {
+                            if(maintanance_accept) {
+                                if(row.status == 'accepted') {
+                                    return `<span class="badge badge-success">Accepted</span>`;
+                                } else if(row.status == 'pending') {
+                                    return `
+                                        <select class="form-control changeStatus" data-id="${row.id}">
+                                            <option value="pending" ${row.status == 'pending' ? 'selected' : ''}>Pending</option>
+                                            <option value="accepted" ${row.status == 'accepted' ? 'selected' : ''}>Accepted</option>
+                                        </select>
+                                    `;
+                                } else {
+                                    return `<span class="badge badge-secondary">${row.status}</span>`;
+                                }
+                            }else {
                                 return `<span class="badge badge-secondary">${row.status}</span>`;
                             }
                         }
