@@ -330,8 +330,8 @@ class MaintenanceController extends Controller
             $maintenance = Maintenance::find($id);
             if($maintenance){
                 $maintenance->status = $status;
-                $maintenance->acept_by = Auth::id();
-                $maintenance->acept_date = Carbon::now();
+                $maintenance->accepted_by = Auth::id();
+                $maintenance->accepted_date = Carbon::now();
                 $maintenance->save();
                 return response()->json([
                     'success' => true,
@@ -346,10 +346,42 @@ class MaintenanceController extends Controller
                 'exception' => $exp->getMessage()
             ], 500);
         }
+    }
+
+    public function acceptMaintenance(Request $request){
+        try {
+            $ids = explode(',', $request->maintenance_ids);
+            $accepted = [];
+            $skipped = [];
+            foreach ($ids as $id) {
+                $maintenance = Maintenance::findOrFail($id);
+                if ($maintenance->status == 'accepted') {
+                    $maintenance->update([
+                        'status'    => $request->status,
+                        'accepted_date'    => Carbon::now()->format('Y-m-d H:i:s'),
+                        'accepted_by'    => Auth::id(),
+                    ]);
+                    $accepted[] = $id;
+                } else {
+                    $skipped[] = $id;
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Maintenance accepted successfully!',
+                'status'  => 200
+            ]);
+        } catch (\Throwable $exp) {
+            DB::rollBack(); // ✅ Roll back only if transaction started
+            return response()->json([
+                'error'     => 'Maintenance not found.',
+                'exception' => $exp->getMessage()
+            ], 500);
+        }
         
         // return response()->json(['message' => 'Maintenance not found.'], 404);
     }
-
     public function OnChangeSerial(Request $request){
         $serial = $request->serial;
         $data = DB::table('assets') // Default database

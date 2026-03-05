@@ -55,6 +55,9 @@
                     <h2>
                         Maintainance 
                     </h2>
+                    <div class="text-lg-right">
+                        <a href="javascript:void(0)" class="btn btn-success btn-sm mr-1" id="btnAcept"> Accept</span></a>
+                    </div>
                 </div>
                 
                 <div class="panel-container show">
@@ -72,6 +75,12 @@
                                     <table id="tbl_maintenace" class="table table-bordered table-hover display table-striped" style="width: 100%">
                                         <thead>
                                             <tr>
+                                                <th>
+                                                    <div class="custom-control custom-checkbox custom-control-inline big-checkbox">
+                                                        <input type="checkbox" class="custom-control-input checkAll" name="checkAll" id="checkAll" onClick="toggle(this)">
+                                                        <label class="custom-control-label" for="checkAll"></label>
+                                                    </div>
+                                                </th>
                                                 <th>Reference</th>
                                                 <th>MaintainanceDate</th>
                                                 <th>Technician</th>
@@ -166,6 +175,68 @@
                 $('#to_date').val('');
                 $('#tbl_maintenace').DataTable().ajax.reload();
             });
+            $(document).on('click', '#btnAcept', function() {
+                let ids = [];
+                $('.sub_chk:checked').each(function() {
+                    ids.push($(this).data('id'));
+                });
+                var maintenance_ids = ids.join(",");
+                if(ids.length > 0) {
+                    $.confirm({
+                        title: 'Accepted',
+                        content: 'Are you sure want to accepted this maintenance?',
+                        type: "blue",
+                        buttons: {
+                            submit: {
+                                text: 'Submit',
+                                btnClass: 'btn-green',
+                                action: function () {
+                                    // $('#modal-loading').modal('show');
+                                    axios.post('{{ URL("admin/maintenance/accept") }}', {
+                                        maintenance_ids: maintenance_ids,
+                                        status: 'accepted'
+                                    })
+                                    .then(function (response) {
+                                        $('#modal-loading').modal('hide');
+                                        if (response.data.success) {
+                                            new Noty({
+                                                text: 'The process has been successfully',
+                                                type: "success",
+                                                timeout: 2500
+                                            }).show();
+                                            window.location.replace("{{ URL('admin/maintenance') }}");
+                                            return;
+                                        } else {
+                                            new Noty({
+                                                text: 'Something went wrong please try again later',
+                                                type: "error",
+                                                timeout: 3000
+                                            }).show();
+                                        }
+                                    }).catch(function (error) {
+                                        $('#modal-loading').modal('hide');
+                                        new Noty({
+                                            text: 'Something went wrong please try again later',
+                                            type: "error",
+                                            timeout: 3000
+                                        }).show();
+                                    });
+                                }
+                            },
+                            cancel: {
+                                text: 'Cancel',
+                                btnClass: 'btn-secondary btn-sm'
+                            }
+                        }
+                    });
+                } else {
+                    new Noty({
+                        text: 'Please select at least one record',
+                        type: "warning",
+                        timeout: 3000
+                    }).show();
+                }
+            });
             $(document).on('change', '.changeStatus', function () {
                 let status = $(this).val();
                 let id = $(this).data('id');
@@ -217,8 +288,22 @@
                     }
                 });
             });
+            $('.checkAll').on('click', function(e) {
+                if($(this).is(':checked',true)){
+                    $(".sub_chk:not(:disabled)").prop("checked", true);
+                } else {
+                    $(".sub_chk:not(:disabled)").prop("checked", false);
+                }
+            });
+            
             dataTables();
         });
+        function toggle(source) {
+            checkboxes = $('.checkAll');
+            for(var i=0, n=checkboxes.length;i<n;i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
         function dataTables() {
             $('#tbl_maintenace').DataTable({
                 // dom: 'Blfrtip',
@@ -243,6 +328,22 @@
                     }
                 },
                 columns: [
+                    {
+                        data: 'id',
+                        name: 'id',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            let disabledAttr = "";
+                            if (row.status == "accepted") {
+                                disabledAttr = "disabled";
+                            }
+                            return `<div class="custom-control custom-checkbox custom-control-inline big-checkbox">
+                                <input type="checkbox" class="custom-control-input sub_chk" name="checkbox" data-status="${row.status}" data-id="${data}" id="${data}" value="${data}" ${disabledAttr}>
+                                <label class="custom-control-label" for="${data}"></label>
+                            </div>`;
+                        }
+                    },
                     {
                         data: 'reference',
                         name: 'reference',
