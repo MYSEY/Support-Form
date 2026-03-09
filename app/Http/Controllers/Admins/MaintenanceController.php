@@ -355,21 +355,12 @@ class MaintenanceController extends Controller
     public function acceptMaintenanceAll(Request $request){
         try {
             $ids = explode(',', $request->maintenance_ids);
-            $accepted = [];
-            $skipped = [];
-            foreach ($ids as $id) {
-                $maintenance = Maintenance::findOrFail($id);
-                if ($maintenance->status == 'accepted') {
-                    $maintenance->update([
-                        'status'    => $request->status,
-                        'accepted_date'    => Carbon::now()->format('Y-m-d H:i:s'),
-                        'accepted_by'    => Auth::id(),
-                    ]);
-                    $accepted[] = $id;
-                } else {
-                    $skipped[] = $id;
-                }
-            }
+            Maintenance::whereIn('id', $ids)->update([
+                'status' => $request->status,
+                'accepted_date' => now(),
+                'accepted_by' => $request->accepted_by,
+                // 'accepted_by' => Auth::id(),
+            ]);
 
             return response()->json([
                 'success' => true,
