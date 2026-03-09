@@ -36,6 +36,7 @@ class MaintenanceReportController extends Controller
             ->leftJoin('departments', 'maintenances.department_id', '=', 'departments.id')
             ->leftJoin('db_hr-production.users', 'maintenances.end_user', '=', 'users.id')
             ->leftJoin('db_hr-production.positions', 'db_hr-production.users.position_id', '=', 'db_hr-production.positions.id')
+            ->leftJoin('users as accepted_users', 'maintenances.accepted_by', '=', 'accepted_users.id')
             ->select(
                 'maintenances.*', 
                 'assets.serial', 
@@ -49,8 +50,10 @@ class MaintenanceReportController extends Controller
                 'branchs.branch_name_en',
                 'departments.name_english as department_name',
                 'rooms.name as location',
+                'accepted_users.name as accepted_by_name',
                 'maintenance_missions.name as maintenance_mission',
             )->where('maintenances.deleted_at',null)
+            ->where('maintenances.status','accepted')
             ->when($request->serial, function ($query, $serial) {
                 $query->where('assets.serial', $serial);
             })->when($request->office, function ($query, $office) {

@@ -19,7 +19,6 @@
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/notifications/sweetalert2/sweetalert2.bundle.css')}}">
         <!-- Place favicon.ico in the root directory -->
         <link rel="apple-touch-icon" sizes="180x180" href="{{asset('/admins/img/favicon.ico')}}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{asset('/admins/img/favicon.ico')}}">
         <link rel="mask-icon" href="{{asset('admins/img/favicon/safari-pinned-tab.svg')}}" color="#5bbad5">
         <link rel="stylesheet" media="screen, print" href="{{asset('admins/css/datagrid/datatables/datatables.bundle.css')}}">
         <link rel="stylesheet" href="{{asset('admins/css/notifications/toastr/toastr.css')}}">

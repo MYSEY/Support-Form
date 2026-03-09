@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\Admins;
 
+use App\Http\Controllers\Controller;
 use App\Models\Asset;
 use App\Models\Branch;
-use App\Models\Employee;
-use App\Models\Department;
-use App\Models\Maintenance;
 use App\Models\CategoryTask;
+use App\Models\Department;
+use App\Models\Employee;
+use App\Models\Maintenance;
+use App\Models\MaintenanceDetail;
+use App\Models\MaintenanceMission;
+use App\Models\MaintenanceStatus;
+use App\Models\User;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Models\MaintenanceDetail;
-use App\Models\MaintenanceStatus;
-use App\Models\MaintenanceMission;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MaintenanceController extends Controller
 {
@@ -61,6 +62,7 @@ class MaintenanceController extends Controller
                 'rooms.name as location',
                 'maintenance_missions.name as maintenance_mission',
             )->where('maintenances.deleted_at',null)
+            ->where('maintenances.status',null)
             ->when($request->serial, function ($query, $serial) {
                 $query->where('assets.serial', $serial);
             })
@@ -115,7 +117,8 @@ class MaintenanceController extends Controller
             "name_khmer",
             "name_english",
         )->where('type','infra')->get();
-        return view('maintenance.index',compact('branch','department'));
+        $user = User::where('status','Active')->get();
+        return view('maintenance.index',compact('branch','department','user'));
     }
 
     /**
@@ -330,7 +333,8 @@ class MaintenanceController extends Controller
             $maintenance = Maintenance::find($id);
             if($maintenance){
                 $maintenance->status = $status;
-                $maintenance->accepted_by = Auth::id();
+                // $maintenance->accepted_by = Auth::id();
+                $maintenance->accepted_by = $request->accepted_by;
                 $maintenance->accepted_date = Carbon::now();
                 $maintenance->save();
                 return response()->json([
@@ -348,7 +352,7 @@ class MaintenanceController extends Controller
         }
     }
 
-    public function acceptMaintenance(Request $request){
+    public function acceptMaintenanceAll(Request $request){
         try {
             $ids = explode(',', $request->maintenance_ids);
             $accepted = [];

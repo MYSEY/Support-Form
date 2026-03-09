@@ -57,7 +57,7 @@
                     </h2>
                     @can('Maintenance Accept')
                         <div class="text-lg-right">
-                            <a href="javascript:void(0)" class="btn btn-success btn-sm mr-1" id="btnAcept"> Accept</span></a>
+                            <a href="javascript:void(0)" class="btn btn-success btn-sm mr-1" id="btnAceptAll"> Accept</span></a>
                         </div>
                     @endcan
                 </div>
@@ -142,7 +142,6 @@
 @include('includs.datatable_basic')
     <script>
         var edit = @json(Auth::user()->can('Maintenance Edit'));
-        var maintanance_detail = @json(Auth::user()->can('Maintenance Detail'));
         var maintanance_delete = @json(Auth::user()->can('Maintenance Delete'));
         var maintanance_accept = @json(Auth::user()->can('Maintenance Accept'));
         let from_date = '';
@@ -178,7 +177,7 @@
                 $('#to_date').val('');
                 $('#tbl_maintenace').DataTable().ajax.reload();
             });
-            $(document).on('click', '#btnAcept', function() {
+            $(document).on('click', '#btnAceptAll', function() {
                 let ids = [];
                 $('.sub_chk:checked').each(function() {
                     ids.push($(this).data('id'));
@@ -187,7 +186,20 @@
                 if(ids.length > 0) {
                     $.confirm({
                         title: 'Accepted',
-                        content: 'Are you sure want to accepted this maintenance?',
+                        // content: 'Are you sure want to accepted this maintenance?',
+                        content: `
+                            <form>
+                                <div class="form-group">
+                                    <label>Users</label>
+                                    <select class="select2 form-control accepted_by" id="accepted_by">
+                                        <option value="">-- Select --</option>
+                                        @foreach ($user as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                        `,
                         type: "blue",
                         buttons: {
                             submit: {
@@ -195,9 +207,18 @@
                                 btnClass: 'btn-green',
                                 action: function () {
                                     // $('#modal-loading').modal('show');
+                                    var accepted_by = this.$content.find('.accepted_by').val();
+                                    if (!accepted_by) {
+                                        $.alert({
+                                            title: '<span class="text-danger">Requiered</span>',
+                                            content: 'Please select users for asign!',
+                                        });
+                                        return false;
+                                    }
                                     axios.post('{{ URL("admin/maintenance/accept") }}', {
                                         maintenance_ids: maintenance_ids,
-                                        status: 'accepted'
+                                        status: 'accepted',
+                                        accepted_by:accepted_by
                                     })
                                     .then(function (response) {
                                         $('#modal-loading').modal('hide');
@@ -245,19 +266,39 @@
                 let id = $(this).data('id');
                 $.confirm({
                     title: 'Accepted',
-                    content: 'Are you sure want to accepted this maintenance?',
+                    // content: 'Are you sure want to accepted this maintenance?',
+                    content: `
+                        <form>
+                            <div class="form-group">
+                                <label>Users</label>
+                                <select class="select2 form-control accepted_by" id="accepted_by">
+                                    <option value="">-- Select --</option>
+                                    @foreach ($user as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </form>
+                    `,
                     type: "blue",
                     buttons: {
                         submit: {
                             text: 'Submit',
                             btnClass: 'btn-green',
                             action: function () {
-                                // $('#modal-loading').modal('show');
+                                var accepted_by = this.$content.find('.accepted_by').val();
+                                if (!accepted_by) {
+                                    $.alert({
+                                        title: '<span class="text-danger">Requiered</span>',
+                                        content: 'Please select users for asign!',
+                                    });
+                                    return false;
+                                }
                                 axios.post('{{ URL("admin/maintenance/change-status") }}', {
                                     id: id,
-                                    status: status
-                                })
-                                .then(function (response) {
+                                    status: status,
+                                    accepted_by: accepted_by,
+                                }).then(function (response) {
                                     $('#modal-loading').modal('hide');
                                     if (response.data.success) {
                                         new Noty({
@@ -415,22 +456,22 @@
                         data: 'status',
                         name: 'status',
                         render: function(data, type, row) {
-                            if(maintanance_accept) {
-                                if(row.status == 'accepted') {
-                                    return `<span class="badge badge-success">Accepted</span>`;
-                                } else if(row.status == 'pending') {
+                            // if(maintanance_accept) {
+                                // if(row.status == 'accepted') {
+                                //     return `<span class="badge badge-success">Accepted</span>`;
+                                // } else if(row.status == 'pending') {
                                     return `
                                         <select class="form-control changeStatus" data-id="${row.id}">
                                             <option value="pending" ${row.status == 'pending' ? 'selected' : ''}>Pending</option>
                                             <option value="accepted" ${row.status == 'accepted' ? 'selected' : ''}>Accepted</option>
                                         </select>
                                     `;
-                                } else {
-                                    return `<span class="badge badge-secondary">${row.status}</span>`;
-                                }
-                            }else {
-                                return `<span class="badge badge-secondary">${row.status}</span>`;
-                            }
+                                // } else {
+                                //     return `<span class="badge badge-secondary">${row.status}</span>`;
+                                // }
+                            // }else {
+                            //     return `<span class="badge badge-secondary">${row.status}</span>`;
+                            // }
                         }
                     },
                     {
@@ -443,9 +484,6 @@
                             }
                             if (edit) {
                                 actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}/edit" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-2" title="Edit"><i class="fal fa-edit"></i></a>`;
-                            }
-                            if (maintanance_detail) {
-                                actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-2" title="Detail"><i class="fal fa-eye"></i></a>`;
                             }
                             return actionButtons;
                         },

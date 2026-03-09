@@ -135,7 +135,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/staff/resign/export', [EmployeeController::class,'exportStaffResign']);
     Route::resource('maintenance', MaintenanceController::class);
     Route::post('maintenance/change-status', [MaintenanceController::class,'onChangeStatus']);
-    Route::post('maintenance/accept', [MaintenanceController::class,'acceptMaintenance']);
+    Route::post('maintenance/accept', [MaintenanceController::class,'acceptMaintenanceAll']);
     Route::get('/serial', [MaintenanceController::class,'OnChangeSerial']);
     Route::get('/onchange/branch', [MaintenanceController::class,'OnChangeBranch']);
     Route::get('/onchange/department', [MaintenanceController::class,'OnChangeDepartment']);

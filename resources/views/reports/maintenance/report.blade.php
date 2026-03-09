@@ -100,6 +100,9 @@
                                         <th>End_User</th>
                                         <th>Postion</th>
                                         <th>MaintenanceType</th>
+                                        <th>Status</th>
+                                        <th>AcceptedBy</th>
+                                        <th>AcceptedDate</th>
                                         <th>Created_At</th>
                                         <th>Action</th>
                                     </tr>
@@ -229,6 +232,21 @@
                     {
                         data: 'maintenance_mission',
                         name: 'maintenance_mission',
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        render: function(data, type, row) {
+                           return `<span class="badge badge-success">Accepted</span>`;
+                        }
+                    },
+                    {
+                        data: 'accepted_by_name',
+                        name: 'accepted_by_name',
+                    },
+                    {
+                        data: 'accepted_date',
+                        name: 'accepted_date',
                     },
                     {
                         data: 'created_at',
