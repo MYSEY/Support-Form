@@ -200,6 +200,12 @@
                                 </div>
                             </form>
                         `,
+                        onContentReady: function () {
+                            var jc = this;
+                            jc.$content.find('#accepted_by').select2({
+                                dropdownParent: jc.$el
+                            });
+                        },
                         type: "blue",
                         buttons: {
                             submit: {
@@ -280,6 +286,12 @@
                             </div>
                         </form>
                     `,
+                    onContentReady: function () {
+                        var jc = this;
+                        jc.$content.find('#accepted_by').select2({
+                            dropdownParent: jc.$el
+                        });
+                    },
                     type: "blue",
                     buttons: {
                         submit: {
