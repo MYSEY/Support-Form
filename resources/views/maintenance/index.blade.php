@@ -55,21 +55,26 @@
                     <h2>
                         Maintainance 
                     </h2>
-                    @can('Maintenance Accept')
+                    {{-- @can('Maintenance Accept')
                         <div class="text-lg-right">
-                            <a href="javascript:void(0)" class="btn btn-success btn-sm mr-1" id="btnAceptAll"> Accept</span></a>
+                            <a href="javascript:void(0)" class="btn btn-primary waves-effect waves-themed btn-sm mr-1" id="btnAceptAll"> Accept</span></a>
                         </div>
-                    @endcan
+                    @endcan --}}
                 </div>
                 
                 <div class="panel-container show">
-                    @can('Maintenance Create')
-                        <div class="panel-tag">
-                            <div class="text-lg-right">
-                                <a href="{{url('admin/maintenance/create')}}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
-                            </div>
+                    <div class="panel-tag">
+                        <div class="text-lg-right">
+                            @can('Maintenance Accept')
+                                <a href="javascript:void(0)" class="btn btn-primary waves-effect waves-themed btn-sm mr-1" id="btnAceptAll">Accept</a>
+                            @endcan
+
+                            @can('Maintenance Create')
+                                <a href="{{ url('admin/maintenance/create') }}" class="btn btn-success btn-sm mr-1"><span><i class="fal fa-plus mr-1"></i> Add New</span></a>
+                            @endcan
+
                         </div>
-                    @endcan
+                    </div>
                     <div class="panel-content">
                         <div class="">
                             <div class="row">

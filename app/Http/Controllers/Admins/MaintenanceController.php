@@ -361,7 +361,6 @@ class MaintenanceController extends Controller
                 'accepted_by' => $request->accepted_by,
                 // 'accepted_by' => Auth::id(),
             ]);
-
             return response()->json([
                 'success' => true,
                 'message' => 'Maintenance accepted successfully!',
