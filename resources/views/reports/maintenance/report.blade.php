@@ -93,17 +93,17 @@
                                         <th>Technician</th>
                                         <th>Serial</th>
                                         <th>Category</th>
-                                        <th>Device_Name</th>
+                                        <th>DeviceName</th>
                                         <th>Office</th>
                                         <th>Department</th>
                                         <th>Location</th>
-                                        <th>End_User</th>
+                                        <th>EndUser</th>
                                         <th>Postion</th>
                                         <th>MaintenanceType</th>
                                         <th>Status</th>
                                         <th>AcceptedBy</th>
                                         <th>AcceptedDate</th>
-                                        <th>Created_At</th>
+                                        <th>CreatedAt</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
