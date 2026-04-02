@@ -12,7 +12,10 @@ class ClassificationIssue extends Model
     protected $guarded = ['id'];
     
     protected $fillable = [
+        'department_id',
+        'branch_id',
         'name',
+        'color',
         'created_by',
         'updated_by',
         'deleted_at',

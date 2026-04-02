@@ -31,6 +31,7 @@ use App\Http\Controllers\Admins\MaintenanceReportController;
 use App\Http\Controllers\Admins\MaintenanceStatusController;
 use App\Http\Controllers\Admins\MaintenanceMissionController;
 use App\Http\Controllers\Admins\PermissionCategoryController;
+use App\Http\Controllers\Admins\ClassificationIssueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +115,7 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
 
     // Department
     Route::get('/department', [DepartmentController::class, 'index']);
+    Route::get('/show/department', [DepartmentController::class, 'show']);
     Route::post('/department/store', [DepartmentController::class,'store']);
     Route::post('/department/update', [DepartmentController::class,'update']);
     Route::post('/department/delete', [DepartmentController::class,'destroy']);
@@ -204,6 +206,13 @@ Route::group(['middleware'=>['auth:sanctum'], 'prefix'=>'admin'],function(){
     Route::get('/backup/full', [BackupController::class, 'fullBackup'])->name('backup.full');
     Route::post('/restore/database', [BackupController::class, 'restoreDatabase'])->name('restore.database');
     Route::post('/restore/files', [BackupController::class, 'restoreFiles'])->name('restore.files');
+
+    
+    Route::get('/classification/index', [ClassificationIssueController::class, 'index'])->name('classification.index');
+    Route::get('/classification', [ClassificationIssueController::class,'showId']);
+    Route::post('/classification/store', [ClassificationIssueController::class,'store']);
+    Route::post('/classification/update', [ClassificationIssueController::class,'update']);
+    Route::post('/classification/delete', [ClassificationIssueController::class,'destroy']);
     
 });
 

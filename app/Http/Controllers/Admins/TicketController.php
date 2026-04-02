@@ -464,9 +464,15 @@ class TicketController extends Controller
     }
     public function showOne(Request $request)
     {
-        $issuetype= IssueType::orderBy('id','DESC')->get();
         $Priority= Priority::orderBy('id','DESC')->get();
-        $data_ticket = Ticket::where("id", $request->id)->first();
+        $data_ticket = Ticket::where("tickets.id", $request->id)
+        ->leftJoin('issue_types', 'tickets.issue_type', '=', 'issue_types.id')
+        ->select(
+            'tickets.*',
+            'issue_types.classification',
+        )
+        ->first();
+        $issuetype= IssueType::where("classification",$data_ticket->classification)->orderBy('id','DESC')->get();
         $user_support = User::where("users.department_id",$data_ticket->department_id)
         ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
         ->select(
@@ -685,6 +691,19 @@ class TicketController extends Controller
             $dataHistoryPriority = [];
             $data = Ticket::find($request->reply_to);
             $assigned_to = User::where("id", $request->assignedby)->first();
+
+            if($request->to_department_id){
+                $data_histoies_to_department['trackid'] = $data->trackid;
+                $data_histoies_to_department['type'] = "assign_dep_suport";
+                $data_histoies_to_department['from_department_id'] = Auth::user()->department_id;
+                $data_histoies_to_department['to_department_id'] = $request->to_department_id;
+                $data_histoies_to_department['from_issue_type'] = $data->issue_type;
+                $data_histoies_to_department['to_issue_type'] = $request->issue_type;
+                $data_histoies_to_department['created_by'] = Auth::user()->id;
+                $historyDepartment = TicketHistory::create($data_histoies_to_department);
+                $data['department_id']  = $request->to_department_id;
+                $data['issue_type']  = $request->issue_type;
+            }
             // Add new history on status
             if ($data->status != $request->status) {
                 $data_histoies_status['trackid'] = $data->trackid;

@@ -52,9 +52,16 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        //
+        $data = Department::where("status", "Active")->when($request, function ($query, $request) {
+            if ($request->department_id) {
+                $query->where("id", $request->department_id);
+            }
+        })->get();
+        return response()->json([
+            'data' => $data,
+        ]);
     }
 
     /**

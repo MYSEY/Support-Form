@@ -27,8 +27,14 @@ class IssueTypeController extends Controller
     public function index()
     {
         $department = Department::orderBy('id', 'DESC')->get();
-        $dataClassification = ClassificationIssue::get();
-        $data = IssueType::with("department")->with("Classification")->get();
+        $dataClassification = ClassificationIssue::where("department_id", Auth::user()->department_id)->get();
+        $data = IssueType::with("department")->with("Classification")
+        ->leftJoin('users','issue_types.created_by','=','users.id')
+         ->select(
+            'issue_types.*',
+            'users.department_id'
+        )->where("users.department_id", Auth::user()->department_id)
+        ->get();
         return view('issue_type.index', compact('department', 'dataClassification', 'data'));
     }
 
@@ -107,7 +113,7 @@ class IssueTypeController extends Controller
     {
         $data = IssueType::where('id', $request->id)->first();
         $department = Department::orderBy('id', 'DESC')->get();
-        $dataClassification = ClassificationIssue::get();
+        $dataClassification = ClassificationIssue::where("department_id", Auth::user()->department_id)->get();
         return response()->json([
             'success' => $data,
             'department' => $department,
@@ -118,6 +124,9 @@ class IssueTypeController extends Controller
     public function showById(Request $request){
 
         $data = IssueType::when($request, function ($query, $request) {
+            if ($request->classification_id) {
+                $query->where("classification", $request->classification_id);
+            }
             if ($request->department_id) {
                 $query->where("department_id", $request->department_id);
             }

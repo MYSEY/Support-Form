@@ -154,7 +154,7 @@ class DashboardController extends Controller
     public function show(Request $request){
         $dataCustomStatuses = DB::table('custom_statuses')->get();
         $dataPriorities = DB::table('priorities')->get();
-        $dataClassifications = DB::table('classification_issues')->get();
+        $dataClassifications = DB::table('classification_issues')->where("department_id",Auth::user()->department_id)->get();
         $users = User::select('id')->get();
         $query = DB::table('tickets')
         ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')

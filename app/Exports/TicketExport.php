@@ -75,6 +75,15 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             $query->where('tickets.branch_id', Auth::user()->branch_id);
         }
 
+        if (in_array(Auth::user()->RolePermission, ['admin_support','admin','super_admin'])){
+            $query->when(Auth::user()->department_id, function ($query) {
+                $query->where('tickets.department_id', Auth::user()->department_id);
+                $query->orWhere("tickets.created_by", Auth::user()->id);
+                $query->orWhere("tickets.owner", Auth::user()->id);
+                $query->orWhere('tickets.department_id_from', Auth::user()->department_id);
+            });
+        }
+
         $data = $query->orderBy('id', 'DESC')->get();
         
         $i = 0;

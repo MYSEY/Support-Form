@@ -19,6 +19,12 @@
                             <label class="form-label" for="ticket-textarea">Description: <span class="text-danger">*</span></label>
                             <textarea class="form-control required" id="e_description" rows="5"></textarea>
                         </div>
+                         <div class="form-group form-group-select2">
+                            <label class="form-label">Classifications: <span class="text-danger">*</span></label>
+                            <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="issue-classifications" required>
+                               
+                            </select>
+                        </div>
                         <div class="form-group form-group-select2">
                             <label class="form-label" for="e_issue-type">Issue Type <span class="text-danger">*</span></label>
                             <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="e_issue-type">
@@ -105,6 +111,15 @@
                 }
 
                 $("#thanLess").text("");
+            });
+
+            $("#issue-classifications").on("change", function () {
+                let dataClass = {
+                    classification_id: ($(this).val() ? $(this).val() : 100000000000),
+                    branch_id: "",
+                    department_id: ""
+                };
+                dataIssue(dataClass);
             });
 
             $("#btn-update").on("click", function(e) {
@@ -213,9 +228,13 @@
                 dataType: "JSON",
                 success: function(response) {
                     let data = response.data;
-                    
                     let issuetype = response.issuetype;
                     if (data) {
+                        let dataClass = {
+                            classification_id: "",
+                            branch_id: "",
+                            department_id: data.department_id
+                        };
                         $("#e_ticket-subject").val(data.subject);
                         $("#e_description").val(data.message);
                         $("#e_due_date").val(data.due_date);
@@ -223,7 +242,11 @@
                         $("#old_attachments").val(data.attachments);
                         if (data.issue_type != '') {
                             $('#e_issue-type').html('<option selected value=""> -- Select --</option>');
+                            // $('#issue-classifications').html('<option selected value=""> -- Select --</option>');
                             $.each(issuetype, function(i, item) {
+                                if (item.id == data.issue_type) {
+                                    dataClass.classification_id = item.classification
+                                }
                                 $('#e_issue-type').append($('<option>', {
                                     value: item.id,
                                     text: item.name,
@@ -259,6 +282,57 @@
                                 }));
                             });
                         };
+                        dataClassifications(dataClass);
+                    }
+                }
+            });
+        }
+        function dataClassifications(datas){
+            $.ajax({
+                type: "GET",
+                url: "{{ url('admin/classification') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    department_id:datas.department_id,
+                    branch_id:datas.branch_id
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    let data = response.data;
+                    $('#issue-classifications').html('<option selected value=""> -- Select --</option>');
+                    if (data !="") {
+                        $.each(data, function(i, item) {
+                            $('#issue-classifications').append($('<option>', {
+                                value: item.id,
+                                text: item.name,
+                                selected: item.id == datas.classification_id
+                            }));
+                        });
+                    }
+                }
+            });
+        }
+        function dataIssue(datas){
+            $.ajax({
+                type: "GET",
+                url: "{{ url('admin/show/issue-type') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    classification_id:datas.classification_id,
+                    department_id:datas.department_id,
+                    branch_id:datas.branch_id
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    let data = response.data;
+                    $('#e_issue-type').html('<option selected value=""> -- Select --</option>');
+                    if (data !="") {
+                        $.each(data, function(i, item) {
+                            $('#e_issue-type').append($('<option>', {
+                                value: item.id,
+                                text: item.name,
+                            }));
+                        });
                     }
                 }
             });

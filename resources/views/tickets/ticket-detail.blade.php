@@ -22,6 +22,16 @@
             justify-content: space-between;
             margin-bottom: 10px;
         }
+        /* បង្ហាញ border ក្រហម និង Shadow តិចៗ */
+        .is-invalid-select2 .select2-selection {
+            border-color: #dc3545 !important; /* ពណ៌ក្រហម Bootstrap */
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+        }
+
+        /* បង្ហាញ border បៃតង */
+        .is-valid-select2 .select2-selection {
+            border-color: #198754 !important;
+        }
     </style>
     <input type="hidden" name="id" id="e_id_ticket" value="{{ $data_ticket->id }}">
     <div class="row">
@@ -101,21 +111,9 @@
                                     </div>
                             </div>
                             <br>
-                            {{-- <button style="text-decoration: none !important; float: right;"
-                                class="btn btn-link dropdown-toggle p-0" type="button" id="btn-responsesTickets" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"> Select a canned response </button>
-                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="btn-responsesTickets">
-                                @foreach ($responses_tickets as $item)
-                                    <a class="dropdown-item" href="javascript:void(0);"> {{$item->title}}</a>
-                                @endforeach
-                            </div> --}}
                         @endif
                         
                         <div class="form mt-3">
-                            {{-- <div class="form-group">
-                                <label class="form-label" for="ticket-assigned">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="ticket-reply" rows="5"></textarea>
-                            </div> --}}
                             <div class="form-group">
                                 <label class="form-label" for="ticket-assigned">Description <span class="text-danger">*</span></label>
                                 <div class="js-summernote" id="ticket-reply"></div>
@@ -123,6 +121,13 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
+                                    <div class="form-group form-group-select2">
+                                        <label class="form-label" for="ticket-department">Assigned to department: </label>
+                                        <select class="select2 form-control w-100 select2-hidden-accessible required select2-option"
+                                            id="ticket-department" required>
+                                            <option value="">  </option>
+                                        </select>
+                                    </div>
                                     <div class="form-group form-group-select2">
                                         <label class="form-label" for="ticket-assigned">Assigned to: </label>
                                         <select
@@ -164,6 +169,19 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
+                                    <div class="group-issue-type" style="display: none">
+                                        <div class="form-group form-group-select2">
+                                            <label class="form-label">Classifications: <span class="text-danger">*</span></label>
+                                            <select class="select2 group-required form-control w-100 select2-hidden-accessible select2-option" id="issue-classifications">
+                                                
+                                            </select>
+                                        </div>
+                                        <div class="form-group form-group-select2">
+                                            <label class="form-label">Issue Type: <span class="text-danger">*</span></label>
+                                            <select class="select2 group-required form-control w-100 select2-hidden-accessible select2-option" id="issue-type">
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="form-group form-group-select2">
                                         <label class="form-label" for="ticket-status">Ticket status:</label>
                                         <select
@@ -373,6 +391,20 @@
                                                     </li>
                                                     {{-- <li> <p class="card-text">{{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}: <strong class="ml-3">Assignee from {{$item->assignedBy->name}} to {{$item->recipient->name}}</strong></p></li>  --}}
                                                 @endif
+                                                 @if ($item->type == 'assign_dep_suport')
+                                                    <li><strong>Assign to department</strong>
+                                                        <ul style="list-style-type:none;">
+                                                            <li>From Department
+                                                                <strong>{{ $item->departmentFrom ? $item->departmentFrom->name_english : 'null' }}</strong>
+                                                                to department
+                                                                <strong>{{ $item->departmentTo ? $item->departmentTo->name_english : 'null' }}</strong>,
+                                                                Change by {{ $item->createdBy->user }} 
+                                                                at
+                                                                {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y h:i A') ?? '' }}
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                @endif
                                             @else
                                                 {!! $item->message_html !!}
                                             @endif
@@ -423,6 +455,7 @@
     <script type="text/javascript">
         var userPermissions = @json(Auth::user()->getAllPermissions()->pluck('name'));
         $(function() {
+            dataDepartment();
             var url = window.location.pathname;
             var id = url.substring(url.lastIndexOf('/') + 1);
 
@@ -495,6 +528,28 @@
 
             $(".btn-print").on("click", function() {
                 print_pdf();
+            });
+
+            $("#ticket-department").on("change", function() {
+                if ($(this).val()) {
+                    $(".group-issue-type").css("display", "block");
+                }else{
+                    $(".group-issue-type").css("display", "none");
+                }
+                let dataClass = {
+                    classification_id: "",
+                    branch_id: "",
+                    department_id: $(this).val()
+                };
+                dataClassifications(dataClass);
+            });
+            $("#issue-classifications").on("change", function () {
+                let dataClass = {
+                    classification_id: ($(this).val() ? $(this).val() : 100000000000),
+                    branch_id: "",
+                    department_id: ""
+                };
+                dataIssue(dataClass);
             });
 
             $(".btn-select-responses-ticket").on("click", function() {
@@ -627,6 +682,29 @@
                 } else {
                     autoreload = true;
                 }
+                let status_rp = false;
+                let num_miss = 0;
+
+                if ($("#ticket-department").val()) {
+                    $(".group-required").each(function(){
+                        // រកមើល Select2 container ដែលពាក់ព័ន្ធនឹង Select នេះ
+                        let select2Container = $(this).siblings('.select2-container');
+                        if($(this).val() == "" || $(this).val() == null){ 
+                            num_miss++;
+                            $(this).addClass("is-invalid").removeClass("is-valid");
+                            // បន្ថែម Class ទៅ Container ធំ
+                            select2Container.addClass("is-invalid-select2").removeClass("is-valid-select2");
+                        } else {
+                            $(this).addClass("is-valid").removeClass("is-invalid");
+                            
+                            select2Container.addClass("is-valid-select2").removeClass("is-invalid-select2");
+                        }
+                    });
+                }
+                if (num_miss > 0) {
+                    $(".btn-hidden-show").show();
+                    $(".btn-loading").css('display', 'none');
+                }
                 
                 var rp_attachments = $("#rp_attachments").prop('files')[0];
                 // var fileSize = rp_attachments ? (rp_attachments['size'] / 1024) : "";
@@ -649,24 +727,27 @@
                 formData.append('assignedby', assignedby);
                 formData.append('autoreload', autoreload);
                 formData.append('rp_attachments', rp_attachments);
-
-                let status_rp = false;
+                formData.append('to_department_id', $("#ticket-department").val());
+                formData.append('issue_type', $("#issue-type").val());
+                
 
                 if (nameAttr != "Closed" && nameAttr != "Resolved") {
                     if (summernoteContent == null || summernoteContent == "") {
                         // $("#ticket-reply").addClass("is-invalid");
                         // $("#ticket-reply").removeClass("is-valid");
+                        $(".note-editor").css("border-color", "red");
                         $(".btn-hidden-show").show();
                         $(".btn-loading").css('display', 'none');
                         toastr.error("Please input to Description!");
                         status_rp = false;
                     } else {
+                        $(".note-editor").css("border-color", "#1dc9b7");
                         status_rp = true;
                     }
                 } else {
                     status_rp = true;
                 }
-                if (status_rp == true) {
+                if (status_rp == true && num_miss == 0) {
                     $.ajax({
                         type: "POST",
                         url: "{{ url('admin/ticket/replies') }}",
@@ -845,6 +926,77 @@
                 formValues: false,
                 canvas: false,
                 doctypeString: "",
+            });
+        }
+        function dataDepartment(id){
+            $.ajax({
+                type: "GET",
+                url: "{{ url('admin/show/department') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    let data = response.data;
+                    $('#ticket-department').html('<option selected value=""> -- Select --</option>');
+                    if (data !="") {
+                        $.each(data, function(i, item) {
+                            $('#ticket-department').append($('<option>', {
+                                value: item.id,
+                                text: item.name_english,
+                            }));
+                        });
+                    }
+                }
+            });
+        }
+        function dataClassifications(datas){
+            $.ajax({
+                type: "GET",
+                url: "{{ url('admin/classification') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    department_id:datas.department_id,
+                    branch_id:datas.branch_id
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    let data = response.data;
+                    $('#issue-classifications').html('<option selected value=""> -- Select --</option>');
+                    if (data !="") {
+                        $.each(data, function(i, item) {
+                            $('#issue-classifications').append($('<option>', {
+                                value: item.id,
+                                text: item.name,
+                            }));
+                        });
+                    }
+                }
+            });
+        }
+        function dataIssue(datas){
+            $.ajax({
+                type: "GET",
+                url: "{{ url('admin/show/issue-type') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    classification_id:datas.classification_id,
+                    department_id:datas.department_id,
+                    branch_id:datas.branch_id
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    let data = response.data;
+                    $('#issue-type').html('<option selected value=""> -- Select --</option>');
+                    if (data !="") {
+                        $.each(data, function(i, item) {
+                            $('#issue-type').append($('<option>', {
+                                value: item.id,
+                                text: item.name,
+                            }));
+                        });
+                    }
+                }
             });
         }
     </script>

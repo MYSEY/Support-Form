@@ -28,10 +28,13 @@ return new class extends Migration
             $table->integer('to_status')->nullable();
             $table->integer('from_priority_id')->nullable();
             $table->integer('to_priority_id')->nullable();
+             $table->integer('from_issue_type')->nullable();
+            $table->integer('to_issue_type')->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
