@@ -14,7 +14,10 @@ return new class extends Migration
     {
         Schema::create('classification_issues', function (Blueprint $table) {
             $table->id();
+            $table->string('department_id');
+            $table->string('branch_id');
             $table->string('name');
+            $table->string('color');
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
             $table->dateTime('deleted_at')->nullable();

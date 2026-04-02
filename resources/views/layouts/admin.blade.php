@@ -119,6 +119,7 @@
                 'Department View', 
                 'Branch View', 
                 'Priority View', 
+                'Classification View',
                 'Issue Type View',
                 'Responses Ticket View',
                 'Reset Password User',
@@ -134,6 +135,7 @@
                 'ticket-guideline',
                 'statuses',
                 'priority',
+                'classification',
                 'issue-type', 
                 'ticket-responses',
                 'reset',
@@ -313,7 +315,14 @@
                                                 </a>
                                             </li>
                                         @endif
-                                        @if (Auth::user()->can('Issue Type View'))
+                                        @if (Auth::user()->can('Classification View'))
+                                            <li class="@if (in_array(Request::instance()->segment(2), ['classification'])) active @endif">
+                                                <a href="{{url('admin/classification/index')}}" title="classification" data-filter-tags="theme settings classification">
+                                                    <span class="nav-link-text">Classification Issue</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                         @if (Auth::user()->can('Issue Type View'))
                                             <li class="@if (in_array(Request::instance()->segment(2), ['issue-type'])) active @endif">
                                                 <a href="{{url('admin/issue-type')}}" title="issue-type" data-filter-tags="theme settings issue type">
                                                     <span class="nav-link-text">Issue Type</span>

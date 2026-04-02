@@ -25,6 +25,8 @@ class TicketHistory extends Model
         'to_status',
         'from_priority_id',
         'to_priority_id',
+        'from_issue_type',
+        'to_issue_type',
         'created_by',
     ];
 

@@ -31,6 +31,12 @@
                             <textarea class="form-control required" id="description" rows="5" required></textarea>
                         </div>
                         <div class="form-group form-group-select2">
+                            <label class="form-label">Classifications: <span class="text-danger">*</span></label>
+                            <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="issue-classifications" required>
+                                
+                            </select>
+                        </div>
+                        <div class="form-group form-group-select2">
                             <label class="form-label">Issue Type: <span class="text-danger">*</span></label>
                             <select class="select2 form-control w-100 select2-hidden-accessible required select2-option" id="issue-type" required>
                             </select>
@@ -133,9 +139,11 @@
             // var department_id = namURL.split("department")[1];
             // var branch_id = namURL.split("branch")[1];
             let datas = {
+                classification_id: "",
                 branch_id: "",
                 department_id: namURL
             };
+            
             $("#ticket-file").on("change", function () {
                 let file = this.files[0];
                 if (!file) return;
@@ -155,8 +163,11 @@
                 $("#thanLess").text("");
             });
 
+            $("#issue-classifications").on("change", function () {
+                datas.classification_id =  $(this).val() ? $(this).val() : 100000000000;
+                dataIssue(datas);
+            });
 
-            dataIssue(datas);
             $("#btn-save").on("click", function(e) {
                 e.preventDefault();
                 var formData = new FormData();
@@ -248,13 +259,39 @@
                     return false;
                 }
             });
+            dataClassifications(datas);
         });
+        function dataClassifications(datas){
+            $.ajax({
+                type: "GET",
+                url: "{{ url('admin/classification') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    department_id:datas.department_id,
+                    branch_id:datas.branch_id
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    let data = response.data;
+                    $('#issue-classifications').html('<option selected value=""> -- Select --</option>');
+                    if (data !="") {
+                        $.each(data, function(i, item) {
+                            $('#issue-classifications').append($('<option>', {
+                                value: item.id,
+                                text: item.name,
+                            }));
+                        });
+                    }
+                }
+            });
+        }
         function dataIssue(datas){
             $.ajax({
                 type: "GET",
                 url: "{{ url('admin/show/issue-type') }}",
                 data: {
                     "_token": "{{ csrf_token() }}",
+                    classification_id:datas.classification_id,
                     department_id:datas.department_id,
                     branch_id:datas.branch_id
                 },
