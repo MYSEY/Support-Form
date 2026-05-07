@@ -172,8 +172,8 @@
             <!-- End User -->
             <div class="signature-box">
                 <div class="signature-name">
-                    <span>Status:</span>
-                    {{ $data->status=='accepted' ? "Accepted" :'' }}
+                    {{-- <span>Status:</span> --}}
+                    {{ $data->status=='accepted' ? "Accepted" :'' }} By (User or Manager)
                 </div>
 
                 <div class="signature-name">
@@ -190,7 +190,7 @@
             <!-- Maintained By -->
             <div class="signature-box">
                 <div class="signature-name">
-                    <span>Maintained By</span>
+                    <span>Maintained By (Technician)</span>
                 </div>
         
                 <div class="signature-name">
