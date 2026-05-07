@@ -192,14 +192,23 @@
                     {
                         data: 'maintenance_date',
                         name: 'maintenance_date',
+                        render: function(data, type, row) {
+                            return `<a href="{{url('/admin/maintenance/history/')}}/${row.asset_id}">${row.maintenance_date}</a>`;
+                        },
                     },
                     {
                         data: 'maintenace_by',
                         name: 'maintenace_by',
+                        render: function(data, type, row) {
+                            return `<a href="{{url('/admin/maintenance/history/')}}/${row.asset_id}">${row.maintenace_by}</a>`;
+                        },
                     },
                     {
                         data: 'serial',
                         name: 'serial',
+                        render: function(data, type, row) {
+                            return `<a href="{{url('/admin/maintenance/history/')}}/${row.asset_id}">${row.serial}</a>`;
+                        },
                     },
                     {
                         data: 'category_name',
@@ -259,7 +268,8 @@
                             let buttons = '';
                             if (row.id) {
                                 if (detail) {
-                                    return `<a href="{{url('/admin/maintenance/history/')}}/${row.asset_id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
+                                    return `<a href="{{url('/admin/maintenance/')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
+                                    // return `<a href="{{url('/admin/maintenance/history/')}}/${row.asset_id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
                                 }
                             }
                             return buttons || '';
