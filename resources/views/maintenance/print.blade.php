@@ -1,3 +1,34 @@
+<style>
+    .signature-section {
+        width: 100%;
+        margin-top: 50px;
+        font-family: Arial, sans-serif;
+    }
+
+    .signature-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    .signature-table td {
+        width: 50%;
+        vertical-align: top;
+        padding: 20px;
+    }
+
+    .signature-title {
+        font-weight: bold;
+        margin-bottom: 80px;
+        font-size: 16px;
+    }
+
+    .signature-name,
+    .signature-date {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+</style>
 <div id="btnPrint" hidden>
     <div class="card-header">
         <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -122,15 +153,55 @@
         </div>
 
         <!-- Signature Section -->
-        <div class="signature-section">
+        {{-- <div class="signature-section">
             <div class="signature-box">
                 <strong>End User</strong><br><br><br><br><br>
-                Name: __________________
+                Name: {{$data->accepted->name}}
+                <br>
+                Accepted Date: {{$data->accepted->accepted_date}}
             </div>
 
             <div class="signature-box">
-                <strong>Technician</strong><br><br><br><br><br>
+                <strong>Maintained by</strong><br><br><br><br><br>
                 Name: {{$data->maintenace_by}}
+                Name: {{$data->maintenace_by}}
+            </div>
+        </div> --}}
+
+        <div class="signature-section">
+            <!-- End User -->
+            <div class="signature-box">
+                <div class="signature-name">
+                    <span>Status:</span>
+                    {{ $data->status=='accepted' ? "Accepted" :'' }}
+                </div>
+
+                <div class="signature-name">
+                    <span>Name:</span>
+                    {{ $data->accepted->name ?? '-' }}
+                </div>
+        
+                <div class="signature-date">
+                    <span>Accepted Date:</span>
+                    {{ $data->accepted_date ?? '-' }}
+                </div>
+            </div>
+        
+            <!-- Maintained By -->
+            <div class="signature-box">
+                <div class="signature-name">
+                    <span>Maintained By</span>
+                </div>
+        
+                <div class="signature-name">
+                    <span>Name:</span>
+                    {{ $data->maintenace_by ?? '-' }}
+                </div>
+        
+                <div class="signature-date">
+                    <span>Date:</span>
+                    {{ $data->maintenance_date ?? '-' }}
+                </div>
             </div>
         </div>
     </div>

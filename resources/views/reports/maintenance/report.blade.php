@@ -269,7 +269,6 @@
                             if (row.id) {
                                 if (detail) {
                                     return `<a href="{{url('/admin/maintenance/')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
-                                    // return `<a href="{{url('/admin/maintenance/history/')}}/${row.asset_id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
                                 }
                             }
                             return buttons || '';

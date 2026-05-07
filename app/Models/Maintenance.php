@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Carbon;
+use App\Models\User;
 use App\Models\MaintenanceDetail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,6 +41,10 @@ class Maintenance extends Model
     public function maintenanceDetail()
     {
         return $this->hasMany(MaintenanceDetail::class, 'maintenance_id');
+    }
+    public function accepted()
+    {
+        return $this->belongsTo(User::class, 'accepted_by');
     }
 
     public function asset() {
