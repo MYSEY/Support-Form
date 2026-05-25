@@ -333,8 +333,7 @@ class MaintenanceController extends Controller
             $maintenance = Maintenance::find($id);
             if($maintenance){
                 $maintenance->status = $status;
-                // $maintenance->accepted_by = Auth::id();
-                $maintenance->accepted_by = $request->accepted_by;
+                $maintenance->accepted_by = Auth::id();
                 $maintenance->accepted_date = Carbon::now();
                 $maintenance->save();
                 return response()->json([

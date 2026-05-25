@@ -277,44 +277,16 @@
                 let id = $(this).data('id');
                 $.confirm({
                     title: 'Accepted',
-                    // content: 'Are you sure want to accepted this maintenance?',
-                    content: `
-                        <form>
-                            <div class="form-group">
-                                <label>Users</label>
-                                <select class="select2 form-control accepted_by" id="accepted_by">
-                                    <option value="">-- Select --</option>
-                                    @foreach ($user as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </form>
-                    `,
-                    onContentReady: function () {
-                        var jc = this;
-                        jc.$content.find('#accepted_by').select2({
-                            dropdownParent: jc.$el
-                        });
-                    },
+                    content: 'Are you sure want to accept?',
                     type: "blue",
                     buttons: {
                         submit: {
                             text: 'Submit',
                             btnClass: 'btn-green',
                             action: function () {
-                                var accepted_by = this.$content.find('.accepted_by').val();
-                                if (!accepted_by) {
-                                    $.alert({
-                                        title: '<span class="text-danger">Requiered</span>',
-                                        content: 'Please select users for asign!',
-                                    });
-                                    return false;
-                                }
                                 axios.post('{{ URL("admin/maintenance/change-status") }}', {
                                     id: id,
                                     status: status,
-                                    accepted_by: accepted_by,
                                 }).then(function (response) {
                                     $('#modal-loading').modal('hide');
                                     if (response.data.success) {
@@ -473,22 +445,20 @@
                         data: 'status',
                         name: 'status',
                         render: function(data, type, row) {
-                            // if(maintanance_accept) {
-                                // if(row.status == 'accepted') {
-                                //     return `<span class="badge badge-success">Accepted</span>`;
-                                // } else if(row.status == 'pending') {
+                            if(maintanance_accept) {
+                                if(row.status == 'accepted') {
+                                    return `<span class="badge badge-success">Accepted</span>`;
+                                } else {
                                     return `
                                         <select class="form-control changeStatus" data-id="${row.id}">
                                             <option value="pending" ${row.status == 'pending' ? 'selected' : ''}>Pending</option>
                                             <option value="accepted" ${row.status == 'accepted' ? 'selected' : ''}>Accepted</option>
                                         </select>
                                     `;
-                                // } else {
-                                //     return `<span class="badge badge-secondary">${row.status}</span>`;
-                                // }
-                            // }else {
-                            //     return `<span class="badge badge-secondary">${row.status}</span>`;
-                            // }
+                                }
+                            }else {
+                                return `<span class="badge badge-secondary">${row.status}</span>`;
+                            }
                         }
                     },
                     {

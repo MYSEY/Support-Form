@@ -123,6 +123,9 @@
                 $('#closed_date').val('');
                 $('#to_date').val('');
                 $('#from_date').val('');
+                $('#priority').val('').trigger('change');
+                $('#status').val('').trigger('change');
+                $('#user_id').val('').trigger('change');
             });
 
             dataTables();
