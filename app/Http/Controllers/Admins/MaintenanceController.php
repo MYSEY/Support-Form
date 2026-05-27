@@ -408,11 +408,23 @@ class MaintenanceController extends Controller
         return response()->json(['message' => $data,'task'=>$task,'maintenanceStatus'=>$maintenanceStatus]);
     }
     public function OnChangeBranch(Request $request){
-        $data = Asset::where('office',$request->branch_id)->get();
+        $data = Asset::leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
+            ->select(
+                'assets.*', 
+                'users.number_employee',
+                'users.employee_name_kh',
+                'users.employee_name_en',
+            )->where('assets.office',$request->branch_id)->get();
         return response()->json(['message' => $data]);
     }
     public function OnChangeDepartment(Request $request){
-        $data = Asset::where('department_id',$request->department_id)->get();
+        $data = Asset::leftJoin('db_hr-production.users', 'assets.end_user', '=', 'users.id')
+            ->select(
+                'assets.*', 
+                'users.number_employee',
+                'users.employee_name_kh',
+                'users.employee_name_en',
+            )->where('assets.department_id',$request->department_id)->get();
         return response()->json(['message' => $data]);
     }
 }

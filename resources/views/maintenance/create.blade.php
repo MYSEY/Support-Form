@@ -222,7 +222,7 @@
                         $.each(response.message, function(i, item) {
                             $('#serial').append($('<option>', {
                                 value: item.id,
-                                text: item.serial
+                                text: item.serial + " - " + item.employee_name_en
                             }));
                         });
                     }
@@ -242,7 +242,7 @@
                         $.each(response.message, function(i, item) {
                             $('#serial').append($('<option>', {
                                 value: item.id,
-                                text: item.serial
+                                text: item.serial + " - " + item.employee_name_en
                             }));
                         });
                     }
