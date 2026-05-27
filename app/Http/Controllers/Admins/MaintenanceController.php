@@ -62,7 +62,7 @@ class MaintenanceController extends Controller
                 'rooms.name as location',
                 'maintenance_missions.name as maintenance_mission',
             )->where('maintenances.deleted_at',null)
-            ->where('maintenances.status',null)
+            ->where('maintenances.status','pending')
             ->when($request->serial, function ($query, $serial) {
                 $query->where('assets.serial', $serial);
             })
