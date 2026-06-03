@@ -62,6 +62,18 @@ class FixedAssetController extends Controller
                 ->when($request->branch_id, function ($query, $branch_id) {
                     $query->where('assets.office', $branch_id);
                 });
+                // **Search Handling**
+                $searchValue = request()->input('search.value');
+                if (!empty($searchValue)) {
+                    $query->where(function ($q) use ($searchValue) {
+                        $q->where('assets.office', 'like', "%{$searchValue}%")
+                        ->orWhere('assets.location',$searchValue)
+                        ->orWhere('assets.end_user', 'like', "%{$searchValue}%")
+                        ->orWhere('assets.serial', 'like', "%{$searchValue}%")
+                        ->orWhere('assets.device_name', 'like', "%{$searchValue}%")
+                        ->orWhere('assets.date', 'like', "%{$searchValue}%");
+                    });
+                }
                 
                 // Apply additional filtering for role
                 if (Auth::user()->RolePermission=='staff') {
