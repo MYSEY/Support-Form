@@ -39,7 +39,41 @@ class TicketReportController extends Controller
         
         if (request()->ajax()) {
             // Define the base query
-            $query = self::getDatas($request);
+            $query = DB::table('tickets')
+            ->leftJoin('departments','tickets.department_id','=','departments.id')
+            ->leftJoin('departments as department_from','tickets.department_id_from','=','department_from.id')
+            ->leftJoin('branchs','tickets.branch_id','=','branchs.id')
+            ->leftJoin('custom_statuses','tickets.status','=','custom_statuses.id')
+            ->leftJoin('users','tickets.owner','=','users.id')
+            ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
+            ->leftJoin('classification_issues','issue_types.classification','=','classification_issues.id')
+            ->leftJoin('priorities','tickets.priority','=','priorities.id')
+            ->select(
+                'tickets.*',
+                'departments.name_khmer',
+                'departments.name_english',
+                'department_from.name_khmer as department_from_name_khmer',
+                'department_from.name_english as department_from_name_english',
+                'branchs.branch_name_en',
+                'branchs.branch_name_kh',
+                'custom_statuses.name as status_name',
+                'custom_statuses.color',
+                'users.name as owner_name',
+                'users.name as lastreplier',
+                'users.name as assign_by',
+                'issue_types.name as issue_type_name',
+                'classification_issues.name as classification_name',
+                'priorities.name as prioritie_name',
+                'priorities.color as priority_color',
+            )->where('tickets.deleted_at',null)
+            ->when($request->priority, function ($query, $priority) {
+                $query->where('tickets.priority', $priority);
+            })->when($request->status, function ($query, $status) {
+                $query->whereIn('tickets.status', $status);
+            })->when($request->user_id, function ($query, $user_id) {
+                $query->where('tickets.created_by', $user_id);
+            });
+
             if ($request->closed_date) {
                 [$start, $end] = explode(' - ', $request->closed_date);
                 $start = Carbon::createFromDate($start)->format('Y-m-d H:i:s');
@@ -54,6 +88,19 @@ class TicketReportController extends Controller
             if (Auth::user()->RolePermission=='staff') {
                 $query->where('tickets.created_by',Auth::user()->id);
             }
+
+            // if (in_array(Auth::user()->RolePermission, ['admin_support','admin','super_admin'])){
+            //     $query->when(Auth::user()->department_id, function ($query) {
+            //         $query->where('tickets.department_id', Auth::user()->department_id);
+            //         $query->orWhere("tickets.created_by", Auth::user()->id);
+            //         $query->orWhere("tickets.owner", Auth::user()->id);
+            //         $query->orWhere('tickets.department_id_from', Auth::user()->department_id);
+            //     });
+            // }
+            // if (Auth::user()->RolePermission=='admin_branch') {
+            //     $query->where('tickets.branch_id', Auth::user()->branch_id);
+            // }
+
             // **Search Handling**
             $searchValue = request()->input('search.value');
             if (!empty($searchValue)) {
@@ -88,46 +135,6 @@ class TicketReportController extends Controller
         }
         return view('reports.ticket', compact("status", "priority",'user'));
     }
-
-    public static function getDatas($request)
-    {
-        $query = DB::table('tickets')
-        ->leftJoin('departments','tickets.department_id','=','departments.id')
-        ->leftJoin('departments as department_from','tickets.department_id_from','=','department_from.id')
-        ->leftJoin('branchs','tickets.branch_id','=','branchs.id')
-        ->leftJoin('custom_statuses','tickets.status','=','custom_statuses.id')
-        ->leftJoin('users','tickets.owner','=','users.id')
-        ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
-        ->leftJoin('classification_issues','issue_types.classification','=','classification_issues.id')
-        ->leftJoin('priorities','tickets.priority','=','priorities.id')
-        ->select(
-            'tickets.*',
-            'departments.name_khmer',
-            'departments.name_english',
-            'department_from.name_khmer as department_from_name_khmer',
-            'department_from.name_english as department_from_name_english',
-            'branchs.branch_name_en',
-            'branchs.branch_name_kh',
-            'custom_statuses.name as status_name',
-            'custom_statuses.color',
-            'users.name as owner_name',
-            'users.name as lastreplier',
-            'users.name as assign_by',
-            'issue_types.name as issue_type_name',
-            'classification_issues.name as classification_name',
-            'priorities.name as prioritie_name',
-            'priorities.color as priority_color',
-        )->where('tickets.deleted_at',null)
-        ->when($request->priority, function ($query, $priority) {
-            $query->where('tickets.priority', $priority);
-        })->when($request->status, function ($query, $status) {
-            $query->whereIn('tickets.status', $status);
-        })->when($request->user_id, function ($query, $user_id) {
-            $query->where('tickets.created_by', $user_id);
-        });
-        return $query;
-    }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -177,8 +184,6 @@ class TicketReportController extends Controller
     }
 
     public function export(Request $request){
-        $query = self::getDatas($request);
-        $data = $query->get();
-        return Excel::download(new TicketExport($data), 'ticket-report.xlsx');
+        return Excel::download(new TicketExport($request), 'ticket-report.xlsx');
     }
 }
