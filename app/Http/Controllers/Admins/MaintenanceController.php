@@ -357,8 +357,7 @@ class MaintenanceController extends Controller
             Maintenance::whereIn('id', $ids)->update([
                 'status' => $request->status,
                 'accepted_date' => now(),
-                'accepted_by' => $request->accepted_by,
-                // 'accepted_by' => Auth::id(),
+                'accepted_by' => Auth::id(),
             ]);
             return response()->json([
                 'success' => true,
@@ -372,8 +371,6 @@ class MaintenanceController extends Controller
                 'exception' => $exp->getMessage()
             ], 500);
         }
-        
-        // return response()->json(['message' => 'Maintenance not found.'], 404);
     }
     public function OnChangeSerial(Request $request){
         $serial = $request->serial;

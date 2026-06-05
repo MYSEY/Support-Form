@@ -55,11 +55,6 @@
                     <h2>
                         Maintainance 
                     </h2>
-                    {{-- @can('Maintenance Accept')
-                        <div class="text-lg-right">
-                            <a href="javascript:void(0)" class="btn btn-primary waves-effect waves-themed btn-sm mr-1" id="btnAceptAll"> Accept</span></a>
-                        </div>
-                    @endcan --}}
                 </div>
                 
                 <div class="panel-container show">
@@ -191,26 +186,7 @@
                 if(ids.length > 0) {
                     $.confirm({
                         title: 'Accepted',
-                        // content: 'Are you sure want to accepted this maintenance?',
-                        content: `
-                            <form>
-                                <div class="form-group">
-                                    <label>Users</label>
-                                    <select class="select2 form-control accepted_by" id="accepted_by">
-                                        <option value="">-- Select --</option>
-                                        @foreach ($user as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </form>
-                        `,
-                        onContentReady: function () {
-                            var jc = this;
-                            jc.$content.find('#accepted_by').select2({
-                                dropdownParent: jc.$el
-                            });
-                        },
+                        content: 'Are you sure want to accepted?',
                         type: "blue",
                         buttons: {
                             submit: {
@@ -218,18 +194,9 @@
                                 btnClass: 'btn-green',
                                 action: function () {
                                     // $('#modal-loading').modal('show');
-                                    var accepted_by = this.$content.find('.accepted_by').val();
-                                    if (!accepted_by) {
-                                        $.alert({
-                                            title: '<span class="text-danger">Requiered</span>',
-                                            content: 'Please select users for asign!',
-                                        });
-                                        return false;
-                                    }
                                     axios.post('{{ URL("admin/maintenance/accept") }}', {
                                         maintenance_ids: maintenance_ids,
                                         status: 'accepted',
-                                        accepted_by:accepted_by
                                     })
                                     .then(function (response) {
                                         $('#modal-loading').modal('hide');

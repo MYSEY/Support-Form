@@ -104,7 +104,7 @@ class MaintenanceDownloadExport implements FromCollection,WithColumnWidths, With
                 "office" => $value->abbreviations,
                 "department"    => $value->depart_name,
                 "maintenance_date" => $value->maintenance_date,
-                "MTechnicain" => $value->number_employee,
+                "MTechnicain" => $value->maintenace_by,
                 "serial" => $value->serial,
                 "category_name" => $value->category_name,
                 "device_name" => $value->device_name,
