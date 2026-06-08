@@ -287,7 +287,8 @@
                         if (response.task.length > 0) {
                             let hardwareIndex = 1;
                             let softwareIndex = 1;
-                            let options = '<option value="">-- Select --</option>';
+                            let options = '';
+                            // let options = '<option value="">-- Select --</option>';
                             response.maintenanceStatus.forEach((row) => {
                                 options += `<option value="${row.id}">${row.name}</option>`;
                             });

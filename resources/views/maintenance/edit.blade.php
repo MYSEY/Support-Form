@@ -149,7 +149,7 @@
                                                     </td>
                                                     <td>
                                                         <select class="select2 form-control w-100 select2-option" id="status" name="status[]">
-                                                            <option value="">-- Select --</option>
+                                                            {{-- <option value="">-- Select --</option> --}}
                                                             @foreach ($maintenanceStatus as $Mitem)
                                                                 <option value="{{$Mitem->id}}" {{$status == $Mitem->id ? 'selected' : ''}}>{{ $Mitem->name}}</option>
                                                             @endforeach
@@ -213,7 +213,7 @@
                                                     </td>
                                                     <td>
                                                         <select class="select2 form-control w-100 select2-option" id="status" name="status[]">
-                                                            <option value="">-- Select --</option>
+                                                            {{-- <option value="">-- Select --</option> --}}
                                                             @foreach ($maintenanceStatus as $Mitem)
                                                                 <option value="{{$Mitem->id}}" {{$status == $Mitem->id ? 'selected' : ''}}>{{ $Mitem->name}}</option>
                                                             @endforeach
@@ -362,7 +362,7 @@
                         if (response.task.length > 0) {
                             let hardwareIndex = 1;
                             let softwareIndex = 1;
-                            let options = '<option value="">-- Select --</option>';
+                            let options = '';
                             response.maintenanceStatus.forEach((row) => {
                                 options += `<option value="${row.id}">${row.name}</option>`;
                             });
