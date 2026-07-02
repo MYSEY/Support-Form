@@ -74,11 +74,20 @@ class TicketReportController extends Controller
                 $query->where('tickets.created_by', $user_id);
             });
 
+            // if ($request->closed_date) {
+            //     [$start, $end] = explode(' - ', $request->closed_date);
+            //     $start = Carbon::createFromDate($start)->format('Y-m-d H:i:s');
+            //     $end = Carbon::createFromDate($end)->format('Y-m-d H:i:s');
+            //     $query->whereBetween('tickets.updated_at', [$start, $end]);
+            // }
             if ($request->closed_date) {
-                [$start, $end] = explode(' - ', $request->closed_date);
-                $start = Carbon::createFromDate($start)->format('Y-m-d H:i:s');
-                $end = Carbon::createFromDate($end)->format('Y-m-d H:i:s');
-                $query->whereBetween('tickets.updated_at', [$start, $end]);
+                [$rawStart, $rawEnd] = array_pad(explode(' - ', $request->closed_date), 2, null);
+
+                if ($rawStart && $rawEnd) {
+                    $start = Carbon::parse($rawStart)->format('Y-m-d H:i:s');
+                    $end   = Carbon::parse($rawEnd)->endOfDay()->format('Y-m-d H:i:s');
+                    $query->whereBetween('tickets.updated_at', [$start, $end]);
+                }
             }
 
             if ($from_date && $to_date) {

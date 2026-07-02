@@ -4,7 +4,6 @@ namespace App\Exports;
 
 use App\Models\Ticket;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -17,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
-class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,WithCustomStartCell,WithEvents
+class TicketExport implements FromCollection, WithColumnWidths, WithHeadings, WithCustomStartCell, WithEvents
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -25,16 +24,18 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
     protected $num;
     protected $export_datas;
     protected $submittedDate;
-    
+
     public function __construct($request)
     {
         $dataExport = [];
-        $from_date = null;
-        $to_date = null;
+        $from_date  = null;
+        $to_date    = null;
+
         if ($request->from_date || $request->to_date) {
-            $from_date = Carbon::createFromDate($request->from_date)->format('Y-m-d H:i:s'); //2023-05-09 00:00:00
-            $to_date = Carbon::createFromDate($request->to_date.' '.'23:59:59')->format('Y-m-d H:i:s'); //2023-05-09 23:59:59
+            $from_date = Carbon::parse($request->from_date)->format('Y-m-d H:i:s'); // 2023-05-09 00:00:00
+            $to_date   = Carbon::parse($request->to_date)->endOfDay()->format('Y-m-d H:i:s'); // 2023-05-09 23:59:59
         }
+
         $query = Ticket::with([
             'fromDepartment',
             'department',
@@ -57,74 +58,80 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
         });
 
         if ($from_date && $to_date) {
-            $query->whereBetween('tickets.dt',  [$from_date, Carbon::parse($to_date)->endOfDay()]);
+            $query->whereBetween('tickets.dt', [$from_date, $to_date]);
         }
+
+        $closedStart = null;
+        $closedEnd   = null;
 
         if ($request->closed_date) {
-            [$start, $end] = explode(' - ', $request->closed_date);
-            $start = Carbon::createFromDate($start)->format('Y-m-d H:i:s');
-            $end = Carbon::createFromDate($end)->format('Y-m-d H:i:s');
-            $query->whereBetween('tickets.updated_at', [$start, $end]);
-        }
-    
-        if (Auth::user()->RolePermission=='staff') {
-            $query->where('tickets.created_by',Auth::user()->id);
+            [$rawStart, $rawEnd] = array_pad(explode(' - ', $request->closed_date), 2, null);
+
+            if ($rawStart && $rawEnd) {
+                $closedStart = Carbon::parse($rawStart)->format('Y-m-d H:i:s');
+                $closedEnd   = Carbon::parse($rawEnd)->endOfDay()->format('Y-m-d H:i:s');
+                $query->whereBetween('tickets.updated_at', [$closedStart, $closedEnd]);
+            }
         }
 
-        // if(Auth::user()->RolePermission=="admin_branch"){
+        if (Auth::user()->RolePermission == 'staff') {
+            $query->where('tickets.created_by', Auth::user()->id);
+        }
+
+        // if (Auth::user()->RolePermission == "admin_branch") {
         //     $query->where('tickets.branch_id', Auth::user()->branch_id);
         // }
 
-        // if (in_array(Auth::user()->RolePermission, ['admin_support','admin','super_admin'])){
+        // if (in_array(Auth::user()->RolePermission, ['admin_support', 'admin', 'super_admin'])) {
         //     $query->when(Auth::user()->department_id, function ($query) {
-        //         $query->where('tickets.department_id', Auth::user()->department_id);
-        //         $query->orWhere("tickets.created_by", Auth::user()->id);
-        //         $query->orWhere("tickets.owner", Auth::user()->id);
-        //         $query->orWhere('tickets.department_id_from', Auth::user()->department_id);
+        //         $query->where(function ($q) {
+        //             $q->where('tickets.department_id', Auth::user()->department_id)
+        //               ->orWhere('tickets.created_by', Auth::user()->id)
+        //               ->orWhere('tickets.owner', Auth::user()->id)
+        //               ->orWhere('tickets.department_id_from', Auth::user()->department_id);
+        //         });
         //     });
         // }
-        $dateRange = explode(' - ', $request->closed_date);
+
         $data = $query->orderBy('id', 'DESC')->get();
-        $this->submittedDate = $to_date ?? $dateRange[1];
-        $i = 0;
-        foreach ($data as $key=>$value) {
-            $i++;
-            $this->num = $i;
-            
+        $this->submittedDate = $to_date ?? $closedEnd ?? now()->format('Y-m-d H:i:s');
+
+        foreach ($data as $key => $value) {
             $ticket_type = "Normal";
             if ($value->ticket_type == 1) {
                 $ticket_type = "Specail Case";
-            };
-            $from_department_branch = ($value->fromDepartment ? $value->fromDepartment->name_english : "").($value->branch ? $value->branch->branch_name_en : "");
+            }
+
+            $from_department_branch = ($value->fromDepartment ? $value->fromDepartment->name_english : ""). ($value->branch ? $value->branch->branch_name_en : "");
+
             $dataExport[] = [
-                "id"                        => $key+1,
-                "trackid"                   => $value->trackid,
-                "submitted"                 => $value->dt,
-                "from_department_branch"    => $from_department_branch,
-                "create_by"                 => $value->name, 
-                'to_department'             => ($value->department ? $value->department->name_english: ""),
-                "subject"                   => $value->subject,
-                "status"                    => $value->CustomStatus->name,
-                'ticket_type'               => $ticket_type,
-
-                "issue_type"                => ($value->issueType ? $value->issueType->name : ""),
-                "Classification"            => ($value->issueType?->Classification?->name ?? ""),
-
-                "Priority"                  => ($value->priorities ? $value->priorities->name : ""),
-                'assigned'                  => ($value->assignedTo ? $value->assignedTo->name : $value->owner),
-                'aast_replier'              => ($value->lastReplier ? $value->lastReplier->name : $value->name),
-                'due_date'                  => $value->due_date,
-                "close_date"                => $value->updated_at,
+                "id"                     => $key + 1,
+                "trackid"                => $value->trackid,
+                "submitted"              => $value->dt,
+                "from_department_branch" => $from_department_branch,
+                "create_by"              => $value->name,
+                'to_department'          => ($value->department ? $value->department->name_english : ""),
+                "subject"                => $value->subject,
+                "status"                 => $value->CustomStatus->name,
+                'ticket_type'            => $ticket_type,
+                "issue_type"             => ($value->issueType ? $value->issueType->name : ""),
+                "Classification"        => ($value->issueType?->Classification?->name ?? ""),
+                "Priority"               => ($value->priorities ? $value->priorities->name : ""),
+                'assigned'               => ($value->assignedTo ? $value->assignedTo->name : $value->owner),
+                'aast_replier'           => ($value->lastReplier ? $value->lastReplier->name : $value->name),
+                'due_date'               => $value->due_date,
+                "close_date"             => $value->updated_at,
             ];
         }
+
         $this->export_datas = $dataExport;
+        $this->num = count($dataExport); // used by registerEvents() to draw row borders
     }
 
     public function collection()
     {
-        return new Collection([
-            $this->export_datas,
-        ]);
+        // Each element must be ONE row, not the whole array wrapped as a single row
+        return collect($this->export_datas);
     }
 
     public function headings(): array
@@ -170,14 +177,16 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
             'P' => 18,
         ];
     }
+
     public function startCell(): string
     {
         return 'A5';
     }
+
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet;
                 $rows = count($this->export_datas) + 5 + 1;
 
@@ -188,7 +197,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 $drawing->setPath(public_path('/admins/img/logo/commalogo1.png')); // Change this path to your logo
                 $drawing->setHeight(90); // Adjust height
 
-               // Set the column and row to center the logo
+                // Set the column and row to center the logo
                 $centerColumn = 'F'; // Adjust based on your sheet width
                 $centerRow = 2;
                 $drawing->setCoordinates($centerColumn . $centerRow);
@@ -210,11 +219,11 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                     ],
                 ]);
 
-                $n=5;
+                $n = 5;
                 if ($this->num > 0) {
-                    foreach ($this->export_datas as $key=>$value) {
+                    foreach ($this->export_datas as $key => $value) {
                         $n++;
-                        $event->sheet->getStyle('A'.$n.':P'.$n)->applyFromArray([
+                        $event->sheet->getStyle('A' . $n . ':P' . $n)->applyFromArray([
                             'borders' => [
                                 'allBorders' => [
                                     'borderStyle' => Border::BORDER_THIN,
@@ -224,7 +233,7 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                         ]);
                     }
                 }
-                $event->sheet->getStyle('A'.$rows.':P'.$rows)->applyFromArray([
+                $event->sheet->getStyle('A' . $rows . ':P' . $rows)->applyFromArray([
                     'borders' => [
                         'allBorders' => [
                             'borderStyle' => Border::BORDER_THIN,
@@ -240,17 +249,18 @@ class TicketExport implements FromCollection, WithColumnWidths, WithHeadings,Wit
                 $sheet->mergeCells('A2:P2');
                 $sheet->setCellValue('A2', "ខេមា​ មីក្រូហិរញ្ញវត្ថុ លីមីតធីត");
                 $sheet->getDelegate()->getStyle('A2:P2')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A2:P2')->setBold(true);
-                $event->sheet->getDelegate()->getStyle('A2:P2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $event->sheet->getDelegate()->getStyle('A2:P2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
                 $sheet->mergeCells('A3:P3');
                 $sheet->setCellValue('A3', "Ticket Summay IT Helpdesk");
                 $sheet->getDelegate()->getStyle('A3:P3')->getFont()->setName('Khmer OS Muol Light')->setSize(12)->setUnderline('A3:M3');
-                $event->sheet->getDelegate()->getStyle('A3:P3')->getAlignment()->setWrapText(true)->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $event->sheet->getDelegate()->getStyle('A3:P3')->getAlignment()->setWrapText(true)->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
                 $month = Carbon::parse($this->submittedDate)->format('d-M-Y');
                 $sheet->mergeCells('A4:P4');
-                $sheet->setCellValue('A4',"As of :" .$month);
+                $sheet->setCellValue('A4', "As of :" . $month);
                 $sheet->getDelegate()->getStyle('A4:P4')->getFont()->setSize(9)->setName('Khmer OS Fasthand')->setSize(10);
-                $event->sheet->getDelegate()->getStyle('A4:P4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $event->sheet->getDelegate()->getStyle('A4:P4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             },
         ];
     }
