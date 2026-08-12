@@ -23,57 +23,60 @@
     <div class="row">
         @can('Dashboad Ticke Active')
             <div class="col-sm-6 col-xl-3">
-                <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
-                    <div class="">
+                <div class="p-3 bg-success-500 rounded overflow-hidden position-relative text-white mb-g">
+                    <div>
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
                             <span id="total-ticke-active" class="float-end">0</span>
                             <small class="m-0 l-h-n">Ticket Active</small>
                         </h3>
                     </div>
-                    <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4" style="font-size: 6rem;"></i>
+                    <i class="fal fa-ticket-alt position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size: 6rem;"></i>
                 </div>
             </div>
         @endcan
+
         @can('Dashboad New Ticket')
             <div class="col-sm-6 col-xl-3">
                 <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
-                    <div class="">
+                    <div>
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
                             <span id="total-new-ticket" class="float-end">0</span>
                             <small class="m-0 l-h-n">New Ticket</small>
                         </h3>
                     </div>
-                    <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
+                    <i class="fal fa-plus-circle position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size: 6rem;"></i>
                 </div>
             </div>
         @endcan
+
         @can('Dashboad Ticket Critical')
             <div class="col-sm-6 col-xl-3">
                 <div class="p-3 bg-danger-400 rounded overflow-hidden position-relative text-white mb-g">
-                    <div class="">
+                    <div>
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
                             <span id="total-priority" class="float-end">0</span>
                             <small class="m-0 l-h-n">Ticket Urgent</small>
                         </h3>
                     </div>
-                    <i class="fal fa-gem position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4" style="font-size: 6rem;"></i>
+                    <i class="fal fa-exclamation-triangle position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size: 6rem;"></i>
                 </div>
             </div>
         @endcan
-        @if(auth()->user()->can('Dashboad Ticket Unassigned'))
+
+        @can('Dashboad Ticket Unassigned')
             <div class="col-sm-6 col-xl-3">
                 <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
-                    <div class="">
+                    <div>
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
                             <span id="total-unassign" class="float-end">0</span>
                             <small class="m-0 l-h-n">Ticket Unassigned</small>
                         </h3>
                     </div>
-                    <i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
+                    <i class="fal fa-user-plus position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size: 6rem;"></i>
                 </div>
             </div>
         @endcan
-        @if(auth()->user()->can('Dashboad Staff Resign'))
+        @can('Dashboad Staff Resign')
             <div class="col-sm-6 col-xl-3">
                 <div class="p-3 bg-danger-300 rounded overflow-hidden position-relative text-white mb-g">
                     <div class="">
@@ -114,7 +117,7 @@
             <div id="panel-10" class="panel">
                 <div class="panel-hdr">	
                     <h2>
-                        Titcket Status <span class="fw-300"><i>Chart</i></span> 
+                        Ticket Status <span class="fw-300"><i>Chart</i></span> 
                     </h2>
                     <div class="panel-toolbar">
                         <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
