@@ -144,6 +144,7 @@
         var edit = @json(Auth::user()->can('Maintenance Edit'));
         var maintanance_delete = @json(Auth::user()->can('Maintenance Delete'));
         var maintanance_accept = @json(Auth::user()->can('Maintenance Accept'));
+        var detail = @json(Auth::user()->can('Maintenance Report Detail'));
         let from_date = '';
         let to_date = '';
         let serial = '';
@@ -438,6 +439,9 @@
                             }
                             if (edit) {
                                 actionButtons += `<a href="{{url('/admin/maintenance')}}/${row.id}/edit" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-2" title="Edit"><i class="fal fa-edit"></i></a>`;
+                            }
+                            if (detail) {
+                                actionButtons += `<a href="{{url('/admin/maintenance/')}}/${row.id}" class="btn btn-sm btn-outline-success btn-icon btn-inline-block mr-1" title="Detail"><i class="fal fa-eye"></i></a>`;
                             }
                             return actionButtons;
                         },
