@@ -155,7 +155,7 @@ class DashboardController extends Controller
         $dataCustomStatuses = DB::table('custom_statuses')->get();
         $dataPriorities = DB::table('priorities')->get();
         $dataClassifications = DB::table('classification_issues')->where("department_id",Auth::user()->department_id)->get();
-        $users = User::select('id')->get();
+        // $users = User::select('id')->get();
         $query = DB::table('tickets')
         ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
         ->leftJoin('classification_issues','issue_types.classification','=','classification_issues.id')
@@ -176,16 +176,38 @@ class DashboardController extends Controller
         // Apply additional filtering for role
         if (Auth::user()->RolePermission=='staff') {
             $query->where("tickets.created_by", Auth::user()->id);
-        }else if(Auth::user()->RolePermission=='admin_support'){
-            $query->where('tickets.department_id', Auth::user()->department_id)
-            ->orWhere("tickets.created_by", Auth::user()->id)
-            ->orWhere("tickets.owner", Auth::user()->id);
-        }else if(Auth::user()->RolePermission=='admin'){
-            $query->where('tickets.department_id', Auth::user()->department_id)
-            ->orWhere('tickets.department_id_from', Auth::user()->department_id);
-        }else if(Auth::user()->RolePermission=="admin_branch"){
-            $query->where('tickets.branch_id', Auth::user()->branch_id);
         }
+        if (Auth::user()->RolePermission == 'admin_support') {
+            $query->where(function ($q) {
+                $q->where('tickets.department_id', Auth::user()->department_id)
+                ->orWhere("tickets.created_by", Auth::user()->id)
+                ->orWhere("tickets.owner", Auth::user()->id);
+            });
+
+        } elseif (Auth::user()->RolePermission == 'admin') {
+
+            $query->where(function ($q) {
+                $q->where('tickets.department_id', Auth::user()->department_id)
+                ->orWhere('tickets.department_id_from', Auth::user()->department_id);
+            });
+
+        } elseif (Auth::user()->RolePermission == 'admin_branch') {
+
+            $query->where('tickets.branch_id', Auth::user()->branch_id);
+
+        }
+
+        $newTicket   = (clone $query)->where("tickets.status", 1)->count();
+        $priority    = (clone $query)->whereNotIn("tickets.status", [6, 7])
+                                    ->where("tickets.priority", 1)
+                                    ->count();
+        $unassign    = (clone $query)->whereNotIn("tickets.status", [6, 7])
+                                    ->where(function ($q) {
+                                        $q->whereIn("tickets.owner", ["unassigned", "auto-assign"])
+                                        ->orWhereNull("tickets.owner");
+                                    })->count();
+        $tickeActive = (clone $query)->whereNotIn("tickets.status", [6, 7])->count();
+
         $dataTickets = $query->orderBy('id','DESC')->get();
         $maintenanceMission = Maintenance::with('maintenanceDetail')->whereNotNull('maintenance_mission_id')->select('id','asset_id','category_id','office','department_id')->get();
         $maintenanceMissionCashByCash = Maintenance::with('maintenanceDetail')->where('maintenance_mission_id',null)->select('id','asset_id','category_id','office','department_id')->get();
@@ -205,7 +227,11 @@ class DashboardController extends Controller
             'maintenanceMissionCashByCash'=>$maintenanceMissionCashByCash,
             'branch'=>$branch,
             'maintenanceStatus'=>$maintenanceStatus,
-            'users'=>$users,
+            // 'users'=>$users,
+            'newTicket' =>$newTicket,
+            'priority' =>$priority,
+            'unassign' =>$unassign,
+            'tickeActive' =>$tickeActive,
         ]);
     }
 }
