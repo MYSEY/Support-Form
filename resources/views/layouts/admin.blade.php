@@ -974,7 +974,7 @@
         <script src="{{asset('admins/js/notifications/sweetalert2/sweetalert2.bundle.js')}}"></script>
         <script type="text/javascript">
             /* Activate smart panels */
-            $('#js-page-content').smartPanel();
+            // $('#js-page-content').smartPanel();
         </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>

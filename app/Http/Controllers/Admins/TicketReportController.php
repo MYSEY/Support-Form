@@ -48,6 +48,7 @@ class TicketReportController extends Controller
             ->leftJoin('issue_types','tickets.issue_type','=','issue_types.id')
             ->leftJoin('classification_issues','issue_types.classification','=','classification_issues.id')
             ->leftJoin('priorities','tickets.priority','=','priorities.id')
+            ->leftJoin('users as user_replier','tickets.lastreplier','=','user_replier.id')
             ->select(
                 'tickets.*',
                 'departments.name_khmer',
@@ -59,7 +60,8 @@ class TicketReportController extends Controller
                 'custom_statuses.name as status_name',
                 'custom_statuses.color',
                 'users.name as owner_name',
-                'users.name as lastreplier',
+                DB::raw('COALESCE(user_replier.name, users.name) as lastreplier'),
+                // 'users.name as lastreplier',
                 'users.name as assign_by',
                 'issue_types.name as issue_type_name',
                 'classification_issues.name as classification_name',
@@ -70,6 +72,8 @@ class TicketReportController extends Controller
                 $query->where('tickets.priority', $priority);
             })->when($request->status, function ($query, $status) {
                 $query->whereIn('tickets.status', $status);
+            })->when($request->user_id_fix, function ($query, $user_id_fix) {
+                $query->where('tickets.owner', $user_id_fix);
             })->when($request->user_id, function ($query, $user_id) {
                 $query->where('tickets.created_by', $user_id);
             });
@@ -132,7 +136,16 @@ class TicketReportController extends Controller
             // Apply pagination for the actual data retrieval
             $start = intval($request->input('start', 0));
             $limit = intval($request->input('length', 10));
-            $data = $query->orderBy('tickets.id', 'DESC')->offset($start)->limit($limit)->get();
+
+            // $data = $query->orderBy('tickets.id', 'DESC')->offset($start)->limit($limit)->get();
+            $query->orderBy('tickets.id', 'DESC');
+
+            // Only apply limit and offset if user didn't select "All" (-1)
+            if ($limit != -1) {
+                $query->offset($start)->limit($limit);
+            }
+
+            $data = $query->get();
             
             // Return JSON response
             return response()->json([

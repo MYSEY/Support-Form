@@ -11,16 +11,29 @@
         <h1 class="subheader-title">
             <i class='subheader-icon fal fa-chart-area'></i> Support Form <span class='fw-300'>Dashboard</span>
         </h1>
-        <div class="mr-1">
+        {{-- <div class="mr-1">
             <label class="fs-sm mb-0 mt-2 mt-md-0">From</label>
             <input type="date" class="form-control" id="from_date" placeholder="from date">
         </div>
         <div>
             <label class="fs-sm mb-0 mt-2 mt-md-0">To</label>
             <input type="date" class="form-control" id="to_date" placeholder="To date">
-        </div>
+        </div> --}}
     </div>
     <div class="row">
+        @can('Dashboad Ticke Active')
+            <div class="col-sm-6 col-xl-3">
+                <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            <span id="total-ticke-active" class="float-end">0</span>
+                            <small class="m-0 l-h-n">Ticket Active</small>
+                        </h3>
+                    </div>
+                    <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4" style="font-size: 6rem;"></i>
+                </div>
+            </div>
+        @endcan
         @can('Dashboad New Ticket')
             <div class="col-sm-6 col-xl-3">
                 <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
@@ -36,7 +49,7 @@
         @endcan
         @can('Dashboad Ticket Critical')
             <div class="col-sm-6 col-xl-3">
-                <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
+                <div class="p-3 bg-danger-400 rounded overflow-hidden position-relative text-white mb-g">
                     <div class="">
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
                             <span id="total-priority" class="float-end">0</span>
@@ -47,20 +60,20 @@
                 </div>
             </div>
         @endcan
-        @can('Dashboad Ticke Active')
+        @if(auth()->user()->can('Dashboad Ticket Unassigned'))
             <div class="col-sm-6 col-xl-3">
-                <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
+                <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
                     <div class="">
                         <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                            <span id="total-ticke-active" class="float-end">0</span>
-                            <small class="m-0 l-h-n">Ticke Active</small>
+                            <span id="total-unassign" class="float-end">0</span>
+                            <small class="m-0 l-h-n">Ticket Unassigned</small>
                         </h3>
                     </div>
-                    <i class="fal fa-globe position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n4" style="font-size: 6rem;"></i>
+                    <i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
                 </div>
             </div>
         @endcan
-        @if(auth()->user()->can('Dashboad Staff Resign') && auth()->user()->can('Dashboad Ticket Assign'))
+        @if(auth()->user()->can('Dashboad Staff Resign'))
             <div class="col-sm-6 col-xl-3">
                 <div class="p-3 bg-danger-300 rounded overflow-hidden position-relative text-white mb-g">
                     <div class="">
@@ -72,27 +85,14 @@
                     <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
                 </div>
             </div>
-        @else
-            <div class="col-sm-6 col-xl-3">
-                <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
-                    <div class="">
-                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                            <span id="total-assign" class="float-end">0</span>
-                            <small class="m-0 l-h-n">Ticket Assign</small>
-                        </h3>
-                    </div>
-                    <i class="fal fa-lightbulb position-absolute pos-right pos-bottom opacity-15 mb-n5 mr-n6" style="font-size: 8rem;"></i>
-                </div>
-            </div>
-        @endif
-       
+        @endcan
     </div>
     <div class="row">
         <div class="col-xl-4">
             <div id="panel-9" class="panel">
                 <div class="panel-hdr">	
                     <h2>
-                        Ticke Priority <span class="fw-300"><i>Chart</i></span> 
+                        Ticket Priority <span class="fw-300"><i>Chart</i></span> 
                     </h2>
                     <div class="panel-toolbar">
                         <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
@@ -103,7 +103,7 @@
                 <div class="panel-container show">
                     <div class="panel-content">									
                         <div class="panel-tag">
-                            Display as Ticke Priority Chart
+                            Display as Ticket Priority Chart
                         </div>
                         <div id="priorityChart" style="width:100%; height:300px;"></div>
                     </div>
@@ -487,8 +487,6 @@
             document.getElementById('modalProfileImage').src = imageUrl;
         }
         $(function() {
-            $("#from_date").on('change',function(){
-            });
             $('.btn_delete_user_onlin').on('click',function(){
                 let user_id = $(this).data("id");
                 $.ajax({
@@ -514,35 +512,11 @@
                 data: "data",
                 dataType: "JSON",
                 success: function(response) {
-                    let dataPriorities = response.priorities;
-                    let user_id = 0;
-                    if (response.dataTickets.length > 0) {
-                        var newTicket = 0;
-                        var priority = 0;
-                        var assign = 0;
-                        var tickeActive = 0;
-                        response.dataTickets.map((item) => {
-                            if (item.status == 1) {
-                                newTicket++;
-                            }
-                            if (item.priority == 1) {
-                                priority++;
-                            }
-                            response.users.forEach(user => {
-                                if (item.owner == user.id) {
-                                    assign++;
-                                } 
-                            });
-                            
-                            if(item.status) {
-                                tickeActive++;
-                            }
-                        });
-                        $('#total-new-ticket').text(Number(newTicket).toLocaleString());
-                        $('#total-priority').text(Number(priority).toLocaleString());
-                        $('#total-assign').text(Number(assign).toLocaleString());
-                        $('#total-ticke-active').text(Number(tickeActive).toLocaleString());
-                    }
+                    $('#total-ticke-active').text(Number(response.tickeActive).toLocaleString());
+                    $('#total-new-ticket').text(Number(response.newTicket).toLocaleString());
+                    $('#total-priority').text(Number(response.priority).toLocaleString());
+                    $('#total-unassign').text(Number(response.unassign).toLocaleString());
+                        
                     let data = {
                         dataTickets: response.dataTickets,
                         customStatuses: response.customStatuses,
