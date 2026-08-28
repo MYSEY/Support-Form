@@ -95,6 +95,9 @@ class MaintenanceController extends Controller
             if (in_array(Auth::user()->RolePermission, ['admin_branch'])){
                 $query->where("maintenances.office", Auth::user()->branch_id);
             }
+            if (in_array(Auth::user()->RolePermission, ['admin'])){
+                $query->where("maintenances.department_id", Auth::user()->department_id);
+            }
             
             // Fetch paginated data
             $recordsTotal = Maintenance::where('id', Auth::user()->id)->count();
