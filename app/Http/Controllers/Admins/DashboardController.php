@@ -77,18 +77,18 @@ class DashboardController extends Controller
             'branch_name_en',
             'abbreviations'
         )
-        ->where('abbreviations', '!=', 'HQ')
-        ->get();
-        $missions = MaintenanceMission::whereIn('id', [1, 2, 3, 4])->get();
+        ->where('abbreviations', '!=', 'HQ')->get();
+        $missions = MaintenanceMission::all();
         foreach ($branches as $branch) {
-            // Get unique missions for this branch
-            $maintenanceMissionIds = Maintenance::where('office', $branch->id)
-                ->whereIn('maintenance_mission_id', [1, 2, 3, 4])
-                ->distinct()
-                ->pluck('maintenance_mission_id')
-            ->toArray();
             $branchMissions = [];
             foreach ($missions as $mission) {
+                // Get unique missions for this branch
+                $maintenanceMissionIds = Maintenance::where('office', $branch->id)
+                    ->where('maintenance_mission_id', $mission->id)
+                    ->whereYear('maintenance_date', now()->year)
+                    ->distinct()
+                    ->pluck('maintenance_mission_id')
+                ->toArray();
                 $hasMission = in_array($mission->id, $maintenanceMissionIds);
                 $branchMissions[] = [
                     'mission_id' => $mission->id,
@@ -186,23 +186,19 @@ class DashboardController extends Controller
             'id',
             'name_khmer',
             'name_english'
-        )
-        ->where('type', 'infra')
-        ->get();
-        $missions = MaintenanceMission::whereIn('id', [1, 2, 3, 4])->get();
+        )->where('type', 'infra')->get();
         foreach ($departments as $department) {
-            // Get unique mission IDs for this department
-            $maintenanceMissionIds = Maintenance::where(
-                'department_id',
-                $department->id
-            )
-            ->whereIn('maintenance_mission_id', [1, 2, 3, 4])
-            ->distinct()
-            ->pluck('maintenance_mission_id')
-            ->toArray();
             $departmentMissions = [];
             foreach ($missions as $mission) {
                 // Mission exists = completed
+                // Get unique mission IDs for this department
+                $maintenanceMissionIds = Maintenance::where('department_id',$department->id)
+                ->where('maintenance_mission_id', $mission->id)
+                ->whereYear('maintenance_date', now()->year)
+                ->distinct()
+                ->pluck('maintenance_mission_id')
+                ->toArray();
+
                 $hasMission = in_array(
                     $mission->id,
                     $maintenanceMissionIds
