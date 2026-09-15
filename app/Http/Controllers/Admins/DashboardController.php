@@ -28,47 +28,88 @@ class DashboardController extends Controller
         $this->employeeRepo = $employeeRepo;
     }
     public function index(){
-        $results = [];
-        $branches = Branch::select("id", "branch_name_kh", "branch_name_en", "abbreviations")->where('abbreviations','!=','HQ')->get();
-        $missions = MaintenanceMission::all();
-        foreach ($branches as $branch) {
-            $totalAsset = Asset::where('office', $branch->id)->count();
-            $branchMissions = [];
-            $allMissionMatch = true;
+        // $results = [];
+        // $branches = Branch::select("id", "branch_name_kh", "branch_name_en", "abbreviations")->where('abbreviations','!=','HQ')->get();
+        // $missions = MaintenanceMission::all();
+        // foreach ($branches as $branch) {
+        //     $totalAsset = Asset::where('office', $branch->id)->count();
+        //     $branchMissions = [];
+        //     $allMissionMatch = true;
 
-            foreach ($missions as $mission) {
-                // Count unique asset_id under maintenance
-                $maintenanceCount = Maintenance::where('office', $branch->id)->where('maintenance_mission_id', $mission->id)->distinct('asset_id')->count('asset_id');
-                $status = 0;
-                if ($totalAsset == 0 || $maintenanceCount == 0) {
-                    $status = 0; // No data
-                } elseif ($maintenanceCount == $totalAsset) {
-                    // Exact match, so status = mission ID (1-4)
-                    $status = $mission->id;
-                } elseif ($maintenanceCount < $totalAsset) {
-                    $status = 0; // Partial
-                } elseif ($maintenanceCount > $totalAsset) {
-                    $status = 5; // Over-maintained
-                }
+        //     foreach ($missions as $mission) {
+        //         // Count unique asset_id under maintenance
+        //         $maintenanceCount = Maintenance::where('office', $branch->id)->where('maintenance_mission_id', $mission->id)->distinct('asset_id')->count('asset_id');
+        //         $status = 0;
+        //         if ($totalAsset == 0 || $maintenanceCount == 0) {
+        //             $status = 0; // No data
+        //         } elseif ($maintenanceCount == $totalAsset) {
+        //             // Exact match, so status = mission ID (1-4)
+        //             $status = $mission->id;
+        //         } elseif ($maintenanceCount < $totalAsset) {
+        //             $status = 0; // Partial
+        //         } elseif ($maintenanceCount > $totalAsset) {
+        //             $status = 5; // Over-maintained
+        //         }
                 
-                // Append mission details
+        //         // Append mission details
+        //         $branchMissions[] = [
+        //             'mission_id' => $mission->id,
+        //             'mission_name' => $mission->name ?? 'Unnamed',
+        //             'total_asset' => $totalAsset,
+        //             'total_maintenance' => $maintenanceCount,
+        //             'status' => $status,
+        //         ];
+        //     }
+
+        //     $results[] = [
+        //         'branch_id' => $branch->id,
+        //         'branch_name_kh' => $branch->branch_name_kh,
+        //         'branch_name_en' => $branch->branch_name_en,
+        //         'abbreviations' => $branch->abbreviations,
+        //         'missions' => $branchMissions
+        //     ];
+        // }
+
+        $results = [];
+        $branches = Branch::select(
+            'id',
+            'branch_name_kh',
+            'branch_name_en',
+            'abbreviations'
+        )
+        ->where('abbreviations', '!=', 'HQ')
+        ->get();
+        $missions = MaintenanceMission::whereIn('id', [1, 2, 3, 4])->get();
+        foreach ($branches as $branch) {
+            // Get unique missions for this branch
+            $maintenanceMissionIds = Maintenance::where('office', $branch->id)
+                ->whereIn('maintenance_mission_id', [1, 2, 3, 4])
+                ->distinct()
+                ->pluck('maintenance_mission_id')
+            ->toArray();
+            $branchMissions = [];
+            foreach ($missions as $mission) {
+                $hasMission = in_array($mission->id, $maintenanceMissionIds);
                 $branchMissions[] = [
                     'mission_id' => $mission->id,
                     'mission_name' => $mission->name ?? 'Unnamed',
-                    'total_asset' => $totalAsset,
-                    'total_maintenance' => $maintenanceCount,
-                    'status' => $status,
+                    'status' => $hasMission ? $mission->id : 0,
                 ];
             }
-
+            // Number of unique missions completed
+            $missionCount = count($maintenanceMissionIds);
             $results[] = [
                 'branch_id' => $branch->id,
                 'branch_name_kh' => $branch->branch_name_kh,
                 'branch_name_en' => $branch->branch_name_en,
                 'abbreviations' => $branch->abbreviations,
-                'missions' => $branchMissions
+                // This can only be 0,1,2,3,4
+                'mission_count' => $missionCount,
+                'mission_total' => $missions->count(),
+                'missions' => $branchMissions,
             ];
         }
+
         $query = Online::with("userOnline")
         ->leftJoin('users','onlines.user_id','=','users.id')
         ->leftJoin('branchs','branchs.id','=','users.branch_id')
@@ -102,36 +143,76 @@ class DashboardController extends Controller
             "name_english",
         )->where('type','infra')->get();
 
+        // $resultsDepartment = [];
+        // $departments = Department::select("id", "name_khmer", "name_english")->where('type', 'infra')->get();
+        // foreach ($departments as $department) {
+        //     $totalAsset = Asset::where('department_id', $department->id)->count();
+        //     $departmentMissions = [];
+        //     foreach ($missions as $mission) {
+        //         $maintenanceCount = Maintenance::where('department_id', $department->id)->where('maintenance_mission_id', $mission->id)->distinct('asset_id')->count('asset_id');
+        //         $totalMaintenances = Maintenance::where('department_id', $department->id)->where('maintenance_mission_id', $mission->id)->count();
+        //         $status = 0;
+        //         if ($totalAsset == 0 || $maintenanceCount <= 1) {
+        //             $status = 0; // No data or too little
+        //         } elseif ($maintenanceCount == $totalAsset && $totalMaintenances == $totalAsset) {
+        //             $status = 1; // Fully completed
+        //         } elseif ($maintenanceCount < $totalAsset) {
+        //             $status = 2; // Partial
+        //         } elseif ($maintenanceCount == $totalAsset && $totalMaintenances > $totalAsset) {
+        //             $status = 3; // Redundant
+        //         } elseif ($maintenanceCount > $totalAsset) {
+        //             $status = 4; // Over-maintained
+        //         }
+
+        //         $departmentMissions[] = [
+        //             'mission_id' => $mission->id,
+        //             'mission_name' => $mission->name ?? 'Unnamed',
+        //             'total_asset' => $totalAsset,
+        //             'total_maintenance' => $maintenanceCount,
+        //             'status' => $status,
+        //         ];
+        //     }
+
+        //     $resultsDepartment[] = [
+        //         'department_id' => $department->id,
+        //         'name_khmer' => $department->name_khmer,
+        //         'name_english' => $department->name_english,
+        //         'missions' => $departmentMissions,
+        //     ];
+        // }
+
         $resultsDepartment = [];
-        $departments = Department::select("id", "name_khmer", "name_english")->where('type', 'infra')->get();
+        $departments = Department::select(
+            'id',
+            'name_khmer',
+            'name_english'
+        )
+        ->where('type', 'infra')
+        ->get();
+        $missions = MaintenanceMission::whereIn('id', [1, 2, 3, 4])->get();
         foreach ($departments as $department) {
-            $totalAsset = Asset::where('department_id', $department->id)->count();
+            // Get unique mission IDs for this department
+            $maintenanceMissionIds = Maintenance::where(
+                'department_id',
+                $department->id
+            )
+            ->whereIn('maintenance_mission_id', [1, 2, 3, 4])
+            ->distinct()
+            ->pluck('maintenance_mission_id')
+            ->toArray();
             $departmentMissions = [];
             foreach ($missions as $mission) {
-                $maintenanceCount = Maintenance::where('department_id', $department->id)->where('maintenance_mission_id', $mission->id)->distinct('asset_id')->count('asset_id');
-                $totalMaintenances = Maintenance::where('department_id', $department->id)->where('maintenance_mission_id', $mission->id)->count();
-                $status = 0;
-                if ($totalAsset == 0 || $maintenanceCount <= 1) {
-                    $status = 0; // No data or too little
-                } elseif ($maintenanceCount == $totalAsset && $totalMaintenances == $totalAsset) {
-                    $status = 1; // Fully completed
-                } elseif ($maintenanceCount < $totalAsset) {
-                    $status = 2; // Partial
-                } elseif ($maintenanceCount == $totalAsset && $totalMaintenances > $totalAsset) {
-                    $status = 3; // Redundant
-                } elseif ($maintenanceCount > $totalAsset) {
-                    $status = 4; // Over-maintained
-                }
-
+                // Mission exists = completed
+                $hasMission = in_array(
+                    $mission->id,
+                    $maintenanceMissionIds
+                );
                 $departmentMissions[] = [
                     'mission_id' => $mission->id,
                     'mission_name' => $mission->name ?? 'Unnamed',
-                    'total_asset' => $totalAsset,
-                    'total_maintenance' => $maintenanceCount,
-                    'status' => $status,
+                    'status' => $hasMission ? 1 : 0,
                 ];
             }
-
             $resultsDepartment[] = [
                 'department_id' => $department->id,
                 'name_khmer' => $department->name_khmer,

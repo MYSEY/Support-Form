@@ -178,7 +178,7 @@
                                 <div class="col-lg-12 col-xl-12">
                                     <!-- Scrollable container start -->
                                     <div style="max-height: 300px; overflow-y: auto;">
-                                        @foreach ($results as $item)
+                                        {{-- @foreach ($results as $item)
                                             @php
                                                 $completed = 0 ;
                                                 foreach ($item['missions'] as $value) {
@@ -187,6 +187,24 @@
                                             @endphp
                                             <div class="d-flex mt-2">
                                                 Branch {{ $item['abbreviations'] }}
+                                                <span class="ml-auto">
+                                                    <strong>({{ $completed }} / 4)</strong>
+                                                </span>
+                                            </div>
+                                            <hr>
+                                        @endforeach --}}
+                                        @foreach ($results as $item)
+                                            @php
+                                                $completed = 0;
+                                                foreach ($item['missions'] as $value) {
+                                                    if ($value['status'] > 0) {
+                                                        $completed++;
+                                                    }
+                                                }
+                                            @endphp
+                                            <div class="d-flex mt-2">
+                                                Branch {{ $item['abbreviations'] }}
+
                                                 <span class="ml-auto">
                                                     <strong>({{ $completed }} / 4)</strong>
                                                 </span>
@@ -258,7 +276,7 @@
                                 <div class="col-lg-12 col-xl-12">
                                     <!-- Scrollable container start -->
                                     <div style="max-height: 300px; overflow-y: auto;">
-                                        @foreach ($resultsDepartment as $item)
+                                        {{-- @foreach ($resultsDepartment as $item)
                                             @php
                                                 $completed = 0 ;
                                                 foreach ($item['missions'] as $value) {
@@ -268,6 +286,24 @@
 
                                             <div class="d-flex mt-2">
                                                 {{ $item['name_english'] }}
+                                                <span class="ml-auto">
+                                                    <strong>({{ $completed }} / 4)</strong>
+                                                </span>
+                                            </div>
+                                            <hr>
+                                        @endforeach --}}
+                                        @foreach ($resultsDepartment as $item)
+                                            @php
+                                                $completed = 0;
+                                                foreach ($item['missions'] as $value) {
+                                                    if ($value['status'] > 0) {
+                                                        $completed++;
+                                                    }
+                                                }
+                                            @endphp
+                                            <div class="d-flex mt-2">
+                                                {{ $item['name_english'] }}
+
                                                 <span class="ml-auto">
                                                     <strong>({{ $completed }} / 4)</strong>
                                                 </span>
